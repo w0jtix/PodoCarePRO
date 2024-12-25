@@ -1,0 +1,1692 @@
+2024-12-18 14:33:28 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 14484 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-18 14:33:28 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-18 14:33:28 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-18 14:33:28 INFO  - Finished Spring Data repository scanning in 87 ms. Found 10 JPA repository interfaces.
+2024-12-18 14:33:29 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-18 14:33:29 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-18 14:33:29 INFO  - Starting service [Tomcat]
+2024-12-18 14:33:29 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-18 14:33:29 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-18 14:33:29 INFO  - Root WebApplicationContext: initialization completed in 1407 ms
+2024-12-18 14:33:29 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-18 14:33:29 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-18 14:33:29 INFO  - HHH000026: Second-level cache disabled
+2024-12-18 14:33:30 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-18 14:33:30 INFO  - HikariPool-1 - Starting...
+2024-12-18 14:33:30 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7ab33ca8
+2024-12-18 14:33:30 INFO  - HikariPool-1 - Start completed.
+2024-12-18 14:33:30 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-18 14:33:31 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-18 14:33:31 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 14:33:32 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-18 14:33:33 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-18 14:33:33 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-18 14:33:33 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-18 14:33:33 INFO  - Started PodoCareWebsiteApplication in 5.773 seconds (process running for 6.628)
+2024-12-18 14:34:01 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-18 14:34:01 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-18 14:34:01 INFO  - Completed initialization in 1 ms
+2024-12-18 14:46:07 ERROR - Order creation failed: Failed to create DraftOrder.
+2024-12-18 14:56:04 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 14:56:04 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-18 14:56:04 INFO  - HikariPool-1 - Shutdown completed.
+2024-12-18 14:56:08 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 21316 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-18 14:56:08 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-18 14:56:08 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-18 14:56:08 INFO  - Finished Spring Data repository scanning in 74 ms. Found 10 JPA repository interfaces.
+2024-12-18 14:56:09 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-18 14:56:09 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-18 14:56:09 INFO  - Starting service [Tomcat]
+2024-12-18 14:56:09 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-18 14:56:09 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-18 14:56:09 INFO  - Root WebApplicationContext: initialization completed in 1180 ms
+2024-12-18 14:56:09 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-18 14:56:09 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-18 14:56:09 INFO  - HHH000026: Second-level cache disabled
+2024-12-18 14:56:09 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-18 14:56:09 INFO  - HikariPool-1 - Starting...
+2024-12-18 14:56:10 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@19faedcc
+2024-12-18 14:56:10 INFO  - HikariPool-1 - Start completed.
+2024-12-18 14:56:10 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-18 14:56:10 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-18 14:56:11 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 14:56:11 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-18 14:56:12 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-18 14:56:12 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-18 14:56:12 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-18 14:56:12 INFO  - Started PodoCareWebsiteApplication in 4.432 seconds (process running for 4.926)
+2024-12-18 14:56:22 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-18 14:56:22 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-18 14:56:22 INFO  - Completed initialization in 1 ms
+2024-12-18 14:56:22 ERROR - Error creating draft order: Order(id=null, supplier=null, orderNumber=1, orderDate=null, orderProducts=[], shippingCost=0.0, totalAmount=0.0, orderStatus=DRAFT, saleProductInstances=[], toolProductInstances=[], equipmentProductInstances=[])
+org.springframework.dao.DataIntegrityViolationException: not-null property references a null or transient value : com.podocare.PodoCareWebsite.model.order.Order.supplier
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:307)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFactoryBean.java:550)
+	at org.springframework.dao.support.ChainedPersistenceExceptionTranslator.translateExceptionIfPossible(ChainedPersistenceExceptionTranslator.java:61)
+	at org.springframework.dao.support.DataAccessUtils.translateIfNecessary(DataAccessUtils.java:335)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:160)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:165)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy2/jdk.proxy2.$Proxy133.save(Unknown Source)
+	at com.podocare.PodoCareWebsite.service.order.OrderService.createDraftOrder(OrderService.java:99)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:355)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:716)
+	at com.podocare.PodoCareWebsite.service.order.OrderService$$SpringCGLIB$$0.createDraftOrder(<generated>)
+	at com.podocare.PodoCareWebsite.controller.order.OrderController.createDraftOrder(OrderController.java:45)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.hibernate.PropertyValueException: not-null property references a null or transient value : com.podocare.PodoCareWebsite.model.order.Order.supplier
+	at org.hibernate.engine.internal.Nullability.checkNullability(Nullability.java:109)
+	at org.hibernate.engine.internal.Nullability.checkNullability(Nullability.java:54)
+	at org.hibernate.action.internal.AbstractEntityInsertAction.nullifyTransientReferencesIfNotAlready(AbstractEntityInsertAction.java:124)
+	at org.hibernate.action.internal.EntityIdentityInsertAction.execute(EntityIdentityInsertAction.java:73)
+	at org.hibernate.engine.spi.ActionQueue.execute(ActionQueue.java:671)
+	at org.hibernate.engine.spi.ActionQueue.addResolvedEntityInsertAction(ActionQueue.java:292)
+	at org.hibernate.engine.spi.ActionQueue.addInsertAction(ActionQueue.java:273)
+	at org.hibernate.engine.spi.ActionQueue.addAction(ActionQueue.java:323)
+	at org.hibernate.event.internal.AbstractSaveEventListener.addInsertAction(AbstractSaveEventListener.java:391)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:305)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:224)
+	at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:137)
+	at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:175)
+	at org.hibernate.event.internal.DefaultPersistEventListener.persist(DefaultPersistEventListener.java:93)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:77)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:54)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
+	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:757)
+	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:741)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.orm.jpa.ExtendedEntityManagerCreator$ExtendedEntityManagerInvocationHandler.invoke(ExtendedEntityManagerCreator.java:364)
+	at jdk.proxy2/jdk.proxy2.$Proxy124.persist(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.orm.jpa.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler.invoke(SharedEntityManagerCreator.java:319)
+	at jdk.proxy2/jdk.proxy2.$Proxy124.persist(Unknown Source)
+	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.save(SimpleJpaRepository.java:626)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:355)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker$RepositoryFragmentMethodInvoker.lambda$new$0(RepositoryMethodInvoker.java:277)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:170)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:158)
+	at org.springframework.data.repository.core.support.RepositoryComposition$RepositoryFragments.invoke(RepositoryComposition.java:516)
+	at org.springframework.data.repository.core.support.RepositoryComposition.invoke(RepositoryComposition.java:285)
+	at org.springframework.data.repository.core.support.RepositoryFactorySupport$ImplementationMethodExecutionInterceptor.invoke(RepositoryFactorySupport.java:628)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:173)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:148)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:70)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:379)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138)
+	... 62 common frames omitted
+2024-12-18 14:56:22 ERROR - Order creation failed: Failed to create DraftOrder.
+2024-12-18 15:31:27 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 15:31:27 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-18 15:31:27 INFO  - HikariPool-1 - Shutdown completed.
+2024-12-18 15:33:30 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 19708 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-18 15:33:31 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-18 15:33:31 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-18 15:33:31 INFO  - Finished Spring Data repository scanning in 74 ms. Found 11 JPA repository interfaces.
+2024-12-18 15:33:32 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-18 15:33:32 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-18 15:33:32 INFO  - Starting service [Tomcat]
+2024-12-18 15:33:32 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-18 15:33:32 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-18 15:33:32 INFO  - Root WebApplicationContext: initialization completed in 1055 ms
+2024-12-18 15:33:32 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-18 15:33:32 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-18 15:33:32 INFO  - HHH000026: Second-level cache disabled
+2024-12-18 15:33:32 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-18 15:33:32 INFO  - HikariPool-1 - Starting...
+2024-12-18 15:33:32 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@ec5f944
+2024-12-18 15:33:32 INFO  - HikariPool-1 - Start completed.
+2024-12-18 15:33:32 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-18 15:33:33 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-18 15:33:33 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 15:33:33 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-18 15:33:34 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-18 15:33:35 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-18 15:33:35 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-18 15:33:35 INFO  - Started PodoCareWebsiteApplication in 4.344 seconds (process running for 4.817)
+2024-12-18 15:34:03 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-18 15:34:03 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-18 15:34:03 INFO  - Completed initialization in 1 ms
+2024-12-18 15:55:38 ERROR - Order creation failed: Failed to create Order.
+2024-12-18 15:56:45 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 15:56:45 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-18 15:56:45 INFO  - HikariPool-1 - Shutdown completed.
+2024-12-18 15:56:48 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 7784 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-18 15:56:48 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-18 15:56:48 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-18 15:56:48 INFO  - Finished Spring Data repository scanning in 76 ms. Found 11 JPA repository interfaces.
+2024-12-18 15:56:49 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-18 15:56:49 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-18 15:56:49 INFO  - Starting service [Tomcat]
+2024-12-18 15:56:49 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-18 15:56:49 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-18 15:56:49 INFO  - Root WebApplicationContext: initialization completed in 1104 ms
+2024-12-18 15:56:49 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-18 15:56:49 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-18 15:56:49 INFO  - HHH000026: Second-level cache disabled
+2024-12-18 15:56:49 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-18 15:56:49 INFO  - HikariPool-1 - Starting...
+2024-12-18 15:56:49 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@bfe47a8
+2024-12-18 15:56:49 INFO  - HikariPool-1 - Start completed.
+2024-12-18 15:56:49 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-18 15:56:50 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-18 15:56:50 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 15:56:51 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-18 15:56:51 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-18 15:56:52 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-18 15:56:52 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-18 15:56:52 INFO  - Started PodoCareWebsiteApplication in 4.472 seconds (process running for 4.94)
+2024-12-18 15:57:00 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-18 15:57:00 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-18 15:57:00 INFO  - Completed initialization in 1 ms
+2024-12-18 15:57:00 ERROR - Failed to create instances for OrderProduct ID: null
+java.lang.NullPointerException: Cannot invoke "com.podocare.PodoCareWebsite.model.product.product_category.SaleProduct.getProductName()" because the return value of "com.podocare.PodoCareWebsite.model.order.OrderProduct.getSaleProduct()" is null
+	at com.podocare.PodoCareWebsite.service.order.OrderService.createHelperToolProductInstanceDtoObject(OrderService.java:317)
+	at com.podocare.PodoCareWebsite.service.order.OrderService.createProductInstances(OrderService.java:245)
+	at com.podocare.PodoCareWebsite.service.order.OrderService.orderDtoToOrderConversion(OrderService.java:202)
+	at com.podocare.PodoCareWebsite.service.order.OrderService.finalizeOrder(OrderService.java:122)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:355)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:716)
+	at com.podocare.PodoCareWebsite.service.order.OrderService$$SpringCGLIB$$0.finalizeOrder(<generated>)
+	at com.podocare.PodoCareWebsite.controller.order.OrderController.finalizeOrder(OrderController.java:47)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPut(FrameworkServlet.java:925)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:593)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2024-12-18 15:57:00 ERROR - Error creating product instances for OrderProduct: [FAILED toString()]
+com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_instance.ProductInstanceCreationException: Error creating product instances for OrderProduct ID: null
+	at com.podocare.PodoCareWebsite.service.order.OrderService.createProductInstances(OrderService.java:258)
+	at com.podocare.PodoCareWebsite.service.order.OrderService.orderDtoToOrderConversion(OrderService.java:202)
+	at com.podocare.PodoCareWebsite.service.order.OrderService.finalizeOrder(OrderService.java:122)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:355)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:716)
+	at com.podocare.PodoCareWebsite.service.order.OrderService$$SpringCGLIB$$0.finalizeOrder(<generated>)
+	at com.podocare.PodoCareWebsite.controller.order.OrderController.finalizeOrder(OrderController.java:47)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPut(FrameworkServlet.java:925)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:593)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: java.lang.NullPointerException: Cannot invoke "com.podocare.PodoCareWebsite.model.product.product_category.SaleProduct.getProductName()" because the return value of "com.podocare.PodoCareWebsite.model.order.OrderProduct.getSaleProduct()" is null
+	at com.podocare.PodoCareWebsite.service.order.OrderService.createHelperToolProductInstanceDtoObject(OrderService.java:317)
+	at com.podocare.PodoCareWebsite.service.order.OrderService.createProductInstances(OrderService.java:245)
+	... 56 common frames omitted
+2024-12-18 15:57:00 ERROR - Product instance creation failed: Failed to create product instances for OrderProduct ID: null
+2024-12-18 16:19:24 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 16:19:24 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-18 16:19:24 INFO  - HikariPool-1 - Shutdown completed.
+2024-12-18 16:19:28 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 8628 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-18 16:19:28 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-18 16:19:29 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-18 16:19:29 INFO  - Finished Spring Data repository scanning in 88 ms. Found 11 JPA repository interfaces.
+2024-12-18 16:19:29 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-18 16:19:29 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-18 16:19:29 INFO  - Starting service [Tomcat]
+2024-12-18 16:19:29 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-18 16:19:30 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-18 16:19:30 INFO  - Root WebApplicationContext: initialization completed in 1246 ms
+2024-12-18 16:19:30 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-18 16:19:30 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-18 16:19:30 INFO  - HHH000026: Second-level cache disabled
+2024-12-18 16:19:30 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-18 16:19:30 INFO  - HikariPool-1 - Starting...
+2024-12-18 16:19:30 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@266da047
+2024-12-18 16:19:30 INFO  - HikariPool-1 - Start completed.
+2024-12-18 16:19:30 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-18 16:19:31 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-18 16:19:31 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 16:19:32 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-18 16:19:33 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-18 16:19:33 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-18 16:19:33 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-18 16:19:33 INFO  - Started PodoCareWebsiteApplication in 5.071 seconds (process running for 5.603)
+2024-12-18 16:19:38 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-18 16:19:38 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-18 16:19:38 INFO  - Completed initialization in 0 ms
+2024-12-18 16:29:44 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 16:29:44 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-18 16:29:44 INFO  - HikariPool-1 - Shutdown completed.
+2024-12-18 16:29:47 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 10836 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-18 16:29:47 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-18 16:29:47 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-18 16:29:47 INFO  - Finished Spring Data repository scanning in 79 ms. Found 11 JPA repository interfaces.
+2024-12-18 16:29:48 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-18 16:29:48 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-18 16:29:48 INFO  - Starting service [Tomcat]
+2024-12-18 16:29:48 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-18 16:29:48 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-18 16:29:48 INFO  - Root WebApplicationContext: initialization completed in 1076 ms
+2024-12-18 16:29:48 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-18 16:29:48 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-18 16:29:48 INFO  - HHH000026: Second-level cache disabled
+2024-12-18 16:29:48 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-18 16:29:48 INFO  - HikariPool-1 - Starting...
+2024-12-18 16:29:49 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3ad847f8
+2024-12-18 16:29:49 INFO  - HikariPool-1 - Start completed.
+2024-12-18 16:29:49 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-18 16:29:49 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-18 16:29:50 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 16:29:50 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-18 16:29:51 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-18 16:29:51 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-18 16:29:51 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-18 16:29:51 INFO  - Started PodoCareWebsiteApplication in 4.323 seconds (process running for 4.824)
+2024-12-18 16:29:58 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-18 16:29:58 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-18 16:29:58 INFO  - Completed initialization in 1 ms
+2024-12-18 16:29:58 ERROR - Failed to create instances for OrderProduct ID: null
+java.lang.NullPointerException: Cannot invoke "com.podocare.PodoCareWebsite.model.product.product_category.SaleProduct.getProductName()" because the return value of "com.podocare.PodoCareWebsite.model.order.OrderProduct.getSaleProduct()" is null
+	at com.podocare.PodoCareWebsite.service.order.OrderService.createHelperToolProductInstanceDtoObject(OrderService.java:315)
+	at com.podocare.PodoCareWebsite.service.order.OrderService.createProductInstances(OrderService.java:243)
+	at com.podocare.PodoCareWebsite.service.order.OrderService.orderDtoToOrderConversion(OrderService.java:200)
+	at com.podocare.PodoCareWebsite.service.order.OrderService.finalizeOrder(OrderService.java:122)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:355)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:716)
+	at com.podocare.PodoCareWebsite.service.order.OrderService$$SpringCGLIB$$0.finalizeOrder(<generated>)
+	at com.podocare.PodoCareWebsite.controller.order.OrderController.finalizeOrder(OrderController.java:47)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPut(FrameworkServlet.java:925)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:593)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2024-12-18 16:29:58 ERROR - Error creating product instances for OrderProduct: [FAILED toString()]
+com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_instance.ProductInstanceCreationException: Error creating product instances for OrderProduct ID: null
+	at com.podocare.PodoCareWebsite.service.order.OrderService.createProductInstances(OrderService.java:256)
+	at com.podocare.PodoCareWebsite.service.order.OrderService.orderDtoToOrderConversion(OrderService.java:200)
+	at com.podocare.PodoCareWebsite.service.order.OrderService.finalizeOrder(OrderService.java:122)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:355)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:716)
+	at com.podocare.PodoCareWebsite.service.order.OrderService$$SpringCGLIB$$0.finalizeOrder(<generated>)
+	at com.podocare.PodoCareWebsite.controller.order.OrderController.finalizeOrder(OrderController.java:47)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPut(FrameworkServlet.java:925)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:593)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: java.lang.NullPointerException: Cannot invoke "com.podocare.PodoCareWebsite.model.product.product_category.SaleProduct.getProductName()" because the return value of "com.podocare.PodoCareWebsite.model.order.OrderProduct.getSaleProduct()" is null
+	at com.podocare.PodoCareWebsite.service.order.OrderService.createHelperToolProductInstanceDtoObject(OrderService.java:315)
+	at com.podocare.PodoCareWebsite.service.order.OrderService.createProductInstances(OrderService.java:243)
+	... 56 common frames omitted
+2024-12-18 16:29:59 ERROR - Product instance creation failed: Failed to create product instances for OrderProduct ID: null
+2024-12-18 16:40:58 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 16:40:58 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-18 16:40:58 INFO  - HikariPool-1 - Shutdown completed.
+2024-12-18 16:41:01 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 13440 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-18 16:41:01 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-18 16:41:02 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-18 16:41:02 INFO  - Finished Spring Data repository scanning in 83 ms. Found 11 JPA repository interfaces.
+2024-12-18 16:41:02 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-18 16:41:02 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-18 16:41:02 INFO  - Starting service [Tomcat]
+2024-12-18 16:41:02 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-18 16:41:02 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-18 16:41:02 INFO  - Root WebApplicationContext: initialization completed in 1149 ms
+2024-12-18 16:41:03 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-18 16:41:03 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-18 16:41:03 INFO  - HHH000026: Second-level cache disabled
+2024-12-18 16:41:03 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-18 16:41:03 INFO  - HikariPool-1 - Starting...
+2024-12-18 16:41:03 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3ad847f8
+2024-12-18 16:41:03 INFO  - HikariPool-1 - Start completed.
+2024-12-18 16:41:03 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-18 16:41:04 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-18 16:41:04 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 16:41:04 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-18 16:41:05 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-18 16:41:06 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-18 16:41:06 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-18 16:41:06 INFO  - Started PodoCareWebsiteApplication in 4.547 seconds (process running for 5.054)
+2024-12-18 16:41:08 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-18 16:41:08 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-18 16:41:08 INFO  - Completed initialization in 1 ms
+2024-12-18 16:41:49 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 16:41:49 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-18 16:41:49 INFO  - HikariPool-1 - Shutdown completed.
+2024-12-18 16:41:52 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 4060 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-18 16:41:52 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-18 16:41:53 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-18 16:41:53 INFO  - Finished Spring Data repository scanning in 81 ms. Found 11 JPA repository interfaces.
+2024-12-18 16:41:53 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-18 16:41:53 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-18 16:41:53 INFO  - Starting service [Tomcat]
+2024-12-18 16:41:53 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-18 16:41:53 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-18 16:41:53 INFO  - Root WebApplicationContext: initialization completed in 1136 ms
+2024-12-18 16:41:54 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-18 16:41:54 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-18 16:41:54 INFO  - HHH000026: Second-level cache disabled
+2024-12-18 16:41:54 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-18 16:41:54 INFO  - HikariPool-1 - Starting...
+2024-12-18 16:41:54 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@d84418a
+2024-12-18 16:41:54 INFO  - HikariPool-1 - Start completed.
+2024-12-18 16:41:54 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-18 16:41:55 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-18 16:41:55 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 16:41:55 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-18 16:41:56 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-18 16:41:56 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-18 16:41:56 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-18 16:41:56 INFO  - Started PodoCareWebsiteApplication in 4.376 seconds (process running for 4.851)
+2024-12-18 16:42:05 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-18 16:42:05 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-18 16:42:05 INFO  - Completed initialization in 0 ms
+2024-12-18 16:42:05 ERROR - Failed to create instances for OrderProduct ID: null
+java.lang.NullPointerException: Cannot invoke "com.podocare.PodoCareWebsite.model.product.product_category.SaleProduct.getProductName()" because the return value of "com.podocare.PodoCareWebsite.model.order.OrderProduct.getSaleProduct()" is null
+	at com.podocare.PodoCareWebsite.service.order.OrderService.createHelperToolProductInstanceDtoObject(OrderService.java:316)
+	at com.podocare.PodoCareWebsite.service.order.OrderService.createProductInstances(OrderService.java:244)
+	at com.podocare.PodoCareWebsite.service.order.OrderService.orderDtoToOrderConversion(OrderService.java:201)
+	at com.podocare.PodoCareWebsite.service.order.OrderService.finalizeOrder(OrderService.java:122)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:355)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:716)
+	at com.podocare.PodoCareWebsite.service.order.OrderService$$SpringCGLIB$$0.finalizeOrder(<generated>)
+	at com.podocare.PodoCareWebsite.controller.order.OrderController.finalizeOrder(OrderController.java:47)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPut(FrameworkServlet.java:925)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:593)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2024-12-18 16:42:05 ERROR - Error creating product instances for OrderProduct: [FAILED toString()]
+com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_instance.ProductInstanceCreationException: Error creating product instances for OrderProduct ID: null
+	at com.podocare.PodoCareWebsite.service.order.OrderService.createProductInstances(OrderService.java:257)
+	at com.podocare.PodoCareWebsite.service.order.OrderService.orderDtoToOrderConversion(OrderService.java:201)
+	at com.podocare.PodoCareWebsite.service.order.OrderService.finalizeOrder(OrderService.java:122)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:355)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:716)
+	at com.podocare.PodoCareWebsite.service.order.OrderService$$SpringCGLIB$$0.finalizeOrder(<generated>)
+	at com.podocare.PodoCareWebsite.controller.order.OrderController.finalizeOrder(OrderController.java:47)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPut(FrameworkServlet.java:925)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:593)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: java.lang.NullPointerException: Cannot invoke "com.podocare.PodoCareWebsite.model.product.product_category.SaleProduct.getProductName()" because the return value of "com.podocare.PodoCareWebsite.model.order.OrderProduct.getSaleProduct()" is null
+	at com.podocare.PodoCareWebsite.service.order.OrderService.createHelperToolProductInstanceDtoObject(OrderService.java:316)
+	at com.podocare.PodoCareWebsite.service.order.OrderService.createProductInstances(OrderService.java:244)
+	... 56 common frames omitted
+2024-12-18 16:42:05 ERROR - Product instance creation failed: Failed to create product instances for OrderProduct ID: null
+2024-12-18 16:45:14 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 16:45:14 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-18 16:45:14 INFO  - HikariPool-1 - Shutdown completed.
+2024-12-18 16:45:18 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 19740 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-18 16:45:18 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-18 16:45:18 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-18 16:45:18 INFO  - Finished Spring Data repository scanning in 80 ms. Found 11 JPA repository interfaces.
+2024-12-18 16:45:19 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-18 16:45:19 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-18 16:45:19 INFO  - Starting service [Tomcat]
+2024-12-18 16:45:19 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-18 16:45:19 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-18 16:45:19 INFO  - Root WebApplicationContext: initialization completed in 1083 ms
+2024-12-18 16:45:19 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-18 16:45:19 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-18 16:45:19 INFO  - HHH000026: Second-level cache disabled
+2024-12-18 16:45:19 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-18 16:45:19 INFO  - HikariPool-1 - Starting...
+2024-12-18 16:45:19 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3973b6d4
+2024-12-18 16:45:19 INFO  - HikariPool-1 - Start completed.
+2024-12-18 16:45:19 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-18 16:45:20 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-18 16:45:20 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 16:45:21 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-18 16:45:21 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-18 16:45:22 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-18 16:45:22 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-18 16:45:22 INFO  - Started PodoCareWebsiteApplication in 4.377 seconds (process running for 4.866)
+2024-12-18 16:45:30 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-18 16:45:30 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-18 16:45:30 INFO  - Completed initialization in 0 ms
+2024-12-18 16:45:30 ERROR - Order creation failed: Failed to create Order.
+2024-12-18 16:48:28 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 16:48:28 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-18 16:48:28 INFO  - HikariPool-1 - Shutdown completed.
+2024-12-18 16:48:31 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 21220 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-18 16:48:31 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-18 16:48:32 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-18 16:48:32 INFO  - Finished Spring Data repository scanning in 88 ms. Found 11 JPA repository interfaces.
+2024-12-18 16:48:33 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-18 16:48:33 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-18 16:48:33 INFO  - Starting service [Tomcat]
+2024-12-18 16:48:33 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-18 16:48:33 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-18 16:48:33 INFO  - Root WebApplicationContext: initialization completed in 1285 ms
+2024-12-18 16:48:33 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-18 16:48:33 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-18 16:48:33 INFO  - HHH000026: Second-level cache disabled
+2024-12-18 16:48:33 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-18 16:48:33 INFO  - HikariPool-1 - Starting...
+2024-12-18 16:48:34 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@6003220a
+2024-12-18 16:48:34 INFO  - HikariPool-1 - Start completed.
+2024-12-18 16:48:34 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-18 16:48:34 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-18 16:48:35 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 16:48:35 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-18 16:48:36 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-18 16:48:36 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-18 16:48:36 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-18 16:48:36 INFO  - Started PodoCareWebsiteApplication in 4.912 seconds (process running for 5.407)
+2024-12-18 16:48:39 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-18 16:48:39 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-18 16:48:39 INFO  - Completed initialization in 1 ms
+2024-12-18 16:48:39 ERROR - Failed to create Order. Exception: 
+org.springframework.dao.DataIntegrityViolationException: not-null property references a null or transient value : com.podocare.PodoCareWebsite.model.product.product_category.product_instances.EquipmentProductInstance.order
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:307)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFactoryBean.java:550)
+	at org.springframework.dao.support.ChainedPersistenceExceptionTranslator.translateExceptionIfPossible(ChainedPersistenceExceptionTranslator.java:61)
+	at org.springframework.dao.support.DataAccessUtils.translateIfNecessary(DataAccessUtils.java:335)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:160)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:165)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy2/jdk.proxy2.$Proxy134.save(Unknown Source)
+	at com.podocare.PodoCareWebsite.service.order.OrderService.finalizeOrder(OrderService.java:125)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:355)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:716)
+	at com.podocare.PodoCareWebsite.service.order.OrderService$$SpringCGLIB$$0.finalizeOrder(<generated>)
+	at com.podocare.PodoCareWebsite.controller.order.OrderController.finalizeOrder(OrderController.java:47)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPut(FrameworkServlet.java:925)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:593)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.hibernate.PropertyValueException: not-null property references a null or transient value : com.podocare.PodoCareWebsite.model.product.product_category.product_instances.EquipmentProductInstance.order
+	at org.hibernate.engine.internal.Nullability.checkNullability(Nullability.java:109)
+	at org.hibernate.engine.internal.Nullability.checkNullability(Nullability.java:54)
+	at org.hibernate.action.internal.AbstractEntityInsertAction.nullifyTransientReferencesIfNotAlready(AbstractEntityInsertAction.java:124)
+	at org.hibernate.action.internal.EntityIdentityInsertAction.execute(EntityIdentityInsertAction.java:73)
+	at org.hibernate.engine.spi.ActionQueue.execute(ActionQueue.java:671)
+	at org.hibernate.engine.spi.ActionQueue.addResolvedEntityInsertAction(ActionQueue.java:292)
+	at org.hibernate.engine.spi.ActionQueue.addInsertAction(ActionQueue.java:273)
+	at org.hibernate.engine.spi.ActionQueue.addAction(ActionQueue.java:323)
+	at org.hibernate.event.internal.AbstractSaveEventListener.addInsertAction(AbstractSaveEventListener.java:391)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:305)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:224)
+	at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:137)
+	at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:175)
+	at org.hibernate.event.internal.DefaultPersistEventListener.persist(DefaultPersistEventListener.java:93)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:77)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:138)
+	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:799)
+	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:747)
+	at org.hibernate.engine.spi.CascadingActions$7.cascade(CascadingActions.java:290)
+	at org.hibernate.engine.spi.CascadingActions$7.cascade(CascadingActions.java:280)
+	at org.hibernate.engine.internal.Cascade.cascadeToOne(Cascade.java:524)
+	at org.hibernate.engine.internal.Cascade.cascadeAssociation(Cascade.java:446)
+	at org.hibernate.engine.internal.Cascade.cascadeProperty(Cascade.java:231)
+	at org.hibernate.engine.internal.Cascade.cascadeCollectionElements(Cascade.java:558)
+	at org.hibernate.engine.internal.Cascade.cascadeCollection(Cascade.java:488)
+	at org.hibernate.engine.internal.Cascade.cascadeAssociation(Cascade.java:449)
+	at org.hibernate.engine.internal.Cascade.cascadeProperty(Cascade.java:231)
+	at org.hibernate.engine.internal.Cascade.cascade(Cascade.java:164)
+	at org.hibernate.event.internal.AbstractSaveEventListener.cascadeAfterSave(AbstractSaveEventListener.java:518)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:317)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:224)
+	at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:137)
+	at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:175)
+	at org.hibernate.event.internal.DefaultPersistEventListener.persist(DefaultPersistEventListener.java:93)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:77)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:54)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
+	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:757)
+	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:741)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.orm.jpa.ExtendedEntityManagerCreator$ExtendedEntityManagerInvocationHandler.invoke(ExtendedEntityManagerCreator.java:364)
+	at jdk.proxy2/jdk.proxy2.$Proxy124.persist(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.orm.jpa.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler.invoke(SharedEntityManagerCreator.java:319)
+	at jdk.proxy2/jdk.proxy2.$Proxy124.persist(Unknown Source)
+	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.save(SimpleJpaRepository.java:626)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:355)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker$RepositoryFragmentMethodInvoker.lambda$new$0(RepositoryMethodInvoker.java:277)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:170)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:158)
+	at org.springframework.data.repository.core.support.RepositoryComposition$RepositoryFragments.invoke(RepositoryComposition.java:516)
+	at org.springframework.data.repository.core.support.RepositoryComposition.invoke(RepositoryComposition.java:285)
+	at org.springframework.data.repository.core.support.RepositoryFactorySupport$ImplementationMethodExecutionInterceptor.invoke(RepositoryFactorySupport.java:628)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:173)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:148)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:70)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:379)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138)
+	... 62 common frames omitted
+2024-12-18 16:48:39 ERROR - Order creation failed: Failed to create Order.
+2024-12-18 17:05:01 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 17:05:01 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-18 17:05:01 INFO  - HikariPool-1 - Shutdown completed.
+2024-12-18 17:05:04 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 13396 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-18 17:05:04 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-18 17:05:05 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-18 17:05:05 INFO  - Finished Spring Data repository scanning in 79 ms. Found 11 JPA repository interfaces.
+2024-12-18 17:05:05 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-18 17:05:05 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-18 17:05:05 INFO  - Starting service [Tomcat]
+2024-12-18 17:05:05 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-18 17:05:05 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-18 17:05:05 INFO  - Root WebApplicationContext: initialization completed in 1106 ms
+2024-12-18 17:05:06 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-18 17:05:06 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-18 17:05:06 INFO  - HHH000026: Second-level cache disabled
+2024-12-18 17:05:06 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-18 17:05:06 INFO  - HikariPool-1 - Starting...
+2024-12-18 17:05:06 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3ad847f8
+2024-12-18 17:05:06 INFO  - HikariPool-1 - Start completed.
+2024-12-18 17:05:06 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-18 17:05:07 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-18 17:05:07 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 17:05:07 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-18 17:05:08 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-18 17:05:08 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-18 17:05:08 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-18 17:05:08 INFO  - Started PodoCareWebsiteApplication in 4.503 seconds (process running for 5.008)
+2024-12-18 17:05:12 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-18 17:05:12 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-18 17:05:12 INFO  - Completed initialization in 1 ms
+2024-12-18 17:05:12 ERROR - Failed to create Order. Exception: 
+org.springframework.dao.DataIntegrityViolationException: not-null property references a null or transient value : com.podocare.PodoCareWebsite.model.product.product_category.product_instances.EquipmentProductInstance.order
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:307)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFactoryBean.java:550)
+	at org.springframework.dao.support.ChainedPersistenceExceptionTranslator.translateExceptionIfPossible(ChainedPersistenceExceptionTranslator.java:61)
+	at org.springframework.dao.support.DataAccessUtils.translateIfNecessary(DataAccessUtils.java:335)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:160)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:165)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy2/jdk.proxy2.$Proxy134.save(Unknown Source)
+	at com.podocare.PodoCareWebsite.service.order.OrderService.finalizeOrder(OrderService.java:125)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:355)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:716)
+	at com.podocare.PodoCareWebsite.service.order.OrderService$$SpringCGLIB$$0.finalizeOrder(<generated>)
+	at com.podocare.PodoCareWebsite.controller.order.OrderController.finalizeOrder(OrderController.java:47)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPut(FrameworkServlet.java:925)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:593)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.hibernate.PropertyValueException: not-null property references a null or transient value : com.podocare.PodoCareWebsite.model.product.product_category.product_instances.EquipmentProductInstance.order
+	at org.hibernate.engine.internal.Nullability.checkNullability(Nullability.java:109)
+	at org.hibernate.engine.internal.Nullability.checkNullability(Nullability.java:54)
+	at org.hibernate.action.internal.AbstractEntityInsertAction.nullifyTransientReferencesIfNotAlready(AbstractEntityInsertAction.java:124)
+	at org.hibernate.action.internal.EntityIdentityInsertAction.execute(EntityIdentityInsertAction.java:73)
+	at org.hibernate.engine.spi.ActionQueue.execute(ActionQueue.java:671)
+	at org.hibernate.engine.spi.ActionQueue.addResolvedEntityInsertAction(ActionQueue.java:292)
+	at org.hibernate.engine.spi.ActionQueue.addInsertAction(ActionQueue.java:273)
+	at org.hibernate.engine.spi.ActionQueue.addAction(ActionQueue.java:323)
+	at org.hibernate.event.internal.AbstractSaveEventListener.addInsertAction(AbstractSaveEventListener.java:391)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:305)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:224)
+	at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:137)
+	at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:175)
+	at org.hibernate.event.internal.DefaultPersistEventListener.persist(DefaultPersistEventListener.java:93)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:77)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:138)
+	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:799)
+	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:747)
+	at org.hibernate.engine.spi.CascadingActions$7.cascade(CascadingActions.java:290)
+	at org.hibernate.engine.spi.CascadingActions$7.cascade(CascadingActions.java:280)
+	at org.hibernate.engine.internal.Cascade.cascadeToOne(Cascade.java:524)
+	at org.hibernate.engine.internal.Cascade.cascadeAssociation(Cascade.java:446)
+	at org.hibernate.engine.internal.Cascade.cascadeProperty(Cascade.java:231)
+	at org.hibernate.engine.internal.Cascade.cascadeCollectionElements(Cascade.java:558)
+	at org.hibernate.engine.internal.Cascade.cascadeCollection(Cascade.java:488)
+	at org.hibernate.engine.internal.Cascade.cascadeAssociation(Cascade.java:449)
+	at org.hibernate.engine.internal.Cascade.cascadeProperty(Cascade.java:231)
+	at org.hibernate.engine.internal.Cascade.cascade(Cascade.java:164)
+	at org.hibernate.event.internal.AbstractSaveEventListener.cascadeAfterSave(AbstractSaveEventListener.java:518)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:317)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:224)
+	at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:137)
+	at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:175)
+	at org.hibernate.event.internal.DefaultPersistEventListener.persist(DefaultPersistEventListener.java:93)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:77)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:54)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
+	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:757)
+	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:741)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.orm.jpa.ExtendedEntityManagerCreator$ExtendedEntityManagerInvocationHandler.invoke(ExtendedEntityManagerCreator.java:364)
+	at jdk.proxy2/jdk.proxy2.$Proxy124.persist(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.orm.jpa.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler.invoke(SharedEntityManagerCreator.java:319)
+	at jdk.proxy2/jdk.proxy2.$Proxy124.persist(Unknown Source)
+	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.save(SimpleJpaRepository.java:626)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:355)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker$RepositoryFragmentMethodInvoker.lambda$new$0(RepositoryMethodInvoker.java:277)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:170)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:158)
+	at org.springframework.data.repository.core.support.RepositoryComposition$RepositoryFragments.invoke(RepositoryComposition.java:516)
+	at org.springframework.data.repository.core.support.RepositoryComposition.invoke(RepositoryComposition.java:285)
+	at org.springframework.data.repository.core.support.RepositoryFactorySupport$ImplementationMethodExecutionInterceptor.invoke(RepositoryFactorySupport.java:628)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:173)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:148)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:70)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:379)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138)
+	... 62 common frames omitted
+2024-12-18 17:05:12 ERROR - Order creation failed: Failed to create Order.
+2024-12-18 17:08:30 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 17:08:30 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-18 17:08:30 INFO  - HikariPool-1 - Shutdown completed.
+2024-12-18 17:08:34 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 3852 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-18 17:08:34 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-18 17:08:34 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-18 17:08:34 INFO  - Finished Spring Data repository scanning in 83 ms. Found 11 JPA repository interfaces.
+2024-12-18 17:08:35 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-18 17:08:35 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-18 17:08:35 INFO  - Starting service [Tomcat]
+2024-12-18 17:08:35 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-18 17:08:35 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-18 17:08:35 INFO  - Root WebApplicationContext: initialization completed in 1219 ms
+2024-12-18 17:08:35 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-18 17:08:35 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-18 17:08:35 INFO  - HHH000026: Second-level cache disabled
+2024-12-18 17:08:36 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-18 17:08:36 INFO  - HikariPool-1 - Starting...
+2024-12-18 17:08:36 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@d84418a
+2024-12-18 17:08:36 INFO  - HikariPool-1 - Start completed.
+2024-12-18 17:08:36 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-18 17:08:37 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-18 17:08:37 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 17:08:37 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-18 17:08:38 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-18 17:08:38 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-18 17:08:38 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-18 17:08:38 INFO  - Started PodoCareWebsiteApplication in 4.79 seconds (process running for 5.291)
+2024-12-18 17:08:41 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-18 17:08:41 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-18 17:08:41 INFO  - Completed initialization in 0 ms
+2024-12-18 17:08:41 INFO  - Order is set correctly for OrderProduct ID: null
+2024-12-18 17:08:41 ERROR - Failed to create Order. Exception: 
+org.springframework.dao.DataIntegrityViolationException: not-null property references a null or transient value : com.podocare.PodoCareWebsite.model.product.product_category.product_instances.EquipmentProductInstance.order
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:307)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFactoryBean.java:550)
+	at org.springframework.dao.support.ChainedPersistenceExceptionTranslator.translateExceptionIfPossible(ChainedPersistenceExceptionTranslator.java:61)
+	at org.springframework.dao.support.DataAccessUtils.translateIfNecessary(DataAccessUtils.java:335)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:160)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:165)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy2/jdk.proxy2.$Proxy134.save(Unknown Source)
+	at com.podocare.PodoCareWebsite.service.order.OrderService.finalizeOrder(OrderService.java:125)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:355)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:716)
+	at com.podocare.PodoCareWebsite.service.order.OrderService$$SpringCGLIB$$0.finalizeOrder(<generated>)
+	at com.podocare.PodoCareWebsite.controller.order.OrderController.finalizeOrder(OrderController.java:47)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPut(FrameworkServlet.java:925)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:593)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.hibernate.PropertyValueException: not-null property references a null or transient value : com.podocare.PodoCareWebsite.model.product.product_category.product_instances.EquipmentProductInstance.order
+	at org.hibernate.engine.internal.Nullability.checkNullability(Nullability.java:109)
+	at org.hibernate.engine.internal.Nullability.checkNullability(Nullability.java:54)
+	at org.hibernate.action.internal.AbstractEntityInsertAction.nullifyTransientReferencesIfNotAlready(AbstractEntityInsertAction.java:124)
+	at org.hibernate.action.internal.EntityIdentityInsertAction.execute(EntityIdentityInsertAction.java:73)
+	at org.hibernate.engine.spi.ActionQueue.execute(ActionQueue.java:671)
+	at org.hibernate.engine.spi.ActionQueue.addResolvedEntityInsertAction(ActionQueue.java:292)
+	at org.hibernate.engine.spi.ActionQueue.addInsertAction(ActionQueue.java:273)
+	at org.hibernate.engine.spi.ActionQueue.addAction(ActionQueue.java:323)
+	at org.hibernate.event.internal.AbstractSaveEventListener.addInsertAction(AbstractSaveEventListener.java:391)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:305)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:224)
+	at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:137)
+	at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:175)
+	at org.hibernate.event.internal.DefaultPersistEventListener.persist(DefaultPersistEventListener.java:93)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:77)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:138)
+	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:799)
+	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:747)
+	at org.hibernate.engine.spi.CascadingActions$7.cascade(CascadingActions.java:290)
+	at org.hibernate.engine.spi.CascadingActions$7.cascade(CascadingActions.java:280)
+	at org.hibernate.engine.internal.Cascade.cascadeToOne(Cascade.java:524)
+	at org.hibernate.engine.internal.Cascade.cascadeAssociation(Cascade.java:446)
+	at org.hibernate.engine.internal.Cascade.cascadeProperty(Cascade.java:231)
+	at org.hibernate.engine.internal.Cascade.cascadeCollectionElements(Cascade.java:558)
+	at org.hibernate.engine.internal.Cascade.cascadeCollection(Cascade.java:488)
+	at org.hibernate.engine.internal.Cascade.cascadeAssociation(Cascade.java:449)
+	at org.hibernate.engine.internal.Cascade.cascadeProperty(Cascade.java:231)
+	at org.hibernate.engine.internal.Cascade.cascade(Cascade.java:164)
+	at org.hibernate.event.internal.AbstractSaveEventListener.cascadeAfterSave(AbstractSaveEventListener.java:518)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:317)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:224)
+	at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:137)
+	at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:175)
+	at org.hibernate.event.internal.DefaultPersistEventListener.persist(DefaultPersistEventListener.java:93)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:77)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:54)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
+	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:757)
+	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:741)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.orm.jpa.ExtendedEntityManagerCreator$ExtendedEntityManagerInvocationHandler.invoke(ExtendedEntityManagerCreator.java:364)
+	at jdk.proxy2/jdk.proxy2.$Proxy124.persist(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.orm.jpa.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler.invoke(SharedEntityManagerCreator.java:319)
+	at jdk.proxy2/jdk.proxy2.$Proxy124.persist(Unknown Source)
+	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.save(SimpleJpaRepository.java:626)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:355)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker$RepositoryFragmentMethodInvoker.lambda$new$0(RepositoryMethodInvoker.java:277)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:170)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:158)
+	at org.springframework.data.repository.core.support.RepositoryComposition$RepositoryFragments.invoke(RepositoryComposition.java:516)
+	at org.springframework.data.repository.core.support.RepositoryComposition.invoke(RepositoryComposition.java:285)
+	at org.springframework.data.repository.core.support.RepositoryFactorySupport$ImplementationMethodExecutionInterceptor.invoke(RepositoryFactorySupport.java:628)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:173)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:148)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:70)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:379)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138)
+	... 62 common frames omitted
+2024-12-18 17:08:41 ERROR - Order creation failed: Failed to create Order.
+2024-12-18 17:12:46 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 17:12:46 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-18 17:12:46 INFO  - HikariPool-1 - Shutdown completed.
+2024-12-18 17:12:50 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 284 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-18 17:12:50 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-18 17:12:50 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-18 17:12:50 INFO  - Finished Spring Data repository scanning in 78 ms. Found 11 JPA repository interfaces.
+2024-12-18 17:12:51 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-18 17:12:51 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-18 17:12:51 INFO  - Starting service [Tomcat]
+2024-12-18 17:12:51 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-18 17:12:51 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-18 17:12:51 INFO  - Root WebApplicationContext: initialization completed in 1151 ms
+2024-12-18 17:12:51 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-18 17:12:51 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-18 17:12:51 INFO  - HHH000026: Second-level cache disabled
+2024-12-18 17:12:51 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-18 17:12:51 INFO  - HikariPool-1 - Starting...
+2024-12-18 17:12:52 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@74d22ddd
+2024-12-18 17:12:52 INFO  - HikariPool-1 - Start completed.
+2024-12-18 17:12:52 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-18 17:12:53 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-18 17:12:53 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 17:12:53 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-18 17:12:54 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-18 17:12:54 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-18 17:12:54 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-18 17:12:54 INFO  - Started PodoCareWebsiteApplication in 4.642 seconds (process running for 5.173)
+2024-12-18 17:12:57 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-18 17:12:57 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-18 17:12:57 INFO  - Completed initialization in 1 ms
+2024-12-18 17:12:58 INFO  - OrderProduct created with ID: null
+2024-12-18 17:12:58 INFO  - OrderProduct created with ID: null
+2024-12-18 17:12:58 INFO  - OrderProduct created with ID: null
+2024-12-18 17:12:58 ERROR - Failed to create Order. Exception: 
+org.springframework.dao.DataIntegrityViolationException: not-null property references a null or transient value : com.podocare.PodoCareWebsite.model.product.product_category.product_instances.EquipmentProductInstance.order
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:307)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFactoryBean.java:550)
+	at org.springframework.dao.support.ChainedPersistenceExceptionTranslator.translateExceptionIfPossible(ChainedPersistenceExceptionTranslator.java:61)
+	at org.springframework.dao.support.DataAccessUtils.translateIfNecessary(DataAccessUtils.java:335)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:160)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:165)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy2/jdk.proxy2.$Proxy134.save(Unknown Source)
+	at com.podocare.PodoCareWebsite.service.order.OrderService.finalizeOrder(OrderService.java:125)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:355)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:716)
+	at com.podocare.PodoCareWebsite.service.order.OrderService$$SpringCGLIB$$0.finalizeOrder(<generated>)
+	at com.podocare.PodoCareWebsite.controller.order.OrderController.finalizeOrder(OrderController.java:47)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPut(FrameworkServlet.java:925)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:593)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: org.hibernate.PropertyValueException: not-null property references a null or transient value : com.podocare.PodoCareWebsite.model.product.product_category.product_instances.EquipmentProductInstance.order
+	at org.hibernate.engine.internal.Nullability.checkNullability(Nullability.java:109)
+	at org.hibernate.engine.internal.Nullability.checkNullability(Nullability.java:54)
+	at org.hibernate.action.internal.AbstractEntityInsertAction.nullifyTransientReferencesIfNotAlready(AbstractEntityInsertAction.java:124)
+	at org.hibernate.action.internal.EntityIdentityInsertAction.execute(EntityIdentityInsertAction.java:73)
+	at org.hibernate.engine.spi.ActionQueue.execute(ActionQueue.java:671)
+	at org.hibernate.engine.spi.ActionQueue.addResolvedEntityInsertAction(ActionQueue.java:292)
+	at org.hibernate.engine.spi.ActionQueue.addInsertAction(ActionQueue.java:273)
+	at org.hibernate.engine.spi.ActionQueue.addAction(ActionQueue.java:323)
+	at org.hibernate.event.internal.AbstractSaveEventListener.addInsertAction(AbstractSaveEventListener.java:391)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:305)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:224)
+	at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:137)
+	at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:175)
+	at org.hibernate.event.internal.DefaultPersistEventListener.persist(DefaultPersistEventListener.java:93)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:77)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:138)
+	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:799)
+	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:747)
+	at org.hibernate.engine.spi.CascadingActions$7.cascade(CascadingActions.java:290)
+	at org.hibernate.engine.spi.CascadingActions$7.cascade(CascadingActions.java:280)
+	at org.hibernate.engine.internal.Cascade.cascadeToOne(Cascade.java:524)
+	at org.hibernate.engine.internal.Cascade.cascadeAssociation(Cascade.java:446)
+	at org.hibernate.engine.internal.Cascade.cascadeProperty(Cascade.java:231)
+	at org.hibernate.engine.internal.Cascade.cascadeCollectionElements(Cascade.java:558)
+	at org.hibernate.engine.internal.Cascade.cascadeCollection(Cascade.java:488)
+	at org.hibernate.engine.internal.Cascade.cascadeAssociation(Cascade.java:449)
+	at org.hibernate.engine.internal.Cascade.cascadeProperty(Cascade.java:231)
+	at org.hibernate.engine.internal.Cascade.cascade(Cascade.java:164)
+	at org.hibernate.event.internal.AbstractSaveEventListener.cascadeAfterSave(AbstractSaveEventListener.java:518)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:317)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:224)
+	at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:137)
+	at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:175)
+	at org.hibernate.event.internal.DefaultPersistEventListener.persist(DefaultPersistEventListener.java:93)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:77)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:54)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
+	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:757)
+	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:741)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.orm.jpa.ExtendedEntityManagerCreator$ExtendedEntityManagerInvocationHandler.invoke(ExtendedEntityManagerCreator.java:364)
+	at jdk.proxy2/jdk.proxy2.$Proxy124.persist(Unknown Source)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.orm.jpa.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler.invoke(SharedEntityManagerCreator.java:319)
+	at jdk.proxy2/jdk.proxy2.$Proxy124.persist(Unknown Source)
+	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.save(SimpleJpaRepository.java:626)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:355)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker$RepositoryFragmentMethodInvoker.lambda$new$0(RepositoryMethodInvoker.java:277)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:170)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:158)
+	at org.springframework.data.repository.core.support.RepositoryComposition$RepositoryFragments.invoke(RepositoryComposition.java:516)
+	at org.springframework.data.repository.core.support.RepositoryComposition.invoke(RepositoryComposition.java:285)
+	at org.springframework.data.repository.core.support.RepositoryFactorySupport$ImplementationMethodExecutionInterceptor.invoke(RepositoryFactorySupport.java:628)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:173)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:148)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:70)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:379)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138)
+	... 62 common frames omitted
+2024-12-18 17:12:58 ERROR - Order creation failed: Failed to create Order.
+2024-12-18 17:20:17 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 17:20:17 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-18 17:20:17 INFO  - HikariPool-1 - Shutdown completed.
+2024-12-18 17:20:20 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 6196 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-18 17:20:20 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-18 17:20:21 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-18 17:20:21 INFO  - Finished Spring Data repository scanning in 72 ms. Found 11 JPA repository interfaces.
+2024-12-18 17:20:21 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-18 17:20:21 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-18 17:20:21 INFO  - Starting service [Tomcat]
+2024-12-18 17:20:21 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-18 17:20:21 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-18 17:20:21 INFO  - Root WebApplicationContext: initialization completed in 1124 ms
+2024-12-18 17:20:21 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-18 17:20:21 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-18 17:20:22 INFO  - HHH000026: Second-level cache disabled
+2024-12-18 17:20:22 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-18 17:20:22 INFO  - HikariPool-1 - Starting...
+2024-12-18 17:20:22 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@283d3628
+2024-12-18 17:20:22 INFO  - HikariPool-1 - Start completed.
+2024-12-18 17:20:22 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-18 17:20:23 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-18 17:20:23 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 17:20:23 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-18 17:20:24 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-18 17:20:24 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-18 17:20:24 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-18 17:20:24 INFO  - Started PodoCareWebsiteApplication in 4.561 seconds (process running for 5.059)
+2024-12-18 17:20:30 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-18 17:20:30 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-18 17:20:30 INFO  - Completed initialization in 0 ms
+2024-12-18 17:20:30 INFO  - OrderProduct created with ID: 4
+2024-12-18 17:20:30 INFO  - OrderProduct created with ID: 5
+2024-12-18 17:20:30 INFO  - OrderProduct created with ID: 6
+2024-12-18 17:47:14 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 17:47:14 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-18 17:47:14 INFO  - HikariPool-1 - Shutdown completed.
+2024-12-18 17:47:18 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 10752 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-18 17:47:18 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-18 17:47:19 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-18 17:47:19 INFO  - Finished Spring Data repository scanning in 82 ms. Found 11 JPA repository interfaces.
+2024-12-18 17:47:19 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-18 17:47:19 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-18 17:47:19 INFO  - Starting service [Tomcat]
+2024-12-18 17:47:19 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-18 17:47:19 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-18 17:47:19 INFO  - Root WebApplicationContext: initialization completed in 1114 ms
+2024-12-18 17:47:19 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-18 17:47:19 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-18 17:47:19 INFO  - HHH000026: Second-level cache disabled
+2024-12-18 17:47:20 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-18 17:47:20 INFO  - HikariPool-1 - Starting...
+2024-12-18 17:47:20 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@2b395581
+2024-12-18 17:47:20 INFO  - HikariPool-1 - Start completed.
+2024-12-18 17:47:20 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-18 17:47:21 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-18 17:47:21 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 17:47:21 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-18 17:47:22 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-18 17:47:22 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-18 17:47:22 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-18 17:47:22 INFO  - Started PodoCareWebsiteApplication in 4.566 seconds (process running for 5.028)
+2024-12-18 17:47:26 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-18 17:47:26 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-18 17:47:26 INFO  - Completed initialization in 0 ms
+2024-12-18 17:49:12 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 17:49:12 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-18 17:49:12 INFO  - HikariPool-1 - Shutdown completed.
+2024-12-18 17:49:15 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 19728 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-18 17:49:15 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-18 17:49:16 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-18 17:49:16 INFO  - Finished Spring Data repository scanning in 94 ms. Found 11 JPA repository interfaces.
+2024-12-18 17:49:16 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-18 17:49:16 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-18 17:49:16 INFO  - Starting service [Tomcat]
+2024-12-18 17:49:16 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-18 17:49:16 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-18 17:49:16 INFO  - Root WebApplicationContext: initialization completed in 1132 ms
+2024-12-18 17:49:17 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-18 17:49:17 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-18 17:49:17 INFO  - HHH000026: Second-level cache disabled
+2024-12-18 17:49:17 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-18 17:49:17 INFO  - HikariPool-1 - Starting...
+2024-12-18 17:49:17 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@283d3628
+2024-12-18 17:49:17 INFO  - HikariPool-1 - Start completed.
+2024-12-18 17:49:17 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-18 17:49:18 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-18 17:49:18 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 17:49:18 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-18 17:49:19 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-18 17:49:19 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-18 17:49:19 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-18 17:49:19 INFO  - Started PodoCareWebsiteApplication in 4.486 seconds (process running for 4.958)
+2024-12-18 17:49:29 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-18 17:49:29 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-18 17:49:29 INFO  - Completed initialization in 1 ms
+2024-12-18 17:57:37 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 17:57:37 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-18 17:57:37 INFO  - HikariPool-1 - Shutdown completed.
+2024-12-18 17:57:41 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 6156 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-18 17:57:41 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-18 17:57:42 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-18 17:57:42 INFO  - Finished Spring Data repository scanning in 81 ms. Found 11 JPA repository interfaces.
+2024-12-18 17:57:42 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-18 17:57:42 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-18 17:57:42 INFO  - Starting service [Tomcat]
+2024-12-18 17:57:42 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-18 17:57:43 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-18 17:57:43 INFO  - Root WebApplicationContext: initialization completed in 1261 ms
+2024-12-18 17:57:43 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-18 17:57:43 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-18 17:57:43 INFO  - HHH000026: Second-level cache disabled
+2024-12-18 17:57:43 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-18 17:57:43 INFO  - HikariPool-1 - Starting...
+2024-12-18 17:57:43 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@2b395581
+2024-12-18 17:57:43 INFO  - HikariPool-1 - Start completed.
+2024-12-18 17:57:43 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-18 17:57:44 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-18 17:57:44 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 17:57:44 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-18 17:57:45 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-18 17:57:46 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-18 17:57:46 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-18 17:57:46 INFO  - Started PodoCareWebsiteApplication in 5.019 seconds (process running for 5.53)
+2024-12-18 17:59:41 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-18 17:59:41 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-18 17:59:41 INFO  - Completed initialization in 1 ms
+2024-12-18 18:21:00 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 18:21:00 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-18 18:21:00 INFO  - HikariPool-1 - Shutdown completed.
+2024-12-18 18:21:02 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 6540 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-18 18:21:02 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-18 18:21:03 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-18 18:21:03 INFO  - Finished Spring Data repository scanning in 78 ms. Found 11 JPA repository interfaces.
+2024-12-18 18:21:03 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-18 18:21:03 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-18 18:21:03 INFO  - Starting service [Tomcat]
+2024-12-18 18:21:03 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-18 18:21:04 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-18 18:21:04 INFO  - Root WebApplicationContext: initialization completed in 1068 ms
+2024-12-18 18:21:04 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-18 18:21:04 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-18 18:21:04 INFO  - HHH000026: Second-level cache disabled
+2024-12-18 18:21:04 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-18 18:21:04 INFO  - HikariPool-1 - Starting...
+2024-12-18 18:21:04 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@283d3628
+2024-12-18 18:21:04 INFO  - HikariPool-1 - Start completed.
+2024-12-18 18:21:04 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-18 18:21:05 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-18 18:21:05 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 18:21:05 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-18 18:21:06 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-18 18:21:06 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-18 18:21:06 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-18 18:21:06 INFO  - Started PodoCareWebsiteApplication in 4.328 seconds (process running for 4.798)
+2024-12-18 18:37:15 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-18 18:37:15 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-18 18:37:15 INFO  - Completed initialization in 1 ms
+2024-12-18 18:47:24 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 18:47:24 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-18 18:47:24 INFO  - HikariPool-1 - Shutdown completed.
+2024-12-18 18:47:28 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 8440 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-18 18:47:28 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-18 18:47:28 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-18 18:47:28 INFO  - Finished Spring Data repository scanning in 74 ms. Found 11 JPA repository interfaces.
+2024-12-18 18:47:29 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-18 18:47:29 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-18 18:47:29 INFO  - Starting service [Tomcat]
+2024-12-18 18:47:29 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-18 18:47:29 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-18 18:47:29 INFO  - Root WebApplicationContext: initialization completed in 1108 ms
+2024-12-18 18:47:29 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-18 18:47:29 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-18 18:47:29 INFO  - HHH000026: Second-level cache disabled
+2024-12-18 18:47:29 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-18 18:47:29 INFO  - HikariPool-1 - Starting...
+2024-12-18 18:47:30 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@5b3518e1
+2024-12-18 18:47:30 INFO  - HikariPool-1 - Start completed.
+2024-12-18 18:47:30 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-18 18:47:30 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-18 18:47:31 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 18:47:31 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-18 18:47:32 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-18 18:47:32 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-18 18:47:32 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-18 18:47:32 INFO  - Started PodoCareWebsiteApplication in 4.477 seconds (process running for 5.041)
+2024-12-18 19:08:53 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-18 19:08:53 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-18 19:08:53 INFO  - Completed initialization in 0 ms
+2024-12-18 20:05:42 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 20:05:42 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-18 20:05:42 INFO  - HikariPool-1 - Shutdown completed.
+2024-12-18 20:05:43 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 16948 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-18 20:05:43 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-18 20:05:44 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-18 20:05:44 INFO  - Finished Spring Data repository scanning in 79 ms. Found 11 JPA repository interfaces.
+2024-12-18 20:05:44 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-18 20:05:44 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-18 20:05:44 INFO  - Starting service [Tomcat]
+2024-12-18 20:05:44 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-18 20:05:44 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-18 20:05:44 INFO  - Root WebApplicationContext: initialization completed in 1070 ms
+2024-12-18 20:05:44 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-18 20:05:45 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-18 20:05:45 INFO  - HHH000026: Second-level cache disabled
+2024-12-18 20:05:45 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-18 20:05:45 INFO  - HikariPool-1 - Starting...
+2024-12-18 20:05:45 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7d1f3fe9
+2024-12-18 20:05:45 INFO  - HikariPool-1 - Start completed.
+2024-12-18 20:05:45 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-18 20:05:46 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-18 20:05:46 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 20:05:46 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-18 20:05:47 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-18 20:05:47 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-18 20:05:47 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-18 20:05:47 INFO  - Started PodoCareWebsiteApplication in 4.391 seconds (process running for 4.896)
+2024-12-18 20:05:51 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-18 20:05:51 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-18 20:05:51 INFO  - Completed initialization in 1 ms
+2024-12-18 20:12:14 ERROR - Brand creation failed: BrandName cannot be null.
+2024-12-18 20:15:04 ERROR - Brand creation failed: BrandName cannot be null.
+2024-12-18 20:18:15 WARN  - SQL Error: 0, SQLState: 23503
+2024-12-18 20:18:15 ERROR - BŁĄD: modyfikacja lub usunięcie na tabeli "sale_product" narusza klucz obcy "fkssk8erf6jm8ddk9b1q5xwtfi" tabeli "order_product"
+  Szczegóły: Klucz (id)=(1) ma wciąż odwołanie w tabeli "order_product".
+2024-12-18 20:18:15 ERROR - Product deletion failed: Failed to delete existing Product.
+2024-12-18 20:31:13 WARN  - SQL Error: 0, SQLState: 23503
+2024-12-18 20:31:13 ERROR - BŁĄD: modyfikacja lub usunięcie na tabeli "sale_product" narusza klucz obcy "fkssk8erf6jm8ddk9b1q5xwtfi" tabeli "order_product"
+  Szczegóły: Klucz (id)=(1) ma wciąż odwołanie w tabeli "order_product".
+2024-12-18 20:31:13 ERROR - Product deletion failed: Failed to delete existing Product.
+2024-12-18 20:44:18 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-18 20:44:18 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-18 20:44:18 INFO  - HikariPool-1 - Shutdown completed.

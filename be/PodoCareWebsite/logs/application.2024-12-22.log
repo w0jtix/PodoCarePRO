@@ -1,0 +1,248 @@
+2024-12-22 11:56:14 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 14588 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-22 11:56:14 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-22 11:56:14 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-22 11:56:14 INFO  - Finished Spring Data repository scanning in 86 ms. Found 11 JPA repository interfaces.
+2024-12-22 11:56:15 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-22 11:56:15 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-22 11:56:15 INFO  - Starting service [Tomcat]
+2024-12-22 11:56:15 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-22 11:56:15 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-22 11:56:15 INFO  - Root WebApplicationContext: initialization completed in 1279 ms
+2024-12-22 11:56:15 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-22 11:56:15 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-22 11:56:15 INFO  - HHH000026: Second-level cache disabled
+2024-12-22 11:56:15 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-22 11:56:15 INFO  - HikariPool-1 - Starting...
+2024-12-22 11:56:16 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7d61468c
+2024-12-22 11:56:16 INFO  - HikariPool-1 - Start completed.
+2024-12-22 11:56:16 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-22 11:56:17 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-22 11:56:17 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-22 11:56:17 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-22 11:56:18 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-22 11:56:18 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-22 11:56:18 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-22 11:56:18 INFO  - Started PodoCareWebsiteApplication in 5.068 seconds (process running for 5.593)
+2024-12-22 11:56:25 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-22 11:56:25 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-22 11:56:25 INFO  - Completed initialization in 1 ms
+2024-12-22 17:32:31 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-22 17:32:31 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-22 17:32:31 INFO  - HikariPool-1 - Shutdown completed.
+2024-12-22 17:32:35 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 10748 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-22 17:32:35 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-22 17:32:35 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-22 17:32:35 INFO  - Finished Spring Data repository scanning in 78 ms. Found 11 JPA repository interfaces.
+2024-12-22 17:32:36 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-22 17:32:36 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-22 17:32:36 INFO  - Starting service [Tomcat]
+2024-12-22 17:32:36 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-22 17:32:36 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-22 17:32:36 INFO  - Root WebApplicationContext: initialization completed in 1148 ms
+2024-12-22 17:32:36 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-22 17:32:36 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-22 17:32:36 INFO  - HHH000026: Second-level cache disabled
+2024-12-22 17:32:36 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-22 17:32:36 INFO  - HikariPool-1 - Starting...
+2024-12-22 17:32:36 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@26a45089
+2024-12-22 17:32:36 INFO  - HikariPool-1 - Start completed.
+2024-12-22 17:32:36 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-22 17:32:37 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-22 17:32:38 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-22 17:32:38 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-22 17:32:39 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-22 17:32:39 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-22 17:32:39 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-22 17:32:39 INFO  - Started PodoCareWebsiteApplication in 4.747 seconds (process running for 5.226)
+2024-12-22 17:32:44 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-22 17:32:44 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-22 17:32:44 INFO  - Completed initialization in 1 ms
+2024-12-22 21:50:56 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-22 21:50:56 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-22 21:50:56 INFO  - HikariPool-1 - Shutdown completed.
+2024-12-22 21:50:59 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 17244 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-22 21:50:59 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-22 21:50:59 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-22 21:51:00 INFO  - Finished Spring Data repository scanning in 91 ms. Found 11 JPA repository interfaces.
+2024-12-22 21:51:00 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-22 21:51:00 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-22 21:51:00 INFO  - Starting service [Tomcat]
+2024-12-22 21:51:00 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-22 21:51:00 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-22 21:51:00 INFO  - Root WebApplicationContext: initialization completed in 1148 ms
+2024-12-22 21:51:00 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-22 21:51:00 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-22 21:51:00 INFO  - HHH000026: Second-level cache disabled
+2024-12-22 21:51:01 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-22 21:51:01 INFO  - HikariPool-1 - Starting...
+2024-12-22 21:51:01 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@26a45089
+2024-12-22 21:51:01 INFO  - HikariPool-1 - Start completed.
+2024-12-22 21:51:01 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-22 21:51:02 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-22 21:51:02 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-22 21:51:02 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-22 21:51:03 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-22 21:51:03 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-22 21:51:03 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-22 21:51:03 INFO  - Started PodoCareWebsiteApplication in 4.681 seconds (process running for 5.16)
+2024-12-22 21:51:11 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-22 21:51:11 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-22 21:51:11 INFO  - Completed initialization in 1 ms
+2024-12-22 21:52:21 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-22 21:52:21 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-22 21:52:22 INFO  - HikariPool-1 - Shutdown completed.
+2024-12-22 21:52:25 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 9184 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-22 21:52:25 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-22 21:52:25 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-22 21:52:26 INFO  - Finished Spring Data repository scanning in 83 ms. Found 11 JPA repository interfaces.
+2024-12-22 21:52:26 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-22 21:52:26 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-22 21:52:26 INFO  - Starting service [Tomcat]
+2024-12-22 21:52:26 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-22 21:52:26 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-22 21:52:26 INFO  - Root WebApplicationContext: initialization completed in 1100 ms
+2024-12-22 21:52:26 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-22 21:52:26 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-22 21:52:26 INFO  - HHH000026: Second-level cache disabled
+2024-12-22 21:52:26 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-22 21:52:26 INFO  - HikariPool-1 - Starting...
+2024-12-22 21:52:27 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@5c8ab9de
+2024-12-22 21:52:27 INFO  - HikariPool-1 - Start completed.
+2024-12-22 21:52:27 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-22 21:52:28 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-22 21:52:28 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-22 21:52:28 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-22 21:52:29 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-22 21:52:29 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-22 21:52:29 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-22 21:52:29 INFO  - Started PodoCareWebsiteApplication in 4.667 seconds (process running for 5.139)
+2024-12-22 21:52:49 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-22 21:52:49 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-22 21:52:49 INFO  - Completed initialization in 2 ms
+2024-12-22 21:59:58 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-22 21:59:58 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-22 21:59:58 INFO  - HikariPool-1 - Shutdown completed.
+2024-12-22 22:00:01 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 10776 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-22 22:00:01 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-22 22:00:02 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-22 22:00:02 INFO  - Finished Spring Data repository scanning in 80 ms. Found 11 JPA repository interfaces.
+2024-12-22 22:00:02 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-22 22:00:02 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-22 22:00:02 INFO  - Starting service [Tomcat]
+2024-12-22 22:00:02 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-22 22:00:02 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-22 22:00:02 INFO  - Root WebApplicationContext: initialization completed in 1110 ms
+2024-12-22 22:00:02 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-22 22:00:02 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-22 22:00:03 INFO  - HHH000026: Second-level cache disabled
+2024-12-22 22:00:03 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-22 22:00:03 INFO  - HikariPool-1 - Starting...
+2024-12-22 22:00:03 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7b451bf4
+2024-12-22 22:00:03 INFO  - HikariPool-1 - Start completed.
+2024-12-22 22:00:03 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-22 22:00:04 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-22 22:00:04 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-22 22:00:04 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-22 22:00:05 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-22 22:00:05 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-22 22:00:05 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-22 22:00:05 INFO  - Started PodoCareWebsiteApplication in 4.604 seconds (process running for 5.085)
+2024-12-22 22:00:11 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-22 22:00:11 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-22 22:00:11 INFO  - Completed initialization in 1 ms
+2024-12-22 22:05:22 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-22 22:05:22 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-22 22:05:22 INFO  - HikariPool-1 - Shutdown completed.
+2024-12-22 22:05:25 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 20736 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-22 22:05:25 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-22 22:05:25 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-22 22:05:25 INFO  - Finished Spring Data repository scanning in 78 ms. Found 11 JPA repository interfaces.
+2024-12-22 22:05:26 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-22 22:05:26 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-22 22:05:26 INFO  - Starting service [Tomcat]
+2024-12-22 22:05:26 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-22 22:05:26 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-22 22:05:26 INFO  - Root WebApplicationContext: initialization completed in 1090 ms
+2024-12-22 22:05:26 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-22 22:05:26 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-22 22:05:26 INFO  - HHH000026: Second-level cache disabled
+2024-12-22 22:05:26 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-22 22:05:26 INFO  - HikariPool-1 - Starting...
+2024-12-22 22:05:26 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@26a45089
+2024-12-22 22:05:26 INFO  - HikariPool-1 - Start completed.
+2024-12-22 22:05:26 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-22 22:05:27 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-22 22:05:27 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-22 22:05:28 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-22 22:05:29 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-22 22:05:29 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-22 22:05:29 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-22 22:05:29 INFO  - Started PodoCareWebsiteApplication in 4.538 seconds (process running for 5.011)
+2024-12-22 22:05:33 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-22 22:05:33 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-22 22:05:33 INFO  - Completed initialization in 1 ms
+2024-12-22 22:07:38 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-22 22:07:38 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-22 22:07:38 INFO  - HikariPool-1 - Shutdown completed.
+2024-12-22 22:07:42 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 3684 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-22 22:07:42 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-22 22:07:42 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-22 22:07:42 INFO  - Finished Spring Data repository scanning in 80 ms. Found 11 JPA repository interfaces.
+2024-12-22 22:07:43 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-22 22:07:43 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-22 22:07:43 INFO  - Starting service [Tomcat]
+2024-12-22 22:07:43 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-22 22:07:43 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-22 22:07:43 INFO  - Root WebApplicationContext: initialization completed in 1123 ms
+2024-12-22 22:07:43 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-22 22:07:43 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-22 22:07:43 INFO  - HHH000026: Second-level cache disabled
+2024-12-22 22:07:43 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-22 22:07:43 INFO  - HikariPool-1 - Starting...
+2024-12-22 22:07:43 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@37cfda1c
+2024-12-22 22:07:43 INFO  - HikariPool-1 - Start completed.
+2024-12-22 22:07:44 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-22 22:07:44 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-22 22:07:45 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-22 22:07:45 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-22 22:07:46 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-22 22:07:46 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-22 22:07:46 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-22 22:07:46 INFO  - Started PodoCareWebsiteApplication in 4.643 seconds (process running for 5.151)
+2024-12-22 22:07:51 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-22 22:07:51 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-22 22:07:51 INFO  - Completed initialization in 1 ms
+2024-12-22 22:10:23 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-22 22:10:23 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-22 22:10:23 INFO  - HikariPool-1 - Shutdown completed.
+2024-12-22 22:10:26 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 7708 (C:\InteliJProjects\PodoCareWebsite\target\classes started by Wojtek in C:\InteliJProjects\PodoCareWebsite)
+2024-12-22 22:10:26 INFO  - No active profile set, falling back to 1 default profile: "default"
+2024-12-22 22:10:26 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-22 22:10:27 INFO  - Finished Spring Data repository scanning in 77 ms. Found 11 JPA repository interfaces.
+2024-12-22 22:10:27 INFO  - Tomcat initialized with port 8080 (http)
+2024-12-22 22:10:27 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-22 22:10:27 INFO  - Starting service [Tomcat]
+2024-12-22 22:10:27 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2024-12-22 22:10:27 INFO  - Initializing Spring embedded WebApplicationContext
+2024-12-22 22:10:27 INFO  - Root WebApplicationContext: initialization completed in 1092 ms
+2024-12-22 22:10:27 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-12-22 22:10:27 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-12-22 22:10:27 INFO  - HHH000026: Second-level cache disabled
+2024-12-22 22:10:27 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-12-22 22:10:27 INFO  - HikariPool-1 - Starting...
+2024-12-22 22:10:28 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@26a45089
+2024-12-22 22:10:28 INFO  - HikariPool-1 - Start completed.
+2024-12-22 22:10:28 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-22 22:10:29 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-12-22 22:10:29 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-12-22 22:10:29 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-12-22 22:10:30 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-22 22:10:30 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2024-12-22 22:10:30 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2024-12-22 22:10:30 INFO  - Started PodoCareWebsiteApplication in 4.543 seconds (process running for 5.016)
+2024-12-22 22:10:33 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-22 22:10:33 INFO  - Initializing Servlet 'dispatcherServlet'
+2024-12-22 22:10:33 INFO  - Completed initialization in 2 ms
+2024-12-22 22:12:01 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-12-22 22:12:01 INFO  - HikariPool-1 - Shutdown initiated...
+2024-12-22 22:12:01 INFO  - HikariPool-1 - Shutdown completed.
