@@ -1,0 +1,10 @@
+# Node.js / React
+/frontend/node_modules/
+/frontend/.env
+
+# IntelliJ IDEA
+.idea/
+
+# Java
+/backend/target/
+/backend/.idea/
