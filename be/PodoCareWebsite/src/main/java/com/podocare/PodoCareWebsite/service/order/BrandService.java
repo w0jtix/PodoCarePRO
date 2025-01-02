@@ -53,7 +53,17 @@ public class BrandService {
         boolean includeTool = productTypes.contains("Tool");
         boolean includeEquipment = productTypes.contains("Equipment");
 
-        List<Brand> filteredBrands = brandRepo.findDistinctBrandsForActiveProductsWithActiveInstances(includeSale, includeTool, includeEquipment);
+        List<Brand> filteredBrands;
+
+        if (filter.getKeyword() != null && !filter.getKeyword().isEmpty()) {
+            filteredBrands = brandRepo.findDistinctBrandsFilteredByTypeAndKeyword(
+                    includeSale, includeTool, includeEquipment, filter.getKeyword()
+            );
+        } else {
+            filteredBrands = brandRepo.findDistinctBrandsForActiveProductsWithActiveInstances(
+                    includeSale, includeTool, includeEquipment
+            );
+        }
 
         return filteredBrands.stream()
                 .map(brand -> new BrandDTO(brand.getId(), brand.getBrandName()))

@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useRef, useEffect } from 'react'
 import axios from 'axios';
 
-const BrandFilterButton = ( { onSave, productTypes }) => {
+const BrandFilterButton = ( { onSave, brandFilterDTO }) => {
 
     const [isExpanded, setIsExpanded] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
@@ -15,6 +15,8 @@ const BrandFilterButton = ( { onSave, productTypes }) => {
             ).sort();
 
     const fetchBrands = async () => {
+      const {productTypes, keyword } = brandFilterDTO;
+
       if (productTypes.length === 0) {
         setBrands([]);
         return;
@@ -22,7 +24,10 @@ const BrandFilterButton = ( { onSave, productTypes }) => {
       try{
         const response = await axios.post(
           "http://localhost:8080/brands/filter",
-          { productTypes: productTypes } )
+          { 
+            productTypes: productTypes,
+            keyword: keyword
+           } )
           if(response.status === 204 || !response.data) {
             setBrands([]);
           } else {
@@ -35,7 +40,7 @@ const BrandFilterButton = ( { onSave, productTypes }) => {
 
     useEffect(() => {
      fetchBrands();
-    }, [productTypes]);
+    }, [brandFilterDTO]);
 
     const expandFilter =  () => {
         setIsExpanded((prev) => !prev);

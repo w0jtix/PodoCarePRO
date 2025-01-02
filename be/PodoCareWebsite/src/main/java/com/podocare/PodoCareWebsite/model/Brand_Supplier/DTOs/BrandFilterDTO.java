@@ -7,4 +7,5 @@ import java.util.List;
 @Getter
 public class BrandFilterDTO {
     private List<String> productTypes;
+    private String keyword;
 }

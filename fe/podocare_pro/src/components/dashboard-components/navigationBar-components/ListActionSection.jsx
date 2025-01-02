@@ -4,10 +4,13 @@ import CategoryButtons from './list-action-section-components/CategoryButtons'
 
 const ListActionSection = ( { onFilter, productFilterDTO }) => {
 
+  const { productTypes, keyword } = productFilterDTO;
+  const brandFilterDTO = { productTypes, keyword };
+
   return (
     <div className="list-action-section">     
       <CategoryButtons onFilter ={onFilter} productFilterDTO={productFilterDTO}/>
-      <BrandFilterButton productTypes={productFilterDTO.productTypes} onSave={onFilter}/>
+      <BrandFilterButton brandFilterDTO={brandFilterDTO} onSave={onFilter}/>
     </div>
   )
 }
