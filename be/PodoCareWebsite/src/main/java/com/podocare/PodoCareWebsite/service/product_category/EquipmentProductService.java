@@ -64,7 +64,7 @@ public class EquipmentProductService {
     public EquipmentProduct createEquipmentProduct(EquipmentProductDTO equipmentProductDTO) {
         isValid(equipmentProductDTO.getProductName());
 
-        if(equipmentProductAlreadyExists(equipmentProductDTO)) {
+        if(equipmentProductAlreadyExists(equipmentProductDTO.getProductName())) {
             throw new ProductCreationException("Product already exists.");
         }
         EquipmentProduct equipmentProduct = new EquipmentProduct();
@@ -111,15 +111,15 @@ public class EquipmentProductService {
     public EquipmentProduct equipmentProductDtoToEquipmentProductConversion(EquipmentProduct equipmentProduct, EquipmentProductDTO equipmentProductDTO){
         equipmentProduct.setProductName(equipmentProductDTO.getProductName());
         equipmentProduct.setBrand(brandService.findOrCreateBrand(equipmentProductDTO.getBrandName()));
-        equipmentProduct.setInitialSupply(equipmentProductDTO.getInitialSupply());
-        equipmentProduct.setCurrentSupply(equipmentProductDTO.getCurrentSupply());
+        equipmentProduct.setInitialSupply(equipmentProductDTO.getInitialSupply() != null ? equipmentProductDTO.getInitialSupply() : 0);
+        equipmentProduct.setCurrentSupply(equipmentProductDTO.getCurrentSupply() != null ? equipmentProductDTO.getCurrentSupply() : 0);
         equipmentProduct.setDescription(equipmentProductDTO.getDescription());
-        equipmentProduct.setWarrantyLength(equipmentProductDTO.getWarrantyLength());
+        equipmentProduct.setWarrantyLength(equipmentProductDTO.getWarrantyLength() != null ? equipmentProductDTO.getWarrantyLength() : 24);
         return equipmentProduct;
     }
 
-    private boolean equipmentProductAlreadyExists(EquipmentProductDTO equipmentProductDTO) {
-        return equipmentProductRepo.findByEquipmentProductName(equipmentProductDTO.getProductName()).isPresent();
+    public boolean equipmentProductAlreadyExists(String equipmentProductName) {
+        return equipmentProductRepo.findByEquipmentProductName(equipmentProductName).isPresent();
     }
 
     private void isValid(String productName) {

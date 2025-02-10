@@ -1,7 +1,10 @@
 package com.podocare.PodoCareWebsite.service.order;
 
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.order.OrderCreationException;
+import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.order.OrderNotFoundException;
+import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.order_product.OrderProductNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product.ProductNotFoundException;
+import com.podocare.PodoCareWebsite.model.VatRate;
 import com.podocare.PodoCareWebsite.model.order.DTOs.OrderProductDTO;
 import com.podocare.PodoCareWebsite.model.order.Order;
 import com.podocare.PodoCareWebsite.model.order.OrderProduct;
@@ -29,6 +32,11 @@ public class OrderProductService {
     @Autowired
     private EquipmentProductRepo equipmentProductRepo;
 
+    public OrderProduct getOrderById(Long orderProductId) {
+        return orderProductRepo.findById(orderProductId)
+                .orElseThrow(() -> new OrderProductNotFoundException("OrderProduct not found with ID: " + orderProductId));
+    }
+
     public OrderProduct createOrderProduct(Order order, OrderProductDTO orderProductDTO) {
         if (order == null) {
             log.error("Failed to create OrderProduct: 'order' is null.");
@@ -37,11 +45,6 @@ public class OrderProductService {
         if (orderProductDTO == null) {
             log.error("Failed to create OrderProduct: 'orderProductDTO' is null.");
             throw new IllegalArgumentException("OrderProductDTO cannot be null.");
-        }
-        if (orderProductDTO.getPrice() <= 0) {
-            log.error("Failed to create OrderProduct: Invalid price {}",
-                    orderProductDTO.getPrice());
-            throw new IllegalArgumentException("Price must be greater than zero.");
         }
         if (orderProductDTO.getQuantity() <= 0) {
             log.error("Failed to create OrderProduct: Invalid quantity {}",
@@ -59,27 +62,47 @@ public class OrderProductService {
         return orderProductToSave;
     }
 
+    public OrderProduct updateOrderProduct(Long orderProductId, OrderProductDTO orderProductDTO) {
+        OrderProduct existingOrderProduct = getOrderById(orderProductId);
+
+        OrderProduct updatedOrderProduct = orderProductDtoToOrderProductConversion(existingOrderProduct.getOrder(), orderProductDTO);
+
+        try {
+            orderProductRepo.save(updatedOrderProduct);
+        } catch (Exception e) {
+            log.error("Failed to create OrderProduct. Exception: ", e);
+            throw new OrderCreationException("Failed to create OrderProduct.", e);
+        }
+
+        return updatedOrderProduct;
+    }
+
     private OrderProduct orderProductDtoToOrderProductConversion(Order order, OrderProductDTO orderProductDTO){
         OrderProduct orderProduct = new OrderProduct();
         orderProduct.setOrder(order);
         orderProduct.setPrice(orderProductDTO.getPrice());
+        orderProduct.setVATrate(orderProductDTO.getVATrate());
         orderProduct.setQuantity(orderProductDTO.getQuantity());
-        orderProduct.setDescription(orderProductDTO.getDescription());
         defineAndSetProductType(orderProduct, orderProductDTO);
         orderProductRepo.save(orderProduct);
         return orderProduct;
     }
 
     private void defineAndSetProductType(OrderProduct orderProduct, OrderProductDTO orderProductDTO){
+        Long productId = orderProductDTO.getId();
 
-        if(orderProductDTO.getSaleProductId() != null) {
-            orderProduct.setSaleProduct(saleProductRepo.findById(orderProductDTO.getSaleProductId()).get());
-        } else if (orderProductDTO.getToolProductId() != null){
-            orderProduct.setToolProduct(toolProductRepo.findById(orderProductDTO.getToolProductId()).get());
-        } else if (orderProductDTO.getEquipmentProductId() != null) {
-            orderProduct.setEquipmentProduct(equipmentProductRepo.findById(orderProductDTO.getEquipmentProductId()).get());
+        if (productId == null) {
+            throw new ProductNotFoundException("Product ID cannot be null.");
+        }
+
+        if (saleProductRepo.existsById(productId)) {
+            orderProduct.setSaleProduct(saleProductRepo.findById(productId).get());
+        } else if (toolProductRepo.existsById(productId)) {
+            orderProduct.setToolProduct(toolProductRepo.findById(productId).get());
+        } else if (equipmentProductRepo.existsById(productId)) {
+            orderProduct.setEquipmentProduct(equipmentProductRepo.findById(productId).get());
         } else {
-            throw new ProductNotFoundException("Product not found.");
+            throw new ProductNotFoundException("No product found with ID: " + productId);
         }
     }
 
@@ -87,7 +110,7 @@ public class OrderProductService {
 
         if(orderProductDTO.getOrderProductId() == null) {
             throw new IllegalArgumentException("OrderProductDTO must contain a non-null orderProductId");
-        } else if (orderProductDTO.getSaleProductId() == null && orderProductDTO.getToolProductId() == null && orderProductDTO.getEquipmentProductId() == null) {
+        } else if (orderProductDTO.getId() == null) {
             throw new IllegalArgumentException("OrderProductDTO must be linked to an existing Product.");
         }
         if (orderProductDTO.getQuantity() == null || orderProductDTO.getQuantity() < 0) {
@@ -95,6 +118,9 @@ public class OrderProductService {
         }
         if (orderProductDTO.getPrice() == null || orderProductDTO.getPrice() < 0) {
             throw new IllegalArgumentException("OrderProductDTO must have a valid non-negative price.");
+        }
+        if (orderProductDTO.getVATrate() == null) {
+            throw new IllegalArgumentException("OrderProductDTO must have a VatRate applied.");
         }
     }
 }

@@ -11,8 +11,8 @@ import org.antlr.v4.runtime.misc.NotNull;
 @Getter
 @AllArgsConstructor
 public class BrandDTO {
-    private Long brandId;
-    private String brandName;
+    private Long id;
+    private String name;
 
 
 }

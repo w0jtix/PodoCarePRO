@@ -1,6 +1,6 @@
 import React from 'react'
-import NavigationBar from './dashboard-components/NavigationBar'
-import SupplyList from './dashboard-components/SupplyList'
+import NavigationBar from './NavigationBar'
+import SupplyList from './SupplyList'
 import { useState } from 'react'
 
 const Dashboard = () => {

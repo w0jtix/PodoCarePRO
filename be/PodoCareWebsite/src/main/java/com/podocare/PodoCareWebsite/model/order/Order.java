@@ -1,6 +1,7 @@
 package com.podocare.PodoCareWebsite.model.order;
 
 import com.podocare.PodoCareWebsite.model.Brand_Supplier.Supplier;
+import com.podocare.PodoCareWebsite.model.VatRate;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.EquipmentProductInstance;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.SaleProductInstance;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.ToolProductInstance;
@@ -33,11 +34,14 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<OrderProduct> orderProducts = new ArrayList<>();;
+    private List<OrderProduct> orderProducts = new ArrayList<>();
 
+    private VatRate shippingVatRate;
     private Double shippingCost = 0.0;
-    private Double totalAmount = 0.0;
-    private String orderStatus;
+    private Double totalNet = 0.0;
+    private Double totalVat = 0.0;
+    private Double totalValue = 0.0;
+
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<SaleProductInstance> saleProductInstances = new ArrayList<>();

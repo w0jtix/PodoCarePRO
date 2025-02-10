@@ -23,7 +23,7 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Order>> getOrders() {
+    public ResponseEntity<List<Order>> getAllOrders() {
         List<Order> ordersList = orderService.getOrders();
         return new ResponseEntity<>(ordersList, ordersList.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
@@ -34,19 +34,17 @@ public class OrderController {
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 
+    //to imo useless bedzie
     @GetMapping("/{orderId}/forEditing")
     public ResponseEntity<OrderDTO> getOrderForEditing(@PathVariable Long orderId) {
         OrderDTO orderDTO = orderService.getOrderDTOByOrderId(orderId);
         return new ResponseEntity<>(orderDTO, HttpStatus.OK);
     }
 
-
-    @PutMapping("/{orderId}/finalize")
-    public ResponseEntity<Order> finalizeOrder(@PathVariable Long orderId, @RequestBody OrderDTO orderDTO) {
-
-        Order finalizedOrder = orderService.finalizeOrder(orderId, orderDTO);
-        return new ResponseEntity<>(finalizedOrder, HttpStatus.OK);
-
+    @PostMapping("/createOrder")
+    public ResponseEntity<Order> createOrder(@RequestBody OrderDTO orderDTO) {
+        Order createdOrder = orderService.createOrder(orderDTO);
+        return new ResponseEntity<>(createdOrder, HttpStatus.OK);
     }
 
     @PutMapping("/{orderId}/update")

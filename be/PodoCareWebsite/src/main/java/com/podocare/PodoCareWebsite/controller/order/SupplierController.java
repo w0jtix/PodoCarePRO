@@ -21,8 +21,8 @@ public class SupplierController {
     SupplierService supplierService;
 
     @GetMapping
-    public ResponseEntity<List<Supplier>> getSuppliers() {
-        List<Supplier> supplierList = supplierService.getSuppliers();
+    public ResponseEntity<List<SupplierDTO>> getSuppliers() {
+        List<SupplierDTO> supplierList = supplierService.getAllSuppliers();
         return new ResponseEntity<>(supplierList, supplierList.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
@@ -34,8 +34,8 @@ public class SupplierController {
 
     @PostMapping
     public ResponseEntity<?> createSupplier(@RequestBody SupplierDTO supplierDTO) {
-        Supplier newSupplier = supplierService.createSupplier(supplierDTO);
-        return new ResponseEntity<>(newSupplier, HttpStatus.CREATED);
+        SupplierDTO newSupplierDTO = supplierService.createSupplier(supplierDTO);
+        return new ResponseEntity<>(newSupplierDTO, HttpStatus.CREATED);
     }
 
     @PutMapping("/{supplierId}")

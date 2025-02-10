@@ -63,7 +63,7 @@ public class ToolProductService{
     public ToolProduct createToolProduct(ToolProductDTO toolProductDTO) {
         isValid(toolProductDTO.getProductName());
 
-        if(toolProductAlreadyExists(toolProductDTO)) {
+        if(toolProductAlreadyExists(toolProductDTO.getProductName())) {
             throw new ProductCreationException("Product already exists.");
         }
         ToolProduct toolProduct = new ToolProduct();
@@ -110,14 +110,14 @@ public class ToolProductService{
     public ToolProduct toolProductDtoToToolProductConversion(ToolProduct toolProduct, ToolProductDTO toolProductDTO){
         toolProduct.setProductName(toolProductDTO.getProductName());
         toolProduct.setBrand(brandService.findOrCreateBrand(toolProductDTO.getBrandName()));
-        toolProduct.setInitialSupply(toolProductDTO.getInitialSupply());
-        toolProduct.setCurrentSupply(toolProductDTO.getCurrentSupply());
+        toolProduct.setInitialSupply(toolProductDTO.getInitialSupply() != null ? toolProductDTO.getInitialSupply() : 0);
+        toolProduct.setCurrentSupply(toolProductDTO.getCurrentSupply() != null ? toolProductDTO.getCurrentSupply() : 0);
         toolProduct.setDescription(toolProductDTO.getDescription());
         return toolProduct;
     }
 
-    private boolean toolProductAlreadyExists(ToolProductDTO toolProductDTO) {
-        return toolProductRepo.findByToolProductName(toolProductDTO.getProductName()).isPresent();
+    public boolean toolProductAlreadyExists(String toolProductName) {
+        return toolProductRepo.findByToolProductName(toolProductName).isPresent();
     }
 
     private void isValid(String productName) {

@@ -1,6 +1,7 @@
 package com.podocare.PodoCareWebsite.model.product.product_category.product_instances;
 
 import com.podocare.PodoCareWebsite.model.Employee;
+import com.podocare.PodoCareWebsite.model.VatRate;
 import com.podocare.PodoCareWebsite.model.order.Order;
 import com.podocare.PodoCareWebsite.model.Brand_Supplier.Supplier;
 import com.podocare.PodoCareWebsite.model.product.product_category.SaleProduct;
@@ -29,6 +30,8 @@ public class SaleProductInstance {
     private Supplier supplier;
     private Date shelfLife;
     private Date purchaseDate;
+    private Double netPrice;
+    private VatRate vatRate;
     private Double purchasePrice;
     private String description;
     @ManyToOne

@@ -24,7 +24,6 @@ public class EquipmentProductController{
 
     @GetMapping
     public ResponseEntity<List<EquipmentProduct>> getEquipmentProductsWithActiveInstances(){
-
         List<EquipmentProduct> equipmentProductList = equipmentProductService.getActiveEquipmentProductsWithActiveInstances();
         return new ResponseEntity<>(equipmentProductList, equipmentProductList.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }

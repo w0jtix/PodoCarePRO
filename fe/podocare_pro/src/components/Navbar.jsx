@@ -1,7 +1,7 @@
 import React from 'react'
-import NavbarLogoContainer from './navbar-components/NavbarLogoContainer'
-import NavbarMenu from './navbar-components/NavbarMenu'
-import Socials from './navbar-components/Socials'
+import NavbarLogoContainer from './NavbarLogoContainer'
+import NavbarMenu from './NavbarMenu'
+import Socials from './Socials'
 
 
 const Navbar = () => {

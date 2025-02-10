@@ -85,7 +85,7 @@ public class BrandService {
     }
 
     public Brand createBrand(BrandDTO brandDTO) {
-        isValid(brandDTO.getBrandName());
+        isValid(brandDTO.getName());
 
         if (brandAlreadyExists(brandDTO)) {
             throw new BrandCreationException("Brand already exists.");
@@ -103,7 +103,7 @@ public class BrandService {
     public Brand updateBrand(Long brandId, BrandDTO brandDTO){
         Brand existingBrand = getBrandById(brandId);
 
-        isValid(brandDTO.getBrandName());
+        isValid(brandDTO.getName());
         Brand brandToUpdate = brandDtoToBrandConversion(existingBrand, brandDTO);
 
         try {
@@ -132,11 +132,11 @@ public class BrandService {
     }
 
     private boolean brandAlreadyExists(BrandDTO brandDTO) {
-        return brandRepo.findByBrandName(brandDTO.getBrandName()).isPresent();
+        return brandRepo.findByBrandName(brandDTO.getName()).isPresent();
     }
 
     private Brand brandDtoToBrandConversion(Brand brand, BrandDTO brandDTO) {
-        brand.setBrandName(brandDTO.getBrandName());
+        brand.setBrandName(brandDTO.getName());
         return brand;
     }
 

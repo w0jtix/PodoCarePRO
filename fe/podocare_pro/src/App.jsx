@@ -1,21 +1,18 @@
-import { useState } from 'react'
 import './App.css'
-import Dashboard from './components/dashboard'
-import Navbar from './components/Navbar'
-
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import Warehouse from './pages/Warehouse'
+import Orders from './pages/Orders'
 
 function App() {
   
 
   return (
-    <>
-    <div className="container">
-      <div className="display">
-          <Navbar />
-          <Dashboard />
-      </div>
-    </div>
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Warehouse/>}/>
+        <Route path="/zamowienia" element={<Orders/>}/>
+      </Routes>
+    </Router>
   )
 }
 

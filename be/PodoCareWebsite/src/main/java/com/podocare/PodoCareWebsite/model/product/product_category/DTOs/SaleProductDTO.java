@@ -1,10 +1,13 @@
 package com.podocare.PodoCareWebsite.model.product.product_category.DTOs;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class SaleProductDTO {
 
+    private Long id;
     private String productName;
     private String brandName;
     private Integer initialSupply;

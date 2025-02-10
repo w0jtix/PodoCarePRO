@@ -13,5 +13,5 @@ public class OrderDTO {
     private List<OrderProductDTO> orderProductDTOList;
     private Double shippingCost;
     private Date orderDate;
-    private String supplierName;
+    private Long supplierId;
 }

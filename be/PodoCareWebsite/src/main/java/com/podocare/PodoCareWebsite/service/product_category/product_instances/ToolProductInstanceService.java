@@ -203,13 +203,15 @@ public class ToolProductInstanceService {
 
     public ToolProductInstance toolProductInstanceDtoToToolProductInstanceConversion(ToolProductInstance toolProductInstance,
                                                                                      ToolProductInstanceDTO toolProductInstanceDTO){
-        toolProductInstance.setToolProduct(toolProductService.findByToolProductName(toolProductInstanceDTO.getToolProductName()));
-        toolProductInstance.setSupplier(supplierService.findOrCreateSupplier(toolProductInstanceDTO.getSupplierName()));
+        toolProductInstance.setToolProduct(toolProductService.getToolProductById(toolProductInstanceDTO.getToolProductId()));
+        toolProductInstance.setSupplier(supplierService.findOrCreateSupplier(supplierService.getSupplierById(toolProductInstanceDTO.getSupplierId()).getSupplierName()));
         toolProductInstance.setOrder(orderService.findOrderByOrderNumber(toolProductInstanceDTO.getOrderNumber()));
         toolProductInstance.setPurchaseDate(toolProductInstanceDTO.getPurchaseDate());
         toolProductInstance.setPurchasePrice(toolProductInstanceDTO.getPurchasePrice());
+        toolProductInstance.setVatRate(toolProductInstanceDTO.getVatRate());
+        toolProductInstance.setNetPrice(toolProductInstanceDTO.getNetPrice());
         toolProductInstance.setDescription(toolProductInstanceDTO.getDescription());
-        toolProductInstance.setOutOfUse(toolProductInstance.getOutOfUse());
+        toolProductInstance.setOutOfUse(toolProductInstanceDTO.getOutOfUse() != null ? toolProductInstanceDTO.getOutOfUse() : false);
         return toolProductInstance;
     }
 
@@ -217,6 +219,8 @@ public class ToolProductInstanceService {
                                                                                                 ToolProductInstanceDTO toolProductInstanceDTO){
         toolProductInstance.setToolProduct(toolProductService.getToolProductById(toolProductInstanceDTO.getToolProductId()));
         toolProductInstance.setPurchasePrice(toolProductInstanceDTO.getPurchasePrice());
+        toolProductInstance.setVatRate(toolProductInstanceDTO.getVatRate());
+        toolProductInstance.setNetPrice(toolProductInstanceDTO.getNetPrice());
         toolProductInstance.setDescription(toolProductInstanceDTO.getDescription());
         if (toolProductInstanceDTO.getPurchaseDate() == null) {
             toolProductInstance.setPurchaseDate(new Date());
@@ -278,11 +282,11 @@ public class ToolProductInstanceService {
     }
 
     public void validateToolProductInstanceDTO(ToolProductInstanceDTO toolProductInstanceDTO) {
-        if (toolProductInstanceDTO.getToolProductName() == null || toolProductInstanceDTO.getToolProductName().isBlank()) {
+        if (toolProductInstanceDTO.getToolProductId() == null) {
             throw new IllegalArgumentException("ToolProductInstanceDTO must have a valid toolProductName.");
         }
-        if (toolProductInstanceDTO.getSupplierName() == null || toolProductInstanceDTO.getSupplierName().isBlank()) {
-            throw new IllegalArgumentException("ToolProductInstanceDTO must have a valid supplierName.");
+        if (toolProductInstanceDTO.getSupplierId() == null) {
+            throw new IllegalArgumentException("ToolProductInstanceDTO must have a valid supplierId.");
         }
         if (toolProductInstanceDTO.getOrderNumber() == null || toolProductInstanceDTO.getOrderNumber() <= 0) {
             throw new IllegalArgumentException("ToolProductInstanceDTO must have a valid orderNumber.");
@@ -290,15 +294,15 @@ public class ToolProductInstanceService {
         if (toolProductInstanceDTO.getPurchaseDate() == null) {
             throw new IllegalArgumentException("ToolProductInstanceDTO must have a valid purchaseDate.");
         }
-        if (toolProductInstanceDTO.getPurchasePrice() == null || toolProductInstanceDTO.getPurchasePrice() <= 0) {
+        if (toolProductInstanceDTO.getPurchasePrice() == null || toolProductInstanceDTO.getPurchasePrice() < 0) {
             throw new IllegalArgumentException("ToolProductInstanceDTO must have a valid purchasePrice.");
+        }
+        if (toolProductInstanceDTO.getVatRate() == null) {
+            throw new IllegalArgumentException("ToolProductInstanceDTO must have a VatRate applied.");
         }
     }
 
     public void validateIndependentToolProductInstanceDTO(ToolProductInstanceDTO toolProductInstanceDTO) {
-        if (toolProductInstanceDTO.getToolProductName() == null || toolProductInstanceDTO.getToolProductName().isBlank()) {
-            throw new IllegalArgumentException("ToolProductInstanceDTO must have a valid toolProductName.");
-        }
         if (toolProductInstanceDTO.getToolProductId() == null) {
             throw new IllegalArgumentException("ToolProductInstanceDTO must have a valid toolProductId.");
         }

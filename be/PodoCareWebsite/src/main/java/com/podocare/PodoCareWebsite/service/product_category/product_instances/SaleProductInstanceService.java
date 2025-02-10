@@ -197,7 +197,7 @@ public class SaleProductInstanceService {
 
     public void calculateAndSetShelfLife(SaleProductInstance saleProductInstance,
                                    SaleProductInstanceDTO saleProductInstanceDTO){
-        SaleProduct saleProduct = saleProductService.findBySaleProductName(saleProductInstanceDTO.getSaleProductName());
+        SaleProduct saleProduct = saleProductService.getSaleProductById(saleProductInstanceDTO.getSaleProductId());
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(saleProductInstanceDTO.getPurchaseDate());
         calendar.add(Calendar.MONTH, saleProduct.getEstimatedShelfLife());
@@ -206,14 +206,16 @@ public class SaleProductInstanceService {
 
     public SaleProductInstance saleProductInstanceDtoToSaleProductInstanceConversion(SaleProductInstance saleProductInstance,
                                                                                      SaleProductInstanceDTO saleProductInstanceDTO){
-        saleProductInstance.setSaleProduct(saleProductService.findBySaleProductName(saleProductInstanceDTO.getSaleProductName()));
-        saleProductInstance.setSupplier(supplierService.findOrCreateSupplier(saleProductInstanceDTO.getSupplierName()));
+        saleProductInstance.setSaleProduct(saleProductService.getSaleProductById(saleProductInstanceDTO.getSaleProductId()));
+        saleProductInstance.setSupplier(supplierService.findOrCreateSupplier(supplierService.getSupplierById(saleProductInstanceDTO.getSupplierId()).getSupplierName()));
         saleProductInstance.setOrder(orderService.findOrderByOrderNumber(saleProductInstanceDTO.getOrderNumber()));
         saleProductInstance.setPurchaseDate(saleProductInstanceDTO.getPurchaseDate());
         saleProductInstance.setPurchasePrice(saleProductInstanceDTO.getPurchasePrice());
+        saleProductInstance.setVatRate(saleProductInstanceDTO.getVatRate());
+        saleProductInstance.setNetPrice(saleProductInstanceDTO.getNetPrice());
         saleProductInstance.setDescription(saleProductInstanceDTO.getDescription());
-        saleProductInstance.setIsSold(saleProductInstance.getIsSold());
-        saleProductInstance.setIsUsed(saleProductInstance.getIsUsed());
+        saleProductInstance.setIsSold(saleProductInstanceDTO.getIsSold() != null ? saleProductInstanceDTO.getIsSold() : false);
+        saleProductInstance.setIsUsed(saleProductInstanceDTO.getIsUsed()!= null ? saleProductInstanceDTO.getIsUsed() : false);
         calculateAndSetShelfLife(saleProductInstance,saleProductInstanceDTO);
         return saleProductInstance;
     }
@@ -222,6 +224,8 @@ public class SaleProductInstanceService {
                                                                                                 SaleProductInstanceDTO saleProductInstanceDTO){
         saleProductInstance.setSaleProduct(saleProductService.getSaleProductById(saleProductInstanceDTO.getSaleProductId()));
         saleProductInstance.setPurchasePrice(saleProductInstanceDTO.getPurchasePrice());
+        saleProductInstance.setVatRate(saleProductInstanceDTO.getVatRate());
+        saleProductInstance.setNetPrice(saleProductInstanceDTO.getNetPrice());
         saleProductInstance.setDescription(saleProductInstanceDTO.getDescription());
         if (saleProductInstanceDTO.getPurchaseDate() == null) {
             saleProductInstance.setPurchaseDate(new Date());
@@ -282,14 +286,12 @@ public class SaleProductInstanceService {
         }
     }
 
-
-    //id?
     public void validateSaleProductInstanceDTO(SaleProductInstanceDTO saleProductInstanceDTO) {
-        if (saleProductInstanceDTO.getSaleProductName() == null || saleProductInstanceDTO.getSaleProductName().isBlank()) {
-            throw new IllegalArgumentException("SaleProductInstanceDTO must have a valid saleProductName.");
+        if (saleProductInstanceDTO.getSaleProductId() == null) {
+            throw new IllegalArgumentException("SaleProductInstanceDTO must have a valid saleProductId.");
         }
-        if (saleProductInstanceDTO.getSupplierName() == null || saleProductInstanceDTO.getSupplierName().isBlank()) {
-            throw new IllegalArgumentException("SaleProductInstanceDTO must have a valid supplierName.");
+        if (saleProductInstanceDTO.getSupplierId() == null) {
+            throw new IllegalArgumentException("SaleProductInstanceDTO must have a valid supplierId.");
         }
         if (saleProductInstanceDTO.getOrderNumber() == null || saleProductInstanceDTO.getOrderNumber() <= 0) {
             throw new IllegalArgumentException("SaleProductInstanceDTO must have a valid orderNumber.");
@@ -297,15 +299,16 @@ public class SaleProductInstanceService {
         if (saleProductInstanceDTO.getPurchaseDate() == null) {
             throw new IllegalArgumentException("SaleProductInstanceDTO must have a valid purchaseDate.");
         }
-        if (saleProductInstanceDTO.getPurchasePrice() == null || saleProductInstanceDTO.getPurchasePrice() <= 0) {
+        if (saleProductInstanceDTO.getPurchasePrice() == null || saleProductInstanceDTO.getPurchasePrice() < 0) {
             throw new IllegalArgumentException("SaleProductInstanceDTO must have a valid purchasePrice.");
+        }
+        if (saleProductInstanceDTO.getVatRate() == null) {
+            throw new IllegalArgumentException("SaleProductInstanceDTO must have a VatRate applied.");
         }
     }
 
     public void validateIndependentSaleProductInstanceDTO(SaleProductInstanceDTO saleProductInstanceDTO) {
-        if (saleProductInstanceDTO.getSaleProductName() == null || saleProductInstanceDTO.getSaleProductName().isBlank()) {
-            throw new IllegalArgumentException("SaleProductInstanceDTO must have a valid saleProductName.");
-        }
+
         if (saleProductInstanceDTO.getSaleProductId() == null) {
             throw new IllegalArgumentException("SaleProductInstanceDTO must have a valid saleProductId.");
         }

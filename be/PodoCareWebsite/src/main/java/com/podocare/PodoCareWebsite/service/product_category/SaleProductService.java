@@ -66,7 +66,7 @@ public class SaleProductService{
     public SaleProduct createSaleProduct(SaleProductDTO saleProductDTO) {
         isValid(saleProductDTO.getProductName());
 
-        if(saleProductAlreadyExists(saleProductDTO)) {
+        if(saleProductAlreadyExists(saleProductDTO.getProductName())) {
             throw new ProductCreationException("Product already exists.");
         }
         SaleProduct saleProduct = new SaleProduct();
@@ -112,10 +112,10 @@ public class SaleProductService{
     public SaleProduct saleProductDtoToSaleProductConversion(SaleProduct saleProduct, SaleProductDTO saleProductDTO){
         saleProduct.setProductName(saleProductDTO.getProductName());
         saleProduct.setBrand(brandService.findOrCreateBrand(saleProductDTO.getBrandName()));
-        saleProduct.setInitialSupply(saleProductDTO.getInitialSupply());
-        saleProduct.setCurrentSupply(saleProductDTO.getCurrentSupply());
+        saleProduct.setInitialSupply(saleProductDTO.getInitialSupply() != null ? saleProductDTO.getInitialSupply()  : 0);
+        saleProduct.setCurrentSupply(saleProductDTO.getCurrentSupply() != null ? saleProductDTO.getCurrentSupply() : 0);
         saleProduct.setDescription(saleProductDTO.getDescription());
-        saleProduct.setEstimatedShelfLife(saleProductDTO.getEstimatedShelfLife());
+        saleProduct.setEstimatedShelfLife(saleProductDTO.getEstimatedShelfLife() != null ? saleProductDTO.getEstimatedShelfLife() : 24);
         saleProduct.setSellingPrice(saleProductDTO.getSellingPrice());
         saleProduct.setInternalUse(saleProductDTO.getInternalUse());
         saleProduct.setForSale(saleProductDTO.getForSale());
@@ -124,8 +124,8 @@ public class SaleProductService{
 
 
 
-    private boolean saleProductAlreadyExists(SaleProductDTO saleProductDTO) {
-        return saleProductRepo.findBySaleProductName(saleProductDTO.getProductName()).isPresent();
+    public boolean saleProductAlreadyExists(String saleProductName) {
+        return saleProductRepo.findBySaleProductName(saleProductName).isPresent();
     }
 
     private void isValid(String productName) {

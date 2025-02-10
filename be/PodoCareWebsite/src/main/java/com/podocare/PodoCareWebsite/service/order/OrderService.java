@@ -7,9 +7,9 @@ import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.order.OrderNo
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product.ProductNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_instance.ProductInstanceCreationException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_instance.ProductInstanceDeletionException;
+import com.podocare.PodoCareWebsite.model.VatRate;
 import com.podocare.PodoCareWebsite.model.order.DTOs.OrderDTO;
 import com.podocare.PodoCareWebsite.model.order.DTOs.OrderProductDTO;
-import com.podocare.PodoCareWebsite.model.order.DraftOrder;
 import com.podocare.PodoCareWebsite.model.order.Order;
 import com.podocare.PodoCareWebsite.model.order.OrderProduct;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.EquipmentProductInstanceDTO;
@@ -18,7 +18,6 @@ import com.podocare.PodoCareWebsite.model.product.product_category.product_insta
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.EquipmentProductInstance;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.SaleProductInstance;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.ToolProductInstance;
-import com.podocare.PodoCareWebsite.repo.order.DraftOrderRepo;
 import com.podocare.PodoCareWebsite.repo.order.OrderRepo;
 import com.podocare.PodoCareWebsite.repo.product_category.EquipmentProductRepo;
 import com.podocare.PodoCareWebsite.repo.product_category.SaleProductRepo;
@@ -36,6 +35,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -45,8 +46,7 @@ import java.util.Optional;
 public class OrderService {
 
     private final OrderRepo orderRepo;
-    @Autowired
-    private DraftOrderRepo draftOrderRepo;
+
     @Autowired
     private SaleProductRepo saleProductRepo;
     @Autowired
@@ -96,21 +96,18 @@ public class OrderService {
         return orderToOrderDtoConversion(order);
     }
 
-    public Order finalizeOrder(Long orderId, OrderDTO orderDTO) {
+    @Transactional(rollbackFor = Exception.class)
+    public Order createOrder(OrderDTO orderDTO) {
 
-        DraftOrder existingDraftOrder = draftOrderRepo.findById(orderId)
-                .orElseThrow(() -> new OrderNotFoundException("DraftOrder not found with ID: " + orderId));
-
-        if(!"DRAFT".equals(existingDraftOrder.getOrderStatus())){
-            throw new InvalidOrderStateException("Cannot modify a finalized Order");
-        }
-        Order newOrder = new Order();
-        newOrder.setOrderStatus(existingDraftOrder.getOrderStatus());
-        newOrder.setOrderNumber(existingDraftOrder.getOrderNumber());
-
-        Order orderToFinalize = orderDtoToOrderConversion(newOrder, orderDTO);
-        orderToFinalize.setOrderStatus("FINALIZED");
         try {
+            Order newOrder = new Order();
+            newOrder.setOrderNumber(generateOrderNumber());
+            //doubled setSupplier (happens in orderDTOToOrderConversion as well), but has to happen b4 saving newOrder(supplier -> nullable=false)
+            newOrder.setSupplier(supplierService.findOrCreateSupplier(supplierService.getSupplierById(orderDTO.getSupplierId()).getSupplierName()));
+
+            Order savedOrder = orderRepo.save(newOrder);
+            Order orderToFinalize = orderDtoToOrderConversion(savedOrder, orderDTO);
+
             return orderRepo.save(orderToFinalize);
         } catch (Exception e) {
             log.error("Failed to create Order. Exception: ", e);
@@ -121,8 +118,6 @@ public class OrderService {
     @Transactional
     public Order updateOrder(Long orderId, OrderDTO updatedOrderDTO){
         Order existingOrder = getOrderById(orderId);
-
-        validateOrderStatus(existingOrder);
 
         for(OrderProductDTO orderProductDTO : updatedOrderDTO.getOrderProductDTOList()){
             orderProductService.validateOrderProductDTO(orderProductDTO);
@@ -162,22 +157,36 @@ public class OrderService {
     private Order orderDtoToOrderConversion(Order existingOrder, OrderDTO orderDTO) {
 
         existingOrder.setOrderDate(orderDTO.getOrderDate());
-        existingOrder.setSupplier(supplierService.findOrCreateSupplier(orderDTO.getSupplierName()));
+        existingOrder.setSupplier(supplierService.findOrCreateSupplier(supplierService.getSupplierById(orderDTO.getSupplierId()).getSupplierName()));
 
-
-        Double totalAmount = 0.0;
+        Double totalValue = 0.0;
+        Double totalNet = 0.0;
+        Double totalVat = 0.0;
         for(OrderProductDTO orderProductDTO : orderDTO.getOrderProductDTOList()) {
             OrderProduct orderProduct = orderProductService.createOrderProduct(existingOrder, orderProductDTO);
             existingOrder.getOrderProducts().add(orderProduct);
-            totalAmount += orderProduct.getPrice() * orderProduct.getQuantity();
+            totalValue += orderProduct.getPrice() * orderProduct.getQuantity();
+            double vatRate = orderProduct.getVATrate().isNumeric() ? (Double) orderProduct.getVATrate().getRate() : 0.0;
+            double netPrice = BigDecimal.valueOf(orderProduct.getPrice() / (1 + vatRate / 100))
+                    .setScale(2, RoundingMode.HALF_UP)
+                    .doubleValue();
+            totalNet += netPrice * orderProduct.getQuantity();
+            double productVat = orderProduct.getPrice() - (netPrice * orderProduct.getQuantity());
+            totalVat += productVat * orderProduct.getQuantity();
         }
 
         if(orderDTO.getShippingCost() < 0) {
             log.error("Shipping cost must be greater than or equal to zero.");
             throw new IllegalArgumentException("Shipping cost must be greater than or equal to zero.");
         }
+
+        double shippingCostNet = orderDTO.getShippingCost()/ (1 +  VatRate.VAT_23.getRate() / 100);
+
         existingOrder.setShippingCost(orderDTO.getShippingCost());
-        existingOrder.setTotalAmount(totalAmount + orderDTO.getShippingCost());
+        existingOrder.setShippingVatRate(VatRate.VAT_23);
+        existingOrder.setTotalValue(totalValue + orderDTO.getShippingCost());
+        existingOrder.setTotalNet(totalNet +  shippingCostNet);
+        existingOrder.setTotalVat(totalVat + orderDTO.getShippingCost() - shippingCostNet);
 
         for(OrderProduct orderProduct : existingOrder.getOrderProducts()) {
             try {
@@ -195,7 +204,7 @@ public class OrderService {
         orderDTO.setOrderDate(order.getOrderDate());
         orderDTO.setShippingCost(order.getShippingCost());
         if (order.getSupplier() != null) {
-            orderDTO.setSupplierName(order.getSupplier().getSupplierName());
+            orderDTO.setSupplierId(order.getSupplier().getId());
         }
         List<OrderProductDTO> orderProductDTOList = order.getOrderProducts().stream()
                 .map(orderProduct -> {
@@ -203,11 +212,11 @@ public class OrderService {
                     orderProductDTO.setQuantity(orderProduct.getQuantity());
                     orderProductDTO.setPrice(orderProduct.getPrice());
                     if(orderProduct.getSaleProduct() != null) {
-                        orderProductDTO.setSaleProductId(orderProduct.getSaleProduct().getId());
+                        orderProductDTO.setId(orderProduct.getSaleProduct().getId());
                     } else if (orderProduct.getToolProduct() != null){
-                        orderProductDTO.setToolProductId(orderProduct.getToolProduct().getId());
+                        orderProductDTO.setId(orderProduct.getToolProduct().getId());
                     } else if(orderProduct.getEquipmentProduct() != null) {
-                        orderProductDTO.setEquipmentProductId(orderProduct.getEquipmentProduct().getId());
+                        orderProductDTO.setId(orderProduct.getEquipmentProduct().getId());
                     } else {
                         throw new ProductNotFoundException("OrderProduct id not assigned.");
                     }
@@ -289,37 +298,50 @@ public class OrderService {
 
     private SaleProductInstanceDTO createHelperSaleProductInstanceDtoObject(OrderDTO orderDTO, OrderProduct orderProduct) {
         SaleProductInstanceDTO saleProductInstanceDTO = new SaleProductInstanceDTO();
-        saleProductInstanceDTO.setSaleProductName(orderProduct.getSaleProduct().getProductName());
-        saleProductInstanceDTO.setSupplierName(orderDTO.getSupplierName());
+        saleProductInstanceDTO.setSaleProductId(orderProduct.getSaleProduct().getId());
+        saleProductInstanceDTO.setSupplierId(orderDTO.getSupplierId());
+        saleProductInstanceDTO.setOrderId(orderProduct.getOrder().getId());
         saleProductInstanceDTO.setOrderNumber(Math.toIntExact(orderProduct.getOrder().getOrderNumber()));
         saleProductInstanceDTO.setPurchaseDate(orderDTO.getOrderDate());
         saleProductInstanceDTO.setPurchasePrice(orderProduct.getPrice());
-        saleProductInstanceDTO.setDescription(orderProduct.getDescription());
-
-        saleProductInstanceService.validateSaleProductInstanceDTO(saleProductInstanceDTO);
+        saleProductInstanceDTO.setVatRate(orderProduct.getVATrate());
+        saleProductInstanceDTO.setNetPrice(BigDecimal.valueOf(
+                orderProduct.getPrice() / (1 + (orderProduct.getVATrate().getRate() / 100)))
+                .setScale(2, RoundingMode.HALF_UP)
+                .doubleValue());
 
         return saleProductInstanceDTO;
     }
     private ToolProductInstanceDTO createHelperToolProductInstanceDtoObject(OrderDTO orderDTO, OrderProduct orderProduct) {
         ToolProductInstanceDTO toolProductInstanceDTO = new ToolProductInstanceDTO();
-        toolProductInstanceDTO.setToolProductName(orderProduct.getToolProduct().getProductName());
-        toolProductInstanceDTO.setSupplierName(orderDTO.getSupplierName());
+        toolProductInstanceDTO.setToolProductId(orderProduct.getToolProduct().getId());
+        toolProductInstanceDTO.setSupplierId(orderDTO.getSupplierId());
+        toolProductInstanceDTO.setOrderId(orderProduct.getOrder().getId());
         toolProductInstanceDTO.setOrderNumber(Math.toIntExact(orderProduct.getOrder().getOrderNumber()));
         toolProductInstanceDTO.setPurchaseDate(orderDTO.getOrderDate());
         toolProductInstanceDTO.setPurchasePrice(orderProduct.getPrice());
-        toolProductInstanceDTO.setDescription(orderProduct.getDescription());
-        toolProductInstanceService.validateToolProductInstanceDTO(toolProductInstanceDTO);
+        toolProductInstanceDTO.setVatRate(orderProduct.getVATrate());
+        toolProductInstanceDTO.setNetPrice(BigDecimal.valueOf(
+                        orderProduct.getPrice() / (1 + (orderProduct.getVATrate().getRate() / 100)))
+                .setScale(2, RoundingMode.HALF_UP)
+                .doubleValue());
+
         return toolProductInstanceDTO;
     }
     private EquipmentProductInstanceDTO createHelperEquipmentProductInstanceDtoObject(OrderDTO orderDTO, OrderProduct orderProduct) {
         EquipmentProductInstanceDTO equipmentProductInstanceDTO = new EquipmentProductInstanceDTO();
-        equipmentProductInstanceDTO.setEquipmentProductName(orderProduct.getEquipmentProduct().getProductName());
-        equipmentProductInstanceDTO.setSupplierName(orderDTO.getSupplierName());
+        equipmentProductInstanceDTO.setEquipmentProductId(orderProduct.getEquipmentProduct().getId());
+        equipmentProductInstanceDTO.setSupplierId(orderDTO.getSupplierId());
+        equipmentProductInstanceDTO.setOrderId(orderProduct.getOrder().getId());
         equipmentProductInstanceDTO.setOrderNumber(Math.toIntExact(orderProduct.getOrder().getOrderNumber()));
         equipmentProductInstanceDTO.setPurchaseDate(orderDTO.getOrderDate());
         equipmentProductInstanceDTO.setPurchasePrice(orderProduct.getPrice());
-        equipmentProductInstanceDTO.setDescription(orderProduct.getDescription());
-        equipmentProductInstanceService.validateEquipmentProductInstanceDTO(equipmentProductInstanceDTO);
+        equipmentProductInstanceDTO.setVatRate(orderProduct.getVATrate());
+        equipmentProductInstanceDTO.setNetPrice(BigDecimal.valueOf(
+                        orderProduct.getPrice() / (1 + (orderProduct.getVATrate().getRate() / 100)))
+                .setScale(2, RoundingMode.HALF_UP)
+                .doubleValue());
+
         return equipmentProductInstanceDTO;
     }
 
@@ -343,20 +365,12 @@ public class OrderService {
                     .orElse(null);
 
             if (existingOrderProduct != null) {
-                updateOrderProductInstancesQuantity(existingOrderProduct, orderProductDTO);
+                updateProductInstances(existingOrderProduct, orderProductDTO);
             } else {
                 addOrderProduct(order, orderProductDTO);
             }
         }
         deleteRemovedOrderProducts(order,orderDTO);
-    }
-
-    private void updateOrderProductInstancesQuantity(OrderProduct existingOrderProduct, OrderProductDTO orderProductDTO) {
-        existingOrderProduct.setQuantity(orderProductDTO.getQuantity());
-        existingOrderProduct.setPrice(orderProductDTO.getPrice());
-        existingOrderProduct.setDescription(orderProductDTO.getDescription());
-
-        updateProductInstances(existingOrderProduct, orderProductDTO);
     }
 
     private void updateProductInstances(OrderProduct existingOrderProduct, OrderProductDTO orderProductDTO) {
@@ -376,7 +390,27 @@ public class OrderService {
                 }
                 removeProductInstances(instancesToRemove);
         }
-        existingOrderProduct.setQuantity(newQuantity);
+
+        orderProductService.updateOrderProduct(existingOrderProduct.getId(), orderProductDTO);
+
+        Order order = existingOrderProduct.getOrder();
+
+        if (existingOrderProduct.getSaleProduct() != null) {
+            SaleProductInstanceDTO saleProductInstanceDTO = createHelperSaleProductInstanceDtoObject(helperOrderDTO, existingOrderProduct);
+            for(SaleProductInstance saleProductInstance : order.getSaleProductInstances()){
+                saleProductInstanceService.updateInstance(saleProductInstance.getId(), saleProductInstanceDTO);
+            }
+        } else if (existingOrderProduct.getToolProduct() != null) {
+            ToolProductInstanceDTO toolProductInstanceDTO = createHelperToolProductInstanceDtoObject(helperOrderDTO, existingOrderProduct);
+            for(ToolProductInstance toolProductInstance : order.getToolProductInstances()){
+                toolProductInstanceService.updateInstance(toolProductInstance.getId(), toolProductInstanceDTO);
+            }
+        } else if (existingOrderProduct.getEquipmentProduct() != null) {
+            EquipmentProductInstanceDTO equipmentProductInstanceDTO = createHelperEquipmentProductInstanceDtoObject(helperOrderDTO, existingOrderProduct);
+            for(EquipmentProductInstance equipmentProductInstance : order.getEquipmentProductInstances()){
+                equipmentProductInstanceService.updateInstance(equipmentProductInstance.getId(), equipmentProductInstanceDTO);
+            }
+        }
     }
 
     private void addOrderProduct(Order order, OrderProductDTO orderProductDTO) {
@@ -466,9 +500,12 @@ public class OrderService {
         }
     }
 
-    private void validateOrderStatus(Order existingOrder){
-        if (!"FINALIZED".equals(existingOrder.getOrderStatus())) {
-            throw new InvalidOrderStateException("Only finalized orders can be updated.");
+    private long generateOrderNumber() {
+        try {
+            Optional<Order> lastOrder = orderRepo.findTopByOrderByOrderNumberDesc();
+            return lastOrder.map(order -> order.getOrderNumber() + 1).orElse(1L);
+        } catch (DataAccessException e) {
+            throw new OrderCreationException("Failed to generate order number.", e);
         }
     }
 

@@ -1,6 +1,6 @@
 package com.podocare.PodoCareWebsite.model.order;
 
-import com.podocare.PodoCareWebsite.model.product.product_category.BaseProduct;
+import com.podocare.PodoCareWebsite.model.VatRate;
 import com.podocare.PodoCareWebsite.model.product.product_category.EquipmentProduct;
 import com.podocare.PodoCareWebsite.model.product.product_category.SaleProduct;
 import com.podocare.PodoCareWebsite.model.product.product_category.ToolProduct;
@@ -36,19 +36,6 @@ public class OrderProduct {
     private EquipmentProduct equipmentProduct;
 
     private Integer quantity;
-
+    private VatRate VATrate;
     private Double price;
-    private String description;
-
-    public Object getAssociatedProduct() {
-        if (saleProduct != null) {
-            return saleProduct;
-        } else if (equipmentProduct != null) {
-            return equipmentProduct;
-        } else if (toolProduct != null) {
-            return toolProduct;
-        }
-        return null;
-    }
-
 }

@@ -16,7 +16,8 @@ import java.util.List;
 @NoArgsConstructor
 public class SaleProduct{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_seq")
+    @SequenceGenerator(name = "product_seq", sequenceName = "product_id_sequence", allocationSize = 1)
     private Long id;
     private String productName;
     @ManyToOne

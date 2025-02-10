@@ -194,7 +194,7 @@ public class EquipmentProductInstanceService {
 
     public void calculateAndSetWarrantyEndDate(EquipmentProductInstance equipmentProductInstance,
                                          EquipmentProductInstanceDTO equipmentProductInstanceDTO){
-        EquipmentProduct equipmentProduct = equipmentProductService.findByEquipmentProductName(equipmentProductInstanceDTO.getEquipmentProductName());
+        EquipmentProduct equipmentProduct = equipmentProductService.getEquipmentProductById(equipmentProductInstanceDTO.getEquipmentProductId());
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(equipmentProductInstanceDTO.getPurchaseDate());
         calendar.add(Calendar.MONTH, equipmentProduct.getWarrantyLength());
@@ -203,13 +203,15 @@ public class EquipmentProductInstanceService {
 
     public EquipmentProductInstance equipmentProductInstanceDtoToEquipmentProductInstanceConversion(EquipmentProductInstance equipmentProductInstance,
                                                                                      EquipmentProductInstanceDTO equipmentProductInstanceDTO){
-        equipmentProductInstance.setEquipmentProduct(equipmentProductService.findByEquipmentProductName(equipmentProductInstanceDTO.getEquipmentProductName()));
-        equipmentProductInstance.setSupplier(supplierService.findOrCreateSupplier(equipmentProductInstanceDTO.getSupplierName()));
+        equipmentProductInstance.setEquipmentProduct(equipmentProductService.getEquipmentProductById(equipmentProductInstanceDTO.getEquipmentProductId()));
+        equipmentProductInstance.setSupplier(supplierService.findOrCreateSupplier(supplierService.getSupplierById(equipmentProductInstanceDTO.getSupplierId()).getSupplierName()));
         equipmentProductInstance.setOrder(orderService.findOrderByOrderNumber(equipmentProductInstanceDTO.getOrderNumber()));
         equipmentProductInstance.setPurchaseDate(equipmentProductInstanceDTO.getPurchaseDate());
         equipmentProductInstance.setPurchasePrice(equipmentProductInstanceDTO.getPurchasePrice());
+        equipmentProductInstance.setVatRate(equipmentProductInstanceDTO.getVatRate());
+        equipmentProductInstance.setNetPrice(equipmentProductInstanceDTO.getNetPrice());
         equipmentProductInstance.setDescription(equipmentProductInstanceDTO.getDescription());
-        equipmentProductInstance.setOutOfUse(equipmentProductInstance.getOutOfUse());
+        equipmentProductInstance.setOutOfUse(equipmentProductInstanceDTO.getOutOfUse() != null ? equipmentProductInstanceDTO.getOutOfUse() : false);
         calculateAndSetWarrantyEndDate(equipmentProductInstance,equipmentProductInstanceDTO);
         return equipmentProductInstance;
     }
@@ -218,6 +220,8 @@ public class EquipmentProductInstanceService {
                                                                                                 EquipmentProductInstanceDTO equipmentProductInstanceDTO){
         equipmentProductInstance.setEquipmentProduct(equipmentProductService.getEquipmentProductById(equipmentProductInstanceDTO.getEquipmentProductId()));
         equipmentProductInstance.setPurchasePrice(equipmentProductInstanceDTO.getPurchasePrice());
+        equipmentProductInstance.setVatRate(equipmentProductInstanceDTO.getVatRate());
+        equipmentProductInstance.setNetPrice(equipmentProductInstanceDTO.getNetPrice());
         equipmentProductInstance.setDescription(equipmentProductInstanceDTO.getDescription());
         if (equipmentProductInstanceDTO.getPurchaseDate() == null) {
             equipmentProductInstance.setPurchaseDate(new Date());
@@ -278,11 +282,11 @@ public class EquipmentProductInstanceService {
     }
 
     public void validateEquipmentProductInstanceDTO(EquipmentProductInstanceDTO equipmentProductInstanceDTO) {
-        if (equipmentProductInstanceDTO.getEquipmentProductName() == null || equipmentProductInstanceDTO.getEquipmentProductName().isBlank()) {
+        if (equipmentProductInstanceDTO.getEquipmentProductId() == null) {
             throw new IllegalArgumentException("EquipmentProductInstanceDTO must have a valid equipmentProductName.");
         }
-        if (equipmentProductInstanceDTO.getSupplierName() == null || equipmentProductInstanceDTO.getSupplierName().isBlank()) {
-            throw new IllegalArgumentException("EquipmentProductInstanceDTO must have a valid supplierName.");
+        if (equipmentProductInstanceDTO.getSupplierId() == null) {
+            throw new IllegalArgumentException("EquipmentProductInstanceDTO must have a valid supplierId.");
         }
         if (equipmentProductInstanceDTO.getOrderNumber() == null || equipmentProductInstanceDTO.getOrderNumber() <= 0) {
             throw new IllegalArgumentException("EquipmentProductInstanceDTO must have a valid orderNumber.");
@@ -290,15 +294,16 @@ public class EquipmentProductInstanceService {
         if (equipmentProductInstanceDTO.getPurchaseDate() == null) {
             throw new IllegalArgumentException("EquipmentProductInstanceDTO must have a valid purchaseDate.");
         }
-        if (equipmentProductInstanceDTO.getPurchasePrice() == null || equipmentProductInstanceDTO.getPurchasePrice() <= 0) {
+        if (equipmentProductInstanceDTO.getPurchasePrice() == null || equipmentProductInstanceDTO.getPurchasePrice() < 0) {
             throw new IllegalArgumentException("EquipmentProductInstanceDTO must have a valid purchasePrice.");
+        }
+        if (equipmentProductInstanceDTO.getVatRate() == null) {
+            throw new IllegalArgumentException("EquipmentProductInstanceDTO must have a VatRate applied.");
         }
     }
 
     public void validateIndependentEquipmentProductInstanceDTO(EquipmentProductInstanceDTO equipmentProductInstanceDTO) {
-        if (equipmentProductInstanceDTO.getEquipmentProductName() == null || equipmentProductInstanceDTO.getEquipmentProductName().isBlank()) {
-            throw new IllegalArgumentException("EquipmentProductInstanceDTO must have a valid equipmentProductName.");
-        }
+
         if (equipmentProductInstanceDTO.getEquipmentProductId() == null) {
             throw new IllegalArgumentException("EquipmentProductInstanceDTO must have a valid equipmentProductId.");
         }

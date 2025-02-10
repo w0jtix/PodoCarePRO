@@ -1,6 +1,7 @@
 package com.podocare.PodoCareWebsite.exceptions;
 
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.order.*;
+import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.order_product.OrderProductNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product.ProductCreationException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product.ProductDeletionException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product.ProductNotFoundException;
@@ -163,6 +164,15 @@ public class GlobalExceptionHandler {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    // ORDER PRODUCT
+
+    @ExceptionHandler(OrderProductNotFoundException.class)
+    public ResponseEntity<String> handleOrderProductNotFoundException(OrderProductNotFoundException ex) {
+        log.error("OrderProduct not found: {}", ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
 
 
 

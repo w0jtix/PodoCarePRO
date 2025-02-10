@@ -34,6 +34,13 @@ public class SupplierService {
         return supplierRepo.findAll();
     }
 
+    public List<SupplierDTO> getAllSuppliers() {
+        List<Supplier> supplierList = getSuppliers();
+        return supplierList.stream()
+                .map(this::supplierToSupplierDTOConversion)
+                .toList();
+    }
+
     public Supplier findOrCreateSupplier(String supplierName){
         return supplierRepo.findBySupplierName(supplierName)
                 .orElseGet(() -> {
@@ -57,8 +64,9 @@ public class SupplierService {
         return totalProductCount;
     }
 
-    public Supplier createSupplier(SupplierDTO supplierDTO) {
-        isValid(supplierDTO.getSupplierName());
+
+    public SupplierDTO createSupplier(SupplierDTO supplierDTO) {
+        isValid(supplierDTO.getName());
 
         if(supplierAlreadyExists(supplierDTO)){
             throw new SupplierCreationException("Supplier already exists.");
@@ -67,7 +75,8 @@ public class SupplierService {
         Supplier supplier = new Supplier();
         Supplier supplierToSave = supplierDtoToSupplierConversion(supplier, supplierDTO);
         try {
-            return supplierRepo.save(supplierToSave);
+            supplierRepo.save(supplierToSave);
+            return supplierDTO;
         } catch (Exception e) {
             throw new SupplierCreationException("Failed to create Supplier.", e);
         }
@@ -77,7 +86,7 @@ public class SupplierService {
     public Supplier updateSupplier(Long supplierId, SupplierDTO supplierDTO){
         Supplier existingSupplier = getSupplierById(supplierId);
 
-        isValid(supplierDTO.getSupplierName());
+        isValid(supplierDTO.getName());
         Supplier supplierToUpdate = supplierDtoToSupplierConversion(existingSupplier, supplierDTO);
 
         try {
@@ -108,15 +117,23 @@ public class SupplierService {
     }
 
     public boolean supplierAlreadyExists(SupplierDTO supplierDTO) {
-        return supplierRepo.findBySupplierName(supplierDTO.getSupplierName()).isPresent();
+        return supplierRepo.findBySupplierName(supplierDTO.getName()).isPresent();
     }
 
     private Supplier supplierDtoToSupplierConversion(Supplier supplier, SupplierDTO supplierDTO) {
-        supplier.setSupplierName(supplierDTO.getSupplierName());
+        supplier.setSupplierName(supplierDTO.getName());
         if(supplierDTO.getWebsiteUrl() != null) {
             supplier.setWebsiteUrl(supplierDTO.getWebsiteUrl());
         }
         return supplier;
+    }
+
+    private SupplierDTO supplierToSupplierDTOConversion(Supplier supplier) {
+        SupplierDTO supplierDTO = new SupplierDTO();
+        supplierDTO.setName(supplier.getSupplierName());
+        supplierDTO.setId(supplier.getId());
+        supplierDTO.setWebsiteUrl(supplier.getWebsiteUrl());
+        return supplierDTO;
     }
 
     private void isValid(String supplierName) {
