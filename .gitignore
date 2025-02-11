@@ -9,3 +9,4 @@
 /be/target/
 /be/.idea/
 /be/
+/be/PodoCareWebsite/logs/*.log
