@@ -2,7 +2,7 @@ import React from "react";
 import SubMenuNavbar from "./SubMenuNavbar";
 import UserMenu from "./UserMenu";
 
-const OrdersNavigationBar = ({ onFilter, orderFilterDTO }) => {
+const OrdersNavigationBar = () => {
   return (
     <div className="orders-navigation-bar">
       <SubMenuNavbar />

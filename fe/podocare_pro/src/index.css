@@ -959,6 +959,7 @@ button.menu-button:hover a.menu-a {
   display: grid;
   gap:10px;
   position: relative;
+  height: 582px;
 }
 
 .order-display-interior > h1 {
@@ -1322,6 +1323,66 @@ input[type="number"]::-webkit-inner-spin-button {
 .vat-select-item.disabled {
   color: #aaa;
   cursor: not-allowed;
+}
+
+/* ORDERS LIST BY SUPPLIER */
+
+.orders-list-by-supplier-container-title {
+  height:47px;
+  display: flex;
+  align-items: center;
+}
+
+.orders-list-by-supplier-orders-count-span{
+  color:white;
+  font-size:14px;
+  opacity:70%;
+  font-family: var(--font-h2-outfit);
+  font-weight: 200;
+  letter-spacing: 1px;
+}
+
+
+/* HANDY ORDER LIST */
+
+.handy-order-list-container {
+  height:406px;
+  max-height: 406px;
+  overflow-y: auto; 
+  scrollbar-width:thin;
+  scrollbar-color: rgba(100, 100, 100, 0.2) transparent;
+}
+
+.order-product-move-button {
+  background-color: transparent;
+  border:none;
+  padding: 0;
+  transition: transform 0.2s ease;
+}
+
+.order-product-move-button:hover {
+  transform: scale(1.1) translateY(1px);
+}
+
+.expand-order-icon {
+  display: grid;
+  width:10px;
+  height:10px;
+  opacity: 90%;
+  cursor: pointer;
+  transition: transform 0.25s ease;
+}
+
+.expand-order-icon.rotated {
+  transform: rotate(180deg);
+}
+
+.orders-list-by-supplier-orders-count{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height:77px;
+  /* border-top: var(--border-dashboard-inner); */
 }
 
 /* ORDER NEW PRODUCTS POPUP */
