@@ -25,7 +25,6 @@ const OrdersListBySupplier = ({ selectedSupplier }) => {
     } else {
       setFilteredOrders([]);
     }
-    console.log("elo");
   }, [selectedSupplier]);
 
   return (
