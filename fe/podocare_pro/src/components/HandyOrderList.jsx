@@ -1,10 +1,14 @@
 import React from "react";
+import { useState } from "react";
+import OrderContent from "./OrderContent";
 
-const HandyOrderList = ({ attributes, orders }) => {
+const HandyOrderList = ({ attributes, orders, setSelectedOrderProduct }) => {
+  const [expandedOrderIds, setExpandedOrderIds] = useState([]);
+
   const attributeMap = {
     Numer: "orderNumber",
     Data: "orderDate",
-    "Ilość produktów": "quantity",
+    Produkty: "quantity",
     Wartość: "totalValue",
   };
 
@@ -24,49 +28,71 @@ const HandyOrderList = ({ attributes, orders }) => {
     );
   };
 
-  const handleProductAddToOrder = (orderProduct) => {};
+  const toggleOrderProducts = (orderId) => {
+    setExpandedOrderIds((prevIds) =>
+      prevIds.includes(orderId)
+        ? prevIds.filter((id) => id !== orderId)
+        : [...prevIds, orderId]
+    );
+  };
 
   return (
     <div className="handy-order-list-container">
-      {orders.map((order, index) => (
-        <div key={`${order.id}-${index}`} className="order-item">
-          {attributes.map((attr) => (
+      {[...orders]
+        .sort((a, b) => b.orderNumber - a.orderNumber)
+        .map((order, index) => (
+          <div key={`${order.id}-${index}`} className="order-wrapper">
             <div
-              key={`${order.id}-${attr.name}`}
-              className={`order-attribute-item ${
-                attr.name === "" ? "order-category-column" : ""
-              }`}
-              style={{
-                width: attr.width,
-                justifyContent: attr.justify,
-              }}
+              className="handy-order-item"
+              onClick={() => toggleOrderProducts(order.id)}
             >
-              {attr.name === "" ? (
-                <button
-                  className="order-product-move-button"
-                  onClick={() => handleProductAddToOrder(order.orderProduct)}
+              {attributes.map((attr) => (
+                <div
+                  key={`${order.id}-${attr.name}`}
+                  className={`order-attribute-item ${
+                    attr.name === "" ? "order-category-column" : ""
+                  }`}
+                  style={{
+                    width: attr.width,
+                    justifyContent: attr.justify,
+                  }}
                 >
-                  <img
-                    src="src/assets/arrow_down.svg"
-                    alt="Expand order"
-                    className="expand-order-icon"
-                  />
-                </button>
-              ) : attr.name === "Numer" ? (
-                <span>{order.orderNumber}</span>
-              ) : attr.name === "Data" ? (
-                <span>{formatDate(order.orderDate)}</span>
-              ) : attr.name === "Ilość produktów" ? (
-                <span>{calculateOrderItems(order)}</span>
-              ) : attr.name === "Wartość" ? (
-                <span>{order.totalValue}</span>
-              ) : (
-                getNestedValue(order, attributeMap[attr.name])
-              )}
+                  {attr.name === "" ? (
+                    <button className="order-product-move-button">
+                      <img
+                        src="src/assets/arrow_down.svg"
+                        alt="Expand order"
+                        className={`expand-order-icon ${
+                          expandedOrderIds.includes(order.id) ? "rotated" : ""
+                        }`}
+                      />
+                    </button>
+                  ) : attr.name === "Numer" ? (
+                    <span>{order.orderNumber}</span>
+                  ) : attr.name === "Data" ? (
+                    <span>{formatDate(order.orderDate)}</span>
+                  ) : attr.name === "Produkty" ? (
+                    <span>{calculateOrderItems(order)}</span>
+                  ) : attr.name === "Wartość" ? (
+                    <span>
+                      {order.totalValue !== null
+                        ? order.totalValue.toFixed(2)
+                        : order.totalValue}
+                    </span>
+                  ) : (
+                    getNestedValue(order, attributeMap[attr.name])
+                  )}
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      ))}
+            {expandedOrderIds.includes(order.id) && (
+              <OrderContent
+                order={order}
+                setSelectedOrderProduct={setSelectedOrderProduct}
+              />
+            )}
+          </div>
+        ))}
     </div>
   );
 };

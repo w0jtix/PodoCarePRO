@@ -9,7 +9,12 @@ import axios from "axios";
 import OrderService from "../service/OrderService";
 import AllProductService from "../service/AllProductService";
 
-const OrderCreator = ({ selectedSupplier, setSelectedSupplier }) => {
+const OrderCreator = ({
+  selectedSupplier,
+  setSelectedSupplier,
+  selectedOrderProduct,
+  setSelectedOrderProduct,
+}) => {
   const [orderProductDTOList, setOrderProductDTOList] = useState([]);
   const [shippingCost, setShippingCost] = useState(0);
   const [orderDate, setOrderDate] = useState("");
@@ -48,6 +53,39 @@ const OrderCreator = ({ selectedSupplier, setSelectedSupplier }) => {
   useEffect(() => {
     fetchSuppliers();
   }, []);
+
+  const getOrderProductCategoryAndDetails = (orderProduct) => {
+    if (orderProduct.saleProduct) {
+      return { category: "saleProduct", product: orderProduct.saleProduct };
+    } else if (orderProduct.toolProduct) {
+      return { category: "toolProduct", product: orderProduct.toolProduct };
+    } else if (orderProduct.equipmentProduct) {
+      return {
+        category: "equipmentProduct",
+        product: orderProduct.equipmentProduct,
+      };
+    }
+    return { category: "Unknown", product: null };
+  };
+
+  useEffect(() => {
+    if (selectedOrderProduct) {
+      const { category, product } =
+        getOrderProductCategoryAndDetails(selectedOrderProduct);
+      setOrderProductDTOList((prevList) => [
+        ...prevList,
+        {
+          id: Date.now(),
+          productName: product ? product.productName : "",
+          price: selectedOrderProduct.price,
+          quantity: 1,
+          VATrate: selectedOrderProduct.vatrate,
+          orderPrice: selectedOrderProduct.price,
+        },
+      ]);
+    }
+    setSelectedOrderProduct(null);
+  }, [selectedOrderProduct]);
 
   const handleAddSupplier = (newSupplier) => {
     setSuppliers((prevSuppliers) => [...prevSuppliers, newSupplier]);
@@ -109,7 +147,6 @@ const OrderCreator = ({ selectedSupplier, setSelectedSupplier }) => {
       orderDate: orderDate,
       supplierId: selectedSupplier.id,
     };
-
     return OrderService.createNewOrder(OrderDTO)
       .then((response) => {
         setIsOrderNewProductsPopupOpen(false);
@@ -117,7 +154,6 @@ const OrderCreator = ({ selectedSupplier, setSelectedSupplier }) => {
           `Zamówienie #${response.data.orderNumber} zostało utworzone!`,
           "success"
         );
-        console.log(response.data);
         resetFormState();
       })
       .catch((error) => {
@@ -204,6 +240,7 @@ const OrderCreator = ({ selectedSupplier, setSelectedSupplier }) => {
     setSelectedSupplier(null);
     setNonExistingProducts([]);
     setIsOrderNewProductsPopupOpen(false);
+    setSelectedOrderProduct();
   };
 
   return (

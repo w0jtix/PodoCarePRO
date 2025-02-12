@@ -17,8 +17,8 @@ const SubMenuNavbar = () => {
   return (
     <div className="submenu-navbar">
       {menuItems.map((menuItem, index) => (
-        <div className="submenu-navbar-button-div">
-          <button key={index} className="submenu-navbar-menuItem-button">
+        <div key={index} className="submenu-navbar-button-div">
+          <button className="submenu-navbar-menuItem-button">
             <div className="submenu-navbar-menuItem-button-interior">
               <img
                 className="submenu-order-icon"

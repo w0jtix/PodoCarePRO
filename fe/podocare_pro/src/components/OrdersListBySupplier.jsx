@@ -4,14 +4,14 @@ import OrderListHeader from "./OrderListHeader";
 import HandyOrderList from "./HandyOrderList";
 import OrderService from "../service/OrderService";
 
-const OrdersListBySupplier = ({ selectedSupplier }) => {
+const OrdersListBySupplier = ({ selectedSupplier, setSelectedOrderProduct }) => {
   const [filteredOrders, setFilteredOrders] = useState([]);
 
   const attributes = [
-    { name: "", width: "6%", justify: "center" },
+    { name: "", width: "6%", justify: "start" },
     { name: "Numer", width: "12%", justify: "center" },
     { name: "Data", width: "48%", justify: "center" },
-    { name: "Ilość produktów", width: "16%", justify: "center" },
+    { name: "Produkty", width: "16%", justify: "center" },
     { name: "Wartość", width: "18%", justify: "center" },
   ];
 
@@ -40,7 +40,11 @@ const OrdersListBySupplier = ({ selectedSupplier }) => {
           </h1>
         )}
         <OrderListHeader attributes={attributes} />
-        <HandyOrderList attributes={attributes} orders={filteredOrders} />
+        <HandyOrderList 
+          attributes={attributes} 
+          orders={filteredOrders} 
+          setSelectedOrderProduct={setSelectedOrderProduct}
+        />
         <section className="orders-list-by-supplier-orders-count">
           {selectedSupplier !== null ? (
             <span className="orders-list-by-supplier-orders-count-span">

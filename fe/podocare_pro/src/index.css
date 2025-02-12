@@ -1022,7 +1022,8 @@ button.menu-button:hover a.menu-a {
   border-bottom:var(--border-dashboard-inner);
 }
 
-.order-attribute-item {
+.order-attribute-item,
+.order-product-attribute-item{
   font-family: var(--font-h2-outfit);
   font-size: 14px;
   letter-spacing: 0.5px;
@@ -1348,9 +1349,10 @@ input[type="number"]::-webkit-inner-spin-button {
 .handy-order-list-container {
   height:406px;
   max-height: 406px;
-  overflow-y: auto; 
-  scrollbar-width:thin;
-  scrollbar-color: rgba(100, 100, 100, 0.2) transparent;
+  overflow-y: scroll; 
+  scrollbar-width:none;
+  display: flex;
+  flex-direction: column;
 }
 
 .order-product-move-button {
@@ -1382,7 +1384,85 @@ input[type="number"]::-webkit-inner-spin-button {
   justify-content: center;
   align-items: center;
   height:77px;
-  /* border-top: var(--border-dashboard-inner); */
+}
+
+.handy-order-item {
+  color:white;
+  display:flex;
+  border-top:var(--border-dashboard-inner);
+  padding:1px 0px;
+  cursor: pointer;
+}
+
+.handy-order-item:first-child {
+  border-top:none;
+}
+.handy-order-item:last-child {
+  border-bottom:var(--border-dashboard-inner);
+}
+.handy-order-item:hover {
+  border-radius:3px;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* ORDER CONTENT */
+
+.order-content{
+ margin-bottom:10px;
+}
+
+/* ORDER PRODUCT LIST HEADER */
+
+.handy-order-product-list-container {
+  overflow-y: scroll; 
+  scrollbar-width:none;
+  display: flex;
+  flex-direction: column;
+}
+
+.order-product-list-header {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 15px;
+  box-shadow: inset 0 0 100px rgba(255, 255, 255, 0.1);
+  width:99.7%;
+  display:flex;
+  flex: 0.5;
+  padding: 0;
+}
+
+.order-product-list-header > h2 {
+  font-size:10px;
+}
+
+.order-product-attribute-item{
+  padding:0.5px 0px 0.5px 0px;
+}
+
+/* HANDY ORDER PRODUCTS LIST */
+
+.handy-order-product-item {
+  color:white;
+  display:flex;
+  border-top:var(--border-dashboard-inner);
+  box-shadow: inset 0 0 25px rgba(255, 255, 255, 0.15);
+  border-radius:20px;
+}
+
+.handy-order-product-item:first-child {
+  border-top:none;
+}
+.handy-order-product-item:last-child {
+  border-bottom:var(--border-dashboard-inner);
+}
+
+
+.move-order-product-icon {
+  display: grid;
+  width:20px;
+  height:20px;
+  opacity: 90%;
+  cursor: pointer;
+  transition: transform 0.25s ease;
 }
 
 /* ORDER NEW PRODUCTS POPUP */
