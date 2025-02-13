@@ -1,9 +1,9 @@
 import React from 'react'
 import SupplyListHeader from './SupplyListHeader'
-import ListHelpBar from './ListHelpBar'
 import ItemList from './ItemList'
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import AllProductService from '../service/AllProductService';
 
 const SupplyList = ( { productFilterDTO }) => {
 
@@ -24,27 +24,18 @@ const SupplyList = ( { productFilterDTO }) => {
     const fetchItems = async (productFilterDTO) => {
         const {productTypes, selectedIds, keyword } = productFilterDTO; 
 
-        try{
-            const response = await axios.post(
-                "http://localhost:8080/products/filter", 
-                {
-                    productTypes,
-                    selectedIds,
-                    keyword,
-                  }
-            );
-            if(response.status === 204 || !response.data) {
-                setItems([]);
-            } else {
-                setItems(response.data);
-            }
-            
-        } catch (error) {
-            console.error(
-                "Error fetching products:", error); 
-        } finally {
+        AllProductService.getFilteredProductsWithActiveInstances(productTypes, selectedIds, keyword)
+        .then((response) => {
+            setItems(response);
+        })
+        .catch((error) => {
+            setItems([]);
+            console.error("Error fetching products:", error); 
+        })
+        .finally(() => {
             setLoading(false);
-        }
+        })
+
     };
 
     useEffect(() => {
@@ -70,7 +61,6 @@ const SupplyList = ( { productFilterDTO }) => {
 
   return (
     <>
-        <ListHelpBar/> 
         <SupplyListHeader attributes={attributes}/>
         {loading ?(
             <div className="list-loading-container">

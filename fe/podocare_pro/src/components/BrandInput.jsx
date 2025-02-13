@@ -11,7 +11,7 @@ const BrandInput = ({ onBrandSelect }) => {
 
   useEffect(() => {
     if (keyword.trim().length > 0) {
-      BrandService.getFilteredBrands(keyword)
+      BrandService.getFilteredBrandsByKeyword(keyword)
         .then((filteredData) => {
           setFilteredBrands(filteredData);
           setIsDropdownOpen(filteredData.length > 0);

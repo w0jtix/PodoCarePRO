@@ -8,12 +8,14 @@ import OrderNewProductsPopup from "./OrderNewProductsPopup";
 import axios from "axios";
 import OrderService from "../service/OrderService";
 import AllProductService from "../service/AllProductService";
+import SupplierService from "../service/SupplierService";
 
 const OrderCreator = ({
   selectedSupplier,
   setSelectedSupplier,
   selectedOrderProduct,
   setSelectedOrderProduct,
+  setExpandedOrderIds
 }) => {
   const [orderProductDTOList, setOrderProductDTOList] = useState([]);
   const [shippingCost, setShippingCost] = useState(0);
@@ -41,13 +43,16 @@ const OrderCreator = ({
     }, 2500);
   };
 
-  const fetchSuppliers = async () => {
-    try {
-      const response = await axios.get("http://localhost:8080/suppliers");
-      setSuppliers(response.data || []);
-    } catch (error) {
+  const fetchSuppliers = () => {
+    SupplierService.getAllSuppliers()
+    .then((response) => {
+      setSuppliers(response.data);
+    })
+    .catch((error) => {
+      setSuppliers([]);
       console.error("Error fetching suppliers:", error);
-    }
+    });
+    console.log("Supp", suppliers)
   };
 
   useEffect(() => {
@@ -241,6 +246,7 @@ const OrderCreator = ({
     setNonExistingProducts([]);
     setIsOrderNewProductsPopupOpen(false);
     setSelectedOrderProduct();
+    setExpandedOrderIds([]);
   };
 
   return (

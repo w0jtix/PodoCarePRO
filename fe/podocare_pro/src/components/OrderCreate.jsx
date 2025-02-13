@@ -6,6 +6,7 @@ import { useState } from "react";
 const OrderCreate = () => {
   const [selectedSupplier, setSelectedSupplier] = useState(null);
   const [selectedOrderProduct, setSelectedOrderProduct] = useState();
+  const [expandedOrderIds, setExpandedOrderIds] = useState([]);
 
 
   return (
@@ -15,10 +16,13 @@ const OrderCreate = () => {
         setSelectedSupplier={setSelectedSupplier}
         selectedOrderProduct={selectedOrderProduct}
         setSelectedOrderProduct={setSelectedOrderProduct}
+        setExpandedOrderIds={setExpandedOrderIds}
       />
       <OrdersListBySupplier
         selectedSupplier={selectedSupplier}
         setSelectedOrderProduct={setSelectedOrderProduct}
+        expandedOrderIds={expandedOrderIds}
+        setExpandedOrderIds={setExpandedOrderIds}
       />
     </div>
   );

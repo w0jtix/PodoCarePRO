@@ -4,7 +4,7 @@ import OrderListHeader from "./OrderListHeader";
 import HandyOrderList from "./HandyOrderList";
 import OrderService from "../service/OrderService";
 
-const OrdersListBySupplier = ({ selectedSupplier, setSelectedOrderProduct }) => {
+const OrdersListBySupplier = ({ selectedSupplier, setSelectedOrderProduct, expandedOrderIds, setExpandedOrderIds }) => {
   const [filteredOrders, setFilteredOrders] = useState([]);
 
   const attributes = [
@@ -44,6 +44,8 @@ const OrdersListBySupplier = ({ selectedSupplier, setSelectedOrderProduct }) => 
           attributes={attributes} 
           orders={filteredOrders} 
           setSelectedOrderProduct={setSelectedOrderProduct}
+          expandedOrderIds={expandedOrderIds}
+          setExpandedOrderIds={setExpandedOrderIds}
         />
         <section className="orders-list-by-supplier-orders-count">
           {selectedSupplier !== null ? (

@@ -2,8 +2,7 @@ import React from "react";
 import { useState } from "react";
 import OrderContent from "./OrderContent";
 
-const HandyOrderList = ({ attributes, orders, setSelectedOrderProduct }) => {
-  const [expandedOrderIds, setExpandedOrderIds] = useState([]);
+const HandyOrderList = ({ attributes, orders, setSelectedOrderProduct, expandedOrderIds, setExpandedOrderIds }) => {
 
   const attributeMap = {
     Numer: "orderNumber",

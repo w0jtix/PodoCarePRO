@@ -251,6 +251,7 @@ const OrderItemList = ({ attributes, items, onItemsChange }) => {
                 />
               ) : attr.name === "VAT" ? (
                 <SelectVATButton
+                  selectedVAT = {item.VATrate}
                   onSelect={(selectedVAT) =>
                     handleVatSelect(item.id, selectedVAT)
                   }
