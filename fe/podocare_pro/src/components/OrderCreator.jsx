@@ -46,7 +46,10 @@ const OrderCreator = ({
   const fetchSuppliers = () => {
     SupplierService.getAllSuppliers()
     .then((response) => {
-      setSuppliers(response.data);
+      const sortedSuppliers = response.data.sort((a, b) =>
+        a.name.localeCompare(b.name)
+      );
+      setSuppliers(sortedSuppliers);
     })
     .catch((error) => {
       setSuppliers([]);

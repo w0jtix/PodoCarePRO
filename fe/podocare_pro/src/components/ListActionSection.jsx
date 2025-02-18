@@ -1,6 +1,6 @@
 import React from 'react'
-import BrandFilterButton from './BrandFilterButton'
 import CategoryButtons from './CategoryButtons'
+import BrandButton from './BrandButton'
 
 const ListActionSection = ( { onFilter, productFilterDTO }) => {
 
@@ -10,7 +10,7 @@ const ListActionSection = ( { onFilter, productFilterDTO }) => {
   return (
     <div className="list-action-section">     
       <CategoryButtons onFilter ={onFilter} productFilterDTO={productFilterDTO}/>
-      <BrandFilterButton brandFilterDTO={brandFilterDTO} onSave={onFilter}/>
+      <BrandButton brandFilterDTO={brandFilterDTO} onSelect={onFilter} />
     </div>
   )
 }

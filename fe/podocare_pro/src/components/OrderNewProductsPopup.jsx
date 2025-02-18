@@ -6,7 +6,6 @@ import BrandInput from "./BrandInput";
 import DigitInput from "./DigitInput";
 import SelectProductCategory from "./SelectProductCategory";
 import OrderListHeader from "./OrderListHeader";
-import axios from "axios";
 import AllProductService from "../service/AllProductService";
 
 const OrderNewProductsPopup = ({

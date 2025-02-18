@@ -5,8 +5,10 @@ import UserMenu from "./UserMenu";
 const OrdersNavigationBar = () => {
   return (
     <div className="orders-navigation-bar">
-      <SubMenuNavbar />
-      <UserMenu />
+      <section className="navigation-bar-interior">
+        <SubMenuNavbar />
+        <UserMenu />
+      </section>
     </div>
   );
 };

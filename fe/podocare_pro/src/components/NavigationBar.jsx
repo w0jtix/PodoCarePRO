@@ -17,9 +17,11 @@ const NavigationBar = ( { onFilter, productFilterDTO }) => {
 
   return (
     <div className="navigation-bar">
+      <section className="navigation-bar-interior">
         <SearchBar onKeywordChange={handleFilterChange}/>
         <ListActionSection onFilter={onFilter} productFilterDTO={productFilterDTO}/>
         <UserMenu />
+        </section>
     </div>
   )
 }

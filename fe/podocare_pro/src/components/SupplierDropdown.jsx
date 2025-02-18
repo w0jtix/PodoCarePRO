@@ -10,7 +10,7 @@ const SupplierDropdown = ({ items, placeholder, selectedSupplier, onSelect, onAd
   const dropdownRef = useRef(null);
 
   const filteredItems = items.filter((item) =>
-    item.name.toLowerCase().includes(searchValue.toLowerCase())
+    item.name.toLowerCase().startsWith(searchValue.toLowerCase())
   );
 
   const handleOpenAddSupplierPopup = () => {
