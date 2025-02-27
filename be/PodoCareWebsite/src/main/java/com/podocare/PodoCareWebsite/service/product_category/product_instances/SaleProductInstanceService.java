@@ -293,9 +293,6 @@ public class SaleProductInstanceService {
         if (saleProductInstanceDTO.getSupplierId() == null) {
             throw new IllegalArgumentException("SaleProductInstanceDTO must have a valid supplierId.");
         }
-        if (saleProductInstanceDTO.getOrderNumber() == null || saleProductInstanceDTO.getOrderNumber() <= 0) {
-            throw new IllegalArgumentException("SaleProductInstanceDTO must have a valid orderNumber.");
-        }
         if (saleProductInstanceDTO.getPurchaseDate() == null) {
             throw new IllegalArgumentException("SaleProductInstanceDTO must have a valid purchaseDate.");
         }

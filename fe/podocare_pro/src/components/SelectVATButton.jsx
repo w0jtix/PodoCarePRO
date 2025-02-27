@@ -38,9 +38,9 @@ const SelectVATButton = ({ selectedVAT, onSelect }) => {
   return (
     <div className="vat-select-container" ref={dropdownRef}>
       <button className="vat-select-button" onClick={toggleDropdown}>
-        {selectedItem ? (
+        {selectedItem !== null && selectedItem !== undefined ? (
           <a className="vat-button-selection">
-            {typeof selectedItem === "number"
+            {typeof selectedItem === "number" || selectedItem === 0
               ? `${selectedItem}%`
               : selectedItem}
           </a>

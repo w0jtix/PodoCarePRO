@@ -4,8 +4,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { pl } from "date-fns/locale";
 
-const DateInput = ({ onChange }) => {
-  const [orderDate, setOrderDate] = useState(new Date());
+const DateInput = ({ onChange, selectedDate }) => {
+  const [orderDate, setOrderDate] = useState(selectedDate ?? new Date());
 
   const handleDateChange = (date) => {
     setOrderDate(date);
@@ -15,6 +15,10 @@ const DateInput = ({ onChange }) => {
   useEffect(() => {
     onChange(orderDate);
   }, []);
+
+  useEffect(() => {
+    setOrderDate(selectedDate ?? new Date());
+  }, [selectedDate]);
 
   return (
     <div className="input-date-component">

@@ -8,6 +8,8 @@ import com.podocare.PodoCareWebsite.model.product.product_category.DTOs.ToolProd
 import com.podocare.PodoCareWebsite.model.product.product_category.EquipmentProduct;
 import com.podocare.PodoCareWebsite.model.product.product_category.SaleProduct;
 import com.podocare.PodoCareWebsite.model.product.product_category.ToolProduct;
+import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.SaleProductInstanceDTO;
+import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.ToolProductInstanceDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.ToolProductInstance;
 import com.podocare.PodoCareWebsite.repo.product_category.ToolProductRepo;
 import com.podocare.PodoCareWebsite.repo.product_category.product_instances.ToolProductInstanceRepo;
@@ -60,6 +62,7 @@ public class ToolProductService{
                 .orElseThrow(() -> new ProductNotFoundException("ToolProduct not found with ID: " + toolProductId));
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public ToolProduct createToolProduct(ToolProductDTO toolProductDTO) {
         isValid(toolProductDTO.getProductName());
 
@@ -70,9 +73,19 @@ public class ToolProductService{
         ToolProduct toolProductToSave = toolProductDtoToToolProductConversion(toolProduct, toolProductDTO);
 
         try {
-            return toolProductRepo.save(toolProductToSave);
+            ToolProduct savedProduct =  toolProductRepo.save(toolProductToSave);
+            Long toolProductId = savedProduct.getId();
+
+            if(toolProductDTO.getProductInstances() != null && !toolProductDTO.getProductInstances().isEmpty()) {
+                for(ToolProductInstanceDTO instanceDTO : toolProductDTO.getProductInstances()) {
+                    instanceDTO.setToolProductId(toolProductId);
+                    toolProductInstanceService.createInstance(instanceDTO);
+                }
+            }
+
+            return savedProduct;
         } catch (Exception e) {
-            throw new ProductCreationException("Failed to create the Product.", e);
+            throw new ProductCreationException("Failed to create the Product."+ e.getMessage(), e);
         }
     }
 

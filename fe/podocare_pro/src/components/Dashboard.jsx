@@ -3,8 +3,11 @@ import NavigationBar from "./NavigationBar";
 import SupplyList from "./SupplyList";
 import { useState } from "react";
 import ProductActionButton from "./ProductActionButton";
+import AddProductPopup from "./AddProductPopup";
 
 const Dashboard = () => {
+   const [isAddNewProductsPopupOpen, setIsAddNewProductsPopupOpen] =
+      useState(false);
   const [productFilterDTO, setProductFilterDTO] = useState({
     productTypes: ["Sale", "Tool", "Equipment"],
     selectedBrandIds: [],
@@ -26,6 +29,7 @@ const Dashboard = () => {
           src={"src/assets/addNew.svg"}
           alt={"Dodaj Produkt"}
           text={"Dodaj nowy"}
+          onClick={() => setIsAddNewProductsPopupOpen(true)}
         />
         <ProductActionButton
           src={"src/assets/edit.svg"}
@@ -39,6 +43,13 @@ const Dashboard = () => {
         />
       </section>
       <SupplyList productFilterDTO={productFilterDTO} />
+      {isAddNewProductsPopupOpen && (
+          <AddProductPopup
+
+          onClose={() => setIsAddNewProductsPopupOpen(false)}
+
+          />
+        )}
     </div>
   );
 };

@@ -12,6 +12,20 @@ class SupplierService {
       throw error;
     }
   }
+
+  static async getFilteredSuppliersByKeyword(keyword) {
+    try {
+      const allSuppliers = await this.getAllSuppliers();
+      const filteredSuppliers = allSuppliers.data.filter((supplier) =>
+        supplier.name.toLowerCase().startsWith(keyword.trim().toLowerCase())
+      );
+      
+      return filteredSuppliers;
+    } catch (error) {
+      console.error("Error filtering Suppliers. ", error);
+      throw error;
+    }
+  }
 }
 
 export default SupplierService;

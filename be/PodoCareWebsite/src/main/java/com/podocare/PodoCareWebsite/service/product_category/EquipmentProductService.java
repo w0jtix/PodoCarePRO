@@ -7,6 +7,8 @@ import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product.Produ
 import com.podocare.PodoCareWebsite.model.product.product_category.DTOs.EquipmentProductDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.EquipmentProduct;
 import com.podocare.PodoCareWebsite.model.product.product_category.EquipmentProduct;
+import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.EquipmentProductInstanceDTO;
+import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.SaleProductInstanceDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.EquipmentProductInstance;
 import com.podocare.PodoCareWebsite.repo.product_category.EquipmentProductRepo;
 import com.podocare.PodoCareWebsite.repo.product_category.product_instances.EquipmentProductInstanceRepo;
@@ -60,7 +62,7 @@ public class EquipmentProductService {
                 .orElseThrow(() -> new ProductNotFoundException("EquipmentProduct not found with ID: " + equipmentProductId));
     }
 
-
+    @Transactional(rollbackFor = Exception.class)
     public EquipmentProduct createEquipmentProduct(EquipmentProductDTO equipmentProductDTO) {
         isValid(equipmentProductDTO.getProductName());
 
@@ -71,9 +73,18 @@ public class EquipmentProductService {
         EquipmentProduct equipmentProductToSave = equipmentProductDtoToEquipmentProductConversion(equipmentProduct, equipmentProductDTO);
 
         try {
-            return equipmentProductRepo.save(equipmentProductToSave);
+            EquipmentProduct savedProduct =  equipmentProductRepo.save(equipmentProductToSave);
+            Long equipmentProductId = savedProduct.getId();
+
+            if(equipmentProductDTO.getProductInstances() != null && !equipmentProductDTO.getProductInstances().isEmpty()) {
+                for(EquipmentProductInstanceDTO instanceDTO : equipmentProductDTO.getProductInstances()) {
+                    instanceDTO.setEquipmentProductId(equipmentProductId);
+                    equipmentProductInstanceService.createInstance(instanceDTO);
+                }
+            }
+            return savedProduct;
         } catch (Exception e) {
-            throw new ProductCreationException("Failed to create the Product.", e);
+            throw new ProductCreationException("Failed to create the Product."+ e.getMessage(), e);
         }
     }
 

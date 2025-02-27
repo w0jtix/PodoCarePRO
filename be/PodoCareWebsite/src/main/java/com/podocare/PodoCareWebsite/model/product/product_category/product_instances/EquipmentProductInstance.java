@@ -36,7 +36,7 @@ public class EquipmentProductInstance{
     private Boolean outOfUse = false;
     private Boolean isDeleted = false;
     @ManyToOne
-    @JoinColumn(name="order_id", nullable = false)
+    @JoinColumn(name = "order_id", nullable = true)
     @JsonBackReference
     private Order order;
 }

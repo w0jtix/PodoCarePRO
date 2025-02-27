@@ -28,7 +28,7 @@ const SupplierDropdown = ({ items, placeholder, selectedSupplier, onSelect, onAd
   }
 
   useEffect(() => {
-    selectedSupplier  === null ? setSelectedItem(null) : selectedItem;
+    selectedSupplier  === null ? setSelectedItem(null) : setSelectedItem(selectedSupplier);
   }, [selectedSupplier]);
 
   useEffect(() => {

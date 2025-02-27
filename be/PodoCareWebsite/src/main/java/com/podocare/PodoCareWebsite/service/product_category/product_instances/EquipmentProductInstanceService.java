@@ -288,9 +288,6 @@ public class EquipmentProductInstanceService {
         if (equipmentProductInstanceDTO.getSupplierId() == null) {
             throw new IllegalArgumentException("EquipmentProductInstanceDTO must have a valid supplierId.");
         }
-        if (equipmentProductInstanceDTO.getOrderNumber() == null || equipmentProductInstanceDTO.getOrderNumber() <= 0) {
-            throw new IllegalArgumentException("EquipmentProductInstanceDTO must have a valid orderNumber.");
-        }
         if (equipmentProductInstanceDTO.getPurchaseDate() == null) {
             throw new IllegalArgumentException("EquipmentProductInstanceDTO must have a valid purchaseDate.");
         }

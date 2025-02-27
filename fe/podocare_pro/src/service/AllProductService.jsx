@@ -13,6 +13,16 @@ class AllProductService {
     }
   }
 
+  static async checkIfProductExists(product, category) {
+    try {
+      const allProducts = await this.getAllProducts();
+      return allProducts.some((p) => p.productName === product.name && p.category === category);
+    } catch (error) {
+      console.error("Error checking if product exists. ", error);
+      throw error;
+    }
+  }
+
   static async getFilteredProducts(keyword) {
     try {
       const allProducts = await this.getAllProducts();
@@ -28,22 +38,23 @@ class AllProductService {
     }
   }
 
-  static async getFilteredProductsWithActiveInstances(productTypes, selectedIds, keyword) {
+  static async getFilteredProductsWithActiveInstances(
+    productTypes,
+    selectedIds,
+    keyword
+  ) {
     try {
-      const response = await axios.post(`${this.API_URL}/filter`,
-        {
-          productTypes,
-          selectedIds,
-          keyword,
-        }
-      );
+      const response = await axios.post(`${this.API_URL}/filter`, {
+        productTypes,
+        selectedIds,
+        keyword,
+      });
       return response.status === 204 ? [] : response.data;
     } catch (error) {
       console.error("Error fetching products. ", error);
       throw error;
     }
   }
-
 
   static async createNewProducts(productsList) {
     try {

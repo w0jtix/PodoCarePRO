@@ -92,6 +92,11 @@ const OrderNewProductsPopup = ({
       showAlert("Nazwa marki za krótka! (2+)", "error");
       return true;
     }
+
+    if (adjustedProducts.some((product) => product.shelfLife === 0)) {
+      showAlert("Okres przydatności musi być  > 0!", "error");
+      return true;
+    }
     return false;
   };
 
@@ -214,10 +219,13 @@ const OrderNewProductsPopup = ({
                   }
                 />
                 <DigitInput
-                  onShelfLifeInput={(shelfLife) =>
+                  onInputValue={(shelfLife) =>
                     handleShelfLife(product.id, shelfLife)
                   }
+                  startValue={24}
+                  disabled={product.category === "Tool"}
                 />
+
                 <SelectProductCategory
                   selectedCategory={product.category}
                   onSelect={(selectedCategory) =>
@@ -228,23 +236,25 @@ const OrderNewProductsPopup = ({
             </li>
           ))}
         </ul>
-        <button
-          className="order-new-products-popup-confirm-button"
-          onClick={async () => {
-            const result = await createNewProducts(adjustedProducts);
-            if (result === false) {
-              return;
-            }
-            handleFinalize();
-          }}
-        >
-          <img
-            src="src/assets/tick.svg"
-            alt="tick"
-            className="order-new-products-popup-tick-icon"
-          />
-          <a>Zapisz</a>
-        </button>
+        <div class="popup-footer-container">
+          <button
+            className="popup-confirm-button"
+            onClick={async () => {
+              const result = await createNewProducts(adjustedProducts);
+              if (result === false) {
+                return;
+              }
+              handleFinalize();
+            }}
+          >
+            <img
+              src="src/assets/tick.svg"
+              alt="tick"
+              className="popup-tick-icon"
+            />
+            <a>Zapisz</a>
+          </button>
+        </div>
         <a className="popup-category-description">
           * Okres przydatności/ długość gwarancji
         </a>

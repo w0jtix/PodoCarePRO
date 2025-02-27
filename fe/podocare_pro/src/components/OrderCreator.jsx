@@ -175,6 +175,7 @@ const OrderCreator = ({
   };
 
   const checkForErrors = () => {
+    console.log(orderProductDTOList);
     if (!selectedSupplier) {
       showAlert("Nie wybrano sklepu...", "error");
       return true;

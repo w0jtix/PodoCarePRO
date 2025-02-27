@@ -1,58 +1,53 @@
 import React from "react";
 import { useState, useRef, useEffect } from "react";
-import BrandService from "../service/BrandService";
+import SupplierService from "../service/SupplierService";
 
-const BrandInput = ({ onBrandSelect, brandName }) => {
+const SupplierInput = ({ onSupplierSelect }) => {
   const dropdownRef = useRef(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [filteredBrands, setFilteredBrands] = useState([]);
+  const [filteredSuppliers, setFilteredSuppliers] = useState([]);
   const [keyword, setKeyword] = useState("");
-  const [selectedBrand, setSelectedBrand] = useState(null);
-
-  useEffect(() => {
-    setKeyword(brandName ?? "");
-  }, [brandName]);
+  const [selectedSupplier, setSelectedSupplier] = useState(null);
 
   useEffect(() => {
     if (keyword.trim().length > 0) {
-      BrandService.getFilteredBrandsByKeyword(keyword)
+      SupplierService.getFilteredSuppliersByKeyword(keyword)
         .then((filteredData) => {
-          setFilteredBrands(filteredData);
+          setFilteredSuppliers(filteredData);
           setIsDropdownOpen(filteredData.length > 0);
         })
         .catch((error) => console.error(error.message));
     } else {
-      setFilteredBrands([]);
-      setSelectedBrand(null);
+      setFilteredSuppliers([]);
       setIsDropdownOpen(false);
     }
   }, [keyword]);
 
   const handleInputChange = (e) => {
     setKeyword(e.target.value);
-    setSelectedBrand(null);
+    setSelectedSupplier(null);
   };
 
-  const handleBrandSelect = (brandName) => {
-    setSelectedBrand(brandName);
-    setKeyword(brandName);
+  const handleSupplierSelect = (supplierName) => {
+    setSelectedSupplier(supplierName);
+    setKeyword(supplierName);
     setTimeout(() => {
       setIsDropdownOpen(false);
     }, 10);
-    if (onBrandSelect) {
-      onBrandSelect(brandName);
+    if (onSupplierSelect) {
+      onSupplierSelect(supplierName);
     }
   };
 
   const handleInputBlur = () => {
-    if (keyword && !selectedBrand) {
-      onBrandSelect(keyword);
+    if (keyword && !selectedSupplier) {
+      onSupplierSelect(keyword);
     }
   };
 
   const handleKeyPress = (event) => {
-    if (event.key == "Enter" && keyword && !selectedBrand) {
-      onBrandSelect(keyword);
+    if (event.key == "Enter" && keyword && !selectedSupplier) {
+      onSupplierSelect(keyword);
       setIsDropdownOpen(false);
     }
   };
@@ -75,20 +70,20 @@ const BrandInput = ({ onBrandSelect, brandName }) => {
         type="text"
         className="popup-input-brand-supplier-name"
         placeholder=""
-        value={selectedBrand || keyword}
+        value={selectedSupplier || keyword}
         onChange={handleInputChange}
         onKeyDown={handleKeyPress}
         onBlur={handleInputBlur}
       />
-      {isDropdownOpen && keyword != "" && filteredBrands.length > 0 && (
+      {isDropdownOpen && keyword != "" && filteredSuppliers.length > 0 && (
         <ul className="supplier-brand-name-dropdown">
-          {filteredBrands.slice(0, 3).map((suggestion) => (
+          {filteredSuppliers.slice(0, 3).map((suggestion) => (
             <li
               key={suggestion.id}
               className="supplier-brand-name-dropdown-item"
               onClick={(e) => {
                 e.stopPropagation();
-                handleBrandSelect(suggestion.name);
+                handleSupplierSelect(suggestion.name);
               }}
             >
               {suggestion.name}
@@ -100,4 +95,4 @@ const BrandInput = ({ onBrandSelect, brandName }) => {
   );
 };
 
-export default BrandInput;
+export default SupplierInput;

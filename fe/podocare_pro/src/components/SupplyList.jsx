@@ -32,7 +32,6 @@ const SupplyList = ({ productFilterDTO }) => {
         const sortedItems = response.sort((a, b) =>
           a.productName.localeCompare(b.productName)
         );
-        console.log(response);
         setItems(sortedItems);
       })
       .catch((error) => {

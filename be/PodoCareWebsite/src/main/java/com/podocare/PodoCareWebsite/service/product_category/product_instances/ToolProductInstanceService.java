@@ -71,9 +71,9 @@ public class ToolProductInstanceService {
 
         try {
             toolProductInstanceRepo.save(toolProductInstanceToSave);
-            incrementCurrentSupply(toolProductInstance.getToolProduct());
+            incrementCurrentSupply(toolProductInstanceToSave.getToolProduct());
         } catch (Exception e) {
-            throw new ProductInstanceCreationException("Failed to save updated ToolProductInstance.", e);
+            throw new ProductInstanceCreationException("Failed to create ToolProductInstance.", e);
         }
 
         return toolProductInstanceToSave;
@@ -288,9 +288,7 @@ public class ToolProductInstanceService {
         if (toolProductInstanceDTO.getSupplierId() == null) {
             throw new IllegalArgumentException("ToolProductInstanceDTO must have a valid supplierId.");
         }
-        if (toolProductInstanceDTO.getOrderNumber() == null || toolProductInstanceDTO.getOrderNumber() <= 0) {
-            throw new IllegalArgumentException("ToolProductInstanceDTO must have a valid orderNumber.");
-        }
+
         if (toolProductInstanceDTO.getPurchaseDate() == null) {
             throw new IllegalArgumentException("ToolProductInstanceDTO must have a valid purchaseDate.");
         }

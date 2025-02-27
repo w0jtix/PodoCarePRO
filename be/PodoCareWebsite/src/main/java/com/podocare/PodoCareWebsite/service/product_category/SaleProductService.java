@@ -7,6 +7,7 @@ import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product.Produ
 import com.podocare.PodoCareWebsite.model.product.product_category.DTOs.SaleProductDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.SaleProduct;
 
+import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.SaleProductInstanceDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.SaleProductInstance;
 import com.podocare.PodoCareWebsite.repo.product_category.SaleProductRepo;
 import com.podocare.PodoCareWebsite.repo.product_category.product_instances.SaleProductInstanceRepo;
@@ -15,6 +16,7 @@ import com.podocare.PodoCareWebsite.service.product_category.product_instances.S
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -63,6 +65,7 @@ public class SaleProductService{
                 .orElseThrow(() -> new ProductNotFoundException("SaleProduct not found with ID: " + saleProductId));
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public SaleProduct createSaleProduct(SaleProductDTO saleProductDTO) {
         isValid(saleProductDTO.getProductName());
 
@@ -73,9 +76,18 @@ public class SaleProductService{
         SaleProduct saleProductToSave = saleProductDtoToSaleProductConversion(saleProduct, saleProductDTO);
 
         try {
-            return saleProductRepo.save(saleProductToSave);
+            SaleProduct savedProduct = saleProductRepo.save(saleProductToSave);
+            Long saleProductId = savedProduct.getId();
+
+            if(saleProductDTO.getProductInstances() != null && !saleProductDTO.getProductInstances().isEmpty()) {
+                for(SaleProductInstanceDTO instanceDTO : saleProductDTO.getProductInstances()) {
+                    instanceDTO.setSaleProductId(saleProductId);
+                    saleProductInstanceService.createInstance(instanceDTO);
+                }
+            }
+            return savedProduct;
         } catch (Exception e) {
-            throw new ProductCreationException("Failed to create the Product.", e);
+            throw new ProductCreationException("Failed to create the Product. Reason: " + e.getMessage(), e);
         }
     }
 

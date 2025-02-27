@@ -12,6 +12,8 @@ import com.podocare.PodoCareWebsite.model.product.product_category.SaleProduct;
 import com.podocare.PodoCareWebsite.model.product.product_category.ToolProduct;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +75,7 @@ public class AllProductsService {
         return orderProductValidator;
     }
 
+    @Transactional
     public List<Object> createProducts(List<ProductCreationDTO> productsToCreateList) {
         List<Object> createdProducts = new ArrayList<>();
 
@@ -147,6 +150,9 @@ public class AllProductsService {
         saleProductDTO.setProductName(productCreationDTO.getName());
         saleProductDTO.setBrandName(productCreationDTO.getBrandName());
         saleProductDTO.setEstimatedShelfLife(productCreationDTO.getShelfLife());
+        saleProductDTO.setSellingPrice(productCreationDTO.getSellingPrice());
+        saleProductDTO.setDescription(productCreationDTO.getDescription());
+        saleProductDTO.setProductInstances(productCreationDTO.getSaleProductInstances());
         return  saleProductDTO;
     }
 
@@ -154,6 +160,8 @@ public class AllProductsService {
         ToolProductDTO toolProductDTO = new ToolProductDTO();
         toolProductDTO.setProductName(productCreationDTO.getName());
         toolProductDTO.setBrandName(productCreationDTO.getBrandName());
+        toolProductDTO.setDescription(productCreationDTO.getDescription());
+        toolProductDTO.setProductInstances(productCreationDTO.getToolProductInstances());
         return toolProductDTO;
     }
 
@@ -162,6 +170,8 @@ public class AllProductsService {
         equipmentProductDTO.setProductName(productCreationDTO.getName());
         equipmentProductDTO.setBrandName(productCreationDTO.getBrandName());
         equipmentProductDTO.setWarrantyLength(productCreationDTO.getShelfLife());
+        equipmentProductDTO.setDescription(productCreationDTO.getDescription());
+        equipmentProductDTO.setProductInstances(productCreationDTO.getEquipmentProductInstances());
         return  equipmentProductDTO;
     }
 

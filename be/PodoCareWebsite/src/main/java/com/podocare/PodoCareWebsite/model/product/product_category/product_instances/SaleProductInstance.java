@@ -35,7 +35,7 @@ public class SaleProductInstance {
     private Double purchasePrice;
     private String description;
     @ManyToOne
-    @JoinColumn(name="order_id")
+    @JoinColumn(name = "order_id", nullable = true)
     @JsonBackReference
     private Order order;
     private Boolean isSold = false;
