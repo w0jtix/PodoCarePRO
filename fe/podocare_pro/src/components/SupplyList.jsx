@@ -5,7 +5,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import AllProductService from "../service/AllProductService";
 
-const SupplyList = ({ productFilterDTO }) => {
+const SupplyList = ({ productFilterDTO, showZeroProducts }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -23,30 +23,52 @@ const SupplyList = ({ productFilterDTO }) => {
   const fetchItems = async (productFilterDTO) => {
     const { productTypes, selectedIds, keyword } = productFilterDTO;
 
-    AllProductService.getFilteredProductsWithActiveInstances(
-      productTypes,
-      selectedIds,
-      keyword
-    )
-      .then((response) => {
-        const sortedItems = response.sort((a, b) =>
-          a.productName.localeCompare(b.productName)
-        );
-        setItems(sortedItems);
-      })
-      .catch((error) => {
-        setItems([]);
-        console.error("Error fetching products:", error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    if (showZeroProducts) {
+      AllProductService.getFilteredProductsWithZeroInstances(
+        productTypes,
+        selectedIds,
+        keyword
+      )
+        .then((response) => {
+          const sortedItems = response.sort((a, b) =>
+            a.productName.localeCompare(b.productName)
+          );
+          setItems(sortedItems);
+        })
+        .catch((error) => {
+          setItems([]);
+          console.error("Error fetching products:", error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      AllProductService.getFilteredProductsWithActiveInstances(
+        productTypes,
+        selectedIds,
+        keyword
+      )
+        .then((response) => {
+          const sortedItems = response.sort((a, b) =>
+            a.productName.localeCompare(b.productName)
+          );
+          setItems(sortedItems);
+        })
+        .catch((error) => {
+          setItems([]);
+          console.error("Error fetching products:", error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
   };
 
   useEffect(() => {
     setLoading(true);
     fetchItems(productFilterDTO);
-  }, [productFilterDTO]);
+    setCurrentPage(1);
+  }, [productFilterDTO, showZeroProducts]);
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;

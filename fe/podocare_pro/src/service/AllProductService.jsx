@@ -38,6 +38,24 @@ class AllProductService {
     }
   }
 
+  static async getFilteredProductsWithZeroInstances(
+    productTypes,
+    selectedIds,
+    keyword
+  ){
+    try{
+      const response = await axios.post(`${this.API_URL}/filterAll`, {
+        productTypes,
+        selectedIds,
+        keyword,
+      });
+      return response.status === 204 ? [] : response.data;
+    } catch (error) {
+      console.error("Error fetching products. ", error);
+      throw error;
+    }
+  }
+
   static async getFilteredProductsWithActiveInstances(
     productTypes,
     selectedIds,

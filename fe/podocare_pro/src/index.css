@@ -582,6 +582,15 @@ button.menu-button:hover a.menu-a {
 
 /* PRODUCT ACTION BUTTON */
 
+.action-buttons-section {
+  width:93%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+
+
 .products-action-buttons {
   display:flex;
   width:80%;
@@ -621,13 +630,23 @@ button.menu-button:hover a.menu-a {
   height: 15px;
 }
 
-.product-action-button-a{
+.product-action-button-a {
   height:19px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: var(--font-h2-outfit);
   font-size: var(--font-size-text);
+}
+
+.button-layer.selected .product-action-button {
+  border: 1px solid rgba(255, 255, 255, 0.6); 
+  opacity: 100%;
+  background-color: rgba(255, 255, 255, 0.09);
+}
+
+.button-layer.selected .product-action-button-a {
+  color:rgba(255, 255, 255, 1);  
 }
 
 /* SUPPLY LIST */

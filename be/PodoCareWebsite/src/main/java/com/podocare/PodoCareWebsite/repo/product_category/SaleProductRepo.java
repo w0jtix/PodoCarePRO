@@ -14,8 +14,8 @@ import java.util.Optional;
 public interface SaleProductRepo extends JpaRepository<SaleProduct, Long> {
 
     @Query("SELECT p FROM SaleProduct p WHERE " +
-            "LOWER(TRIM(p.productName)) LIKE LOWER(CONCAT('%', TRIM(:keyword), '%')) OR " +
-            "LOWER(TRIM(p.brand.brandName)) LIKE LOWER(CONCAT('%', TRIM(:keyword), '%'))")
+            "LOWER(TRIM(p.productName)) LIKE LOWER(CONCAT(TRIM(:keyword), '%')) OR " +
+            "LOWER(TRIM(p.brand.brandName)) LIKE LOWER(CONCAT(TRIM(:keyword), '%'))")
     List<SaleProduct> searchProducts(String keyword);
 
     @Query ("SELECT DISTINCT sp FROM SaleProduct sp JOIN FETCH sp.productInstances pi WHERE sp.isDeleted = false AND pi.isDeleted = false AND pi.isSold = false AND pi.isUsed = false")

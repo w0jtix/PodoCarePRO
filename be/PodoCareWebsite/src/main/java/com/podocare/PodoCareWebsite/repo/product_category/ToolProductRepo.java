@@ -13,8 +13,8 @@ import java.util.Optional;
 public interface ToolProductRepo extends JpaRepository<ToolProduct, Long> {
 
     @Query("SELECT p FROM ToolProduct p WHERE " +
-            "LOWER(TRIM(p.productName)) LIKE LOWER(CONCAT('%', TRIM(:keyword), '%')) OR " +
-            "LOWER(TRIM(p.brand.brandName)) LIKE LOWER(CONCAT('%', TRIM(:keyword), '%'))")
+            "LOWER(TRIM(p.productName)) LIKE LOWER(CONCAT(TRIM(:keyword), '%')) OR " +
+            "LOWER(TRIM(p.brand.brandName)) LIKE LOWER(CONCAT(TRIM(:keyword), '%'))")
     List<ToolProduct> searchProducts(String keyword);
 
     @Query ("SELECT DISTINCT sp FROM ToolProduct sp JOIN FETCH sp.productInstances pi WHERE sp.isDeleted = false AND pi.isDeleted = false AND pi.outOfUse = false")

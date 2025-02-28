@@ -40,14 +40,18 @@ public class AllProductsService {
     }
 
     public List<Object> getFilteredProducts(ProductFilterDTO filter) {
-        List<Object> allProductsList = getAllProducts();
+        List<Object> filteredAllProductsByType = filterAllProductByProductType(filter.getProductTypes());
 
-        if(filter.getKeyword() != null && !filter.getKeyword().isEmpty()) {
-            return searchProductsByKeyword(allProductsList, filter.getKeyword());
+        if (filter.getKeyword() != null && !filter.getKeyword().isEmpty()) {
+            filteredAllProductsByType = searchProductsByKeyword(filteredAllProductsByType, filter.getKeyword());
         }
 
-        return new ArrayList<>();
-    }
+        if(filter.getSelectedIds() == null || filter.getSelectedIds().isEmpty()) {
+            return filteredAllProductsByType;
+        } else {
+            return filterProductsByBrands(filteredAllProductsByType, filter.getSelectedIds());
+        }
+      }
 
     public OrderProductValidator validateProducts(List<OrderProductDTO> orderProductDTOList) {
 
@@ -173,6 +177,21 @@ public class AllProductsService {
         equipmentProductDTO.setDescription(productCreationDTO.getDescription());
         equipmentProductDTO.setProductInstances(productCreationDTO.getEquipmentProductInstances());
         return  equipmentProductDTO;
+    }
+
+    private List<Object> filterAllProductByProductType(List<String> productTypes) {
+        List<Object> filteredProducts = new ArrayList<>();
+
+        if(productTypes.contains("Sale")) {
+            filteredProducts.addAll(saleProductService.getSaleProducts());
+        }
+        if (productTypes.contains("Tool")){
+            filteredProducts.addAll(toolProductService.getToolProducts());
+        }
+        if(productTypes.contains("Equipment")) {
+            filteredProducts.addAll(equipmentProductService.getEquipmentProducts());
+        }
+        return filteredProducts;
     }
 
     private List<Object> filterProductsByProductType(List<String> productTypes) {
