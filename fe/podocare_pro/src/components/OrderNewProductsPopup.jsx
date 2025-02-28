@@ -196,13 +196,13 @@ const OrderNewProductsPopup = ({
               </button>
             ))}
             <button
-              className="order-new-products-popup-category-reset-button"
+              className="reset-button"
               onClick={() => handleGlobalCategoryReset()}
             >
               <img
                 src="src/assets/reset.svg"
                 alt="reset"
-                className="popup-reset-icon"
+                className="reset-icon"
               />
             </button>
           </div>

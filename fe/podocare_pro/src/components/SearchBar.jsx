@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react'
 
-const SearchBar = ({ onKeywordChange }) => {
+const SearchBar = ({ onKeywordChange, resetTriggered }) => {
 
   const [keyword, setKeyword] = useState("");
 
@@ -11,6 +11,10 @@ const SearchBar = ({ onKeywordChange }) => {
 
     onKeywordChange(newKeyword);
   }
+
+  useEffect(() => {
+    setKeyword("");
+  },[resetTriggered])
 
   return (
     <div className="searchbar-container">

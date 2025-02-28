@@ -13,6 +13,16 @@ const Dashboard = () => {
     selectedBrandIds: [],
     keyword: "",
   });
+const [resetTriggered, setResetTriggered] = useState(false);
+
+  const handleResetAllFilters = () => {
+    setProductFilterDTO({
+      productTypes: ["Sale", "Tool", "Equipment"],
+      selectedBrandIds: [],
+      keyword: "",
+    });
+    setResetTriggered((prev) => !prev);
+  }
 
   const handleFilterChange = (newFilter) => {
     setProductFilterDTO(newFilter);
@@ -23,6 +33,8 @@ const Dashboard = () => {
       <NavigationBar
         onFilter={handleFilterChange}
         productFilterDTO={productFilterDTO}
+        handleResetAllFilters={handleResetAllFilters}
+        resetTriggered={resetTriggered}
       />
       <section className="products-action-buttons">
         <ProductActionButton

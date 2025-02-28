@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react';
 
-const CategoryButtons = ( { onFilter, filterProductDTO }) => {
+const CategoryButtons = ( { onFilter, filterProductDTO, resetTriggered }) => {
 
-  const [selectedCategories, setSelectedCategories] = useState(filterProductDTO?.productTypes || [] );
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
   const categories = ["Sale", "Tool", "Equipment"];
   const categoryMap = {
@@ -12,6 +12,10 @@ const CategoryButtons = ( { onFilter, filterProductDTO }) => {
     "Equipment" : "Sprzęt"
 
   };
+
+  useEffect(() =>{
+    setSelectedCategories([]);
+  },[resetTriggered]);
 
   const toggleCategory = (category) => {
     setSelectedCategories((prev) => {

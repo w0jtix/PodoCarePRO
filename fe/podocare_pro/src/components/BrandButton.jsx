@@ -2,13 +2,19 @@ import React from "react";
 import { useState, useRef, useEffect } from "react";
 import BrandService from "../service/BrandService";
 
-const BrandButton = ({ brandFilterDTO, onSelect }) => {
+const BrandButton = ({ brandFilterDTO, onSelect, resetTriggered }) => {
   const [searchValue, setSearchValue] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
   const [tempSelectedIds, setTempSelectedIds] = useState([]);
   const [brands, setBrands] = useState([]);
   const dropdownRef = useRef(null);
+
+  useEffect(() =>{
+    setSearchValue("");
+    setSelectedIds([]);
+    setTempSelectedIds([]);
+  },[resetTriggered]);
 
   const filteredBrands = brands
     .filter((item) =>
