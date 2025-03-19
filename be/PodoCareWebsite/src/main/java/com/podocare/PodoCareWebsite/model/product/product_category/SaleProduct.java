@@ -28,7 +28,7 @@ public class SaleProduct{
     private String description;
     private Integer estimatedShelfLife; // user input in months
     private Double sellingPrice;
-    //internalUse & forSale are marked when employee summarizes the visit
+    //internalUse & forSale are marked when employee summarizes the visit -> jednak do wyjebania bo to w instancji
     private Boolean internalUse;
     private Boolean forSale;
     private String category= "Sale";

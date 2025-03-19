@@ -13,11 +13,9 @@ const DateInput = ({ onChange, selectedDate }) => {
   };
 
   useEffect(() => {
-    onChange(orderDate);
-  }, []);
-
-  useEffect(() => {
-    setOrderDate(selectedDate ?? new Date());
+    if (selectedDate && selectedDate.getTime() !== orderDate.getTime()) {
+      setOrderDate(selectedDate);
+    }
   }, [selectedDate]);
 
   return (

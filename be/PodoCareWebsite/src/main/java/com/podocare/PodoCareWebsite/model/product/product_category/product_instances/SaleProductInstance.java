@@ -25,22 +25,17 @@ public class SaleProductInstance {
     @JoinColumn(name = "sale_product_id", nullable = false)
     @JsonBackReference
     private SaleProduct saleProduct;
-    @ManyToOne
-    @JoinColumn(name = "supplier_id")
-    private Supplier supplier;
+
     private Date shelfLife;
     private Date purchaseDate;
-    private Double netPrice;
-    private VatRate vatRate;
-    private Double purchasePrice;
+
+    private Double sellingPrice;
+
     private String description;
-    @ManyToOne
-    @JoinColumn(name = "order_id", nullable = true)
-    @JsonBackReference
-    private Order order;
+
     private Boolean isSold = false;
     private Boolean isUsed = false;
-    private Boolean isDeleted = false;
+
     @Transient
     public Boolean getIsAvailable() {
         return !Boolean.TRUE.equals(isSold) && !Boolean.TRUE.equals(isUsed);

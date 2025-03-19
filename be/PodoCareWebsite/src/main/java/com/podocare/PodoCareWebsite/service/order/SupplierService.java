@@ -3,6 +3,8 @@ package com.podocare.PodoCareWebsite.service.order;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.supplier_brand.*;
 import com.podocare.PodoCareWebsite.model.Brand_Supplier.DTOs.SupplierDTO;
 import com.podocare.PodoCareWebsite.model.Brand_Supplier.Supplier;
+import com.podocare.PodoCareWebsite.repo.order.OrderProductRepo;
+import com.podocare.PodoCareWebsite.repo.order.OrderRepo;
 import com.podocare.PodoCareWebsite.repo.order.SupplierRepo;
 import com.podocare.PodoCareWebsite.repo.product_category.product_instances.EquipmentProductInstanceRepo;
 import com.podocare.PodoCareWebsite.repo.product_category.product_instances.SaleProductInstanceRepo;
@@ -22,6 +24,8 @@ public class SupplierService {
     EquipmentProductInstanceRepo equipmentProductInstanceRepo;
     @Autowired
     ToolProductInstanceRepo toolProductInstanceRepo;
+    @Autowired
+    OrderRepo orderRepo;
 
 
 
@@ -58,9 +62,8 @@ public class SupplierService {
 
     public long countProductsBySupplier(Supplier supplier) {
         long totalProductCount = 0;
-        totalProductCount += saleProductInstanceRepo.countBySupplier(supplier);
-        totalProductCount += equipmentProductInstanceRepo.countBySupplier(supplier);
-        totalProductCount += toolProductInstanceRepo.countBySupplier(supplier);
+
+        totalProductCount += orderRepo.countProductsBySupplier(supplier);
         return totalProductCount;
     }
 
@@ -75,8 +78,8 @@ public class SupplierService {
         Supplier supplier = new Supplier();
         Supplier supplierToSave = supplierDtoToSupplierConversion(supplier, supplierDTO);
         try {
-            supplierRepo.save(supplierToSave);
-            return supplierDTO;
+            Supplier newSupplier = supplierRepo.save(supplierToSave);
+            return supplierToSupplierDTOConversion(newSupplier);
         } catch (Exception e) {
             throw new SupplierCreationException("Failed to create Supplier.", e);
         }
@@ -102,11 +105,14 @@ public class SupplierService {
 
         long associatedProductsCount = countProductsBySupplier(supplier);
 
-        if(associatedProductsCount > 0) {
-            throw new SupplierDeleteRestrictionException("You cannot remove Supplier because some product instances are using it as an attribute.");
-        }
         try {
-            supplierRepo.deleteById(supplierId);
+            if(associatedProductsCount > 0) {
+                supplier.setDeleted(true);
+                supplierRepo.save(supplier);
+            } else {
+                supplierRepo.deleteById(supplierId);
+            }
+
         } catch (Exception e) {
             throw new SupplierDeletionException("Failed to delete existing Supplier", e);
         }

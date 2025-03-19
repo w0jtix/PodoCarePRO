@@ -16,7 +16,7 @@ class AllProductService {
   static async checkIfProductExists(product, category) {
     try {
       const allProducts = await this.getAllProducts();
-      return allProducts.some((p) => p.productName === product.name && p.category === category);
+      return allProducts.some((p) => p.productName.toLowerCase() === product.name.toLowerCase() && p.category === category);
     } catch (error) {
       console.error("Error checking if product exists. ", error);
       throw error;
@@ -96,6 +96,19 @@ class AllProductService {
       return response;
     } catch (error) {
       console.error("Error validating Products.", error);
+      throw error;
+    }
+  }
+
+  static async updateProduct(productCreationDTO) {
+    try{
+      const response = await axios.patch(
+        `${this.API_URL}/${productCreationDTO.id}`,
+        productCreationDTO
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error updating Product", error);
       throw error;
     }
   }

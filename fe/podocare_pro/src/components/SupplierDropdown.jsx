@@ -1,8 +1,14 @@
-import React from 'react'
+import React from "react";
 import { useState, useRef, useEffect } from "react";
-import AddSupplierPopup from './AddSupplierPopup';
+import AddSupplierPopup from "./AddSupplierPopup";
 
-const SupplierDropdown = ({ items, placeholder, selectedSupplier, onSelect, onAddSupplier }) => {
+const SupplierDropdown = ({
+  items,
+  placeholder,
+  selectedSupplier,
+  onSelect,
+  onAddSupplier,
+}) => {
   const [searchValue, setSearchValue] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -25,24 +31,26 @@ const SupplierDropdown = ({ items, placeholder, selectedSupplier, onSelect, onAd
 
   const handleCloseAddSupplierPopup = () => {
     setIsAddSupplierPopupOpen(false);
-  }
+  };
 
   useEffect(() => {
-    selectedSupplier  === null ? setSelectedItem(null) : setSelectedItem(selectedSupplier);
+    selectedSupplier === null
+      ? setSelectedItem(null)
+      : setSelectedItem(selectedSupplier);
   }, [selectedSupplier]);
 
   useEffect(() => {
-      const handleClickOutside = (event) => {
-        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-            setIsExpanded(false)
-        }
-      };
-      document.addEventListener('mousedown', handleClickOutside);
-  
-      return () => { document.removeEventListener('mousedown', handleClickOutside)
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsExpanded(false);
+      }
     };
-    }, []);       
-    
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="supplier-searchable-dropdown" ref={dropdownRef}>
@@ -50,18 +58,18 @@ const SupplierDropdown = ({ items, placeholder, selectedSupplier, onSelect, onAd
         className="supplier-dropdown-header"
         onClick={() => setIsExpanded((prev) => !prev)}
       >
-        <a>{selectedItem ? (
-          <div className="supplier-placeholder"> 
-            {selectedItem.name}
-          </div> 
-              ):(  
-                placeholder 
-                )}
-              </a>
-        <img 
-            src="src/assets/arrow_down.svg" 
-            alt="arrow down" 
-            className={`arrow-down ${isExpanded ? 'rotated' : ''}`}/>
+        <a>
+          {selectedItem ? (
+            <div className="supplier-placeholder">{selectedItem.name}</div>
+          ) : (
+            placeholder
+          )}
+        </a>
+        <img
+          src="src/assets/arrow_down.svg"
+          alt="arrow down"
+          className={`arrow-down ${isExpanded ? "rotated" : ""}`}
+        />
       </button>
       {isExpanded && !isAddSupplierPopupOpen && (
         <div className="dropdown-menu">
@@ -73,15 +81,16 @@ const SupplierDropdown = ({ items, placeholder, selectedSupplier, onSelect, onAd
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
             />
-            <button 
-              className="add-supplier-dropdown-button" 
-              onClick={handleOpenAddSupplierPopup}>
-                <img 
-                  src='src/assets/addNew.svg' 
-                  alt="add new" 
-                  className='supplier-add-new-icon' />
+            <button
+              className="add-supplier-dropdown-button"
+              onClick={handleOpenAddSupplierPopup}
+            >
+              <img
+                src="src/assets/addNew.svg"
+                alt="add new"
+                className="supplier-add-new-icon"
+              />
             </button>
-            
           </section>
           <ul className="dropdown-list">
             {filteredItems.length > 0 ? (
@@ -108,8 +117,8 @@ const SupplierDropdown = ({ items, placeholder, selectedSupplier, onSelect, onAd
         </div>
       )}
       {isAddSupplierPopupOpen && (
-        <AddSupplierPopup 
-          onClose={handleCloseAddSupplierPopup} 
+        <AddSupplierPopup
+          onClose={handleCloseAddSupplierPopup}
           onAddSupplier={(newSupplier) => {
             onAddSupplier(newSupplier);
             handleSelect(newSupplier);
@@ -117,7 +126,7 @@ const SupplierDropdown = ({ items, placeholder, selectedSupplier, onSelect, onAd
         />
       )}
     </div>
-  )
-}
+  );
+};
 
-export default SupplierDropdown
+export default SupplierDropdown;

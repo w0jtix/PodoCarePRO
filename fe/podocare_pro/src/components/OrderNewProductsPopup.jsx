@@ -236,7 +236,7 @@ const OrderNewProductsPopup = ({
             </li>
           ))}
         </ul>
-        <div class="popup-footer-container">
+        <div className="popup-footer-container">
           <button
             className="popup-confirm-button"
             onClick={async () => {

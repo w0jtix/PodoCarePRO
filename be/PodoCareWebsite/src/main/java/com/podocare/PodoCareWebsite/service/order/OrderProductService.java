@@ -1,10 +1,9 @@
 package com.podocare.PodoCareWebsite.service.order;
 
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.order.OrderCreationException;
-import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.order.OrderNotFoundException;
+import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.order.OrderDeletionException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.order_product.OrderProductNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product.ProductNotFoundException;
-import com.podocare.PodoCareWebsite.model.VatRate;
 import com.podocare.PodoCareWebsite.model.order.DTOs.OrderProductDTO;
 import com.podocare.PodoCareWebsite.model.order.Order;
 import com.podocare.PodoCareWebsite.model.order.OrderProduct;
@@ -32,7 +31,7 @@ public class OrderProductService {
     @Autowired
     private EquipmentProductRepo equipmentProductRepo;
 
-    public OrderProduct getOrderById(Long orderProductId) {
+    public OrderProduct getOrderProductById(Long orderProductId) {
         return orderProductRepo.findById(orderProductId)
                 .orElseThrow(() -> new OrderProductNotFoundException("OrderProduct not found with ID: " + orderProductId));
     }
@@ -63,7 +62,7 @@ public class OrderProductService {
     }
 
     public OrderProduct updateOrderProduct(Long orderProductId, OrderProductDTO orderProductDTO) {
-        OrderProduct existingOrderProduct = getOrderById(orderProductId);
+        OrderProduct existingOrderProduct = getOrderProductById(orderProductId);
 
         OrderProduct updatedOrderProduct = orderProductDtoToOrderProductConversion(existingOrderProduct.getOrder(), orderProductDTO);
 
@@ -75,6 +74,15 @@ public class OrderProductService {
         }
 
         return updatedOrderProduct;
+    }
+
+    public void deleteOrderProduct(Long orderProductId) {
+        OrderProduct orderProduct = getOrderProductById(orderProductId);
+        try {
+            orderProductRepo.deleteById(orderProductId);
+        } catch (Exception e) {
+            throw new OrderDeletionException("Failed to delete the OrderProduct", e);
+        }
     }
 
     private OrderProduct orderProductDtoToOrderProductConversion(Order order, OrderProductDTO orderProductDTO){

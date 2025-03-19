@@ -9,15 +9,11 @@ import java.util.Date;
 @Setter
 @Getter
 public class ToolProductInstanceDTO {
+    private Long id;
+    private Long productId;
 
-    private Long toolProductId;
-    private Long supplierId;
-    private Long orderId;
-    private Integer orderNumber;
     private Date purchaseDate;
-    private Double netPrice;
-    private VatRate vatRate;
-    private Double purchasePrice;
+
     private String description;
     private Boolean outOfUse;
 }

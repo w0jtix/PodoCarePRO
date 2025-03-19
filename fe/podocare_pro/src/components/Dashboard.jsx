@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import NavigationBar from "./NavigationBar";
 import SupplyList from "./SupplyList";
 import { useState } from "react";
 import ProductActionButton from "./ProductActionButton";
 import AddProductPopup from "./AddProductPopup";
+import EditProductPopup from "./EditProductPopup";
 
 const Dashboard = () => {
   const [isAddNewProductsPopupOpen, setIsAddNewProductsPopupOpen] =
     useState(false);
+  const [isEditProductsPopupOpen, setIsEditProductsPopupOpen] = useState(false);
   const [productFilterDTO, setProductFilterDTO] = useState({
     productTypes: ["Sale", "Tool", "Equipment"],
     selectedBrandIds: [],
@@ -15,6 +17,7 @@ const Dashboard = () => {
   });
   const [resetTriggered, setResetTriggered] = useState(false);
   const [showZeroProducts, setShowZeroProducts] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   const handleResetAllFilters = () => {
     setProductFilterDTO({
@@ -38,9 +41,7 @@ const Dashboard = () => {
         resetTriggered={resetTriggered}
       />
       <section className="action-buttons-section">
-        <div
-          className={`button-layer ${showZeroProducts ? "selected" : ""}`}
-        >
+        <div className={`button-layer ${showZeroProducts ? "selected" : ""}`}>
           <ProductActionButton
             src={
               showZeroProducts
@@ -59,24 +60,27 @@ const Dashboard = () => {
             text={"Dodaj nowy"}
             onClick={() => setIsAddNewProductsPopupOpen(true)}
           />
-          <ProductActionButton
-            src={"src/assets/edit.svg"}
-            alt={"Edytuj Produkt"}
-            text={"Edytuj"}
-          />
-          <ProductActionButton
-            src={"src/assets/cancel.svg"}
-            alt={"Usuń Produkt"}
-            text={"Usuń"}
-          />
         </section>
       </section>
-      <SupplyList 
-      productFilterDTO={productFilterDTO} 
-      showZeroProducts={showZeroProducts}
+      <SupplyList
+        productFilterDTO={productFilterDTO}
+        showZeroProducts={showZeroProducts}
+        setIsAddNewProductsPopupOpen={setIsAddNewProductsPopupOpen}
+        setIsEditProductsPopupOpen={setIsEditProductsPopupOpen}
+        setSelectedProduct={setSelectedProduct}
       />
       {isAddNewProductsPopupOpen && (
-        <AddProductPopup onClose={() => setIsAddNewProductsPopupOpen(false)} />
+        <AddProductPopup
+          onClose={() => setIsAddNewProductsPopupOpen(false)}
+          handleResetAllFilters={handleResetAllFilters}
+        />
+      )}
+      {isEditProductsPopupOpen && (
+        <EditProductPopup
+          onClose={() => setIsEditProductsPopupOpen(false)}
+          handleResetAllFilters={handleResetAllFilters}
+          selectedProduct={selectedProduct}
+        />
       )}
     </div>
   );

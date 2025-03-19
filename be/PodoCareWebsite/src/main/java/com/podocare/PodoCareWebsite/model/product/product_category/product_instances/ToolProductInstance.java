@@ -24,18 +24,16 @@ public class ToolProductInstance{
     @JoinColumn(name = "tool_product_id", nullable = false)
     @JsonBackReference
     private ToolProduct toolProduct;
-    @ManyToOne
-    @JoinColumn(name = "supplier_id", nullable = false)
-    private Supplier supplier;
+
     private Date purchaseDate;
-    private Double netPrice;
-    private VatRate vatRate;
-    private Double purchasePrice;
+
     private String description;
     private Boolean outOfUse = false;
-    private Boolean isDeleted = false;
-    @ManyToOne
-    @JoinColumn(name = "order_id", nullable = true)
-    @JsonBackReference
-    private Order order;
+
+
+    @Transient
+    public Boolean getIsAvailable() {
+        return !Boolean.TRUE.equals(outOfUse);
+    }
+
 }

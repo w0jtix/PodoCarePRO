@@ -1,11 +1,11 @@
 import React from "react";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import CustomAlert from "./CustomAlert";
 import ReactDOM from "react-dom";
 import ProductForm from "./ProductForm";
 import AllProductService from "../service/AllProductService";
 
-const AddProductPopup = ({ onClose }) => {
+const AddProductPopup = ({ onClose, handleResetAllFilters }) => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [infoMessage, setInfoMessage] = useState(null);
@@ -42,16 +42,17 @@ const AddProductPopup = ({ onClose }) => {
   };
 
   const handleCreateProduct = async (productCreationDTO) => {
+    console.log("prodCrDTO", productCreationDTO);
     if (await checkForErrors(productCreationDTO)) return false;
-
     const productArray = [productCreationDTO];
     return AllProductService.createNewProducts(productArray)
       .then((response) => {
-        console.log("Response: ", response);
+        console.log("Response", response);
         showAlert(
           `Produkt ${productCreationDTO.name} został utworzony!`,
           "success"
         );
+        handleResetAllFilters();
         setTimeout(() => {
           onClose();
         }, 1200);
@@ -75,9 +76,12 @@ const AddProductPopup = ({ onClose }) => {
     );
     if (productExists) {
       showAlert("Produkt o takiej nazwie już istnieje!", "error");
-      setTimeout(() => {
-        showAlert("W celu zmiany liczby produktów użyj -> Edytuj ", "info");
-      }, 3030);
+      /* setTimeout(() => {
+        showAlert(
+          "Jeśli chcesz zmienić liczbę istniejącego produktu użyj -> Edytuj ",
+          "info"
+        );
+      }, 3030); */
       return true;
     }
 
@@ -90,15 +94,15 @@ const AddProductPopup = ({ onClose }) => {
       showAlert("Okres przydatności musi być  > 0!", "error");
       return true;
     }
+
     const instancesProperty = `${selectedCategory.toLowerCase()}ProductInstances`;
-    if (productForm[instancesProperty].length > 0) {
+    if (
+      productForm[instancesProperty].length > 0 &&
+      (selectedCategory === "Sale" || selectedCategory === "Equipment")
+    ) {
       for (let instance of productForm[instancesProperty]) {
-        if (!instance.supplierId) {
-          console.log(instance.supplierId);
-          showAlert(
-            `Nie wybrano sklepu... - Produkt nr ${instance.id + 1}`,
-            "error"
-          );
+        if (selectedCategory === "Sale" && instance.sellingPrice <= 0) {
+          showAlert("Cena sprzedaży produktu musi być  > 0!", "error");
           return true;
         }
 
@@ -133,32 +137,16 @@ const AddProductPopup = ({ onClose }) => {
           </button>
         </section>
         <section className="new-product-popup-interior">
-          <section className="order-new-products-popup-action-keys-section add-product">
-            <a className="new-product-popup-field-title">Kategoria:</a>
-            <div className="order-new-products-popup-category-buttons">
-              {categories.map((category) => (
-                <button
-                  key={category}
-                  className={`order-new-products-popup-category-button ${category.toLowerCase()} ${
-                    selectedCategory === category ? "active" : ""
-                  }`}
-                  onClick={() => setSelectedCategory(category)}
-                >
-                  <h2 className="order-new-products-popup-category-button-h2">
-                    {categoryMap[category]}
-                  </h2>
-                </button>
-              ))}
-            </div>
-          </section>
           <ProductForm
             onForwardProductCreationForm={(productForm) => {
               setProductCreationDTO(productForm);
             }}
-            category={selectedCategory}
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            action="Create"
           />
         </section>
-        <div class="popup-footer-container"></div>
+        <div className="popup-footer-container"></div>
         <button
           className="popup-confirm-button add-product"
           onClick={async () => handleCreateProduct(productCreationDTO)}

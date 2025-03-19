@@ -29,8 +29,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -88,19 +90,36 @@ public class SaleProductInstanceService {
         return saleProductInstanceToSave;
     }
 
-    @Transactional
     public SaleProductInstance updateInstance(Long saleProductInstanceId,
                                               SaleProductInstanceDTO saleProductInstanceDTO){
         SaleProductInstance existingSaleProductInstance =  getSaleProductInstanceById(saleProductInstanceId);
-        validateSaleProductInstanceDTO(saleProductInstanceDTO);
-        SaleProductInstance saleProductInstanceToUpdate = saleProductInstanceDtoToSaleProductInstanceConversion(existingSaleProductInstance, saleProductInstanceDTO);
-
         boolean wasActive = !existingSaleProductInstance.getIsSold() && !existingSaleProductInstance.getIsUsed();
-        boolean isNowActive = !saleProductInstanceToUpdate.getIsSold() && !saleProductInstanceToUpdate.getIsUsed();
-        SaleProduct saleProduct = saleProductInstanceToUpdate.getSaleProduct();
+        validateIndependentSaleProductInstanceDTO(saleProductInstanceDTO);
+
+        if(saleProductInstanceDTO.getPurchaseDate() != null) {
+            existingSaleProductInstance.setPurchaseDate(saleProductInstanceDTO.getPurchaseDate());
+        }
+        if(saleProductInstanceDTO.getSellingPrice() != null) {
+            existingSaleProductInstance.setSellingPrice(saleProductInstanceDTO.getSellingPrice());
+        }
+        if(saleProductInstanceDTO.getShelfLife() != null) {
+            existingSaleProductInstance.setShelfLife(saleProductInstanceDTO.getShelfLife());
+        }
+        if(saleProductInstanceDTO.getDescription() != null) {
+            existingSaleProductInstance.setDescription(saleProductInstanceDTO.getDescription());
+        }
+        if(saleProductInstanceDTO.getIsSold() != null) {
+            existingSaleProductInstance.setIsSold(saleProductInstanceDTO.getIsSold());
+        }
+        if(saleProductInstanceDTO.getIsUsed() != null) {
+            existingSaleProductInstance.setIsUsed(saleProductInstanceDTO.getIsUsed());
+        }
+
+        SaleProduct saleProduct = saleProductService.getSaleProductById(existingSaleProductInstance.getSaleProduct().getId());
 
         try {
-            saleProductInstanceRepo.save(saleProductInstanceToUpdate);
+            saleProductInstanceRepo.save(existingSaleProductInstance);
+            boolean isNowActive = !existingSaleProductInstance.getIsSold() && !existingSaleProductInstance.getIsUsed();
             if (wasActive && !isNowActive) {
                 decrementCurrentSupply(saleProduct);
             } else if (!wasActive && isNowActive) {
@@ -110,35 +129,13 @@ public class SaleProductInstanceService {
             log.error("Failed to update SaleProductInstance or currentSupply for Product ID: {}", saleProduct.getId(), e);
             throw new ProductInstanceUpdateException("Error occurred while updating SaleProductInstance.", e);
         }
-
-        return saleProductInstanceToUpdate;
+        return existingSaleProductInstance;
     }
 
-    @Transactional
-    public void deleteInstance(Long saleProductInstanceId){
+    public void deleteInstance(Long saleProductInstanceId) {
         SaleProductInstance existingSaleProductInstance =  getSaleProductInstanceById(saleProductInstanceId);
 
-        boolean isActive = !existingSaleProductInstance.getIsSold() && !existingSaleProductInstance.getIsUsed() && !existingSaleProductInstance.getIsDeleted();
-
-        existingSaleProductInstance.setIsDeleted(true);
-
-        try{
-            saleProductInstanceRepo.save(existingSaleProductInstance);
-            if(isActive) {
-                decrementCurrentSupply(existingSaleProductInstance.getSaleProduct());
-            }
-        } catch (Exception e) {
-            log.error("Failed to soft delete SaleProductInstance ID: {}", saleProductInstanceId, e);
-            throw new ProductInstanceDeletionException("Failed to soft delete SaleProductInstance.", e);
-        }
-    }
-
-    @Transactional
-    public void hardDeleteInstance(Long saleProductInstanceId) {
-        SaleProductInstance existingSaleProductInstance =  getSaleProductInstanceById(saleProductInstanceId);
-
-        boolean wasSoftDeleted = existingSaleProductInstance.getIsDeleted();
-        boolean isActive = !existingSaleProductInstance.getIsSold() && !existingSaleProductInstance.getIsUsed() && !wasSoftDeleted;
+        boolean isActive = !existingSaleProductInstance.getIsSold() && !existingSaleProductInstance.getIsUsed();
 
         try {
             saleProductInstanceRepo.deleteById(saleProductInstanceId);
@@ -151,6 +148,30 @@ public class SaleProductInstanceService {
         }
     }
 
+    public List<SaleProductInstance> getClosestDateSortedActiveInstanceList(Long saleProductId, Date date) {
+        List<SaleProductInstance> activeInstances = saleProductService.getActiveInstances(saleProductId);
+
+        return activeInstances.stream()
+                .sorted((instance1, instance2) -> {
+                    long diff1 = Math.abs(instance1.getPurchaseDate().getTime() - date.getTime());
+                    long diff2 = Math.abs(instance2.getPurchaseDate().getTime() - date.getTime());
+                    return Long.compare(diff1, diff2);
+                })
+                .toList();
+    }
+
+    public List<SaleProductInstance> getClosestDateSortedAllInstanceList(Long saleProductId, Date date) {
+        List<SaleProductInstance> allInstances = saleProductService.getAllInstances(saleProductId);
+
+        return allInstances.stream()
+                .sorted((instance1, instance2) -> {
+                    long diff1 = Math.abs(instance1.getPurchaseDate().getTime() - date.getTime());
+                    long diff2 = Math.abs(instance2.getPurchaseDate().getTime() - date.getTime());
+                    return Long.compare(diff1, diff2);
+                })
+                .toList();
+    }
+
     @Transactional
     public void hardDeleteAllInstances(List<SaleProductInstance> saleProductInstances) {
         if(saleProductInstances == null || saleProductInstances.isEmpty()) {
@@ -158,7 +179,7 @@ public class SaleProductInstanceService {
         }
 
         long activeCount = saleProductInstances.stream()
-                .filter(instance -> !instance.getIsUsed() && !instance.getIsSold() && !instance.getIsDeleted())
+                .filter(instance -> !instance.getIsUsed() && !instance.getIsSold())
                 .count();
 
         SaleProduct saleProduct = saleProductInstances.getFirst().getSaleProduct();
@@ -173,31 +194,9 @@ public class SaleProductInstanceService {
         }
     }
 
-    @Transactional
-    public void batchDeleteInstancesByProduct(SaleProduct saleProduct) {
-
-        List<SaleProductInstance> saleProductInstances = saleProduct.getProductInstances();
-
-        long activeCount = saleProductInstances.stream()
-                .filter(instance -> !instance.getIsSold() && !instance.getIsUsed() && !instance.getIsDeleted())
-                .count();
-
-        List<Long> instanceIds = saleProductInstances.stream()
-                .map(SaleProductInstance::getId)
-                .toList();
-        try {
-            saleProductInstanceRepo.markInstancesAsDeletedByIds(instanceIds);
-            if(activeCount > 0) {
-                decrementCurrentSupplyByAmount(saleProduct, (int) activeCount);
-            }
-        } catch (Exception e) {
-            throw new ProductInstanceDeletionException("Failed to batch soft delete SaleProductInstances.", e);
-        }
-    }
-
     public void calculateAndSetShelfLife(SaleProductInstance saleProductInstance,
                                    SaleProductInstanceDTO saleProductInstanceDTO){
-        SaleProduct saleProduct = saleProductService.getSaleProductById(saleProductInstanceDTO.getSaleProductId());
+        SaleProduct saleProduct = saleProductService.getSaleProductById(saleProductInstanceDTO.getProductId());
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(saleProductInstanceDTO.getPurchaseDate());
         calendar.add(Calendar.MONTH, saleProduct.getEstimatedShelfLife());
@@ -206,13 +205,9 @@ public class SaleProductInstanceService {
 
     public SaleProductInstance saleProductInstanceDtoToSaleProductInstanceConversion(SaleProductInstance saleProductInstance,
                                                                                      SaleProductInstanceDTO saleProductInstanceDTO){
-        saleProductInstance.setSaleProduct(saleProductService.getSaleProductById(saleProductInstanceDTO.getSaleProductId()));
-        saleProductInstance.setSupplier(supplierService.findOrCreateSupplier(supplierService.getSupplierById(saleProductInstanceDTO.getSupplierId()).getSupplierName()));
-        saleProductInstance.setOrder(orderService.findOrderByOrderNumber(saleProductInstanceDTO.getOrderNumber()));
+        saleProductInstance.setSaleProduct(saleProductService.getSaleProductById(saleProductInstanceDTO.getProductId()));
         saleProductInstance.setPurchaseDate(saleProductInstanceDTO.getPurchaseDate());
-        saleProductInstance.setPurchasePrice(saleProductInstanceDTO.getPurchasePrice());
-        saleProductInstance.setVatRate(saleProductInstanceDTO.getVatRate());
-        saleProductInstance.setNetPrice(saleProductInstanceDTO.getNetPrice());
+        saleProductInstance.setSellingPrice(saleProductInstanceDTO.getSellingPrice());
         saleProductInstance.setDescription(saleProductInstanceDTO.getDescription());
         saleProductInstance.setIsSold(saleProductInstanceDTO.getIsSold() != null ? saleProductInstanceDTO.getIsSold() : false);
         saleProductInstance.setIsUsed(saleProductInstanceDTO.getIsUsed()!= null ? saleProductInstanceDTO.getIsUsed() : false);
@@ -222,10 +217,7 @@ public class SaleProductInstanceService {
 
     public SaleProductInstance saleProductInstanceDtoToIndependentSaleProductInstanceConversion(SaleProductInstance saleProductInstance,
                                                                                                 SaleProductInstanceDTO saleProductInstanceDTO){
-        saleProductInstance.setSaleProduct(saleProductService.getSaleProductById(saleProductInstanceDTO.getSaleProductId()));
-        saleProductInstance.setPurchasePrice(saleProductInstanceDTO.getPurchasePrice());
-        saleProductInstance.setVatRate(saleProductInstanceDTO.getVatRate());
-        saleProductInstance.setNetPrice(saleProductInstanceDTO.getNetPrice());
+        saleProductInstance.setSaleProduct(saleProductService.getSaleProductById(saleProductInstanceDTO.getProductId()));
         saleProductInstance.setDescription(saleProductInstanceDTO.getDescription());
         if (saleProductInstanceDTO.getPurchaseDate() == null) {
             saleProductInstance.setPurchaseDate(new Date());
@@ -280,33 +272,19 @@ public class SaleProductInstanceService {
     }
 
 
-    private void isValid(SaleProductInstanceDTO saleProductInstanceDTO) {
-        if (saleProductInstanceDTO.getPurchasePrice() < 0) {
-            throw new ProductInstanceCreationException("PurchasePrice cannot be negative.");
-        }
-    }
-
     public void validateSaleProductInstanceDTO(SaleProductInstanceDTO saleProductInstanceDTO) {
-        if (saleProductInstanceDTO.getSaleProductId() == null) {
+        if (saleProductInstanceDTO.getProductId() == null) {
             throw new IllegalArgumentException("SaleProductInstanceDTO must have a valid saleProductId.");
         }
-        if (saleProductInstanceDTO.getSupplierId() == null) {
-            throw new IllegalArgumentException("SaleProductInstanceDTO must have a valid supplierId.");
-        }
+
         if (saleProductInstanceDTO.getPurchaseDate() == null) {
             throw new IllegalArgumentException("SaleProductInstanceDTO must have a valid purchaseDate.");
-        }
-        if (saleProductInstanceDTO.getPurchasePrice() == null || saleProductInstanceDTO.getPurchasePrice() < 0) {
-            throw new IllegalArgumentException("SaleProductInstanceDTO must have a valid purchasePrice.");
-        }
-        if (saleProductInstanceDTO.getVatRate() == null) {
-            throw new IllegalArgumentException("SaleProductInstanceDTO must have a VatRate applied.");
         }
     }
 
     public void validateIndependentSaleProductInstanceDTO(SaleProductInstanceDTO saleProductInstanceDTO) {
 
-        if (saleProductInstanceDTO.getSaleProductId() == null) {
+        if (saleProductInstanceDTO.getProductId() == null) {
             throw new IllegalArgumentException("SaleProductInstanceDTO must have a valid saleProductId.");
         }
 

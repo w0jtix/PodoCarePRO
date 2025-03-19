@@ -15,11 +15,11 @@ const OrderCreator = ({
   setSelectedSupplier,
   selectedOrderProduct,
   setSelectedOrderProduct,
-  setExpandedOrderIds
+  setExpandedOrderIds,
 }) => {
   const [orderProductDTOList, setOrderProductDTOList] = useState([]);
   const [shippingCost, setShippingCost] = useState(0);
-  const [orderDate, setOrderDate] = useState("");
+  const [orderDate, setOrderDate] = useState(new Date());
   const [suppliers, setSuppliers] = useState([]);
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -43,19 +43,20 @@ const OrderCreator = ({
     }, 2500);
   };
 
-  const fetchSuppliers = () => {
+  const fetchSuppliers = async () => {
     SupplierService.getAllSuppliers()
-    .then((response) => {
-      const sortedSuppliers = response.data.sort((a, b) =>
-        a.name.localeCompare(b.name)
-      );
-      setSuppliers(sortedSuppliers);
-    })
-    .catch((error) => {
-      setSuppliers([]);
-      console.error("Error fetching suppliers:", error);
-    });
-    console.log("Supp", suppliers)
+      .then((response) => {
+        const sortedSuppliers = response.data.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+        setSuppliers(sortedSuppliers);
+        return sortedSuppliers;
+      })
+      .catch((error) => {
+        setSuppliers([]);
+        console.error("Error fetching suppliers:", error);
+        return [];
+      });
   };
 
   useEffect(() => {
@@ -95,8 +96,8 @@ const OrderCreator = ({
     setSelectedOrderProduct(null);
   }, [selectedOrderProduct]);
 
-  const handleAddSupplier = (newSupplier) => {
-    setSuppliers((prevSuppliers) => [...prevSuppliers, newSupplier]);
+  const handleAddSupplier = async (newSupplier) => {
+    await fetchSuppliers();
     setSelectedSupplier(newSupplier);
   };
 
@@ -175,7 +176,6 @@ const OrderCreator = ({
   };
 
   const checkForErrors = () => {
-    console.log(orderProductDTOList);
     if (!selectedSupplier) {
       showAlert("Nie wybrano sklepu...", "error");
       return true;
@@ -265,7 +265,10 @@ const OrderCreator = ({
             onSelect={handleOnSelectSupplier}
             onAddSupplier={handleAddSupplier}
           />
-          <DateInput onChange={handleOrderDateChange} />
+          <DateInput
+            onChange={handleOrderDateChange}
+            selectedDate={orderDate}
+          />
           <button
             className="order-add-new-product-button"
             onClick={handleAddNewProduct}

@@ -15,10 +15,10 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@Table(name = "internal_order")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "internal_order")
 public class Order {
 
     @Id
@@ -41,12 +41,4 @@ public class Order {
     private Double totalNet = 0.0;
     private Double totalVat = 0.0;
     private Double totalValue = 0.0;
-
-
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<SaleProductInstance> saleProductInstances = new ArrayList<>();
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<ToolProductInstance> toolProductInstances = new ArrayList<>();
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<EquipmentProductInstance> equipmentProductInstances = new ArrayList<>();
 }

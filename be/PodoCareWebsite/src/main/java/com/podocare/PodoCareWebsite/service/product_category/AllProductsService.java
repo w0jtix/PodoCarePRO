@@ -10,6 +10,13 @@ import com.podocare.PodoCareWebsite.model.product.product_category.EquipmentProd
 import com.podocare.PodoCareWebsite.model.product.product_category.ProductFilterDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.SaleProduct;
 import com.podocare.PodoCareWebsite.model.product.product_category.ToolProduct;
+import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.EquipmentProductInstanceDTO;
+import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.SaleProductInstanceDTO;
+import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.ToolProductInstanceDTO;
+import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.SaleProductInstance;
+import com.podocare.PodoCareWebsite.service.product_category.product_instances.EquipmentProductInstanceService;
+import com.podocare.PodoCareWebsite.service.product_category.product_instances.SaleProductInstanceService;
+import com.podocare.PodoCareWebsite.service.product_category.product_instances.ToolProductInstanceService;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +36,12 @@ public class AllProductsService {
     private ToolProductService toolProductService;
     @Autowired
     private EquipmentProductService equipmentProductService;
+    @Autowired
+    private SaleProductInstanceService saleProductInstanceService;
+    @Autowired
+    private ToolProductInstanceService toolProductInstanceService;
+    @Autowired
+    private EquipmentProductInstanceService equipmentProductInstanceService;
 
 
     public List<Object>  getAllProducts() {
@@ -101,8 +114,73 @@ public class AllProductsService {
         return createdProducts;
     }
 
+    @Transactional
+    public Object updateProduct(Long productId, ProductCreationDTO productToUpdateDTO) {
+        String category = productToUpdateDTO.getCategory();
+        List<Long> instanceIdsToBeRemoved = productToUpdateDTO.getInstanceIdsToBeRemoved();
 
+        if(Objects.equals(category, "Sale")) {
+            SaleProductDTO saleProductDTO = createSaleProductDTO(productToUpdateDTO);
+            saleProductService.updateSaleProduct(productId, saleProductDTO);
+            if(productToUpdateDTO.getSaleProductInstances() != null && !productToUpdateDTO.getSaleProductInstances().isEmpty()) {
+                for(SaleProductInstanceDTO saleProductInstanceDTO : productToUpdateDTO.getSaleProductInstances()) {
+                    Long instanceId = saleProductInstanceDTO.getId();
+                    if(instanceId == null) {
+                        saleProductInstanceService.createInstance(saleProductInstanceDTO);
+                    } else {
+                        saleProductInstanceService.updateInstance(instanceId, saleProductInstanceDTO);
+                    }
+                }
+            }
+            if (instanceIdsToBeRemoved != null && !instanceIdsToBeRemoved.isEmpty()) {
+                for(Long instanceId : instanceIdsToBeRemoved){
+                    saleProductInstanceService.deleteInstance(instanceId);
+                }
+            }
+            return saleProductService.getSaleProductById(productId);
+        } else if (Objects.equals(category, "Tool")) {
+            ToolProductDTO toolProductDTO = createToolProductDTO(productToUpdateDTO);
+            toolProductService.updateToolProduct(productId, toolProductDTO);
+            if(productToUpdateDTO.getToolProductInstances() != null && !productToUpdateDTO.getToolProductInstances().isEmpty()) {
+                for(ToolProductInstanceDTO toolProductInstanceDTO : productToUpdateDTO.getToolProductInstances()) {
+                    Long instanceId = toolProductInstanceDTO.getId();
+                    if(instanceId == null) {
+                        toolProductInstanceService.createInstance(toolProductInstanceDTO);
+                    } else {
+                        toolProductInstanceService.updateInstance(instanceId, toolProductInstanceDTO);
+                    }
+                }
+            }
+            if (instanceIdsToBeRemoved != null && !instanceIdsToBeRemoved.isEmpty()) {
+                for(Long instanceId : instanceIdsToBeRemoved){
+                    toolProductInstanceService.deleteInstance(instanceId);
+                }
 
+            }
+            return toolProductService.getToolProductById(productId);
+        } else if (Objects.equals(category, "Equipment")) {
+            EquipmentProductDTO equipmentProductDTO = createEquipmentProductDTO(productToUpdateDTO);
+            equipmentProductService.updateEquipmentProduct(productId, equipmentProductDTO);
+            if(productToUpdateDTO.getEquipmentProductInstances() !=null && !productToUpdateDTO.getEquipmentProductInstances().isEmpty()) {
+                for(EquipmentProductInstanceDTO equipmentProductInstanceDTO : productToUpdateDTO.getEquipmentProductInstances()) {
+                    Long instanceId = equipmentProductInstanceDTO.getId();
+                    if(instanceId == null) {
+                        equipmentProductInstanceService.createInstance(equipmentProductInstanceDTO);
+                    } else {
+                        equipmentProductInstanceService.updateInstance(instanceId, equipmentProductInstanceDTO);
+                    }
+                }
+            }
+            if (instanceIdsToBeRemoved != null && !instanceIdsToBeRemoved.isEmpty()) {
+                for(Long instanceId : instanceIdsToBeRemoved){
+                    equipmentProductInstanceService.deleteInstance(instanceId);
+                }
+
+            }
+            return equipmentProductService.getEquipmentProductById(productId);
+        }
+        throw new IllegalArgumentException("Invalid category: " + category);
+    }
 
     public List<Object> getFilteredProductsWithActiveInstances(ProductFilterDTO filter){
 
@@ -121,7 +199,7 @@ public class AllProductsService {
 
     public void deleteProductById(Long productId){
         if (saleProductService.getSaleProductById(productId) != null) {
-            saleProductService.deleteSaleProduct(productId);
+            saleProductService.deleteSaleProduct(productId); //verify
         } else if (toolProductService.getToolProductById(productId) != null) {
             toolProductService.deleteToolProduct(productId);
         } else if (equipmentProductService.getEquipmentProductById(productId) != null) {
@@ -153,8 +231,8 @@ public class AllProductsService {
         SaleProductDTO saleProductDTO = new SaleProductDTO();
         saleProductDTO.setProductName(productCreationDTO.getName());
         saleProductDTO.setBrandName(productCreationDTO.getBrandName());
-        saleProductDTO.setEstimatedShelfLife(productCreationDTO.getShelfLife());
-        saleProductDTO.setSellingPrice(productCreationDTO.getSellingPrice());
+        saleProductDTO.setEstimatedShelfLife(productCreationDTO.getEstimatedShelfLife());
+        saleProductDTO.setSellingPrice(productCreationDTO.getEstimatedSellingPrice());
         saleProductDTO.setDescription(productCreationDTO.getDescription());
         saleProductDTO.setProductInstances(productCreationDTO.getSaleProductInstances());
         return  saleProductDTO;
@@ -173,7 +251,7 @@ public class AllProductsService {
         EquipmentProductDTO equipmentProductDTO = new EquipmentProductDTO();
         equipmentProductDTO.setProductName(productCreationDTO.getName());
         equipmentProductDTO.setBrandName(productCreationDTO.getBrandName());
-        equipmentProductDTO.setWarrantyLength(productCreationDTO.getShelfLife());
+        equipmentProductDTO.setWarrantyLength(productCreationDTO.getEstimatedShelfLife());
         equipmentProductDTO.setDescription(productCreationDTO.getDescription());
         equipmentProductDTO.setProductInstances(productCreationDTO.getEquipmentProductInstances());
         return  equipmentProductDTO;

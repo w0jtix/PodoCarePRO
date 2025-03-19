@@ -12,6 +12,7 @@ import com.podocare.PodoCareWebsite.service.product_category.SaleProductService;
 import com.podocare.PodoCareWebsite.service.product_category.ToolProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.web.JsonPath;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -55,6 +56,12 @@ public class GeneralProductController {
     public ResponseEntity<List<Object>> createNewProducts(@RequestBody List<ProductCreationDTO> productsToCreateList) {
         List<Object> createdProducts = allProductsService.createProducts(productsToCreateList);
         return  new ResponseEntity<>(createdProducts, HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/{productId}")
+    public ResponseEntity<Object> updateProduct(@PathVariable Long productId, @RequestBody ProductCreationDTO productCreationDTO) {
+        Object updatedProducts = allProductsService.updateProduct(productId, productCreationDTO);
+        return new ResponseEntity<>(updatedProducts, HttpStatus.OK);
     }
 
     @PostMapping("/filter")

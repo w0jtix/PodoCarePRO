@@ -65,7 +65,6 @@ public class SaleProductService{
                 .orElseThrow(() -> new ProductNotFoundException("SaleProduct not found with ID: " + saleProductId));
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public SaleProduct createSaleProduct(SaleProductDTO saleProductDTO) {
         isValid(saleProductDTO.getProductName());
 
@@ -81,7 +80,7 @@ public class SaleProductService{
 
             if(saleProductDTO.getProductInstances() != null && !saleProductDTO.getProductInstances().isEmpty()) {
                 for(SaleProductInstanceDTO instanceDTO : saleProductDTO.getProductInstances()) {
-                    instanceDTO.setSaleProductId(saleProductId);
+                    instanceDTO.setProductId(saleProductId);
                     saleProductInstanceService.createInstance(instanceDTO);
                 }
             }
@@ -92,13 +91,36 @@ public class SaleProductService{
     }
 
     public SaleProduct updateSaleProduct(Long saleProductId, SaleProductDTO saleProductDTO) {
-        SaleProduct existingProduct = getSaleProductById(saleProductId);
-
-        isValid(saleProductDTO.getProductName());
-        SaleProduct saleProductToUpdate = saleProductDtoToSaleProductConversion(existingProduct, saleProductDTO);
-
         try {
-            return saleProductRepo.save(saleProductToUpdate);
+            SaleProduct existingProduct = getSaleProductById(saleProductId);
+            boolean updated = false;
+
+            if(saleProductDTO.getProductName() != null) {
+                isValid(saleProductDTO.getProductName());
+                existingProduct.setProductName(saleProductDTO.getProductName());
+                updated = true;
+            }
+            if (saleProductDTO.getBrandName() != null) {
+                existingProduct.setBrand(brandService.findOrCreateBrand(saleProductDTO.getBrandName()));
+                updated = true;
+            }
+            if(saleProductDTO.getDescription() != null) {
+                existingProduct.setDescription(saleProductDTO.getDescription());
+                updated = true;
+            }
+            if(saleProductDTO.getEstimatedShelfLife() != null) {
+                existingProduct.setEstimatedShelfLife(saleProductDTO.getEstimatedShelfLife());
+                updated = true;
+            }
+            if(saleProductDTO.getSellingPrice() != null) {
+                existingProduct.setSellingPrice(saleProductDTO.getSellingPrice());
+                updated = true;
+            }
+
+            if (updated) {
+                return saleProductRepo.save(existingProduct);
+            }
+            return existingProduct;
         } catch (Exception e) {
             throw new ProductCreationException("Failed to update existing Product.", e);
         }
@@ -107,8 +129,7 @@ public class SaleProductService{
     public void deleteSaleProduct(Long saleProductId) {
         SaleProduct existingProduct = getSaleProductById(saleProductId);
 
-        saleProductInstanceService.batchDeleteInstancesByProduct(existingProduct);
-        existingProduct.setIsDeleted(true);
+        saleProductInstanceService.hardDeleteAllInstances(existingProduct.getProductInstances());
 
         try{
             saleProductRepo.save(existingProduct);
@@ -134,10 +155,20 @@ public class SaleProductService{
         return saleProduct;
     }
 
+    public List<SaleProductInstance> getActiveInstances(Long saleProductId) {
+        SaleProduct saleProduct = getSaleProductById(saleProductId);
+        List<SaleProductInstance> allInstances =  saleProduct.getProductInstances();
 
+        return allInstances.stream().filter(SaleProductInstance::getIsAvailable).toList();
+    }
 
     public boolean saleProductAlreadyExists(String saleProductName) {
         return saleProductRepo.findBySaleProductName(saleProductName).isPresent();
+    }
+
+    public List<SaleProductInstance> getAllInstances(Long saleProductId) {
+        SaleProduct saleProduct = getSaleProductById(saleProductId);
+        return saleProduct.getProductInstances();
     }
 
     private void isValid(String productName) {

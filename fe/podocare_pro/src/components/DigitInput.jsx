@@ -1,20 +1,20 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 
-const DigitInput = ({ onInputValue, startValue, disabled, defaultValue }) => {
-  const [shelfLife, setShelfLife] = useState(startValue);
+const DigitInput = ({ onInputValue, startValue, disabled }) => {
+  const [number, setNumber] = useState(startValue);
 
   useEffect(() => {
-    if (defaultValue) {
-      setShelfLife(startValue);
-    }
-  }, [defaultValue]);
+
+      setNumber(startValue);
+
+  }, [startValue]);
 
   const handleDigitInputChange = (value) => {
     if (disabled) return;
     if (/^\d{0,2}$/.test(value)) {
       const numericValue = value === "" ? "" : Number(value);
-      setShelfLife(numericValue);
+      setNumber(numericValue);
       if (onInputValue) {
         onInputValue(numericValue);
       }
@@ -31,7 +31,7 @@ const DigitInput = ({ onInputValue, startValue, disabled, defaultValue }) => {
           disabled ? "disabled" : ""
         }`}
         placeholder=""
-        value={shelfLife}
+        value={number}
         onChange={(e) => {
           handleDigitInputChange(e.target.value);
         }}

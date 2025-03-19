@@ -17,18 +17,11 @@ public interface EquipmentProductInstanceRepo extends JpaRepository<EquipmentPro
 
     List<EquipmentProductInstance> findByEquipmentProductId(Long equipmentProductId);
 
-    @Query("SELECT pi FROM EquipmentProductInstance pi WHERE pi.equipmentProduct.id = :equipmentProductId AND pi.outOfUse = false AND pi.isDeleted = false")
+    @Query("SELECT pi FROM EquipmentProductInstance pi WHERE pi.equipmentProduct.id = :equipmentProductId AND pi.outOfUse = false")
     List<EquipmentProductInstance> findActiveInstancesByProductId(@Param("equipmentProductId") Long equipmentProductId);
 
-    @Query("SELECT COUNT(spi) FROM EquipmentProductInstance spi WHERE spi.outOfUse = false AND spi.isDeleted = false")
+    @Query("SELECT COUNT(spi) FROM EquipmentProductInstance spi WHERE spi.outOfUse = false")
     long countAvailableInstances();
-
-    @Modifying
-    @Transactional
-    @Query("UPDATE EquipmentProductInstance e SET e.isDeleted = true WHERE e.id IN :ids")
-    void markInstancesAsDeletedByIds(@Param("ids") List<Long> ids);
-
-    long countBySupplier(Supplier supplier);
 
     Long countByEquipmentProductIdAndOutOfUseFalse(Long equipmentProductId);
     Long countByEquipmentProductIdAndOutOfUseTrue(Long equipmentProductId);

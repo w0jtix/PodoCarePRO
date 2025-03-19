@@ -1,20 +1,15 @@
 package com.podocare.PodoCareWebsite.service.product_category.product_instances;
 
-import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product.ProductCreationException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product.ProductUpdateException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_instance.ProductInstanceCreationException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_instance.ProductInstanceDeletionException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_instance.ProductInstanceNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_instance.ProductInstanceUpdateException;
 import com.podocare.PodoCareWebsite.model.product.product_category.EquipmentProduct;
-import com.podocare.PodoCareWebsite.model.product.product_category.EquipmentProduct;
-import com.podocare.PodoCareWebsite.model.product.product_category.EquipmentProduct;
-import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.EquipmentProductInstanceDTO;
-import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.EquipmentProductInstanceDTO;
+import com.podocare.PodoCareWebsite.model.product.product_category.SaleProduct;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.EquipmentProductInstanceDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.EquipmentProductInstance;
-import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.EquipmentProductInstance;
-import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.ToolProductInstance;
+import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.SaleProductInstance;
 import com.podocare.PodoCareWebsite.repo.product_category.EquipmentProductRepo;
 import com.podocare.PodoCareWebsite.repo.product_category.product_instances.EquipmentProductInstanceRepo;
 import com.podocare.PodoCareWebsite.service.order.OrderService;
@@ -86,19 +81,30 @@ public class EquipmentProductInstanceService {
         return equipmentProductInstanceToSave;
     }
 
-    @Transactional
     public EquipmentProductInstance updateInstance(Long equipmentProductInstanceId,
                                               EquipmentProductInstanceDTO equipmentProductInstanceDTO){
         EquipmentProductInstance existingEquipmentProductInstance =  getEquipmentProductInstanceById(equipmentProductInstanceId);
-        validateEquipmentProductInstanceDTO(equipmentProductInstanceDTO);
-        EquipmentProductInstance equipmentProductInstanceToUpdate = equipmentProductInstanceDtoToEquipmentProductInstanceConversion(existingEquipmentProductInstance, equipmentProductInstanceDTO);
-
         boolean wasActive = !existingEquipmentProductInstance.getOutOfUse();
-        boolean isNowActive = !equipmentProductInstanceToUpdate.getOutOfUse();
-        EquipmentProduct equipmentProduct = equipmentProductInstanceToUpdate.getEquipmentProduct();
+        validateIndependentEquipmentProductInstanceDTO(equipmentProductInstanceDTO);
+
+        if(equipmentProductInstanceDTO.getPurchaseDate() != null) {
+            existingEquipmentProductInstance.setPurchaseDate(equipmentProductInstanceDTO.getPurchaseDate());
+        }
+        if(equipmentProductInstanceDTO.getWarrantyEndDate() != null) {
+            existingEquipmentProductInstance.setWarrantyEndDate(equipmentProductInstanceDTO.getWarrantyEndDate());
+        }
+        if(equipmentProductInstanceDTO.getDescription() != null) {
+            existingEquipmentProductInstance.setDescription(equipmentProductInstanceDTO.getDescription());
+        }
+        if(equipmentProductInstanceDTO.getOutOfUse() != null) {
+            existingEquipmentProductInstance.setOutOfUse(equipmentProductInstanceDTO.getOutOfUse());
+        }
+
+        EquipmentProduct equipmentProduct = equipmentProductService.getEquipmentProductById(existingEquipmentProductInstance.getEquipmentProduct().getId());
 
         try {
-            equipmentProductInstanceRepo.save(equipmentProductInstanceToUpdate);
+            equipmentProductInstanceRepo.save(existingEquipmentProductInstance);
+            boolean isNowActive = !existingEquipmentProductInstance.getOutOfUse();
             if (wasActive && !isNowActive) {
                 decrementCurrentSupply(equipmentProduct);
             } else if (!wasActive && isNowActive) {
@@ -109,34 +115,14 @@ public class EquipmentProductInstanceService {
             throw new ProductInstanceUpdateException("Error occurred while updating EquipmentProductInstance.", e);
         }
 
-        return equipmentProductInstanceToUpdate;
+        return existingEquipmentProductInstance;
     }
 
-    @Transactional
-    public void deleteInstance(Long equipmentProductInstanceId){
+
+    public void deleteInstance(Long equipmentProductInstanceId) {
         EquipmentProductInstance existingEquipmentProductInstance =  getEquipmentProductInstanceById(equipmentProductInstanceId);
 
-        boolean isActive = !existingEquipmentProductInstance.getOutOfUse() && !existingEquipmentProductInstance.getIsDeleted();
-
-        existingEquipmentProductInstance.setIsDeleted(true);
-
-        try{
-            equipmentProductInstanceRepo.save(existingEquipmentProductInstance);
-            if(isActive) {
-                decrementCurrentSupply(existingEquipmentProductInstance.getEquipmentProduct());
-            }
-        } catch (Exception e) {
-            log.error("Failed to soft delete EquipmentProductInstance ID: {}", equipmentProductInstanceId, e);
-            throw new ProductInstanceDeletionException("Failed to soft delete EquipmentProductInstance.", e);
-        }
-    }
-
-    @Transactional
-    public void hardDeleteInstance(Long equipmentProductInstanceId) {
-        EquipmentProductInstance existingEquipmentProductInstance =  getEquipmentProductInstanceById(equipmentProductInstanceId);
-
-        boolean wasSoftDeleted = !existingEquipmentProductInstance.getIsDeleted();
-        boolean isActive = !existingEquipmentProductInstance.getOutOfUse() && !wasSoftDeleted;
+        boolean isActive = !existingEquipmentProductInstance.getOutOfUse();
 
         try {
             equipmentProductInstanceRepo.deleteById(equipmentProductInstanceId);
@@ -149,6 +135,18 @@ public class EquipmentProductInstanceService {
         }
     }
 
+    public List<EquipmentProductInstance> getClosestDateSortedActiveInstanceList(Long equipmentProductId, Date date) {
+        List<EquipmentProductInstance> activeInstances = equipmentProductService.getActiveInstances(equipmentProductId);
+
+        return activeInstances.stream()
+                .sorted((instance1, instance2) -> {
+                    long diff1 = Math.abs(instance1.getPurchaseDate().getTime() - date.getTime());
+                    long diff2 = Math.abs(instance2.getPurchaseDate().getTime() - date.getTime());
+                    return Long.compare(diff1, diff2);
+                })
+                .toList();
+    }
+
     @Transactional
     public void hardDeleteAllInstances(List<EquipmentProductInstance> equipmentProductInstances) {
         if(equipmentProductInstances == null || equipmentProductInstances.isEmpty()){
@@ -156,9 +154,10 @@ public class EquipmentProductInstanceService {
         }
 
         long activeCount = equipmentProductInstances.stream()
-                .filter(instance -> !instance.getOutOfUse() && !instance.getIsDeleted())
+                .filter(instance -> !instance.getOutOfUse())
                 .count();
         EquipmentProduct equipmentProduct = equipmentProductInstances.getFirst().getEquipmentProduct();
+
 
         try{
             equipmentProductInstanceRepo.deleteAll(equipmentProductInstances);
@@ -170,31 +169,9 @@ public class EquipmentProductInstanceService {
         }
     }
 
-    @Transactional
-    public void batchDeleteInstancesByProduct(EquipmentProduct equipmentProduct) {
-
-        List<EquipmentProductInstance> equipmentProductInstances = equipmentProduct.getProductInstances();
-
-        long activeCount = equipmentProductInstances.stream()
-                .filter(instance -> !instance.getOutOfUse() && !instance.getIsDeleted())
-                .count();
-
-        List<Long> instanceIds = equipmentProductInstances.stream()
-                .map(EquipmentProductInstance::getId)
-                .toList();
-        try {
-            equipmentProductInstanceRepo.markInstancesAsDeletedByIds(instanceIds);
-            if(activeCount > 0){
-                decrementCurrentSupplyByAmount(equipmentProduct, (int) activeCount);
-            }
-        } catch (Exception e) {
-            throw new ProductInstanceDeletionException("Failed to batch soft delete EquipmentProductInstances.", e);
-        }
-    }
-
     public void calculateAndSetWarrantyEndDate(EquipmentProductInstance equipmentProductInstance,
                                          EquipmentProductInstanceDTO equipmentProductInstanceDTO){
-        EquipmentProduct equipmentProduct = equipmentProductService.getEquipmentProductById(equipmentProductInstanceDTO.getEquipmentProductId());
+        EquipmentProduct equipmentProduct = equipmentProductService.getEquipmentProductById(equipmentProductInstanceDTO.getProductId());
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(equipmentProductInstanceDTO.getPurchaseDate());
         calendar.add(Calendar.MONTH, equipmentProduct.getWarrantyLength());
@@ -203,13 +180,8 @@ public class EquipmentProductInstanceService {
 
     public EquipmentProductInstance equipmentProductInstanceDtoToEquipmentProductInstanceConversion(EquipmentProductInstance equipmentProductInstance,
                                                                                      EquipmentProductInstanceDTO equipmentProductInstanceDTO){
-        equipmentProductInstance.setEquipmentProduct(equipmentProductService.getEquipmentProductById(equipmentProductInstanceDTO.getEquipmentProductId()));
-        equipmentProductInstance.setSupplier(supplierService.findOrCreateSupplier(supplierService.getSupplierById(equipmentProductInstanceDTO.getSupplierId()).getSupplierName()));
-        equipmentProductInstance.setOrder(orderService.findOrderByOrderNumber(equipmentProductInstanceDTO.getOrderNumber()));
+        equipmentProductInstance.setEquipmentProduct(equipmentProductService.getEquipmentProductById(equipmentProductInstanceDTO.getProductId()));
         equipmentProductInstance.setPurchaseDate(equipmentProductInstanceDTO.getPurchaseDate());
-        equipmentProductInstance.setPurchasePrice(equipmentProductInstanceDTO.getPurchasePrice());
-        equipmentProductInstance.setVatRate(equipmentProductInstanceDTO.getVatRate());
-        equipmentProductInstance.setNetPrice(equipmentProductInstanceDTO.getNetPrice());
         equipmentProductInstance.setDescription(equipmentProductInstanceDTO.getDescription());
         equipmentProductInstance.setOutOfUse(equipmentProductInstanceDTO.getOutOfUse() != null ? equipmentProductInstanceDTO.getOutOfUse() : false);
         calculateAndSetWarrantyEndDate(equipmentProductInstance,equipmentProductInstanceDTO);
@@ -218,10 +190,7 @@ public class EquipmentProductInstanceService {
 
     public EquipmentProductInstance equipmentProductInstanceDtoToIndependentEquipmentProductInstanceConversion(EquipmentProductInstance equipmentProductInstance,
                                                                                                 EquipmentProductInstanceDTO equipmentProductInstanceDTO){
-        equipmentProductInstance.setEquipmentProduct(equipmentProductService.getEquipmentProductById(equipmentProductInstanceDTO.getEquipmentProductId()));
-        equipmentProductInstance.setPurchasePrice(equipmentProductInstanceDTO.getPurchasePrice());
-        equipmentProductInstance.setVatRate(equipmentProductInstanceDTO.getVatRate());
-        equipmentProductInstance.setNetPrice(equipmentProductInstanceDTO.getNetPrice());
+        equipmentProductInstance.setEquipmentProduct(equipmentProductService.getEquipmentProductById(equipmentProductInstanceDTO.getProductId()));
         equipmentProductInstance.setDescription(equipmentProductInstanceDTO.getDescription());
         if (equipmentProductInstanceDTO.getPurchaseDate() == null) {
             equipmentProductInstance.setPurchaseDate(new Date());
@@ -275,33 +244,18 @@ public class EquipmentProductInstanceService {
         }
     }
 
-    private void isValid(EquipmentProductInstanceDTO equipmentProductInstanceDTO) {
-        if (equipmentProductInstanceDTO.getPurchasePrice() < 0) {
-            throw new ProductInstanceCreationException("PurchasePrice cannot be negative.");
-        }
-    }
-
     public void validateEquipmentProductInstanceDTO(EquipmentProductInstanceDTO equipmentProductInstanceDTO) {
-        if (equipmentProductInstanceDTO.getEquipmentProductId() == null) {
+        if (equipmentProductInstanceDTO.getProductId() == null) {
             throw new IllegalArgumentException("EquipmentProductInstanceDTO must have a valid equipmentProductName.");
-        }
-        if (equipmentProductInstanceDTO.getSupplierId() == null) {
-            throw new IllegalArgumentException("EquipmentProductInstanceDTO must have a valid supplierId.");
         }
         if (equipmentProductInstanceDTO.getPurchaseDate() == null) {
             throw new IllegalArgumentException("EquipmentProductInstanceDTO must have a valid purchaseDate.");
-        }
-        if (equipmentProductInstanceDTO.getPurchasePrice() == null || equipmentProductInstanceDTO.getPurchasePrice() < 0) {
-            throw new IllegalArgumentException("EquipmentProductInstanceDTO must have a valid purchasePrice.");
-        }
-        if (equipmentProductInstanceDTO.getVatRate() == null) {
-            throw new IllegalArgumentException("EquipmentProductInstanceDTO must have a VatRate applied.");
         }
     }
 
     public void validateIndependentEquipmentProductInstanceDTO(EquipmentProductInstanceDTO equipmentProductInstanceDTO) {
 
-        if (equipmentProductInstanceDTO.getEquipmentProductId() == null) {
+        if (equipmentProductInstanceDTO.getProductId() == null) {
             throw new IllegalArgumentException("EquipmentProductInstanceDTO must have a valid equipmentProductId.");
         }
 

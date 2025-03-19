@@ -20,11 +20,11 @@ public interface BrandRepo extends JpaRepository<Brand, Long> {
 
     @Query("SELECT DISTINCT b FROM Brand b " +
             "WHERE (:includeSale = true AND b IN (SELECT sp.brand FROM SaleProduct sp " +
-            "JOIN sp.productInstances pi WHERE sp.isDeleted = false AND pi.isDeleted = false AND pi.isSold = false AND pi.isUsed = false)) " +
+            "JOIN sp.productInstances pi WHERE sp.isDeleted = false AND pi.isSold = false AND pi.isUsed = false)) " +
             "OR (:includeTool = true AND b IN (SELECT tp.brand FROM ToolProduct tp " +
-            "JOIN tp.productInstances pi WHERE tp.isDeleted = false AND pi.isDeleted = false AND pi.outOfUse = false)) " +
+            "JOIN tp.productInstances pi WHERE tp.isDeleted = false AND pi.outOfUse = false)) " +
             "OR (:includeEquipment = true AND b IN (SELECT ep.brand FROM EquipmentProduct ep " +
-            "JOIN ep.productInstances pi WHERE ep.isDeleted = false AND pi.isDeleted = false AND pi.outOfUse = false))")
+            "JOIN ep.productInstances pi WHERE ep.isDeleted = false AND pi.outOfUse = false))")
     List<Brand> findDistinctBrandsForActiveProductsWithActiveInstances(
             @Param("includeSale") boolean includeSale,
             @Param("includeTool") boolean includeTool,
@@ -33,13 +33,13 @@ public interface BrandRepo extends JpaRepository<Brand, Long> {
 
     @Query("SELECT DISTINCT b FROM Brand b " +
             "WHERE ((:includeSale = true AND b IN (SELECT sp.brand FROM SaleProduct sp " +
-            "JOIN sp.productInstances pi WHERE sp.isDeleted = false AND pi.isDeleted = false AND pi.isSold = false AND pi.isUsed = false " +
+            "JOIN sp.productInstances pi WHERE sp.isDeleted = false AND pi.isSold = false AND pi.isUsed = false " +
             "AND (LOWER(TRIM(sp.productName)) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(TRIM(b.brandName)) LIKE LOWER(CONCAT('%', :keyword, '%'))))) " +
             "OR (:includeTool = true AND b IN (SELECT tp.brand FROM ToolProduct tp " +
-            "JOIN tp.productInstances pi WHERE tp.isDeleted = false AND pi.isDeleted = false AND pi.outOfUse = false " +
+            "JOIN tp.productInstances pi WHERE tp.isDeleted = false AND pi.outOfUse = false " +
             "AND (LOWER(TRIM(tp.productName)) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(TRIM(b.brandName)) LIKE LOWER(CONCAT('%', :keyword, '%'))))) " +
             "OR (:includeEquipment = true AND b IN (SELECT ep.brand FROM EquipmentProduct ep " +
-            "JOIN ep.productInstances pi WHERE ep.isDeleted = false AND pi.isDeleted = false AND pi.outOfUse = false " +
+            "JOIN ep.productInstances pi WHERE ep.isDeleted = false AND pi.outOfUse = false " +
             "AND (LOWER(TRIM(ep.productName)) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(TRIM(b.brandName)) LIKE LOWER(CONCAT('%', :keyword, '%'))))))")
     List<Brand> findDistinctBrandsFilteredByTypeAndKeyword(
             @Param("includeSale") boolean includeSale,

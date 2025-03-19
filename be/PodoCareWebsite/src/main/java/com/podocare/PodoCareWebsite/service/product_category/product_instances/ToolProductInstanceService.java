@@ -1,31 +1,19 @@
 package com.podocare.PodoCareWebsite.service.product_category.product_instances;
 
-import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product.ProductCreationException;
-import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product.ProductNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product.ProductUpdateException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_instance.ProductInstanceCreationException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_instance.ProductInstanceDeletionException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_instance.ProductInstanceNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_instance.ProductInstanceUpdateException;
-import com.podocare.PodoCareWebsite.model.order.Order;
-import com.podocare.PodoCareWebsite.model.Brand_Supplier.Supplier;
-import com.podocare.PodoCareWebsite.model.product.product_category.*;
-import com.podocare.PodoCareWebsite.model.product.product_category.ToolProduct;
+import com.podocare.PodoCareWebsite.model.product.product_category.SaleProduct;
 import com.podocare.PodoCareWebsite.model.product.product_category.ToolProduct;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.ToolProductInstanceDTO;
-import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.ToolProductInstanceDTO;
-import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.ToolProductInstanceDTO;
-import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.EquipmentProductInstance;
-import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.ToolProductInstance;
-import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.ToolProductInstance;
+import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.SaleProductInstance;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.ToolProductInstance;
 import com.podocare.PodoCareWebsite.repo.product_category.ToolProductRepo;
-import com.podocare.PodoCareWebsite.repo.product_category.ToolProductRepo;
-import com.podocare.PodoCareWebsite.repo.product_category.product_instances.ToolProductInstanceRepo;
 import com.podocare.PodoCareWebsite.repo.product_category.product_instances.ToolProductInstanceRepo;
 import com.podocare.PodoCareWebsite.service.order.OrderService;
 import com.podocare.PodoCareWebsite.service.order.SupplierService;
-import com.podocare.PodoCareWebsite.service.product_category.ToolProductService;
 import com.podocare.PodoCareWebsite.service.product_category.ToolProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +21,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -93,19 +80,27 @@ public class ToolProductInstanceService {
         return toolProductInstanceToSave;
     }
 
-    @Transactional
     public ToolProductInstance updateInstance(Long toolProductInstanceId,
                                               ToolProductInstanceDTO toolProductInstanceDTO){
         ToolProductInstance existingToolProductInstance =  getToolProductInstanceById(toolProductInstanceId);
-        validateToolProductInstanceDTO(toolProductInstanceDTO);
-        ToolProductInstance toolProductInstanceToUpdate = toolProductInstanceDtoToToolProductInstanceConversion(existingToolProductInstance, toolProductInstanceDTO);
-
         boolean wasActive = !existingToolProductInstance.getOutOfUse();
-        boolean isNowActive = !toolProductInstanceToUpdate.getOutOfUse();
-        ToolProduct toolProduct = toolProductInstanceToUpdate.getToolProduct();
+        validateIndependentToolProductInstanceDTO(toolProductInstanceDTO);
+
+        if(toolProductInstanceDTO.getPurchaseDate() != null) {
+            existingToolProductInstance.setPurchaseDate(toolProductInstanceDTO.getPurchaseDate());
+        }
+        if(toolProductInstanceDTO.getDescription() != null) {
+            existingToolProductInstance.setDescription(toolProductInstanceDTO.getDescription());
+        }
+        if(toolProductInstanceDTO.getOutOfUse() != null) {
+            existingToolProductInstance.setOutOfUse(toolProductInstanceDTO.getOutOfUse());
+        }
+
+        ToolProduct toolProduct = toolProductService.getToolProductById(existingToolProductInstance.getToolProduct().getId());
 
         try {
-            toolProductInstanceRepo.save(toolProductInstanceToUpdate);
+            toolProductInstanceRepo.save(existingToolProductInstance);
+            boolean isNowActive = !existingToolProductInstance.getOutOfUse();
             if (wasActive && !isNowActive) {
                 decrementCurrentSupply(toolProduct);
             } else if (!wasActive && isNowActive) {
@@ -116,34 +111,38 @@ public class ToolProductInstanceService {
             throw new ProductInstanceUpdateException("Error occurred while updating ToolProductInstance.", e);
         }
 
-        return toolProductInstanceToUpdate;
+        return existingToolProductInstance;
     }
 
-    @Transactional
-    public void deleteInstance(Long toolProductInstanceId){
-        ToolProductInstance existingToolProductInstance =  getToolProductInstanceById(toolProductInstanceId);
+    public List<ToolProductInstance> getClosestDateSortedActiveInstanceList(Long toolProductId, Date date) {
+        List<ToolProductInstance> activeInstances = toolProductService.getActiveInstances(toolProductId);
 
-        boolean isActive = !existingToolProductInstance.getOutOfUse() && !existingToolProductInstance.getIsDeleted();
-
-        existingToolProductInstance.setIsDeleted(true);
-
-        try{
-            toolProductInstanceRepo.save(existingToolProductInstance);
-            if(isActive) {
-                decrementCurrentSupply(existingToolProductInstance.getToolProduct());
-            }
-        } catch (Exception e) {
-            log.error("Failed to soft delete ToolProductInstance ID: {}", toolProductInstanceId, e);
-            throw new ProductInstanceDeletionException("Failed to soft delete ToolProductInstance.", e);
-        }
+        return activeInstances.stream()
+                .sorted((instance1, instance2) -> {
+                    long diff1 = Math.abs(instance1.getPurchaseDate().getTime() - date.getTime());
+                    long diff2 = Math.abs(instance2.getPurchaseDate().getTime() - date.getTime());
+                    return Long.compare(diff1, diff2);
+                })
+                .toList();
     }
 
-    @Transactional
-    public void hardDeleteInstance(Long toolProductInstanceId) {
+    public List<ToolProductInstance> getClosestDateSortedAllInstanceList(Long toolProductId, Date date) {
+        List<ToolProductInstance> allInstances = toolProductService.getAllInstances(toolProductId);
+
+        return allInstances.stream()
+                .sorted((instance1, instance2) -> {
+                    long diff1 = Math.abs(instance1.getPurchaseDate().getTime() - date.getTime());
+                    long diff2 = Math.abs(instance2.getPurchaseDate().getTime() - date.getTime());
+                    return Long.compare(diff1, diff2);
+                })
+                .toList();
+    }
+
+
+    public void deleteInstance(Long toolProductInstanceId) {
         ToolProductInstance existingToolProductInstance =  getToolProductInstanceById(toolProductInstanceId);
 
-        boolean wasSoftDeleted = !existingToolProductInstance.getIsDeleted();
-        boolean isActive = !existingToolProductInstance.getOutOfUse() && !wasSoftDeleted;
+        boolean isActive = !existingToolProductInstance.getOutOfUse();
 
         try {
             toolProductInstanceRepo.deleteById(toolProductInstanceId);
@@ -163,7 +162,7 @@ public class ToolProductInstanceService {
         }
 
         long activeCount = toolProductInstances.stream()
-                .filter(instance -> !instance.getOutOfUse() && !instance.getIsDeleted())
+                .filter(instance -> !instance.getOutOfUse())
                 .count();
 
         ToolProduct toolProduct = toolProductInstances.getFirst().getToolProduct();
@@ -178,38 +177,10 @@ public class ToolProductInstanceService {
         }
     }
 
-    @Transactional
-    public void batchDeleteInstancesByProduct(ToolProduct toolProduct) {
-
-        List<ToolProductInstance> toolProductInstances = toolProduct.getProductInstances();
-
-        long activeCount = toolProductInstances.stream()
-                .filter(instance -> !instance.getOutOfUse() && !instance.getIsDeleted())
-                .count();
-
-        List<Long> instanceIds = toolProductInstances.stream()
-                .map(ToolProductInstance::getId)
-                .toList();
-        try {
-            toolProductInstanceRepo.markInstancesAsDeletedByIds(instanceIds);
-            if(activeCount > 0){
-                decrementCurrentSupplyByAmount(toolProduct, (int) activeCount);
-            }
-        } catch (Exception e) {
-            throw new ProductInstanceDeletionException("Failed to batch soft delete ToolProductInstances.", e);
-        }
-    }
-
-
     public ToolProductInstance toolProductInstanceDtoToToolProductInstanceConversion(ToolProductInstance toolProductInstance,
                                                                                      ToolProductInstanceDTO toolProductInstanceDTO){
-        toolProductInstance.setToolProduct(toolProductService.getToolProductById(toolProductInstanceDTO.getToolProductId()));
-        toolProductInstance.setSupplier(supplierService.findOrCreateSupplier(supplierService.getSupplierById(toolProductInstanceDTO.getSupplierId()).getSupplierName()));
-        toolProductInstance.setOrder(orderService.findOrderByOrderNumber(toolProductInstanceDTO.getOrderNumber()));
+        toolProductInstance.setToolProduct(toolProductService.getToolProductById(toolProductInstanceDTO.getProductId()));
         toolProductInstance.setPurchaseDate(toolProductInstanceDTO.getPurchaseDate());
-        toolProductInstance.setPurchasePrice(toolProductInstanceDTO.getPurchasePrice());
-        toolProductInstance.setVatRate(toolProductInstanceDTO.getVatRate());
-        toolProductInstance.setNetPrice(toolProductInstanceDTO.getNetPrice());
         toolProductInstance.setDescription(toolProductInstanceDTO.getDescription());
         toolProductInstance.setOutOfUse(toolProductInstanceDTO.getOutOfUse() != null ? toolProductInstanceDTO.getOutOfUse() : false);
         return toolProductInstance;
@@ -217,10 +188,7 @@ public class ToolProductInstanceService {
 
     public ToolProductInstance toolProductInstanceDtoToIndependentToolProductInstanceConversion(ToolProductInstance toolProductInstance,
                                                                                                 ToolProductInstanceDTO toolProductInstanceDTO){
-        toolProductInstance.setToolProduct(toolProductService.getToolProductById(toolProductInstanceDTO.getToolProductId()));
-        toolProductInstance.setPurchasePrice(toolProductInstanceDTO.getPurchasePrice());
-        toolProductInstance.setVatRate(toolProductInstanceDTO.getVatRate());
-        toolProductInstance.setNetPrice(toolProductInstanceDTO.getNetPrice());
+        toolProductInstance.setToolProduct(toolProductService.getToolProductById(toolProductInstanceDTO.getProductId()));
         toolProductInstance.setDescription(toolProductInstanceDTO.getDescription());
         if (toolProductInstanceDTO.getPurchaseDate() == null) {
             toolProductInstance.setPurchaseDate(new Date());
@@ -273,35 +241,17 @@ public class ToolProductInstanceService {
         }
     }
 
-
-
-    private void isValid(ToolProductInstanceDTO toolProductInstanceDTO) {
-        if (toolProductInstanceDTO.getPurchasePrice() < 0) {
-            throw new ProductInstanceCreationException("PurchasePrice cannot be negative.");
-        }
-    }
-
     public void validateToolProductInstanceDTO(ToolProductInstanceDTO toolProductInstanceDTO) {
-        if (toolProductInstanceDTO.getToolProductId() == null) {
+        if (toolProductInstanceDTO.getProductId() == null) {
             throw new IllegalArgumentException("ToolProductInstanceDTO must have a valid toolProductName.");
         }
-        if (toolProductInstanceDTO.getSupplierId() == null) {
-            throw new IllegalArgumentException("ToolProductInstanceDTO must have a valid supplierId.");
-        }
-
         if (toolProductInstanceDTO.getPurchaseDate() == null) {
             throw new IllegalArgumentException("ToolProductInstanceDTO must have a valid purchaseDate.");
-        }
-        if (toolProductInstanceDTO.getPurchasePrice() == null || toolProductInstanceDTO.getPurchasePrice() < 0) {
-            throw new IllegalArgumentException("ToolProductInstanceDTO must have a valid purchasePrice.");
-        }
-        if (toolProductInstanceDTO.getVatRate() == null) {
-            throw new IllegalArgumentException("ToolProductInstanceDTO must have a VatRate applied.");
         }
     }
 
     public void validateIndependentToolProductInstanceDTO(ToolProductInstanceDTO toolProductInstanceDTO) {
-        if (toolProductInstanceDTO.getToolProductId() == null) {
+        if (toolProductInstanceDTO.getProductId() == null) {
             throw new IllegalArgumentException("ToolProductInstanceDTO must have a valid toolProductId.");
         }
 

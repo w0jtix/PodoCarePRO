@@ -7,9 +7,11 @@ import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product.Produ
 import com.podocare.PodoCareWebsite.model.product.product_category.DTOs.EquipmentProductDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.EquipmentProduct;
 import com.podocare.PodoCareWebsite.model.product.product_category.EquipmentProduct;
+import com.podocare.PodoCareWebsite.model.product.product_category.SaleProduct;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.EquipmentProductInstanceDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.SaleProductInstanceDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.EquipmentProductInstance;
+import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.SaleProductInstance;
 import com.podocare.PodoCareWebsite.repo.product_category.EquipmentProductRepo;
 import com.podocare.PodoCareWebsite.repo.product_category.product_instances.EquipmentProductInstanceRepo;
 import com.podocare.PodoCareWebsite.service.order.BrandService;
@@ -62,7 +64,6 @@ public class EquipmentProductService {
                 .orElseThrow(() -> new ProductNotFoundException("EquipmentProduct not found with ID: " + equipmentProductId));
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public EquipmentProduct createEquipmentProduct(EquipmentProductDTO equipmentProductDTO) {
         isValid(equipmentProductDTO.getProductName());
 
@@ -78,7 +79,7 @@ public class EquipmentProductService {
 
             if(equipmentProductDTO.getProductInstances() != null && !equipmentProductDTO.getProductInstances().isEmpty()) {
                 for(EquipmentProductInstanceDTO instanceDTO : equipmentProductDTO.getProductInstances()) {
-                    instanceDTO.setEquipmentProductId(equipmentProductId);
+                    instanceDTO.setProductId(equipmentProductId);
                     equipmentProductInstanceService.createInstance(instanceDTO);
                 }
             }
@@ -89,13 +90,29 @@ public class EquipmentProductService {
     }
 
     public EquipmentProduct updateEquipmentProduct(Long equipmentProductId, EquipmentProductDTO equipmentProductDTO) {
-        EquipmentProduct existingProduct = getEquipmentProductById(equipmentProductId);
-
-        isValid(equipmentProductDTO.getProductName());
-        EquipmentProduct equipmentProductToUpdate = equipmentProductDtoToEquipmentProductConversion(existingProduct, equipmentProductDTO);
-
-        try {
-            return equipmentProductRepo.save(equipmentProductToUpdate);
+        try{
+            EquipmentProduct existingProduct = getEquipmentProductById(equipmentProductId);
+            boolean updated = false;
+            if(equipmentProductDTO.getProductName() != null) {
+                isValid(equipmentProductDTO.getProductName());
+                existingProduct.setProductName(equipmentProductDTO.getProductName());
+            }
+            if (equipmentProductDTO.getBrandName() != null) {
+                existingProduct.setBrand(brandService.findOrCreateBrand(equipmentProductDTO.getBrandName()));
+                updated = true;
+            }
+            if(equipmentProductDTO.getDescription() != null) {
+                existingProduct.setDescription(equipmentProductDTO.getDescription());
+                updated = true;
+            }
+            if(equipmentProductDTO.getWarrantyLength() != null) {
+                existingProduct.setWarrantyLength(equipmentProductDTO.getWarrantyLength());
+                updated = true;
+            }
+            if (updated) {
+                return equipmentProductRepo.save(existingProduct);
+            }
+            return existingProduct;
         } catch (Exception e) {
             throw new ProductCreationException("Failed to update existing Product.", e);
         }
@@ -105,7 +122,7 @@ public class EquipmentProductService {
     public void deleteEquipmentProduct(Long equipmentProductId) {
         EquipmentProduct existingProduct = getEquipmentProductById(equipmentProductId);
 
-        equipmentProductInstanceService.batchDeleteInstancesByProduct(existingProduct);
+        equipmentProductInstanceService.hardDeleteAllInstances(existingProduct.getProductInstances());
         existingProduct.setIsDeleted(true);
 
         try{
@@ -127,6 +144,18 @@ public class EquipmentProductService {
         equipmentProduct.setDescription(equipmentProductDTO.getDescription());
         equipmentProduct.setWarrantyLength(equipmentProductDTO.getWarrantyLength() != null ? equipmentProductDTO.getWarrantyLength() : 24);
         return equipmentProduct;
+    }
+
+    public List<EquipmentProductInstance> getActiveInstances(Long equipmentProductId) {
+        EquipmentProduct equipmentProduct = getEquipmentProductById(equipmentProductId);
+        List<EquipmentProductInstance> allInstances =  equipmentProduct.getProductInstances();
+
+        return allInstances.stream().filter(EquipmentProductInstance::getIsAvailable).toList();
+    }
+
+    public List<EquipmentProductInstance> getAllInstances(Long equipmentProductId) {
+        EquipmentProduct equipmentProduct = getEquipmentProductById(equipmentProductId);
+        return equipmentProduct.getProductInstances();
     }
 
     public boolean equipmentProductAlreadyExists(String equipmentProductName) {

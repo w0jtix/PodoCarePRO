@@ -17,18 +17,11 @@ public interface ToolProductInstanceRepo extends JpaRepository<ToolProductInstan
 
     List<ToolProductInstance> findByToolProductId(Long toolProductId);
 
-    @Query("SELECT pi FROM ToolProductInstance pi WHERE pi.toolProduct.id = :toolProductId AND pi.outOfUse = false AND pi.isDeleted = false")
+    @Query("SELECT pi FROM ToolProductInstance pi WHERE pi.toolProduct.id = :toolProductId AND pi.outOfUse = false")
     List<ToolProductInstance> findActiveInstancesByProductId(@Param("toolProductId")Long toolProductId);
 
-    @Query("SELECT COUNT(spi) FROM ToolProductInstance spi WHERE spi.outOfUse = false AND spi.isDeleted = false")
+    @Query("SELECT COUNT(spi) FROM ToolProductInstance spi WHERE spi.outOfUse = false")
     long countAvailableInstances();
-
-    @Modifying
-    @Transactional
-    @Query("UPDATE ToolProductInstance e SET e.isDeleted = true WHERE e.id IN :ids")
-    void markInstancesAsDeletedByIds(@Param("ids") List<Long> ids);
-
-    long countBySupplier(Supplier supplier);
 
     Long countByToolProductIdAndOutOfUseFalse(Long toolProductId);
     Long countByToolProductIdAndOutOfUseTrue(Long toolProductId);

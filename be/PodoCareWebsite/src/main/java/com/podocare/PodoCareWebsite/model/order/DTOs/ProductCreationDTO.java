@@ -14,12 +14,14 @@ public class ProductCreationDTO {
     private Long id;
     private String name;
     private String brandName;
-    private Integer shelfLife;
+    private Integer estimatedShelfLife;
     private String category;
-    private Double sellingPrice;
+    private Double estimatedSellingPrice;
     private String description;
 
     private List<SaleProductInstanceDTO> saleProductInstances;
     private List<ToolProductInstanceDTO> toolProductInstances;
     private List<EquipmentProductInstanceDTO> equipmentProductInstances;
+
+    private List<Long> instanceIdsToBeRemoved;
 }

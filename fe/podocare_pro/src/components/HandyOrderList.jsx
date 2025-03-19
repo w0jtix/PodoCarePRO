@@ -18,12 +18,10 @@ const HandyOrderList = ({ attributes, orders, setSelectedOrderProduct, expandedO
     const year = date.getFullYear();
     return `${day}.${month}.${year}`;
   };
-
+ 
   const calculateOrderItems = (order) => {
     return (
-      order.saleProductInstances.length +
-      order.toolProductInstances.length +
-      order.equipmentProductInstances.length
+      order.orderProducts.length
     );
   };
 

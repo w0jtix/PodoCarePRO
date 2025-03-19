@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 
-const CostInput = ({ startValue, onChange, selectedCost, defaultValue }) => {
+const CostInput = ({ startValue, onChange, selectedCost, defaultValue, onBlur }) => {
   const [cost, setCost] = useState(selectedCost ?? startValue);
 
   useEffect(() => {
@@ -15,6 +15,7 @@ const CostInput = ({ startValue, onChange, selectedCost, defaultValue }) => {
         setCost(startValue);
       }
     }, [defaultValue]);
+
 
 /*   useEffect(() => {
       selectedCost  === null ? setCost(null) : setCost(selectedCost);

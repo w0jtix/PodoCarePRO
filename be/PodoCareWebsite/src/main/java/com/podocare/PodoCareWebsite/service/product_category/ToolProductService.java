@@ -10,6 +10,7 @@ import com.podocare.PodoCareWebsite.model.product.product_category.SaleProduct;
 import com.podocare.PodoCareWebsite.model.product.product_category.ToolProduct;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.SaleProductInstanceDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.ToolProductInstanceDTO;
+import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.SaleProductInstance;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.ToolProductInstance;
 import com.podocare.PodoCareWebsite.repo.product_category.ToolProductRepo;
 import com.podocare.PodoCareWebsite.repo.product_category.product_instances.ToolProductInstanceRepo;
@@ -62,7 +63,6 @@ public class ToolProductService{
                 .orElseThrow(() -> new ProductNotFoundException("ToolProduct not found with ID: " + toolProductId));
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public ToolProduct createToolProduct(ToolProductDTO toolProductDTO) {
         isValid(toolProductDTO.getProductName());
 
@@ -78,7 +78,7 @@ public class ToolProductService{
 
             if(toolProductDTO.getProductInstances() != null && !toolProductDTO.getProductInstances().isEmpty()) {
                 for(ToolProductInstanceDTO instanceDTO : toolProductDTO.getProductInstances()) {
-                    instanceDTO.setToolProductId(toolProductId);
+                    instanceDTO.setProductId(toolProductId);
                     toolProductInstanceService.createInstance(instanceDTO);
                 }
             }
@@ -90,13 +90,28 @@ public class ToolProductService{
     }
 
     public ToolProduct updateToolProduct(Long toolProductId, ToolProductDTO toolProductDTO) {
-        ToolProduct existingProduct = getToolProductById(toolProductId);
-
-        isValid(toolProductDTO.getProductName());
-        ToolProduct toolProductToUpdate = toolProductDtoToToolProductConversion(existingProduct, toolProductDTO);
-
         try {
-            return toolProductRepo.save(toolProductToUpdate);
+            ToolProduct existingProduct = getToolProductById(toolProductId);
+            boolean updated = false;
+
+            if(toolProductDTO.getProductName() != null) {
+                isValid(toolProductDTO.getProductName());
+                existingProduct.setProductName(toolProductDTO.getProductName());
+                updated = true;
+            }
+            if (toolProductDTO.getBrandName() != null) {
+                existingProduct.setBrand(brandService.findOrCreateBrand(toolProductDTO.getBrandName()));
+                updated = true;
+            }
+            if(toolProductDTO.getDescription() != null) {
+                existingProduct.setDescription(toolProductDTO.getDescription());
+                updated = true;
+            }
+
+            if (updated) {
+                return toolProductRepo.save(existingProduct);
+            }
+            return existingProduct;
         } catch (Exception e) {
             throw new ProductCreationException("Failed to update existing Product.", e);
         }
@@ -106,7 +121,7 @@ public class ToolProductService{
     public void deleteToolProduct(Long toolProductId) {
         ToolProduct existingProduct = getToolProductById(toolProductId);
 
-        toolProductInstanceService.batchDeleteInstancesByProduct(existingProduct);
+        toolProductInstanceService.hardDeleteAllInstances(existingProduct.getProductInstances());
         existingProduct.setIsDeleted(true);
 
         try{
@@ -127,6 +142,18 @@ public class ToolProductService{
         toolProduct.setCurrentSupply(toolProductDTO.getCurrentSupply() != null ? toolProductDTO.getCurrentSupply() : 0);
         toolProduct.setDescription(toolProductDTO.getDescription());
         return toolProduct;
+    }
+
+    public List<ToolProductInstance> getActiveInstances(Long toolProductId) {
+        ToolProduct toolProduct = getToolProductById(toolProductId);
+        List<ToolProductInstance> allInstances =  toolProduct.getProductInstances();
+
+        return allInstances.stream().filter(ToolProductInstance::getIsAvailable).toList();
+    }
+
+    public List<ToolProductInstance> getAllInstances(Long toolProductId) {
+        ToolProduct toolProduct = getToolProductById(toolProductId);
+        return toolProduct.getProductInstances();
     }
 
     public boolean toolProductAlreadyExists(String toolProductName) {

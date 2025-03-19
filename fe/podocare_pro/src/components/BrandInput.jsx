@@ -8,9 +8,15 @@ const BrandInput = ({ onBrandSelect, brandName }) => {
   const [filteredBrands, setFilteredBrands] = useState([]);
   const [keyword, setKeyword] = useState("");
   const [selectedBrand, setSelectedBrand] = useState(null);
+  const [isUserInteracting, setIsUserInteracting] = useState(false);
 
   useEffect(() => {
-    setKeyword(brandName ?? "");
+    if (!isUserInteracting) {
+      setKeyword(brandName ?? "");
+    }
+    if (!brandName) {
+      setKeyword("");
+    }
   }, [brandName]);
 
   useEffect(() => {
@@ -18,7 +24,7 @@ const BrandInput = ({ onBrandSelect, brandName }) => {
       BrandService.getFilteredBrandsByKeyword(keyword)
         .then((filteredData) => {
           setFilteredBrands(filteredData);
-          setIsDropdownOpen(filteredData.length > 0);
+          setIsDropdownOpen(isUserInteracting && filteredData.length > 0);
         })
         .catch((error) => console.error(error.message));
     } else {
@@ -31,21 +37,24 @@ const BrandInput = ({ onBrandSelect, brandName }) => {
   const handleInputChange = (e) => {
     setKeyword(e.target.value);
     setSelectedBrand(null);
+    setIsUserInteracting(true);
   };
 
   const handleBrandSelect = (brandName) => {
     setSelectedBrand(brandName);
     setKeyword(brandName);
+
     setTimeout(() => {
       setIsDropdownOpen(false);
     }, 10);
+    setIsUserInteracting(false);
     if (onBrandSelect) {
       onBrandSelect(brandName);
     }
   };
 
   const handleInputBlur = () => {
-    if (keyword && !selectedBrand) {
+    if (keyword !== undefined && !selectedBrand) {
       onBrandSelect(keyword);
     }
   };

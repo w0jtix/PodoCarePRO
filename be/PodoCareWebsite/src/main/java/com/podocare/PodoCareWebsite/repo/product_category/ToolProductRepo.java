@@ -17,7 +17,7 @@ public interface ToolProductRepo extends JpaRepository<ToolProduct, Long> {
             "LOWER(TRIM(p.brand.brandName)) LIKE LOWER(CONCAT(TRIM(:keyword), '%'))")
     List<ToolProduct> searchProducts(String keyword);
 
-    @Query ("SELECT DISTINCT sp FROM ToolProduct sp JOIN FETCH sp.productInstances pi WHERE sp.isDeleted = false AND pi.isDeleted = false AND pi.outOfUse = false")
+    @Query ("SELECT DISTINCT sp FROM ToolProduct sp JOIN FETCH sp.productInstances pi WHERE sp.isDeleted = false AND pi.outOfUse = false")
     List<ToolProduct> findAllActiveWithActiveInstances();
 
     @Query("SELECT p FROM ToolProduct p WHERE LOWER(TRIM(p.productName)) = LOWER(TRIM(:productName))")

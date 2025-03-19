@@ -13,13 +13,24 @@ class SupplierService {
     }
   }
 
+  static async createSupplier(supplierDTO) {
+    try {
+      const response = await axios.post(`${this.API_URL}`,
+        supplierDTO);
+      return response.data;
+    } catch (error) {
+      console.error("Error creating new Supplier.", error);
+      throw error;
+    }
+  }
+
   static async getFilteredSuppliersByKeyword(keyword) {
     try {
       const allSuppliers = await this.getAllSuppliers();
       const filteredSuppliers = allSuppliers.data.filter((supplier) =>
         supplier.name.toLowerCase().startsWith(keyword.trim().toLowerCase())
       );
-      
+
       return filteredSuppliers;
     } catch (error) {
       console.error("Error filtering Suppliers. ", error);
