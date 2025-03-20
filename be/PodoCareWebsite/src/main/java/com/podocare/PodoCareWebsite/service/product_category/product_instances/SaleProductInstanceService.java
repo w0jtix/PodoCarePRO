@@ -16,6 +16,7 @@ import com.podocare.PodoCareWebsite.model.product.product_category.SaleProduct;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.SaleProductInstanceDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.EquipmentProductInstance;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.SaleProductInstance;
+import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.ToolProductInstance;
 import com.podocare.PodoCareWebsite.repo.product_category.SaleProductRepo;
 import com.podocare.PodoCareWebsite.repo.product_category.product_instances.SaleProductInstanceRepo;
 import com.podocare.PodoCareWebsite.service.order.OrderService;
@@ -138,13 +139,25 @@ public class SaleProductInstanceService {
         boolean isActive = !existingSaleProductInstance.getIsSold() && !existingSaleProductInstance.getIsUsed();
 
         try {
-            saleProductInstanceRepo.deleteById(saleProductInstanceId);
             if(isActive) {
+                saleProductInstanceRepo.deleteById(saleProductInstanceId);
                 decrementCurrentSupply(existingSaleProductInstance.getSaleProduct());
             }
         } catch (Exception e) {
             log.error("Failed to hard delete SaleProductInstance ID: {}", saleProductInstanceId, e);
             throw new ProductInstanceDeletionException("Failed to hard delete SaleProductInstance.", e);
+        }
+    }
+
+    public void hardDeleteAllActiveInstances(List<SaleProductInstance> saleProductInstances) {
+        if(saleProductInstances == null || saleProductInstances.isEmpty()) {
+            return;
+        }
+        List<Long> instanceIds = saleProductInstances.stream()
+                .map(SaleProductInstance::getId)
+                .toList();
+        for(Long instanceId : instanceIds) {
+            deleteInstance(instanceId);
         }
     }
 
@@ -170,28 +183,6 @@ public class SaleProductInstanceService {
                     return Long.compare(diff1, diff2);
                 })
                 .toList();
-    }
-
-    @Transactional
-    public void hardDeleteAllInstances(List<SaleProductInstance> saleProductInstances) {
-        if(saleProductInstances == null || saleProductInstances.isEmpty()) {
-            return;
-        }
-
-        long activeCount = saleProductInstances.stream()
-                .filter(instance -> !instance.getIsUsed() && !instance.getIsSold())
-                .count();
-
-        SaleProduct saleProduct = saleProductInstances.getFirst().getSaleProduct();
-
-        try{
-            saleProductInstanceRepo.deleteAll(saleProductInstances);
-            if(activeCount > 0) {
-                decrementCurrentSupplyByAmount(saleProduct, (int) activeCount);
-            }
-        } catch (Exception e) {
-            throw new ProductInstanceDeletionException("Failed to batch hard delete SaleProductInstances.", e);
-        }
     }
 
     public void calculateAndSetShelfLife(SaleProductInstance saleProductInstance,
@@ -226,6 +217,18 @@ public class SaleProductInstanceService {
         }
         calculateAndSetShelfLife(saleProductInstance,saleProductInstanceDTO);
         return saleProductInstance;
+    }
+
+    public SaleProductInstanceDTO saleProductInstanceToSaleProductInstanceDTO(SaleProductInstance saleProductInstance, SaleProductInstanceDTO saleProductInstanceDTO) {
+        saleProductInstanceDTO.setId(saleProductInstance.getId());
+        saleProductInstanceDTO.setProductId(saleProductInstance.getSaleProduct().getId());
+        saleProductInstanceDTO.setPurchaseDate(saleProductInstance.getPurchaseDate());
+        saleProductInstanceDTO.setSellingPrice(saleProductInstance.getSellingPrice());
+        saleProductInstanceDTO.setShelfLife(saleProductInstance.getShelfLife());
+        saleProductInstanceDTO.setDescription(saleProductInstance.getDescription());
+        saleProductInstanceDTO.setIsSold(saleProductInstance.getIsSold());
+        saleProductInstanceDTO.setIsUsed(saleProductInstance.getIsUsed());
+        return saleProductInstanceDTO;
     }
 
     public Long countSaleProductInstancesAvailable(Long saleProductId) {

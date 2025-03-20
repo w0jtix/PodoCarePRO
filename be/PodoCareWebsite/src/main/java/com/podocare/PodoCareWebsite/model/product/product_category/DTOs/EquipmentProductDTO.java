@@ -18,6 +18,7 @@ public class EquipmentProductDTO {
     private Integer currentSupply;
     private String description;
     private List<EquipmentProductInstanceDTO> productInstances;
+    private String category;
 
     private Integer warrantyLength;
 }

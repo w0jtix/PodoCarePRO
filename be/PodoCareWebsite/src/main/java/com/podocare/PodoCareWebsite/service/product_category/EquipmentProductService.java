@@ -5,6 +5,7 @@ import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product.Produ
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product.ProductNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product.ProductUpdateException;
 import com.podocare.PodoCareWebsite.model.product.product_category.DTOs.EquipmentProductDTO;
+import com.podocare.PodoCareWebsite.model.product.product_category.DTOs.SaleProductDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.EquipmentProduct;
 import com.podocare.PodoCareWebsite.model.product.product_category.EquipmentProduct;
 import com.podocare.PodoCareWebsite.model.product.product_category.SaleProduct;
@@ -12,6 +13,7 @@ import com.podocare.PodoCareWebsite.model.product.product_category.product_insta
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.SaleProductInstanceDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.EquipmentProductInstance;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.SaleProductInstance;
+import com.podocare.PodoCareWebsite.repo.order.OrderProductRepo;
 import com.podocare.PodoCareWebsite.repo.product_category.EquipmentProductRepo;
 import com.podocare.PodoCareWebsite.repo.product_category.product_instances.EquipmentProductInstanceRepo;
 import com.podocare.PodoCareWebsite.service.order.BrandService;
@@ -21,6 +23,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,6 +33,8 @@ public class EquipmentProductService {
     private EquipmentProductRepo equipmentProductRepo;
     @Autowired
     private BrandService brandService;
+    @Autowired
+    private OrderProductRepo orderProductRepo;
     @Autowired
     private EquipmentProductInstanceRepo equipmentProductInstanceRepo;
     @Autowired
@@ -46,17 +51,13 @@ public class EquipmentProductService {
         return equipmentProductRepo.findAll();
     }
 
-    public EquipmentProduct getEquipmentProductWithActiveInstances(Long equipmentProductId) {
-        EquipmentProduct equipmentProduct = getEquipmentProductById(equipmentProductId);
-
-        List<EquipmentProductInstance> activeInstances = equipmentProductInstanceRepo.findActiveInstancesByProductId(equipmentProductId);
-
-        equipmentProduct.setProductInstances(activeInstances);
-        return equipmentProduct;
-    }
-
     public List<EquipmentProduct> getActiveEquipmentProductsWithActiveInstances() {
-        return equipmentProductRepo.findAllActiveWithActiveInstances();
+        List<EquipmentProduct> products = equipmentProductRepo.findAllActiveEquipmentProducts();
+        for (EquipmentProduct product : products) {
+            product.setProductInstances(getActiveInstances(product.getId())
+            );
+        }
+        return products;
     }
 
     public EquipmentProduct getEquipmentProductById(Long equipmentProductId) {
@@ -118,15 +119,23 @@ public class EquipmentProductService {
         }
     }
 
-    @Transactional
     public void deleteEquipmentProduct(Long equipmentProductId) {
         EquipmentProduct existingProduct = getEquipmentProductById(equipmentProductId);
+        boolean hasOrderProductReference = orderProductRepo.hasEquipmentProductReference(equipmentProductId);
 
-        equipmentProductInstanceService.hardDeleteAllInstances(existingProduct.getProductInstances());
-        existingProduct.setIsDeleted(true);
+        List<EquipmentProductInstance> inactiveInstances = existingProduct.getProductInstances().stream()
+                .filter(EquipmentProductInstance::getOutOfUse)
+                .toList();
+
+        equipmentProductInstanceService.hardDeleteAllActiveInstances(existingProduct.getProductInstances());
 
         try{
-            equipmentProductRepo.save(existingProduct);
+            if (inactiveInstances.isEmpty() && !hasOrderProductReference) {
+                equipmentProductRepo.deleteById(equipmentProductId);
+            } else {
+                existingProduct.setIsDeleted(true);
+                equipmentProductRepo.save(existingProduct);
+            }
         } catch (Exception e){
             throw new ProductDeletionException("Failed to delete existing Product.", e);
         }
@@ -144,6 +153,26 @@ public class EquipmentProductService {
         equipmentProduct.setDescription(equipmentProductDTO.getDescription());
         equipmentProduct.setWarrantyLength(equipmentProductDTO.getWarrantyLength() != null ? equipmentProductDTO.getWarrantyLength() : 24);
         return equipmentProduct;
+    }
+
+    public EquipmentProductDTO equipmentProductToEquipmentProductDTOConversion(EquipmentProduct equipmentProduct, EquipmentProductDTO equipmentProductDTO) {
+        equipmentProductDTO.setId(equipmentProduct.getId());
+        equipmentProductDTO.setProductName(equipmentProduct.getProductName());
+        equipmentProductDTO.setBrandName(equipmentProduct.getBrand().getBrandName());
+        equipmentProductDTO.setInitialSupply(equipmentProduct.getInitialSupply());
+        equipmentProductDTO.setCurrentSupply(equipmentProduct.getCurrentSupply());
+        equipmentProductDTO.setDescription(equipmentProduct.getDescription());
+        equipmentProductDTO.setWarrantyLength(equipmentProduct.getWarrantyLength());
+        equipmentProductDTO.setCategory(equipmentProduct.getCategory());
+        List<EquipmentProductInstanceDTO> instanceDTOList = new ArrayList<>();
+        for(EquipmentProductInstance equipmentProductInstance : equipmentProduct.getProductInstances()) {
+            EquipmentProductInstanceDTO equipmentProductInstanceDTO = new EquipmentProductInstanceDTO();
+            instanceDTOList.add(
+                    equipmentProductInstanceService.equipmentProductInstanceToEquipmentProductInstanceDTO(equipmentProductInstance,equipmentProductInstanceDTO)
+            );
+        }
+        equipmentProductDTO.setProductInstances(instanceDTOList);
+        return equipmentProductDTO;
     }
 
     public List<EquipmentProductInstance> getActiveInstances(Long equipmentProductId) {

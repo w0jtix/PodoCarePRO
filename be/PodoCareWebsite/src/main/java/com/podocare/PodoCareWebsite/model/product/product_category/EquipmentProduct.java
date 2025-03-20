@@ -32,7 +32,7 @@ public class EquipmentProduct{
     private String category= "Equipment";
     private Boolean isDeleted = false;
 
-    @OneToMany(mappedBy = "equipmentProduct", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "equipmentProduct")
     @JsonManagedReference
     private List<EquipmentProductInstance> productInstances = new ArrayList<>();
 }

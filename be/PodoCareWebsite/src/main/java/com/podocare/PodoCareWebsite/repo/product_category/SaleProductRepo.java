@@ -18,10 +18,8 @@ public interface SaleProductRepo extends JpaRepository<SaleProduct, Long> {
             "LOWER(TRIM(p.brand.brandName)) LIKE LOWER(CONCAT(TRIM(:keyword), '%'))")
     List<SaleProduct> searchProducts(String keyword);
 
-    @Query ("SELECT DISTINCT sp FROM SaleProduct sp JOIN FETCH sp.productInstances pi WHERE sp.isDeleted = false AND pi.isSold = false AND pi.isUsed = false")
-    List<SaleProduct> findAllActiveWithActiveInstances();
-
-
+    @Query("SELECT DISTINCT sp FROM SaleProduct sp LEFT JOIN FETCH sp.productInstances pi WHERE sp.isDeleted = false")
+    List<SaleProduct> findAllActiveSaleProducts();
 
     @Query("SELECT p FROM SaleProduct p WHERE LOWER(TRIM(p.productName)) = LOWER(TRIM(:productName))")
     Optional<SaleProduct> findBySaleProductName(String productName);

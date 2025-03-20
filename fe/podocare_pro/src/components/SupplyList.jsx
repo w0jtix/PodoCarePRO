@@ -10,7 +10,9 @@ const SupplyList = ({
   showZeroProducts,
   setIsAddNewProductsPopupOpen,
   setIsEditProductsPopupOpen,
+  setIsRemoveProductsPopupOpen,
   setSelectedProduct,
+  handleProductRemove
 }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,45 +32,31 @@ const SupplyList = ({
   const fetchItems = async (productFilterDTO) => {
     const { productTypes, selectedIds, keyword } = productFilterDTO;
 
-    if (showZeroProducts) {
-      AllProductService.getFilteredProductsWithZeroInstances(
-        productTypes,
-        selectedIds,
-        keyword
-      )
-        .then((response) => {
-          const sortedItems = response.sort((a, b) =>
-            a.productName.localeCompare(b.productName)
-          );
+    AllProductService.getFilteredActiveProductsWithActiveInstances(
+      productTypes,
+      selectedIds,
+      keyword
+    )
+      .then((response) => {
+        const sortedItems = response.sort((a, b) =>
+          a.productName.localeCompare(b.productName)
+        );
+        if (showZeroProducts) {
           setItems(sortedItems);
-        })
-        .catch((error) => {
-          setItems([]);
-          console.error("Error fetching products:", error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    } else {
-      AllProductService.getFilteredProductsWithActiveInstances(
-        productTypes,
-        selectedIds,
-        keyword
-      )
-        .then((response) => {
-          const sortedItems = response.sort((a, b) =>
-            a.productName.localeCompare(b.productName)
+        } else {
+          const productsWithActiveInstances = sortedItems.filter(
+            (item) => item.productInstances.length > 0
           );
-          setItems(sortedItems);
-        })
-        .catch((error) => {
-          setItems([]);
-          console.error("Error fetching products:", error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
+          setItems(productsWithActiveInstances);
+        }
+      })
+      .catch((error) => {
+        setItems([]);
+        console.error("Error fetching products:", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -114,7 +102,9 @@ const SupplyList = ({
             itemsPerPage={itemsPerPage}
             setIsAddNewProductsPopupOpen={setIsAddNewProductsPopupOpen}
             setIsEditProductsPopupOpen={setIsEditProductsPopupOpen}
+            setIsRemoveProductsPopupOpen={setIsRemoveProductsPopupOpen}
             setSelectedProduct={setSelectedProduct}
+            handleProductRemove={handleProductRemove}
           />
           {items.length > itemsPerPage && (
             <div className="list-pagination">

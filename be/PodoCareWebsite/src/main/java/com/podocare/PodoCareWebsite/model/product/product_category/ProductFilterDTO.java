@@ -8,6 +8,6 @@ import java.util.List;
 @Getter
 public class ProductFilterDTO {
     private List<String> productTypes;
-    private List<Long> selectedIds;
+    private List<Long> selectedIds; // brandIds
     private String keyword;
 }

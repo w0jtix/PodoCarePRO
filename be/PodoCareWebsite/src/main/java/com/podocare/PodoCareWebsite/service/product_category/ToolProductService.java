@@ -5,6 +5,7 @@ import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product.Produ
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product.ProductNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product.ProductUpdateException;
 import com.podocare.PodoCareWebsite.model.product.product_category.DTOs.ToolProductDTO;
+import com.podocare.PodoCareWebsite.model.product.product_category.DTOs.ToolProductDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.EquipmentProduct;
 import com.podocare.PodoCareWebsite.model.product.product_category.SaleProduct;
 import com.podocare.PodoCareWebsite.model.product.product_category.ToolProduct;
@@ -12,6 +13,7 @@ import com.podocare.PodoCareWebsite.model.product.product_category.product_insta
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.ToolProductInstanceDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.SaleProductInstance;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.ToolProductInstance;
+import com.podocare.PodoCareWebsite.repo.order.OrderProductRepo;
 import com.podocare.PodoCareWebsite.repo.product_category.ToolProductRepo;
 import com.podocare.PodoCareWebsite.repo.product_category.product_instances.ToolProductInstanceRepo;
 import com.podocare.PodoCareWebsite.service.order.BrandService;
@@ -21,6 +23,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,6 +32,8 @@ public class ToolProductService{
     private ToolProductRepo toolProductRepo;
     @Autowired
     private BrandService brandService;
+    @Autowired
+    private OrderProductRepo orderProductRepo;
     @Autowired
     private ToolProductInstanceRepo toolProductInstanceRepo;
     @Autowired
@@ -45,17 +50,13 @@ public class ToolProductService{
         return toolProductRepo.findAll();
     }
 
-    public ToolProduct getToolProductWithActiveInstances(Long toolProductId) {
-        ToolProduct toolProduct = getToolProductById(toolProductId);
-
-        List<ToolProductInstance> activeInstances = toolProductInstanceRepo.findActiveInstancesByProductId(toolProductId);
-
-        toolProduct.setProductInstances(activeInstances);
-        return toolProduct;
-    }
-
     public List<ToolProduct> getActiveToolProductsWithActiveInstances() {
-        return toolProductRepo.findAllActiveWithActiveInstances();
+        List<ToolProduct> products = toolProductRepo.findAllActiveToolProducts();
+        for (ToolProduct product : products) {
+            product.setProductInstances(getActiveInstances(product.getId())
+            );
+        }
+        return products;
     }
 
     public ToolProduct getToolProductById(Long toolProductId) {
@@ -117,15 +118,23 @@ public class ToolProductService{
         }
     }
 
-    @Transactional
     public void deleteToolProduct(Long toolProductId) {
         ToolProduct existingProduct = getToolProductById(toolProductId);
+        boolean hasOrderProductReference = orderProductRepo.hasToolProductReference(toolProductId);
 
-        toolProductInstanceService.hardDeleteAllInstances(existingProduct.getProductInstances());
-        existingProduct.setIsDeleted(true);
+        List<ToolProductInstance> inactiveInstances = existingProduct.getProductInstances().stream()
+                .filter(ToolProductInstance::getOutOfUse)
+                .toList();
+
+        toolProductInstanceService.hardDeleteAllActiveInstances(existingProduct.getProductInstances());
 
         try{
-            toolProductRepo.save(existingProduct);
+            if (inactiveInstances.isEmpty() && !hasOrderProductReference) {
+                toolProductRepo.deleteById(toolProductId);
+            } else {
+                existingProduct.setIsDeleted(true);
+                toolProductRepo.save(existingProduct);
+            }
         } catch (Exception e){
             throw new ProductDeletionException("Failed to delete existing Product.", e);
         }
@@ -142,6 +151,25 @@ public class ToolProductService{
         toolProduct.setCurrentSupply(toolProductDTO.getCurrentSupply() != null ? toolProductDTO.getCurrentSupply() : 0);
         toolProduct.setDescription(toolProductDTO.getDescription());
         return toolProduct;
+    }
+
+    public ToolProductDTO toolProductToToolProductDTOConversion(ToolProduct toolProduct, ToolProductDTO toolProductDTO) {
+        toolProductDTO.setId(toolProduct.getId());
+        toolProductDTO.setProductName(toolProduct.getProductName());
+        toolProductDTO.setBrandName(toolProduct.getBrand().getBrandName());
+        toolProductDTO.setInitialSupply(toolProduct.getInitialSupply());
+        toolProductDTO.setCurrentSupply(toolProduct.getCurrentSupply());
+        toolProductDTO.setDescription(toolProduct.getDescription());
+        toolProductDTO.setCategory(toolProduct.getCategory());
+        List<ToolProductInstanceDTO> instanceDTOList = new ArrayList<>();
+        for(ToolProductInstance toolProductInstance : toolProduct.getProductInstances()) {
+            ToolProductInstanceDTO toolProductInstanceDTO = new ToolProductInstanceDTO();
+            instanceDTOList.add(
+                    toolProductInstanceService.toolProductInstanceToToolProductInstanceDTO(toolProductInstance,toolProductInstanceDTO)
+            );
+        }
+        toolProductDTO.setProductInstances(instanceDTOList);
+        return toolProductDTO;
     }
 
     public List<ToolProductInstance> getActiveInstances(Long toolProductId) {

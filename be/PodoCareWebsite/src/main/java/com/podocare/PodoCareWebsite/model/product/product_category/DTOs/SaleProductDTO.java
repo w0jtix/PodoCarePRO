@@ -17,6 +17,7 @@ public class SaleProductDTO {
     private Integer currentSupply;
     private String description;
     private List<SaleProductInstanceDTO> productInstances;
+    private String category;
 
     private Integer estimatedShelfLife;
     private Double sellingPrice;

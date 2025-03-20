@@ -35,7 +35,7 @@ public class SaleProduct{
     private Boolean isDeleted = false;
 
 
-    @OneToMany(mappedBy = "saleProduct", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "saleProduct")
     @JsonManagedReference
     private List<SaleProductInstance> productInstances = new ArrayList<>();
 

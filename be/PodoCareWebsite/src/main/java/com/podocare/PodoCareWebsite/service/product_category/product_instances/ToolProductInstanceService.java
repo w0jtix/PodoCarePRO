@@ -7,6 +7,7 @@ import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_insta
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_instance.ProductInstanceUpdateException;
 import com.podocare.PodoCareWebsite.model.product.product_category.SaleProduct;
 import com.podocare.PodoCareWebsite.model.product.product_category.ToolProduct;
+import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.SaleProductInstanceDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.ToolProductInstanceDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.SaleProductInstance;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.ToolProductInstance;
@@ -145,35 +146,25 @@ public class ToolProductInstanceService {
         boolean isActive = !existingToolProductInstance.getOutOfUse();
 
         try {
-            toolProductInstanceRepo.deleteById(toolProductInstanceId);
             if(isActive) {
+                toolProductInstanceRepo.deleteById(toolProductInstanceId);
                 decrementCurrentSupply(existingToolProductInstance.getToolProduct());
             }
         } catch (Exception e) {
-            log.error("Failed to soft delete ToolProductInstance ID: {}", toolProductInstanceId, e);
+            log.error("Failed to hard delete ToolProductInstance ID: {}", toolProductInstanceId, e);
             throw new ProductInstanceDeletionException("Failed to hard delete ToolProductInstance.", e);
         }
     }
 
-    @Transactional
-    public void hardDeleteAllInstances(List<ToolProductInstance> toolProductInstances) {
+    public void hardDeleteAllActiveInstances(List<ToolProductInstance> toolProductInstances) {
         if(toolProductInstances == null || toolProductInstances.isEmpty()) {
             return;
         }
-
-        long activeCount = toolProductInstances.stream()
-                .filter(instance -> !instance.getOutOfUse())
-                .count();
-
-        ToolProduct toolProduct = toolProductInstances.getFirst().getToolProduct();
-
-        try{
-            toolProductInstanceRepo.deleteAll(toolProductInstances);
-            if(activeCount > 0){
-                decrementCurrentSupplyByAmount(toolProduct, (int) activeCount);
-            }
-        } catch (Exception e) {
-            throw new ProductInstanceDeletionException("Failed to batch hard delete ToolProductInstances.", e);
+        List<Long> instanceIds = toolProductInstances.stream()
+                .map(ToolProductInstance::getId)
+                .toList();
+        for(Long instanceId : instanceIds) {
+            deleteInstance(instanceId);
         }
     }
 
@@ -196,6 +187,15 @@ public class ToolProductInstanceService {
             toolProductInstance.setPurchaseDate(toolProductInstanceDTO.getPurchaseDate());
         }
         return toolProductInstance;
+    }
+
+    public ToolProductInstanceDTO toolProductInstanceToToolProductInstanceDTO(ToolProductInstance toolProductInstance, ToolProductInstanceDTO toolProductInstanceDTO) {
+        toolProductInstanceDTO.setId(toolProductInstance.getId());
+        toolProductInstanceDTO.setProductId(toolProductInstance.getToolProduct().getId());
+        toolProductInstanceDTO.setPurchaseDate(toolProductInstance.getPurchaseDate());
+        toolProductInstanceDTO.setDescription(toolProductInstance.getDescription());
+        toolProductInstanceDTO.setOutOfUse(toolProductInstance.getOutOfUse());
+        return toolProductInstanceDTO;
     }
 
     public Long countToolProductInstancesAvailable(Long toolProductId) {

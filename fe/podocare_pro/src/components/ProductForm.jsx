@@ -21,7 +21,7 @@ const ProductForm = ({
     selectedProduct?.productName ?? ""
   );
   const [brandName, setBrandName] = useState(
-    selectedProduct?.brand.brandName ?? null
+    selectedProduct?.brandName ?? null
   );
   const [suggestedSellingPrice, setsuggestedSellingPrice] = useState(
     selectedProduct?.sellingPrice ?? 0
@@ -116,7 +116,7 @@ const ProductForm = ({
   const resetProductInstanceForm = () => {
     setSupply(selectedProduct?.currentSupply ?? 0);
     setProductName(selectedProduct?.productName ?? "");
-    setBrandName(selectedProduct?.brand.brandName ?? null);
+    setBrandName(selectedProduct?.brandName ?? null);
     setsuggestedSellingPrice(selectedProduct?.sellingPrice ?? 0);
     setExpiryLength(selectedProduct?.estimatedShelfLife ?? 24);
     setDescription(selectedProduct?.description ?? null);
@@ -256,7 +256,7 @@ const ProductForm = ({
     if (action === "Edit") {
       const initialProduct = {
         name: selectedProduct.productName,
-        brandName: selectedProduct.brand.brandName,
+        brandName: selectedProduct.brandName,
         estimatedShelfLife:
           (selectedProduct?.category === "Equipment"
             ? selectedProduct?.warrantyLength
@@ -447,7 +447,9 @@ const ProductForm = ({
               />
             )}
           </div>
-          {supply >= 0 && <div>{renderInstances(action)}</div>}
+          <div className="popup-instances-list">
+            {supply >= 0 && <div>{renderInstances(action)}</div>}
+          </div>
         </div>
       </section>
     </div>

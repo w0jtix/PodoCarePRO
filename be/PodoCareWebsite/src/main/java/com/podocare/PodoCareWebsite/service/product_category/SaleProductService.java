@@ -9,6 +9,7 @@ import com.podocare.PodoCareWebsite.model.product.product_category.SaleProduct;
 
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.SaleProductInstanceDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.SaleProductInstance;
+import com.podocare.PodoCareWebsite.repo.order.OrderProductRepo;
 import com.podocare.PodoCareWebsite.repo.product_category.SaleProductRepo;
 import com.podocare.PodoCareWebsite.repo.product_category.product_instances.SaleProductInstanceRepo;
 import com.podocare.PodoCareWebsite.service.order.BrandService;
@@ -18,6 +19,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,6 +28,8 @@ public class SaleProductService{
     private SaleProductRepo saleProductRepo;
     @Autowired
     private BrandService brandService;
+    @Autowired
+    private OrderProductRepo orderProductRepo;
     @Autowired
     private SaleProductInstanceRepo saleProductInstanceRepo;
     @Autowired
@@ -43,21 +47,13 @@ public class SaleProductService{
         return saleProductRepo.findAll();
     }
 
-    public SaleProduct getSaleProductWithActiveInstances(Long saleProductId) {
-        SaleProduct saleProduct = getSaleProductById(saleProductId);
-
-        if(saleProduct.getIsDeleted()) {
-
-        }
-
-        List<SaleProductInstance> activeInstances = saleProductInstanceRepo.findActiveInstancesByProductId(saleProductId);
-
-        saleProduct.setProductInstances(activeInstances);
-        return saleProduct;
-    }
-
     public List<SaleProduct> getActiveSaleProductsWithActiveInstances() {
-        return saleProductRepo.findAllActiveWithActiveInstances();
+        List<SaleProduct> products = saleProductRepo.findAllActiveSaleProducts();
+        for (SaleProduct product : products) {
+            product.setProductInstances(getActiveInstances(product.getId())
+            );
+        }
+        return products;
     }
 
     public SaleProduct getSaleProductById(Long saleProductId) {
@@ -128,11 +124,21 @@ public class SaleProductService{
 
     public void deleteSaleProduct(Long saleProductId) {
         SaleProduct existingProduct = getSaleProductById(saleProductId);
+        boolean hasOrderProductReference = orderProductRepo.hasSaleProductReference(saleProductId);
 
-        saleProductInstanceService.hardDeleteAllInstances(existingProduct.getProductInstances());
+        List<SaleProductInstance> inactiveInstances = existingProduct.getProductInstances().stream()
+                        .filter(instance -> instance.getIsUsed() || instance.getIsSold())
+                                .toList();
+
+        saleProductInstanceService.hardDeleteAllActiveInstances(existingProduct.getProductInstances());
 
         try{
-            saleProductRepo.save(existingProduct);
+            if (inactiveInstances.isEmpty() && !hasOrderProductReference) {
+                saleProductRepo.deleteById(saleProductId);
+            } else {
+                existingProduct.setIsDeleted(true);
+                saleProductRepo.save(existingProduct);
+            }
         } catch (Exception e){
             throw new ProductDeletionException("Failed to delete existing Product.", e);
         }
@@ -153,6 +159,29 @@ public class SaleProductService{
         saleProduct.setInternalUse(saleProductDTO.getInternalUse());
         saleProduct.setForSale(saleProductDTO.getForSale());
         return saleProduct;
+    }
+
+    public SaleProductDTO saleProductToSaleProductDTOConversion(SaleProduct saleProduct, SaleProductDTO saleProductDTO) {
+        saleProductDTO.setId(saleProduct.getId());
+        saleProductDTO.setProductName(saleProduct.getProductName());
+        saleProductDTO.setBrandName(saleProduct.getBrand().getBrandName());
+        saleProductDTO.setInitialSupply(saleProduct.getInitialSupply());
+        saleProductDTO.setCurrentSupply(saleProduct.getCurrentSupply());
+        saleProductDTO.setDescription(saleProduct.getDescription());
+        saleProductDTO.setEstimatedShelfLife(saleProduct.getEstimatedShelfLife());
+        saleProductDTO.setSellingPrice(saleProduct.getSellingPrice());
+        saleProductDTO.setInternalUse(saleProduct.getInternalUse());
+        saleProductDTO.setForSale(saleProduct.getForSale());
+        saleProductDTO.setCategory(saleProduct.getCategory());
+        List<SaleProductInstanceDTO> instanceDTOList = new ArrayList<>();
+        for(SaleProductInstance saleProductInstance : saleProduct.getProductInstances()) {
+            SaleProductInstanceDTO saleProductInstanceDTO = new SaleProductInstanceDTO();
+            instanceDTOList.add(
+                    saleProductInstanceService.saleProductInstanceToSaleProductInstanceDTO(saleProductInstance,saleProductInstanceDTO)
+            );
+        }
+        saleProductDTO.setProductInstances(instanceDTOList);
+        return saleProductDTO;
     }
 
     public List<SaleProductInstance> getActiveInstances(Long saleProductId) {

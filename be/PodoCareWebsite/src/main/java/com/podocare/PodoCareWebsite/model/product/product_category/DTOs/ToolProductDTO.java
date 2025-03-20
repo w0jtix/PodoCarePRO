@@ -18,5 +18,5 @@ public class ToolProductDTO {
     private Integer currentSupply;
     private String description;
     private List<ToolProductInstanceDTO> productInstances;
-
+    private String category;
 }

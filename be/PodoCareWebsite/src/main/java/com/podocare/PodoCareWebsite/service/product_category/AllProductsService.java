@@ -1,5 +1,6 @@
 package com.podocare.PodoCareWebsite.service.product_category;
 
+import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product.ProductNotFoundException;
 import com.podocare.PodoCareWebsite.model.order.DTOs.OrderProductDTO;
 import com.podocare.PodoCareWebsite.model.order.DTOs.ProductCreationDTO;
 import com.podocare.PodoCareWebsite.model.order.OrderProductValidator;
@@ -191,20 +192,52 @@ public class AllProductsService {
         }
 
         if(filter.getSelectedIds() == null || filter.getSelectedIds().isEmpty()) {
-            return filteredProductsByType;
+            return combineAllProductsIntoDTOList(filteredProductsByType);
         } else {
-            return filterProductsByBrands(filteredProductsByType, filter.getSelectedIds());
+            return combineAllProductsIntoDTOList(
+                    filterProductsByBrands(filteredProductsByType, filter.getSelectedIds())
+            );
         }
     }
 
-    public void deleteProductById(Long productId){
-        if (saleProductService.getSaleProductById(productId) != null) {
-            saleProductService.deleteSaleProduct(productId); //verify
-        } else if (toolProductService.getToolProductById(productId) != null) {
-            toolProductService.deleteToolProduct(productId);
-        } else if (equipmentProductService.getEquipmentProductById(productId) != null) {
-            equipmentProductService.deleteEquipmentProduct(productId);
+    public List<Object> combineAllProductsIntoDTOList(List<Object> productList) {
+        List<Object> productsDTOList = new ArrayList<>();
+        for(Object product : productList) {
+            if(product instanceof SaleProduct) {
+                SaleProductDTO saleProductDTO = new SaleProductDTO();
+                productsDTOList.add(saleProductService.saleProductToSaleProductDTOConversion((SaleProduct) product, saleProductDTO));
+            } else if (product instanceof ToolProduct) {
+                ToolProductDTO toolProductDTO = new ToolProductDTO();
+                productsDTOList.add(toolProductService.toolProductToToolProductDTOConversion((ToolProduct) product, toolProductDTO));
+            } else if (product instanceof EquipmentProduct) {
+                EquipmentProductDTO equipmentProductDTO = new EquipmentProductDTO();
+                productsDTOList.add(equipmentProductService.equipmentProductToEquipmentProductDTOConversion((EquipmentProduct) product, equipmentProductDTO));
+            }
         }
+        return productsDTOList;
+    }
+
+    @Transactional
+    public void deleteProductById(Long productId){
+        try {
+            if (saleProductService.getSaleProductById(productId) != null) {
+                saleProductService.deleteSaleProduct(productId);
+                return;
+            }
+        } catch (ProductNotFoundException ignored) {}
+
+        try {
+            if (toolProductService.getToolProductById(productId) != null) {
+                toolProductService.deleteToolProduct(productId);
+                return;
+            }
+        } catch (ProductNotFoundException ignored) {}
+
+        try {
+            if (equipmentProductService.getEquipmentProductById(productId) != null) {
+                equipmentProductService.deleteEquipmentProduct(productId);
+            }
+        } catch (ProductNotFoundException ignored) {}
     }
 
     //returns a list of products present in DB, nonExisting are discarded, use case - validate products when finalizing Order

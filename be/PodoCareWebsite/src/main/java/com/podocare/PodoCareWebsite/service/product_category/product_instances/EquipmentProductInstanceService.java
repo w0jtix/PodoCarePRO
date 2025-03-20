@@ -8,8 +8,10 @@ import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_insta
 import com.podocare.PodoCareWebsite.model.product.product_category.EquipmentProduct;
 import com.podocare.PodoCareWebsite.model.product.product_category.SaleProduct;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.EquipmentProductInstanceDTO;
+import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.SaleProductInstanceDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.EquipmentProductInstance;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.SaleProductInstance;
+import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.ToolProductInstance;
 import com.podocare.PodoCareWebsite.repo.product_category.EquipmentProductRepo;
 import com.podocare.PodoCareWebsite.repo.product_category.product_instances.EquipmentProductInstanceRepo;
 import com.podocare.PodoCareWebsite.service.order.OrderService;
@@ -125,13 +127,25 @@ public class EquipmentProductInstanceService {
         boolean isActive = !existingEquipmentProductInstance.getOutOfUse();
 
         try {
-            equipmentProductInstanceRepo.deleteById(equipmentProductInstanceId);
             if(isActive) {
+                equipmentProductInstanceRepo.deleteById(equipmentProductInstanceId);
                 decrementCurrentSupply(existingEquipmentProductInstance.getEquipmentProduct());
             }
         } catch (Exception e) {
             log.error("Failed to hard delete EquipmentProductInstance ID: {}", equipmentProductInstanceId, e);
             throw new ProductInstanceDeletionException("Failed to hard delete EquipmentProductInstance.", e);
+        }
+    }
+
+    public void hardDeleteAllActiveInstances(List<EquipmentProductInstance> equipmentProductInstances) {
+        if(equipmentProductInstances == null || equipmentProductInstances.isEmpty()){
+            return;
+        }
+        List<Long> instanceIds = equipmentProductInstances.stream()
+                .map(EquipmentProductInstance::getId)
+                .toList();
+        for(Long instanceId : instanceIds) {
+            deleteInstance(instanceId);
         }
     }
 
@@ -145,28 +159,6 @@ public class EquipmentProductInstanceService {
                     return Long.compare(diff1, diff2);
                 })
                 .toList();
-    }
-
-    @Transactional
-    public void hardDeleteAllInstances(List<EquipmentProductInstance> equipmentProductInstances) {
-        if(equipmentProductInstances == null || equipmentProductInstances.isEmpty()){
-            return;
-        }
-
-        long activeCount = equipmentProductInstances.stream()
-                .filter(instance -> !instance.getOutOfUse())
-                .count();
-        EquipmentProduct equipmentProduct = equipmentProductInstances.getFirst().getEquipmentProduct();
-
-
-        try{
-            equipmentProductInstanceRepo.deleteAll(equipmentProductInstances);
-            if(activeCount > 0) {
-                decrementCurrentSupplyByAmount(equipmentProduct, (int) activeCount);
-            }
-        } catch (Exception e) {
-            throw new ProductInstanceDeletionException("Failed to batch hard delete EquipmentProductInstances.", e);
-        }
     }
 
     public void calculateAndSetWarrantyEndDate(EquipmentProductInstance equipmentProductInstance,
@@ -199,6 +191,16 @@ public class EquipmentProductInstanceService {
         }
         calculateAndSetWarrantyEndDate(equipmentProductInstance,equipmentProductInstanceDTO);
         return equipmentProductInstance;
+    }
+
+    public EquipmentProductInstanceDTO equipmentProductInstanceToEquipmentProductInstanceDTO(EquipmentProductInstance equipmentProductInstance, EquipmentProductInstanceDTO equipmentProductInstanceDTO) {
+        equipmentProductInstanceDTO.setId(equipmentProductInstance.getId());
+        equipmentProductInstanceDTO.setProductId(equipmentProductInstance.getEquipmentProduct().getId());
+        equipmentProductInstanceDTO.setPurchaseDate(equipmentProductInstance.getPurchaseDate());
+        equipmentProductInstanceDTO.setWarrantyEndDate(equipmentProductInstance.getWarrantyEndDate());
+        equipmentProductInstanceDTO.setDescription(equipmentProductInstance.getDescription());
+        equipmentProductInstanceDTO.setOutOfUse(equipmentProductInstance.getOutOfUse());
+        return equipmentProductInstanceDTO;
     }
 
     public Long countEquipmentProductInstancesAvailable(Long equipmentProductId) {

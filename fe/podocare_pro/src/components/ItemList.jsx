@@ -3,13 +3,16 @@ import ProductActionButton from "./ProductActionButton";
 import { useState } from "react";
 import ProductContent from "./ProductContent";
 
+
 const ItemList = ({
   attributes,
   items,
   currentPage,
   itemsPerPage,
   setIsEditProductsPopupOpen,
+  setIsRemoveProductsPopupOpen,
   setSelectedProduct,
+  handleProductRemove
 }) => {
   const [expandedProductIds, setExpandedProductIds] = useState([]);
 
@@ -29,11 +32,22 @@ const ItemList = ({
     return path.split(".").reduce((acc, part) => acc && acc[part], obj);
   };
 
-  const handleOnClick = (e, item) => {
+  const handleOnClickEdit = (e, item) => {
     e.stopPropagation();
     setIsEditProductsPopupOpen(true);
     setSelectedProduct(item);
   };
+
+  const handleOnClickRemove = async (e, item) => {
+    e.stopPropagation();
+    setSelectedProduct(item);
+
+    if(item.productInstances.length === 0) {
+      handleProductRemove(item.id);
+    } else {
+      setIsRemoveProductsPopupOpen(true);
+    }
+  }
 
   const toggleProducts = (productId) => {
     setExpandedProductIds((prevIds) =>
@@ -80,13 +94,14 @@ const ItemList = ({
                       src={"src/assets/edit.svg"}
                       alt={"Edytuj Produkt"}
                       text={"Edytuj"}
-                      onClick={(e) => handleOnClick(e, item)}
+                      onClick={(e) => handleOnClickEdit(e, item)}
                       disableText={true}
                     />
                     <ProductActionButton
                       src={"src/assets/cancel.svg"}
                       alt={"Usuń Produkt"}
                       text={"Usuń"}
+                      onClick={(e) => handleOnClickRemove(e, item)}
                       disableText={true}
                     />
                   </div>
