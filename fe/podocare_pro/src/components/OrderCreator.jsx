@@ -5,7 +5,7 @@ import DateInput from "./DateInput";
 import SupplierDropdown from "./SupplierDropdown";
 import CustomAlert from "./CustomAlert";
 import OrderNewProductsPopup from "./OrderNewProductsPopup";
-import axios from "axios";
+import ProductActionButton from "./ProductActionButton";
 import OrderService from "../service/OrderService";
 import AllProductService from "../service/AllProductService";
 import SupplierService from "../service/SupplierService";
@@ -323,14 +323,14 @@ const OrderCreator = ({
             </a>
           </div>
         </div>
-        <button className="order-confirm-button" onClick={handleValidateOrder}>
-          <img
-            src="src/assets/tick.svg"
-            alt="tick"
-            className="order-tick-icon"
+        <div className="order-confirm-button">
+          <ProductActionButton
+            src={"src/assets/tick.svg"}
+            alt={"Zapisz"}
+            text={"Zapisz"}
+            onClick={() => handleValidateOrder()}
           />
-          <a>Zapisz</a>
-        </button>
+        </div>
         {alertVisible && (
           <CustomAlert
             message={errorMessage || successMessage}

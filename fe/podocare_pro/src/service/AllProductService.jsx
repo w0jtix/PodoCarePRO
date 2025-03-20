@@ -56,7 +56,7 @@ class AllProductService {
     }
   }
 
-  static async getFilteredProductsWithActiveInstances(
+  static async getFilteredActiveProductsWithActiveInstances(
     productTypes,
     selectedIds,
     keyword
@@ -109,6 +109,18 @@ class AllProductService {
       return response.data;
     } catch (error) {
       console.error("Error updating Product", error);
+      throw error;
+    }
+  }
+
+  static async deleteProductAndActiveInstances(productId) {
+    try{
+      const response = await axios.delete(
+        `${this.API_URL}/${productId}`,
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error removing Product", error?.response?.data || error.message);
       throw error;
     }
   }
