@@ -110,6 +110,10 @@ public class EquipmentProductService {
                 existingProduct.setWarrantyLength(equipmentProductDTO.getWarrantyLength());
                 updated = true;
             }
+            if(equipmentProductDTO.getIsDeleted() != null) {
+                existingProduct.setIsDeleted(equipmentProductDTO.getIsDeleted());
+                updated = true;
+            }
             if (updated) {
                 return equipmentProductRepo.save(existingProduct);
             }

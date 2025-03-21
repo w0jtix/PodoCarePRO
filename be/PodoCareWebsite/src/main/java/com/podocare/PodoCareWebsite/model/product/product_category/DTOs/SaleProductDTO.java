@@ -18,6 +18,7 @@ public class SaleProductDTO {
     private String description;
     private List<SaleProductInstanceDTO> productInstances;
     private String category;
+    private Boolean isDeleted;
 
     private Integer estimatedShelfLife;
     private Double sellingPrice;

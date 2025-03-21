@@ -108,6 +108,10 @@ public class ToolProductService{
                 existingProduct.setDescription(toolProductDTO.getDescription());
                 updated = true;
             }
+            if(toolProductDTO.getIsDeleted() != null) {
+                existingProduct.setIsDeleted(toolProductDTO.getIsDeleted());
+                updated = true;
+            }
 
             if (updated) {
                 return toolProductRepo.save(existingProduct);

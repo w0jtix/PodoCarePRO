@@ -267,6 +267,7 @@ public class AllProductsService {
         saleProductDTO.setEstimatedShelfLife(productCreationDTO.getEstimatedShelfLife());
         saleProductDTO.setSellingPrice(productCreationDTO.getEstimatedSellingPrice());
         saleProductDTO.setDescription(productCreationDTO.getDescription());
+        saleProductDTO.setIsDeleted(productCreationDTO.getIsDeleted());
         saleProductDTO.setProductInstances(productCreationDTO.getSaleProductInstances());
         return  saleProductDTO;
     }
@@ -276,6 +277,7 @@ public class AllProductsService {
         toolProductDTO.setProductName(productCreationDTO.getName());
         toolProductDTO.setBrandName(productCreationDTO.getBrandName());
         toolProductDTO.setDescription(productCreationDTO.getDescription());
+        toolProductDTO.setIsDeleted(productCreationDTO.getIsDeleted());
         toolProductDTO.setProductInstances(productCreationDTO.getToolProductInstances());
         return toolProductDTO;
     }
@@ -286,6 +288,7 @@ public class AllProductsService {
         equipmentProductDTO.setBrandName(productCreationDTO.getBrandName());
         equipmentProductDTO.setWarrantyLength(productCreationDTO.getEstimatedShelfLife());
         equipmentProductDTO.setDescription(productCreationDTO.getDescription());
+        equipmentProductDTO.setIsDeleted(productCreationDTO.getIsDeleted());
         equipmentProductDTO.setProductInstances(productCreationDTO.getEquipmentProductInstances());
         return  equipmentProductDTO;
     }

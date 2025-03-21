@@ -112,6 +112,10 @@ public class SaleProductService{
                 existingProduct.setSellingPrice(saleProductDTO.getSellingPrice());
                 updated = true;
             }
+            if(saleProductDTO.getIsDeleted() != null) {
+                existingProduct.setIsDeleted(saleProductDTO.getIsDeleted());
+                updated = true;
+            }
 
             if (updated) {
                 return saleProductRepo.save(existingProduct);

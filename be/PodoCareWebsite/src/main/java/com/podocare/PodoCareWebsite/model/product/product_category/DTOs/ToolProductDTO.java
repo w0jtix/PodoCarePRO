@@ -19,4 +19,5 @@ public class ToolProductDTO {
     private String description;
     private List<ToolProductInstanceDTO> productInstances;
     private String category;
+    private Boolean isDeleted;
 }

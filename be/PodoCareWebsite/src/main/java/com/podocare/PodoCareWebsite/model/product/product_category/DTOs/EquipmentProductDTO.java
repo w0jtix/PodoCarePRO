@@ -19,6 +19,7 @@ public class EquipmentProductDTO {
     private String description;
     private List<EquipmentProductInstanceDTO> productInstances;
     private String category;
+    private Boolean isDeleted;
 
     private Integer warrantyLength;
 }

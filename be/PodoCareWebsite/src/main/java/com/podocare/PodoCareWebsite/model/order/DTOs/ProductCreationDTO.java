@@ -18,6 +18,7 @@ public class ProductCreationDTO {
     private String category;
     private Double estimatedSellingPrice;
     private String description;
+    private Boolean isDeleted;
 
     private List<SaleProductInstanceDTO> saleProductInstances;
     private List<ToolProductInstanceDTO> toolProductInstances;
