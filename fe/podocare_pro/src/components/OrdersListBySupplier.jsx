@@ -4,7 +4,12 @@ import OrderListHeader from "./OrderListHeader";
 import HandyOrderList from "./HandyOrderList";
 import OrderService from "../service/OrderService";
 
-const OrdersListBySupplier = ({ selectedSupplier, setSelectedOrderProduct, expandedOrderIds, setExpandedOrderIds }) => {
+const OrdersListBySupplier = ({
+  selectedSupplier,
+  setSelectedOrderProduct,
+  expandedOrderIds,
+  setExpandedOrderIds,
+}) => {
   const [filteredOrders, setFilteredOrders] = useState([]);
 
   const attributes = [
@@ -40,9 +45,9 @@ const OrdersListBySupplier = ({ selectedSupplier, setSelectedOrderProduct, expan
           </h1>
         )}
         <OrderListHeader attributes={attributes} />
-        <HandyOrderList 
-          attributes={attributes} 
-          orders={filteredOrders} 
+        <HandyOrderList
+          attributes={attributes}
+          orders={filteredOrders}
           setSelectedOrderProduct={setSelectedOrderProduct}
           expandedOrderIds={expandedOrderIds}
           setExpandedOrderIds={setExpandedOrderIds}

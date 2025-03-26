@@ -1,6 +1,7 @@
 package com.podocare.PodoCareWebsite.controller.order;
 
 import com.podocare.PodoCareWebsite.model.order.DTOs.OrderDTO;
+import com.podocare.PodoCareWebsite.model.order.DTOs.OrderFilterDTO;
 import com.podocare.PodoCareWebsite.model.order.Order;
 import com.podocare.PodoCareWebsite.service.order.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,8 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Order>> getAllOrders() {
-        List<Order> ordersList = orderService.getOrders();
+    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+        List<OrderDTO> ordersList = orderService.getOrders();
         return new ResponseEntity<>(ordersList, ordersList.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
@@ -32,6 +33,12 @@ public class OrderController {
     public ResponseEntity<Order> getOrderById(@PathVariable Long orderId) {
         Order order = orderService.getOrderById(orderId);
         return new ResponseEntity<>(order, HttpStatus.OK);
+    }
+
+    @PostMapping("/filter")
+    public ResponseEntity<List<OrderDTO>> getFilteredOrders(@RequestBody OrderFilterDTO orderFilterDTO) {
+        List<OrderDTO> matchingOrders = orderService.getFilteredOrders(orderFilterDTO);
+        return new ResponseEntity<>(matchingOrders, matchingOrders.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
     //to imo useless bedzie

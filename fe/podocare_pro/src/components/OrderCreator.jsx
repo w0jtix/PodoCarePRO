@@ -63,32 +63,16 @@ const OrderCreator = ({
     fetchSuppliers();
   }, []);
 
-  const getOrderProductCategoryAndDetails = (orderProduct) => {
-    if (orderProduct.saleProduct) {
-      return { category: "saleProduct", product: orderProduct.saleProduct };
-    } else if (orderProduct.toolProduct) {
-      return { category: "toolProduct", product: orderProduct.toolProduct };
-    } else if (orderProduct.equipmentProduct) {
-      return {
-        category: "equipmentProduct",
-        product: orderProduct.equipmentProduct,
-      };
-    }
-    return { category: "Unknown", product: null };
-  };
-
   useEffect(() => {
     if (selectedOrderProduct) {
-      const { category, product } =
-        getOrderProductCategoryAndDetails(selectedOrderProduct);
       setOrderProductDTOList((prevList) => [
         ...prevList,
         {
           id: Date.now(),
-          productName: product ? product.productName : "",
+          productName: selectedOrderProduct.productName,
           price: selectedOrderProduct.price,
           quantity: 1,
-          VATrate: selectedOrderProduct.vatrate,
+          VATrate: selectedOrderProduct.VATrate,
           orderPrice: selectedOrderProduct.price,
         },
       ]);
@@ -269,17 +253,13 @@ const OrderCreator = ({
             onChange={handleOrderDateChange}
             selectedDate={orderDate}
           />
-          <button
-            className="order-add-new-product-button"
-            onClick={handleAddNewProduct}
-          >
-            <img
-              src="src/assets/addNew.svg"
-              alt="add new"
-              className="order-add-new-icon"
-            />
-            <a>Dodaj produkt</a>
-          </button>
+
+          <ProductActionButton
+            src={"src/assets/addNew.svg"}
+            alt={"Dodaj Produkt"}
+            text={"Dodaj produkt"}
+            onClick={() => handleAddNewProduct()}
+          />
         </section>
         <OrderProductList
           items={orderProductDTOList}

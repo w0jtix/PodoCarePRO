@@ -96,8 +96,33 @@ public class OrderProductService {
         return orderProduct;
     }
 
+    public OrderProductDTO orderProductToOrderProductDTOConversion(OrderProduct orderProduct) {
+        OrderProductDTO orderProductDTO = new OrderProductDTO();
+        orderProductDTO.setOrderProductId(orderProduct.getId());
+        orderProductDTO.setQuantity(orderProduct.getQuantity());
+        orderProductDTO.setPrice(orderProduct.getPrice());
+        orderProductDTO.setVATrate(orderProduct.getVATrate());
+        orderProductDTO.setOrderId(orderProduct.getOrder().getId());
+        if(orderProduct.getSaleProduct() != null) {
+            orderProductDTO.setProductId(orderProduct.getSaleProduct().getId());
+            orderProductDTO.setProductName(orderProduct.getSaleProduct().getProductName());
+            orderProductDTO.setCategory(orderProduct.getSaleProduct().getCategory());
+        } else if (orderProduct.getToolProduct() != null){
+            orderProductDTO.setProductId(orderProduct.getToolProduct().getId());
+            orderProductDTO.setProductName(orderProduct.getToolProduct().getProductName());
+            orderProductDTO.setCategory(orderProduct.getToolProduct().getCategory());
+        } else if(orderProduct.getEquipmentProduct() != null) {
+            orderProductDTO.setProductId(orderProduct.getEquipmentProduct().getId());
+            orderProductDTO.setProductName(orderProduct.getEquipmentProduct().getProductName());
+            orderProductDTO.setCategory(orderProduct.getEquipmentProduct().getCategory());
+        } else {
+            throw new ProductNotFoundException("OrderProduct productId not assigned.");
+        }
+        return orderProductDTO;
+    }
+
     private void defineAndSetProductType(OrderProduct orderProduct, OrderProductDTO orderProductDTO){
-        Long productId = orderProductDTO.getId();
+        Long productId = orderProductDTO.getProductId();
 
         if (productId == null) {
             throw new ProductNotFoundException("Product ID cannot be null.");
@@ -118,7 +143,7 @@ public class OrderProductService {
 
         if(orderProductDTO.getOrderProductId() == null) {
             throw new IllegalArgumentException("OrderProductDTO must contain a non-null orderProductId");
-        } else if (orderProductDTO.getId() == null) {
+        } else if (orderProductDTO.getProductId() == null) {
             throw new IllegalArgumentException("OrderProductDTO must be linked to an existing Product.");
         }
         if (orderProductDTO.getQuantity() == null || orderProductDTO.getQuantity() < 0) {

@@ -21,7 +21,7 @@ const HandyOrderList = ({ attributes, orders, setSelectedOrderProduct, expandedO
  
   const calculateOrderItems = (order) => {
     return (
-      order.orderProducts.length
+      order.orderProductDTOList.length
     );
   };
 
@@ -38,14 +38,14 @@ const HandyOrderList = ({ attributes, orders, setSelectedOrderProduct, expandedO
       {[...orders]
         .sort((a, b) => b.orderNumber - a.orderNumber)
         .map((order, index) => (
-          <div key={`${order.id}-${index}`} className="order-wrapper">
+          <div key={`${order.orderId}-${index}`} className="order-wrapper">
             <div
               className="handy-order-item"
-              onClick={() => toggleOrderProducts(order.id)}
+              onClick={() => toggleOrderProducts(order.orderId)}
             >
               {attributes.map((attr) => (
                 <div
-                  key={`${order.id}-${attr.name}`}
+                  key={`${order.orderId}-${attr.name}`}
                   className={`order-attribute-item ${
                     attr.name === "" ? "order-category-column" : ""
                   }`}
@@ -60,7 +60,7 @@ const HandyOrderList = ({ attributes, orders, setSelectedOrderProduct, expandedO
                         src="src/assets/arrow_down.svg"
                         alt="Expand order"
                         className={`expand-order-icon ${
-                          expandedOrderIds.includes(order.id) ? "rotated" : ""
+                          expandedOrderIds.includes(order.orderId) ? "rotated" : ""
                         }`}
                       />
                     </button>
@@ -82,10 +82,11 @@ const HandyOrderList = ({ attributes, orders, setSelectedOrderProduct, expandedO
                 </div>
               ))}
             </div>
-            {expandedOrderIds.includes(order.id) && (
+            {expandedOrderIds.includes(order.orderId) && (
               <OrderContent
                 order={order}
                 setSelectedOrderProduct={setSelectedOrderProduct}
+                action={"Create"}
               />
             )}
           </div>

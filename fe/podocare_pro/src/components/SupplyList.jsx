@@ -1,5 +1,5 @@
 import React from "react";
-import SupplyListHeader from "./SupplyListHeader";
+import ListHeader from "./ListHeader";
 import ItemList from "./ItemList";
 import axios from "axios";
 import { useState, useEffect } from "react";
@@ -12,7 +12,6 @@ const SupplyList = ({
   setIsEditProductsPopupOpen,
   setIsRemoveProductsPopupOpen,
   setSelectedProduct,
-  handleProductRemove
 }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -48,6 +47,7 @@ const SupplyList = ({
             (item) => item.productInstances.length > 0
           );
           setItems(productsWithActiveInstances);
+          console.log("[", productsWithActiveInstances);
         }
       })
       .catch((error) => {
@@ -81,7 +81,7 @@ const SupplyList = ({
 
   return (
     <>
-      <SupplyListHeader attributes={attributes} />
+      <ListHeader attributes={attributes} />
       {loading ? (
         <div className="list-loading-container">
           <div className="loading-dot"></div>
@@ -104,7 +104,6 @@ const SupplyList = ({
             setIsEditProductsPopupOpen={setIsEditProductsPopupOpen}
             setIsRemoveProductsPopupOpen={setIsRemoveProductsPopupOpen}
             setSelectedProduct={setSelectedProduct}
-            handleProductRemove={handleProductRemove}
           />
           {items.length > itemsPerPage && (
             <div className="list-pagination">

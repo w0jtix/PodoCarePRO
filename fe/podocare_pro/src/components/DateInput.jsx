@@ -4,16 +4,22 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { pl } from "date-fns/locale";
 
-const DateInput = ({ onChange, selectedDate }) => {
-  const [orderDate, setOrderDate] = useState(selectedDate ?? new Date());
+const DateInput = ({ onChange, selectedDate, showPlaceholder = false }) => {
+  const [orderDate, setOrderDate] = useState(
+    selectedDate ?? (showPlaceholder ? null : new Date())
+  );
 
   const handleDateChange = (date) => {
-    setOrderDate(date);
     onChange(date);
   };
 
   useEffect(() => {
-    if (selectedDate && selectedDate.getTime() !== orderDate.getTime()) {
+    if (selectedDate === null) {
+      setOrderDate(null);
+    } else if (
+      selectedDate &&
+      (!orderDate || selectedDate.getTime() !== orderDate.getTime())
+    ) {
       setOrderDate(selectedDate);
     }
   }, [selectedDate]);
@@ -25,11 +31,13 @@ const DateInput = ({ onChange, selectedDate }) => {
         selected={orderDate}
         onChange={handleDateChange}
         customInput={
-          <button className="custom-calendar-button">
+          <button
+            className={`custom-calendar-button ${orderDate ? "selected" : ""}`}
+          >
             <img
               src="src/assets/calendar.svg"
               alt="Calendar"
-              className="calendar-icon"
+              className={`calendar-icon ${orderDate ? "selected" : ""}`}
             />
             {orderDate ? orderDate.toLocaleDateString("pl-PL") : "DD-MM-YYYY"}
           </button>

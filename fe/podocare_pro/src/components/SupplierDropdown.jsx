@@ -8,10 +8,12 @@ const SupplierDropdown = ({
   selectedSupplier,
   onSelect,
   onAddSupplier,
+  addSupplierVisible = true,
+  multiSelect = false,
 }) => {
   const [searchValue, setSearchValue] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(multiSelect ? [] : null);
   const [isAddSupplierPopupOpen, setIsAddSupplierPopupOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -24,9 +26,22 @@ const SupplierDropdown = ({
   };
 
   const handleSelect = (item) => {
-    setSelectedItem(item);
-    onSelect(item);
-    setIsExpanded(false);
+    if (multiSelect) {
+      setSelectedItem((prev) =>
+        prev.some((s) => s.id === item.id)
+          ? prev.filter((s) => s.id !== item.id)
+          : [...prev, item]
+      );
+      onSelect(
+        selectedItem.some((s) => s.id === item.id)
+          ? selectedItem.filter((s) => s.id !== item.id)
+          : [...selectedItem, item]
+      );
+    } else {
+      setSelectedItem((prev) => (prev?.id === item.id ? null : item));
+      onSelect(item);
+      setIsExpanded(false);
+    }
   };
 
   const handleCloseAddSupplierPopup = () => {
@@ -34,10 +49,12 @@ const SupplierDropdown = ({
   };
 
   useEffect(() => {
-    selectedSupplier === null
-      ? setSelectedItem(null)
-      : setSelectedItem(selectedSupplier);
-  }, [selectedSupplier]);
+    if (multiSelect) {
+      setSelectedItem(selectedSupplier ?? []);
+    } else {
+      setSelectedItem(selectedSupplier ?? null);
+    }
+  }, [selectedSupplier, multiSelect]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -55,16 +72,39 @@ const SupplierDropdown = ({
   return (
     <div className="supplier-searchable-dropdown" ref={dropdownRef}>
       <button
-        className="supplier-dropdown-header"
+        className={`supplier-dropdown-header ${
+          multiSelect && selectedItem.length > 0 ? "selected" : ""
+        }`}
         onClick={() => setIsExpanded((prev) => !prev)}
       >
-        <a>
-          {selectedItem ? (
-            <div className="supplier-placeholder">{selectedItem.name}</div>
-          ) : (
-            placeholder
-          )}
-        </a>
+        <div className="supplier-dropdown-placeholder-wrapper">
+          <a
+            className={`supplier-dropdown-header-a ${
+              (multiSelect && selectedItem.length > 0) ||
+              (!multiSelect && selectedItem)
+                ? "center"
+                : ""
+            }`}
+          >
+            {multiSelect ? (
+              selectedItem && selectedItem.length > 0 ? (
+                selectedItem.length === 1 ? (
+                  <div className="supplier-placeholder">
+                    {selectedItem[0].name}
+                  </div>
+                ) : (
+                  <div className="supplier-placeholder">{`[${selectedItem.length}]`}</div>
+                )
+              ) : (
+                placeholder
+              )
+            ) : selectedItem ? (
+              <div className="supplier-placeholder">{selectedItem.name}</div>
+            ) : (
+              placeholder
+            )}
+          </a>
+        </div>
         <img
           src="src/assets/arrow_down.svg"
           alt="arrow down"
@@ -76,21 +116,23 @@ const SupplierDropdown = ({
           <section className="dropdown-search-and-add-new-supplier">
             <input
               type="text"
-              className="dropdown-search"
+              className={`dropdown-search ${!addSupplierVisible ? "wide" : ""}`}
               placeholder="Szukaj..."
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
             />
-            <button
-              className="add-supplier-dropdown-button"
-              onClick={handleOpenAddSupplierPopup}
-            >
-              <img
-                src="src/assets/addNew.svg"
-                alt="add new"
-                className="supplier-add-new-icon"
-              />
-            </button>
+            {addSupplierVisible && (
+              <button
+                className="add-supplier-dropdown-button"
+                onClick={handleOpenAddSupplierPopup}
+              >
+                <img
+                  src="src/assets/addNew.svg"
+                  alt="add new"
+                  className="supplier-add-new-icon"
+                />
+              </button>
+            )}
           </section>
           <ul className="dropdown-list">
             {filteredItems.length > 0 ? (
@@ -101,13 +143,21 @@ const SupplierDropdown = ({
                   onClick={() => handleSelect(item)}
                 >
                   {item.name}
-                  {selectedItem?.id === item.id && (
-                    <img
-                      src="src/assets/tick.svg"
-                      alt="selected"
-                      className="supplier-tick-icon"
-                    />
-                  )}
+                  {multiSelect
+                    ? selectedItem.some((s) => s.id === item.id) && (
+                        <img
+                          src="src/assets/tick.svg"
+                          alt="selected"
+                          className="supplier-tick-icon"
+                        />
+                      )
+                    : selectedItem?.id === item.id && (
+                        <img
+                          src="src/assets/tick.svg"
+                          alt="selected"
+                          className="supplier-tick-icon"
+                        />
+                      )}
                 </li>
               ))
             ) : (

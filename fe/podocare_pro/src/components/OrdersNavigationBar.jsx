@@ -2,11 +2,11 @@ import React from "react";
 import SubMenuNavbar from "./SubMenuNavbar";
 import UserMenu from "./UserMenu";
 
-const OrdersNavigationBar = () => {
+const OrdersNavigationBar = ( { setModuleVisible } ) => {
   return (
     <div className="orders-navigation-bar">
       <section className="navigation-bar-interior">
-        <SubMenuNavbar />
+        <SubMenuNavbar setModuleVisible={setModuleVisible} />
         <UserMenu />
       </section>
     </div>

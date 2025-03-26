@@ -76,15 +76,15 @@ public class AllProductsService {
 
             if (saleProductService.saleProductAlreadyExists(productName)) {
                 SaleProduct saleProduct = saleProductService.findBySaleProductName(productName);
-                orderProductDTO.setId(saleProduct.getId());
+                orderProductDTO.setProductId(saleProduct.getId());
                 orderProductValidator.getExistingProducts().add(orderProductDTO);
             } else if (toolProductService.toolProductAlreadyExists(productName)) {
                 ToolProduct toolProduct = toolProductService.findByToolProductName(productName);
-                orderProductDTO.setId(toolProduct.getId());
+                orderProductDTO.setProductId(toolProduct.getId());
                 orderProductValidator.getExistingProducts().add(orderProductDTO);
             } else if (equipmentProductService.equipmentProductAlreadyExists(productName)) {
                 EquipmentProduct equipmentProduct = equipmentProductService.findByEquipmentProductName(productName);
-                orderProductDTO.setId(equipmentProduct.getId());
+                orderProductDTO.setProductId(equipmentProduct.getId());
                 orderProductValidator.getExistingProducts().add(orderProductDTO);
             } else {
                 orderProductValidator.getNonExistingProducts().add(orderProductDTO);

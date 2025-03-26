@@ -13,6 +13,18 @@ class OrderService {
     }
   }
 
+  static async getFilteredOrders(orderFilterDTO) {
+    try{
+      const response = await axios.post(`${this.API_URL}/filter`,
+        orderFilterDTO
+      )
+      return response.status === 204 ? [] : response.data;
+    } catch (error) {
+      console.error("Error fetching Orders.", error);
+      throw error;
+    }
+  }
+
   static async createNewOrder(OrderDTO) {
     try {
       const response = await axios.post(
@@ -30,7 +42,7 @@ class OrderService {
     try {
       const allOrders = (await this.getAllOrders()) || [];
       const filteredOrders = allOrders.filter(
-        (order) => order.supplier.id === supplier.id
+        (order) => order.supplierId === supplier.id
       );
       return filteredOrders;
     } catch (error) {

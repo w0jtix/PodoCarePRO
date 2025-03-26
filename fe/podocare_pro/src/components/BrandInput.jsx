@@ -90,7 +90,17 @@ const BrandInput = ({ onBrandSelect, brandName }) => {
         onBlur={handleInputBlur}
       />
       {isDropdownOpen && keyword != "" && filteredBrands.length > 0 && (
-        <ul className="supplier-brand-name-dropdown">
+        <ul
+          className={`supplier-brand-name-dropdown ${
+            filteredBrands.length === 1
+              ? "one-slot"
+              : filteredBrands.length === 2
+              ? "two-slot"
+              : filteredBrands.length > 2
+              ? "regular-size"
+              : ""
+          }`}
+        >
           {filteredBrands.slice(0, 3).map((suggestion) => (
             <li
               key={suggestion.id}

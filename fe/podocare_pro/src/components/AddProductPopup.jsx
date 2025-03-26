@@ -4,6 +4,7 @@ import CustomAlert from "./CustomAlert";
 import ReactDOM from "react-dom";
 import ProductForm from "./ProductForm";
 import AllProductService from "../service/AllProductService";
+import ProductActionButton from "./ProductActionButton";
 
 const AddProductPopup = ({ onClose, handleResetAllFilters }) => {
   const [errorMessage, setErrorMessage] = useState(null);
@@ -41,27 +42,110 @@ const AddProductPopup = ({ onClose, handleResetAllFilters }) => {
     }, 3000);
   };
 
+  const getChangedFields = (initial, edited) => {
+    const productCreationDTO = {};
+    Object.keys(initial).forEach((key) => {
+      if (JSON.stringify(initial[key]) !== JSON.stringify(edited[key])) {
+        productCreationDTO[key] = edited[key];
+      }
+    });
+
+    if (Object.keys(productCreationDTO).length > 0) {
+      productCreationDTO.id = initial.id;
+      if (!productCreationDTO.hasOwnProperty("category")) {
+        productCreationDTO.category = initial.category;
+      }
+    }
+
+    return productCreationDTO;
+  };
+
   const handleCreateProduct = async (productCreationDTO) => {
-    console.log("prodCrDTO", productCreationDTO);
     if (await checkForErrors(productCreationDTO)) return false;
-    const productArray = [productCreationDTO];
-    return AllProductService.createNewProducts(productArray)
-      .then((response) => {
-        console.log("Response", response);
-        showAlert(
-          `Produkt ${productCreationDTO.name} został utworzony!`,
-          "success"
-        );
-        handleResetAllFilters();
-        setTimeout(() => {
-          onClose();
-        }, 1200);
-      })
-      .catch((error) => {
-        console.error("Error creating new Product.", error);
-        showAlert("Błąd tworzenia produktu.", "error");
-        return false;
-      });
+
+    const { exists, product } =
+      await AllProductService.checkIfProductExistsAndIsSoftDeleted(
+        productCreationDTO,
+        selectedCategory
+      );
+
+    if (exists) {
+      const initialProduct = {
+        id: product.id,
+        name: product.productName,
+        brandName: product.brand.brandName,
+        estimatedShelfLife:
+          (product?.category === "Equipment"
+            ? product?.warrantyLength
+            : product?.estimatedShelfLife) ?? 24,
+        category: product.category,
+        estimatedSellingPrice: product.sellingPrice ?? 0,
+        description: product.description,
+        isDeleted: product.isDeleted,
+      };
+
+      const categoryInstancesMap = {
+        Sale: "saleProductInstances",
+        Tool: "toolProductInstances",
+        Equipment: "equipmentProductInstances",
+      };
+      const categoryInstancesKey = categoryInstancesMap[product.category];
+      if (categoryInstancesKey) {
+        initialProduct[categoryInstancesKey] = [];
+      }
+
+      productCreationDTO.isDeleted = false;
+
+      if (
+        categoryInstancesKey &&
+        productCreationDTO[categoryInstancesKey]?.length > 0
+      ) {
+        productCreationDTO[categoryInstancesKey].forEach((instance) => {
+          instance.productId = product.id;
+          delete instance.id;
+        });
+      }
+
+      const productForm = getChangedFields(initialProduct, productCreationDTO);
+      console.log("DTO", productCreationDTO);
+      console.log("PF", productForm);
+
+      return AllProductService.updateProduct(productForm)
+        .then((response) => {
+          showAlert(
+            `Produkt ${productCreationDTO.name} został utworzony!`,
+            "success"
+          );
+          handleResetAllFilters();
+          setTimeout(() => {
+            onClose();
+          }, 1200);
+        })
+        .catch((error) => {
+          console.error("Error creating(updating) new Product.", error);
+          showAlert("Błąd tworzenia produktu.", "error");
+          return false;
+        });
+    } else {
+      const productArray = [productCreationDTO];
+      return AllProductService.createNewProducts(productArray)
+        .then((response) => {
+          console.log("Response", response);
+          showAlert(
+            `Produkt ${productCreationDTO.name} został utworzony!`,
+            "success"
+          );
+          handleResetAllFilters();
+          setTimeout(() => {
+            onClose();
+          }, 1200);
+        })
+        .catch((error) => {
+          console.error("Error creating new Product.", error);
+          showAlert("Błąd tworzenia produktu.", "error");
+          return false;
+        });
+    }
   };
 
   const checkForErrors = async (productForm) => {
@@ -147,17 +231,13 @@ const AddProductPopup = ({ onClose, handleResetAllFilters }) => {
           />
         </section>
         <div className="popup-footer-container"></div>
-        <button
-          className="popup-confirm-button add-product"
-          onClick={async () => handleCreateProduct(productCreationDTO)}
-        >
-          <img
-            src="src/assets/tick.svg"
-            alt="tick"
-            className="popup-tick-icon"
+
+        <ProductActionButton
+            src={"src/assets/tick.svg"}
+            alt={"Zapisz"}
+            text={"Zapisz"}
+            onClick={async () => handleCreateProduct(productCreationDTO)}
           />
-          <a>Zapisz</a>
-        </button>
         <a className="popup-category-description">
           Jeśli chcesz przypisać produkt do zamówienia skorzystaj z zakładki -{" "}
           <i>Zamówienia</i>

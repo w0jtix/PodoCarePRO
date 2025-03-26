@@ -8,6 +8,7 @@ import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_insta
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_instance.ProductInstanceDeletionException;
 import com.podocare.PodoCareWebsite.model.VatRate;
 import com.podocare.PodoCareWebsite.model.order.DTOs.OrderDTO;
+import com.podocare.PodoCareWebsite.model.order.DTOs.OrderFilterDTO;
 import com.podocare.PodoCareWebsite.model.order.DTOs.OrderProductDTO;
 import com.podocare.PodoCareWebsite.model.order.Order;
 import com.podocare.PodoCareWebsite.model.order.OrderProduct;
@@ -36,10 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -86,8 +84,58 @@ public class OrderService {
                 .orElseThrow(() -> new OrderNotFoundException("Order not found with ID: " + orderId));
     }
 
-    public List<Order> getOrders(){
-        return orderRepo.findAll();
+    public List<OrderDTO> getOrders(){
+        List<Order> orders = orderRepo.findAll();
+        return orders.stream()
+                .map(this::orderToOrderDtoConversion).toList();
+    }
+
+    public List<OrderDTO> getFilteredOrders(OrderFilterDTO orderFilterDTO) {
+
+        List<OrderDTO> filteredOrderBySupplier;
+
+        if(orderFilterDTO.getSupplierIds() == null || orderFilterDTO.getSupplierIds().isEmpty()) {
+            filteredOrderBySupplier = getOrders();
+        } else {
+            filteredOrderBySupplier = filterOrdersBySupplier(orderFilterDTO.getSupplierIds());
+        }
+
+        Date dateFrom = orderFilterDTO.getDateFrom();
+        Date dateTo = orderFilterDTO.getDateTo();
+
+        if (dateFrom == null && dateTo == null) {
+            return filteredOrderBySupplier;
+        }
+
+        return filteredOrderBySupplier.stream()
+                .filter(orderDTO -> isDateInRange(orderDTO.getOrderDate(), dateFrom, dateTo))
+                .toList();
+    }
+
+
+    private List<OrderDTO> filterOrdersBySupplier(List<Long> supplierIds){
+            List<Order> filteredOrders = orderRepo.findOrdersBySupplierIds(supplierIds);
+
+            return filteredOrders.stream()
+                    .map(this::orderToOrderDtoConversion).toList();
+    }
+
+    private boolean isDateInRange(Date orderDate, Date dateFrom, Date dateTo) {
+        if (orderDate == null) {
+            return false;
+        }
+
+        if (dateTo != null) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(dateTo);
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+            dateTo = calendar.getTime();
+        }
+
+        boolean afterStart = (dateFrom == null || !orderDate.before(dateFrom));
+        boolean beforeEnd = (dateTo == null || !orderDate.after(dateTo));
+
+        return afterStart && beforeEnd;
     }
 
     public OrderDTO getOrderDTOByOrderId(Long orderId) {
@@ -165,7 +213,7 @@ public class OrderService {
         for(OrderProductDTO orderProductDTO : orderDTO.getOrderProductDTOList()) {
             OrderProduct orderProduct = new OrderProduct();
             if(action.equals("Edit")) {
-                orderProduct = orderProductService.getOrderProductById(orderProductDTO.getId());
+                orderProduct = orderProductService.getOrderProductById(orderProductDTO.getProductId());
             } else if ( action.equals("Create")) {
                 orderProduct = orderProductService.createOrderProduct(existingOrder, orderProductDTO);
                 existingOrder.getOrderProducts().add(orderProduct);
@@ -208,27 +256,20 @@ public class OrderService {
 
     private OrderDTO orderToOrderDtoConversion(Order order) {
         OrderDTO orderDTO = new OrderDTO();
-        orderDTO.setOrderDate(order.getOrderDate());
+        orderDTO.setOrderId(order.getId());
         orderDTO.setShippingCost(order.getShippingCost());
+        orderDTO.setOrderDate(order.getOrderDate());
         if (order.getSupplier() != null) {
             orderDTO.setSupplierId(order.getSupplier().getId());
+            orderDTO.setSupplierName(order.getSupplier().getSupplierName());
         }
+        orderDTO.setOrderNumber(order.getOrderNumber());
+        orderDTO.setShippingVatRate(order.getShippingVatRate());
+        orderDTO.setTotalNet(order.getTotalNet());
+        orderDTO.setTotalVat(order.getTotalVat());
+        orderDTO.setTotalValue(order.getTotalValue());
         List<OrderProductDTO> orderProductDTOList = order.getOrderProducts().stream()
-                .map(orderProduct -> {
-                    OrderProductDTO orderProductDTO = new OrderProductDTO();
-                    orderProductDTO.setQuantity(orderProduct.getQuantity());
-                    orderProductDTO.setPrice(orderProduct.getPrice());
-                    if(orderProduct.getSaleProduct() != null) {
-                        orderProductDTO.setId(orderProduct.getSaleProduct().getId());
-                    } else if (orderProduct.getToolProduct() != null){
-                        orderProductDTO.setId(orderProduct.getToolProduct().getId());
-                    } else if(orderProduct.getEquipmentProduct() != null) {
-                        orderProductDTO.setId(orderProduct.getEquipmentProduct().getId());
-                    } else {
-                        throw new ProductNotFoundException("OrderProduct id not assigned.");
-                    }
-                    return orderProductDTO;
-        }).toList();
+                .map(orderProduct -> orderProductService.orderProductToOrderProductDTOConversion(orderProduct)).toList();
 
         orderDTO.setOrderProductDTOList(orderProductDTOList);
         return orderDTO;

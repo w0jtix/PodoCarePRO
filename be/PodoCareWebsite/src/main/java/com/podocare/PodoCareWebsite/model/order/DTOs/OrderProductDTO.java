@@ -10,8 +10,10 @@ import lombok.Setter;
 public class OrderProductDTO {
 
     private Long orderProductId;
-    private Long id;
+    private Long orderId;
+    private Long productId;
     private String productName;
+    private String category;
     private Integer quantity;
     @JsonProperty("VATrate")
     private VatRate VATrate;

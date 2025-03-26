@@ -2,29 +2,17 @@ import React from "react";
 import { useState, useEffect } from "react";
 import CustomAlert from "./CustomAlert";
 import ReactDOM from "react-dom";
-import ProductForm from "./ProductForm";
+import OrderForm from "./OrderForm";
 import AllProductService from "../service/AllProductService";
 import ProductActionButton from "./ProductActionButton";
 
-const EditProductPopup = ({
-  onClose,
-  handleResetAllFilters,
-  selectedProduct,
-}) => {
+const EditOrderPopup = ({ onClose, handleResetAllFilters, selectedOrder }) => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [infoMessage, setInfoMessage] = useState(null);
   const [alertVisible, setAlertVisible] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("Sale");
-  const [productCreationDTO, setProductCreationDTO] = useState(null);
-  const [categoryChanged, setCategoryChanged] = useState(false);
 
-  const categories = ["Sale", "Tool", "Equipment"];
-  const categoryMap = {
-    Sale: "Produkty",
-    Tool: "Narzędzia",
-    Equipment: "Sprzęt",
-  };
+
 
   const showAlert = (message, variant) => {
     if (variant === "success") {
@@ -47,7 +35,7 @@ const EditProductPopup = ({
     }, 3000);
   };
 
-  const handleSaveProduct = async (productCreationDTO) => {
+  /* const handleSaveProduct = async (productCreationDTO) => {
     if (await checkForErrors(productCreationDTO)) return false;
     return AllProductService.updateProduct(productCreationDTO)
       .then((response) => {
@@ -96,13 +84,7 @@ const EditProductPopup = ({
         }
       }
     }
-  };
-
-  useEffect(() => {
-    if (selectedProduct) {
-      setSelectedCategory(selectedProduct.category);
-    }
-  }, [selectedProduct]);
+  }; */
 
   return ReactDOM.createPortal(
     <div className="add-popup-overlay" onClick={onClose}>
@@ -110,8 +92,10 @@ const EditProductPopup = ({
         className="new-product-popup-content"
         onClick={(e) => e.stopPropagation()}
       >
-        <section className="edit-product-popup-header">
-          <h2 className="popup-title">Edytuj Produkt</h2>
+        <section
+          className="edit-product-popup-header"
+        >
+          <h2 className="popup-title">Edytuj Zamówienie</h2>
           <button className="popup-close-button" onClick={onClose}>
             <img
               src="src/assets/close.svg"
@@ -120,27 +104,22 @@ const EditProductPopup = ({
             />
           </button>
         </section>
-        <section className="new-product-popup-interior">
-          {selectedProduct && (
-            <ProductForm
-              selectedCategory={selectedCategory}
-              setSelectedCategory={setSelectedCategory}
-              action="Edit"
-              selectedProduct={selectedProduct}
-              setProductCreationDTO={setProductCreationDTO}
-              setCategoryChanged={setCategoryChanged}
+        <section className="order-popup-interior">
+          {selectedOrder && (
+            <OrderForm
+              selectedOrder={selectedOrder}
             />
           )}
         </section>
-        {selectedProduct && (
+        {selectedOrder && (
           <>
             <div className="popup-footer-container"></div>
             <ProductActionButton
-              src={"src/assets/tick.svg"}
-              alt={"Zapisz"}
-              text={"Zapisz"}
-              onClick={async () => handleSaveProduct(productCreationDTO)}
-            />
+            src={"src/assets/tick.svg"}
+            alt={"Zapisz"}
+            text={"Zapisz"}
+            /* onClick={async () => handleSaveProduct(productCreationDTO)} */
+          />
           </>
         )}
         {alertVisible && (
@@ -157,4 +136,4 @@ const EditProductPopup = ({
   );
 };
 
-export default EditProductPopup;
+export default EditOrderPopup;

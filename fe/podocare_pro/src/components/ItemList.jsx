@@ -12,13 +12,12 @@ const ItemList = ({
   setIsEditProductsPopupOpen,
   setIsRemoveProductsPopupOpen,
   setSelectedProduct,
-  handleProductRemove
 }) => {
   const [expandedProductIds, setExpandedProductIds] = useState([]);
 
   const attributeMap = {
     Nazwa: "productName",
-    Marka: "brand.brandName",
+    Marka: "brandName",
     "Stan Magazynowy": "productInstances.length",
   };
 
@@ -38,15 +37,10 @@ const ItemList = ({
     setSelectedProduct(item);
   };
 
-  const handleOnClickRemove = async (e, item) => {
+  const handleOnClickRemove = (e, item) => {
     e.stopPropagation();
     setSelectedProduct(item);
-
-    if(item.productInstances.length === 0) {
-      handleProductRemove(item.id);
-    } else {
-      setIsRemoveProductsPopupOpen(true);
-    }
+    setIsRemoveProductsPopupOpen(true);
   }
 
   const toggleProducts = (productId) => {

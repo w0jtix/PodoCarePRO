@@ -6,8 +6,7 @@ import ProductActionButton from "./ProductActionButton";
 import AddProductPopup from "./AddProductPopup";
 import EditProductPopup from "./EditProductPopup";
 import RemoveProductPopup from "./RemoveProductPopup";
-import AllProductService from "../service/AllProductService";
-import CustomAlert from "./CustomAlert";
+
 
 const Dashboard = () => {
   const [isAddNewProductsPopupOpen, setIsAddNewProductsPopupOpen] =
@@ -23,31 +22,9 @@ const Dashboard = () => {
   const [resetTriggered, setResetTriggered] = useState(false);
   const [showZeroProducts, setShowZeroProducts] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null);
-  const [infoMessage, setInfoMessage] = useState(null);
-  const [alertVisible, setAlertVisible] = useState(false);
 
-  const showAlert = (message, variant) => {
-    if (variant === "success") {
-      setSuccessMessage(message);
-      setErrorMessage(null);
-      setInfoMessage(null);
-    } else if (variant === "error") {
-      setErrorMessage(message);
-      setSuccessMessage(null);
-      setInfoMessage(null);
-    } else {
-      setErrorMessage(null);
-      setSuccessMessage(null);
-      setInfoMessage(message);
-    }
 
-    setAlertVisible(true);
-    setTimeout(() => {
-      setAlertVisible(false);
-    }, 700);
-  };
+  
 
   const handleResetAllFilters = () => {
     setProductFilterDTO({
@@ -60,21 +37,6 @@ const Dashboard = () => {
 
   const handleFilterChange = (newFilter) => {
     setProductFilterDTO(newFilter);
-  };
-
-  const handleProductRemove = async (productId) => {
-    AllProductService.deleteProductAndActiveInstances(productId)
-      .then((response) => {
-        showAlert("Produkt usunięty!", "success");
-        handleResetAllFilters();
-        setTimeout(() => {
-          setIsRemoveProductsPopupOpen(false);
-        }, 1200);
-      })
-      .catch((error) => {
-        console.error("Error removing Product", error);
-        showAlert("Błąd usuwania produktu.", "error");
-      });
   };
 
   return (
@@ -114,7 +76,6 @@ const Dashboard = () => {
         setIsEditProductsPopupOpen={setIsEditProductsPopupOpen}
         setIsRemoveProductsPopupOpen={setIsRemoveProductsPopupOpen}
         setSelectedProduct={setSelectedProduct}
-        handleProductRemove={handleProductRemove}
       />
       {isAddNewProductsPopupOpen && (
         <AddProductPopup
@@ -132,14 +93,8 @@ const Dashboard = () => {
       {isRemoveProductsPopupOpen && (
         <RemoveProductPopup
           onClose={() => setIsRemoveProductsPopupOpen(false)}
-          handleProductRemove={handleProductRemove}
+          handleResetAllFilters={handleResetAllFilters}
           selectedProduct={selectedProduct}
-        />
-      )}
-      {alertVisible && (
-        <CustomAlert
-          message={errorMessage || successMessage || infoMessage}
-          variant={errorMessage ? "error" : successMessage ? "success" : "info"}
         />
       )}
     </div>

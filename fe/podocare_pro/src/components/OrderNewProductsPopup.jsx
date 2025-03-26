@@ -7,6 +7,7 @@ import DigitInput from "./DigitInput";
 import SelectProductCategory from "./SelectProductCategory";
 import OrderListHeader from "./OrderListHeader";
 import AllProductService from "../service/AllProductService";
+import ProductActionButton from "./ProductActionButton";
 
 const OrderNewProductsPopup = ({
   nonExistingProducts,
@@ -195,16 +196,13 @@ const OrderNewProductsPopup = ({
                 </h2>
               </button>
             ))}
-            <button
-              className="reset-button"
+            <ProductActionButton
+              src={"src/assets/reset.svg"}
+              alt={"Reset"}
+              text={"Reset"}
               onClick={() => handleGlobalCategoryReset()}
-            >
-              <img
-                src="src/assets/reset.svg"
-                alt="reset"
-                className="reset-icon"
-              />
-            </button>
+              disableText={true}
+            />
           </div>
         </section>
         <OrderListHeader attributes={attributes} />
@@ -237,8 +235,10 @@ const OrderNewProductsPopup = ({
           ))}
         </ul>
         <div className="popup-footer-container">
-          <button
-            className="popup-confirm-button"
+          <ProductActionButton
+            src={"src/assets/tick.svg"}
+            alt={"Zapisz"}
+            text={"Zapisz"}
             onClick={async () => {
               const result = await createNewProducts(adjustedProducts);
               if (result === false) {
@@ -246,14 +246,7 @@ const OrderNewProductsPopup = ({
               }
               handleFinalize();
             }}
-          >
-            <img
-              src="src/assets/tick.svg"
-              alt="tick"
-              className="popup-tick-icon"
-            />
-            <a>Zapisz</a>
-          </button>
+          />
         </div>
         <a className="popup-category-description">
           * Okres przydatności/ długość gwarancji

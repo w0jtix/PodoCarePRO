@@ -1,6 +1,6 @@
 import React from "react";
 
-const SupplyListHeader = ({ attributes }) => {
+const ListHeader = ({ attributes }) => {
   return (
     <div className="supply-list-header">
       {attributes.map((attr, index) => (
@@ -19,4 +19,4 @@ const SupplyListHeader = ({ attributes }) => {
   );
 };
 
-export default SupplyListHeader;
+export default ListHeader;
