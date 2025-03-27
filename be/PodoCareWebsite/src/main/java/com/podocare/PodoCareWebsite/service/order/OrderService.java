@@ -306,6 +306,7 @@ public class OrderService {
         SaleProductInstanceDTO saleProductInstanceDTO = new SaleProductInstanceDTO();
         saleProductInstanceDTO.setProductId(orderProduct.getSaleProduct().getId());
         saleProductInstanceDTO.setPurchaseDate(orderDTO.getOrderDate());
+        saleProductInstanceDTO.setSellingPrice(orderProduct.getSaleProduct().getSellingPrice());
 
         return saleProductInstanceDTO;
     }

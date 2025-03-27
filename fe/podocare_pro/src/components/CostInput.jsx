@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 
-const CostInput = ({ startValue, onChange, selectedCost, defaultValue, onBlur }) => {
+const CostInput = ({ startValue, onChange, selectedCost, defaultValue, disabled }) => {
   const [cost, setCost] = useState(selectedCost ?? startValue);
 
   useEffect(() => {
@@ -28,10 +28,12 @@ const CostInput = ({ startValue, onChange, selectedCost, defaultValue, onBlur })
     }, [selectedCost]);
 
   return (
-    <div className="digit-input-container">
+    <div className={`digit-input-container ${disabled ? "disabled" : ""}`}>
       <input
         type="number"
-        className="cost-input"
+        className={`cost-input ${
+          disabled ? "disabled" : ""
+        }`}
         value={cost}
         onChange={(e) => {
           const newCost = parseFloat(e.target.value) || 0.0;

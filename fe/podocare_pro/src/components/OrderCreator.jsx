@@ -188,7 +188,7 @@ const OrderCreator = ({
 
   const handleValidateOrder = async () => {
     if (checkForErrors()) return;
-
+    console.log("orderProdDTRO", orderProductDTOList);
     return AllProductService.validateProducts(orderProductDTOList)
       .then((response) => {
         const { existingProducts, nonExistingProducts } = response.data;
@@ -225,6 +225,10 @@ const OrderCreator = ({
         showAlert("Error validating orderProducts.", "error");
       });
   };
+
+  useEffect(() => {
+    console.log("non", nonExistingProducts);
+  }, [nonExistingProducts]);
 
   const resetFormState = () => {
     setOrderProductDTOList([]);

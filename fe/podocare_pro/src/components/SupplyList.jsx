@@ -47,7 +47,6 @@ const SupplyList = ({
             (item) => item.productInstances.length > 0
           );
           setItems(productsWithActiveInstances);
-          console.log("[", productsWithActiveInstances);
         }
       })
       .catch((error) => {

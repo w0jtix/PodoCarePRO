@@ -8,6 +8,7 @@ import SelectProductCategory from "./SelectProductCategory";
 import OrderListHeader from "./OrderListHeader";
 import AllProductService from "../service/AllProductService";
 import ProductActionButton from "./ProductActionButton";
+import CostInput from "./CostInput";
 
 const OrderNewProductsPopup = ({
   nonExistingProducts,
@@ -29,10 +30,11 @@ const OrderNewProductsPopup = ({
 
   const attributes = [
     { name: "", width: "2%", justify: "flex-start" },
-    { name: "Nazwa", width: "40%", justify: "flex-start" },
-    { name: "Marka", width: "23%", justify: "center" },
-    { name: "[Msc]*", width: "11%", justify: "center" },
-    { name: "Kategoria", width: "17%", justify: "center" },
+    { name: "Nazwa", width: "26.5%", justify: "flex-start" },
+    { name: "Marka", width: "24%", justify: "center" },
+    { name: "[Msc]*", width: "10%", justify: "center" },
+    { name: "Kategoria", width: "21%", justify: "center" },
+    { name: "Cena*", width: "17%", justify: "center" },
   ];
 
   const showAlert = (message, variant) => {
@@ -103,7 +105,6 @@ const OrderNewProductsPopup = ({
 
   const createNewProducts = async (adjustedProducts) => {
     if (checkForErrors()) return false;
-
     return AllProductService.createNewProducts(adjustedProducts).catch(
       (error) => {
         console.error("Error creating new Products.", error);
@@ -143,18 +144,33 @@ const OrderNewProductsPopup = ({
     );
   };
 
+  const handleSuggestedSellingPrice = (productId, estimatedSellingPrice) => {
+    setAdjustedProducts((prevProducts) =>
+      prevProducts.map((product) =>
+        product.id === productId
+          ? { ...product, estimatedSellingPrice }
+          : product
+      )
+    );
+  };
+
+  useEffect(() => {
+    console.log("ad", adjustedProducts);
+  }, [adjustedProducts]);
+
   const handleFinalize = () => {
     onFinalizeOrder();
   };
 
   useEffect(() => {
     if (adjustedProducts.length === 0 && nonExistingProducts.length > 0) {
-      const initProducts = nonExistingProducts.map((product) => ({
-        id: product.id,
+      const initProducts = nonExistingProducts.map((product, index) => ({
+        id: index,
         name: product.productName,
         category: null,
         brandName: null,
         shelfLife: 24,
+        estimatedSellingPrice: 0,
       }));
       setAdjustedProducts(initProducts);
     }
@@ -228,6 +244,16 @@ const OrderNewProductsPopup = ({
                   selectedCategory={product.category}
                   onSelect={(selectedCategory) =>
                     handleSelectCategory(product.id, selectedCategory)
+                  }
+                />
+                <CostInput
+                  startValue={0.0}
+                  onChange={(price) =>
+                    handleSuggestedSellingPrice(product.id, price)
+                  }
+                  disabled={
+                    product.category === "Tool" ||
+                    product.category === "Equipment"
                   }
                 />
               </section>

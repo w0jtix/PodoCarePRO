@@ -2001,7 +2001,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .supplier-brand-name-dropdown-item {
   overflow: hidden; 
-  max-width: 75%;
+  max-width: 100%;
 }
 
 .supplier-brand-name-dropdown-item:first-child,
@@ -2079,11 +2079,13 @@ input[type="number"]::-webkit-inner-spin-button {
   cursor:auto;
 }
 
-.new-products-popup-digit-input.disabled {
+.new-products-popup-digit-input.disabled,
+.cost-input.disabled {
   cursor: not-allowed;
 }
 
-.new-product-popup-common-section-row .cost-input{
+.new-product-popup-common-section-row .cost-input,
+.order-new-products-popup-input-section .cost-input {
   width:37px;
 }
 
