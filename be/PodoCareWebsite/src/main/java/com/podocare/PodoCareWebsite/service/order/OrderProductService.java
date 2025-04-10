@@ -98,8 +98,6 @@ public class OrderProductService {
         return orderProductToSave;
     }
 
-
-
     public OrderProduct updateOrderProduct(OrderProduct existingOrderProduct, OrderProductDTO orderProductDTO, Date orderDate) {
         try{
             Long orderId = existingOrderProduct.getOrder().getId();
@@ -156,7 +154,6 @@ public class OrderProductService {
     }
 
     public void deleteOrderProduct(Long orderProductId) {
-        OrderProduct orderProduct = getOrderProductById(orderProductId);
         try {
             orderProductRepo.deleteById(orderProductId);
         } catch (Exception e) {
@@ -232,110 +229,6 @@ public class OrderProductService {
 
     }
 
-/*    public void deleteOrderProduct(OrderProduct orderProduct) {
-        try{
-            System.out.println("OrderProduct: " + orderProduct.getId());
-            int qty = orderProduct.getQuantity();
-            OrderProductDTO orderProductDTO = orderProductToOrderProductDTOConversion(orderProduct);
-            Long orderId = orderProduct.getOrder().getId();
-            Long storeProductId = null;
-            String category = null;
-            boolean hardDelete = false;
-
-            if(orderProduct.getSaleProduct() != null) {
-                System.out.println("SaleProduct");
-                Long productId = orderProduct.getSaleProduct().getId();
-                boolean isDeleted = orderProduct.getSaleProduct().getIsDeleted();
-                category = orderProduct.getSaleProduct().getCategory();
-                long ordersWithProductReferenceCount = orderProductRepo.countOrdersWithSaleProductReference(productId);
-                int instancesQty = orderProduct.getSaleProduct().getProductInstances().size(); // both active and inactive
-                int activeInstancesQty = saleProductService.getActiveInstances(productId).size();
-                int inactiveInstancesQty = instancesQty - activeInstancesQty;
-
-                if(isDeleted && ordersWithProductReferenceCount < 2 && inactiveInstancesQty == 0) {
-                    saleProductService.deleteSaleProductAndActiveInstances(productId);
-                } else {
-                    if (activeInstancesQty <= qty) {
-                        saleProductInstanceService.deleteInstancesByOrderProduct(orderProductDTO, activeInstancesQty, orderId);
-                        SaleProduct saleProduct = orderProduct.getSaleProduct();
-                        saleProduct.setIsDeleted(true);
-                        saleProductRepo.save(saleProduct);
-                        if (ordersWithProductReferenceCount < 2 && inactiveInstancesQty == 0) { //excludes this order
-                            hardDelete = true;
-                            storeProductId = productId;
-                        }
-                    } else {
-                        saleProductInstanceService.deleteInstancesByOrderProduct(orderProductDTO, qty, orderId);
-                    }
-                }
-            } else if(orderProduct.getToolProduct() != null) {
-                System.out.println("ToolProduct");
-                Long productId = orderProduct.getToolProduct().getId();
-                category = orderProduct.getToolProduct().getCategory();
-                boolean isDeleted = orderProduct.getToolProduct().getIsDeleted();
-                long ordersWithProductReferenceCount = orderProductRepo.countOrdersWithToolProductReference(productId);
-                int instancesQty = orderProduct.getToolProduct().getProductInstances().size(); // both active and inactive
-                int activeInstancesQty = toolProductService.getActiveInstances(productId).size();
-                int inactiveInstancesQty = instancesQty - activeInstancesQty;
-
-                if(isDeleted && ordersWithProductReferenceCount < 2 && inactiveInstancesQty == 0) {
-                    toolProductService.deleteToolProductAndActiveInstances(productId);
-                } else {
-                    if (activeInstancesQty <= qty) {
-                        toolProductInstanceService.deleteInstancesByOrderProduct(orderProductDTO, activeInstancesQty, orderId);
-                        ToolProduct toolProduct = orderProduct.getToolProduct();
-                        toolProduct.setIsDeleted(true);
-                        toolProductRepo.save(toolProduct);
-                        if (ordersWithProductReferenceCount < 2 && inactiveInstancesQty == 0) { //excludes this order
-                            hardDelete = true;
-                            storeProductId = productId;
-                        }
-                    } else {
-                        toolProductInstanceService.deleteInstancesByOrderProduct(orderProductDTO, qty, orderId);
-                    }
-                }
-            } else if(orderProduct.getEquipmentProduct() != null) {
-                System.out.println("EquipmentProduct");
-                Long productId = orderProduct.getEquipmentProduct().getId();
-                category = orderProduct.getEquipmentProduct().getCategory();
-                boolean isDeleted = orderProduct.getEquipmentProduct().getIsDeleted();
-                long ordersWithProductReferenceCount = orderProductRepo.countOrdersWithEquipmentProductReference(productId);
-                int instancesQty = orderProduct.getEquipmentProduct().getProductInstances().size(); // both active and inactive
-                int activeInstancesQty = equipmentProductService.getActiveInstances(productId).size();
-                int inactiveInstancesQty = instancesQty - activeInstancesQty;
-
-                if (isDeleted && ordersWithProductReferenceCount < 2 && inactiveInstancesQty == 0) {
-                    equipmentProductService.deleteEquipmentProductAndActiveInstances(productId);
-                } else {
-                    if (activeInstancesQty <= qty) {
-                        equipmentProductInstanceService.deleteInstancesByOrderProduct(orderProductDTO, activeInstancesQty, orderId);
-                        EquipmentProduct equipmentProduct = orderProduct.getEquipmentProduct();
-                        equipmentProduct.setIsDeleted(true);
-                        equipmentProductRepo.save(equipmentProduct);
-                        if (ordersWithProductReferenceCount < 2 && inactiveInstancesQty == 0) { //excludes this order
-                            hardDelete = true;
-                            storeProductId = productId;
-                        }
-                    } else {
-                        equipmentProductInstanceService.deleteInstancesByOrderProduct(orderProductDTO, qty, orderId);
-                    }
-                }
-            }
-            orderProductRepo.deleteById(orderProduct.getId());
-            if(hardDelete && storeProductId != null){
-                switch (category) {
-                    case "Sale" -> saleProductService.deleteSaleProductAndActiveInstances(storeProductId);
-                    case "Tool" -> toolProductService.deleteToolProductAndActiveInstances(storeProductId);
-                    case "Equipment" -> equipmentProductService.deleteEquipmentProductAndActiveInstances(storeProductId);
-                }
-            }
-            System.out.println("Deleted orderProduct: " + orderProduct.getId());
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Failed to delete the OrderProduct error: " + e.getMessage());
-            throw new OrderDeletionException("Failed to delete the OrderProduct", e);
-        }
-    }*/
 
     public OrderProduct orderProductDtoToOrderProductConversion(Order order, OrderProductDTO orderProductDTO){
         OrderProduct orderProduct = new OrderProduct();

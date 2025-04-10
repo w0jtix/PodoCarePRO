@@ -58,11 +58,11 @@ public class GeneralProductController {
         return new ResponseEntity<>(matchingProducts, HttpStatus.OK);
     }
 
-    @PostMapping("/validate")
+    /*@PostMapping("/validate")
     public ResponseEntity<OrderProductValidator> validateProducts(@RequestBody List<OrderProductDTO> orderProductDTOList) {
         OrderProductValidator validator = allProductsService.validateProducts(orderProductDTOList);
         return new ResponseEntity<>(validator, HttpStatus.OK);
-    }
+    }*/
 
     @PostMapping("/createNewProducts")
     public ResponseEntity<List<Object>> createNewProducts(@RequestBody List<ProductCreationDTO> productsToCreateList) {

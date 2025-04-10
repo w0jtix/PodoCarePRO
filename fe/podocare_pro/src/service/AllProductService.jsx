@@ -112,19 +112,6 @@ class AllProductService {
     }
   }
 
-  static async validateProducts(orderProductDTOList) {
-    try {
-      const response = await axios.post(
-        `${this.API_URL}/validate`,
-        orderProductDTOList
-      );
-      return response;
-    } catch (error) {
-      console.error("Error validating Products.", error);
-      throw error;
-    }
-  }
-
   static async updateProduct(productCreationDTO) {
     try {
       const response = await axios.patch(

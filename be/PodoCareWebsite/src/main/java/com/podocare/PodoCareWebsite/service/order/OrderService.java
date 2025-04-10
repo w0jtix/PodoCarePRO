@@ -279,91 +279,24 @@ public class OrderService {
         }
     }
 
-
-    /*@Transactional
-    public Order updateOrder(Long orderId, OrderDTO updatedOrderDTO){
-        try{
-            Order existingOrder = getOrderById(orderId);
-            boolean updated = false;
-
-            Date orderDate = existingOrder.getOrderDate();
-            if(updatedOrderDTO.getSupplierId() != null) {
-                existingOrder.setSupplier(supplierService.getSupplierById(updatedOrderDTO.getSupplierId()));
-                updated = true;
-            }
-            if(updatedOrderDTO.getOrderDate() != null) {
-                existingOrder.setOrderDate(updatedOrderDTO.getOrderDate());
-                orderDate = updatedOrderDTO.getOrderDate();
-                updated = true;
-            }
-            if(updatedOrderDTO.getShippingCost() != null) {
-                existingOrder.setShippingCost(updatedOrderDTO.getShippingCost());
-                updated = true;
-            }
-            if(updatedOrderDTO.getRemovedOrderProducts() != null && !updatedOrderDTO.getRemovedOrderProducts().isEmpty()) {
-                List<OrderProduct> orderProductsToRemove = existingOrder.getOrderProducts().stream()
-                        .filter(op -> updatedOrderDTO.getRemovedOrderProducts().contains(op.getId()))
-                        .toList();
-                System.out.println("Removed Product IDs: " + updatedOrderDTO.getRemovedOrderProducts());
-                System.out.println("Existing Order Products: " + existingOrder.getOrderProducts().stream().map(OrderProduct::getId).toList());
-                System.out.println("Order Products To Remove: " + orderProductsToRemove.stream().map(OrderProduct::getId).toList());
-
-
-                for (OrderProduct orderProduct : orderProductsToRemove) {
-                    existingOrder.getOrderProducts().remove(orderProduct);
-                    orderProductService.deleteOrderProduct(orderProduct);
-                }
-
-                updated = true;
-            }
-            if(updatedOrderDTO.getEditedOrderProducts() != null && !updatedOrderDTO.getEditedOrderProducts().isEmpty()) {
-                for(OrderProductDTO editedOrderProductDTO : updatedOrderDTO.getEditedOrderProducts()) {
-                    OrderProduct existingOrderProduct = existingOrder.getOrderProducts().stream()
-                            .filter(op -> op.getId().equals(editedOrderProductDTO.getOrderProductId()))
-                            .findFirst()
-                            .orElseThrow(() -> new OrderProductNotFoundException("OrderProduct not found with ID: " + editedOrderProductDTO.getOrderProductId()));
-                    orderProductService.updateOrderProduct(existingOrderProduct, editedOrderProductDTO, orderDate);
-                }
-                updated = true;
-            }
-            if(updatedOrderDTO.getAddedOrderProducts() != null && !updatedOrderDTO.getAddedOrderProducts().isEmpty()) {
-                for(OrderProductDTO orderProductDTO : updatedOrderDTO.getAddedOrderProducts()) {
-                    OrderProduct orderProduct = new OrderProduct();
-                    orderProduct = orderProductService.createOrderProduct(existingOrder, orderProductDTO);
-                    createProductInstances(updatedOrderDTO, orderProduct, orderProduct.getQuantity());
-                }
-                updated = true;
-            }
-            if(updatedOrderDTO.getOrderProductDTOList() != null && !updatedOrderDTO.getOrderProductDTOList().isEmpty()){
-                existingOrder = calculateOrderCosts(existingOrder, updatedOrderDTO, "Edit");
-                updated = true;
-            }
-
-            if(updated) {
-                System.out.println("B4 save" + existingOrder.getOrderProducts());
-                return orderRepo.save(existingOrder);
-
-            }
-            return existingOrder;
-        } catch (Exception e) {
-
-            System.err.println("Order update error: " + e.getMessage());
-            throw new OrderCreationException("Failed to update existing Order.", e);
-        }
-    }*/
-
     @Transactional
     public void deleteOrder(Long orderId) {
         Order existingOrder = getOrderById(orderId);
+        List<OrderProduct> orderProductsList = existingOrder.getOrderProducts();
+        Map<Long, ProductStatusSnapshot> productSnapshotMap = new HashMap<>();
         try {
-        for(OrderProduct orderProduct : existingOrder.getOrderProducts()) {
-              orderProductService.deleteOrderProduct(orderProduct.getId());
-        }
-        orderRepo.deleteById(orderId);
-        } catch (EmptyResultDataAccessException e) {
-            throw new OrderDeletionException("Order with ID " + orderId + " does not exist.", e);
-        } catch (DataIntegrityViolationException e) {
-            throw new OrderDeletionException("Order deletion failed due to database integrity constraints.", e);
+            for(OrderProduct orderProduct : orderProductsList) {
+                manageProductStatusSnapshot(orderProduct, productSnapshotMap);
+                orderProductService.removeInstancesByOrderProduct(orderProduct, orderProduct.getQuantity(), orderId);
+
+            }
+            for(OrderProduct orderProduct : orderProductsList) {
+                orderProductService.deleteOrderProduct(orderProduct.getId());
+            }
+            existingOrder.getOrderProducts().removeAll(orderProductsList);
+
+            orderProductService.manageProductDeleteStatus(productSnapshotMap);
+            orderRepo.deleteById(orderId);
         } catch (Exception e) {
             throw new OrderDeletionException("Failed to delete the Order", e);
         }
