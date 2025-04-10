@@ -24,4 +24,6 @@ public class SaleProductDTO {
     private Double sellingPrice;
     private Boolean internalUse;
     private Boolean forSale;
+
+    private List<SaleProductInstanceDTO> activeProductInstances;
 }

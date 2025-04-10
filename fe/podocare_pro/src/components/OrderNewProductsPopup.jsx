@@ -12,8 +12,14 @@ import CostInput from "./CostInput";
 
 const OrderNewProductsPopup = ({
   nonExistingProducts,
+  orderProductDTOList,
+  setOrderProductDTOList,
+  trueOrderProductDTOList,
+  orderDTO,
+  setOrderDTO,
   onClose,
   onFinalizeOrder,
+  action,
 }) => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -34,7 +40,7 @@ const OrderNewProductsPopup = ({
     { name: "Marka", width: "24%", justify: "center" },
     { name: "[Msc]*", width: "10%", justify: "center" },
     { name: "Kategoria", width: "21%", justify: "center" },
-    { name: "Cena*", width: "17%", justify: "center" },
+    { name: "Cena**", width: "17%", justify: "center" },
   ];
 
   const showAlert = (message, variant) => {
@@ -105,13 +111,47 @@ const OrderNewProductsPopup = ({
 
   const createNewProducts = async (adjustedProducts) => {
     if (checkForErrors()) return false;
-    return AllProductService.createNewProducts(adjustedProducts).catch(
-      (error) => {
+    return AllProductService.createNewProducts(adjustedProducts)
+      .then((data) => {
+        if (!data || data.length === 0) {
+          showAlert("Błąd tworzenia produktu.", "error");
+          return false;
+        }
+        const updatedOrderProductList = orderProductDTOList.map((product) => {
+          const matchingProduct = data.find(
+            (newProduct) => newProduct.productName === product.productName
+          );
+          return matchingProduct
+            ? { ...product, productId: matchingProduct.id }
+            : product;
+        });
+        if (action === "Create") {
+          setOrderProductDTOList(updatedOrderProductList);
+          onFinalizeOrder(updatedOrderProductList);
+        } else if (action === "Edit") {
+          const updatedTrueOrderProductList = trueOrderProductDTOList.map((product) => {
+            const matchingProduct = data.find(
+              (newProduct) => newProduct.productName === product.productName
+            );
+            return matchingProduct
+              ? { ...product, productId: matchingProduct.id }
+              : product;
+          });
+          const updatedOrderDTO = {
+            ...orderDTO,
+            addedOrderProducts: updatedOrderProductList,
+            orderProductDTOList: updatedTrueOrderProductList,
+          };
+          setOrderDTO(updatedOrderDTO);
+          onFinalizeOrder(updatedOrderDTO);
+        }
+        return true;
+      })
+      .catch((error) => {
         console.error("Error creating new Products.", error);
         showAlert("Błąd tworzenia produktu.", "error");
         return false;
-      }
-    );
+      });
   };
 
   const handleGlobalCategoryChange = (category) => {
@@ -152,14 +192,6 @@ const OrderNewProductsPopup = ({
           : product
       )
     );
-  };
-
-  useEffect(() => {
-    console.log("ad", adjustedProducts);
-  }, [adjustedProducts]);
-
-  const handleFinalize = () => {
-    onFinalizeOrder();
   };
 
   useEffect(() => {
@@ -265,18 +297,17 @@ const OrderNewProductsPopup = ({
             src={"src/assets/tick.svg"}
             alt={"Zapisz"}
             text={"Zapisz"}
-            onClick={async () => {
-              const result = await createNewProducts(adjustedProducts);
-              if (result === false) {
-                return;
-              }
-              handleFinalize();
-            }}
+            onClick={async () => await createNewProducts(adjustedProducts)}
           />
         </div>
-        <a className="popup-category-description">
-          * Okres przydatności/ długość gwarancji
-        </a>
+        <div className="popup-description-display">
+          <a className="popup-category-description">
+            * Okres przydatności/ długość gwarancji
+          </a>
+          <a className="popup-category-description">
+            ** Szacowana cena sprzedaży
+          </a>
+        </div>
         {alertVisible && (
           <CustomAlert
             message={errorMessage || successMessage}

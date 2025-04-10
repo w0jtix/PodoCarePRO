@@ -3,6 +3,7 @@ package com.podocare.PodoCareWebsite.service.order;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.order.OrderCreationException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.order.OrderDeletionException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.order.OrderNotFoundException;
+import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.order_product.OrderProductNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product.ProductNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_instance.ProductInstanceCreationException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_instance.ProductInstanceDeletionException;
@@ -10,14 +11,19 @@ import com.podocare.PodoCareWebsite.model.VatRate;
 import com.podocare.PodoCareWebsite.model.order.DTOs.OrderDTO;
 import com.podocare.PodoCareWebsite.model.order.DTOs.OrderFilterDTO;
 import com.podocare.PodoCareWebsite.model.order.DTOs.OrderProductDTO;
+import com.podocare.PodoCareWebsite.model.order.DTOs.ProductStatusSnapshot;
 import com.podocare.PodoCareWebsite.model.order.Order;
 import com.podocare.PodoCareWebsite.model.order.OrderProduct;
+import com.podocare.PodoCareWebsite.model.product.product_category.EquipmentProduct;
+import com.podocare.PodoCareWebsite.model.product.product_category.SaleProduct;
+import com.podocare.PodoCareWebsite.model.product.product_category.ToolProduct;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.EquipmentProductInstanceDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.SaleProductInstanceDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.ToolProductInstanceDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.EquipmentProductInstance;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.SaleProductInstance;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.ToolProductInstance;
+import com.podocare.PodoCareWebsite.repo.order.OrderProductRepo;
 import com.podocare.PodoCareWebsite.repo.order.OrderRepo;
 import com.podocare.PodoCareWebsite.repo.product_category.EquipmentProductRepo;
 import com.podocare.PodoCareWebsite.repo.product_category.SaleProductRepo;
@@ -33,11 +39,14 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
+import java.util.function.BiConsumer;
 
 @Slf4j
 @Service
@@ -46,33 +55,31 @@ public class OrderService {
     private final OrderRepo orderRepo;
 
     @Autowired
-    private SaleProductRepo saleProductRepo;
-    @Autowired
-    private EquipmentProductRepo equipmentProductRepo;
-    @Autowired
-    private ToolProductRepo toolProductRepo;
-
-    @Autowired
     private SupplierService supplierService;
-
     @Autowired
     private OrderProductService orderProductService;
-
     @Autowired
-    @Lazy
     private SaleProductInstanceService saleProductInstanceService;
     @Autowired
     private SaleProductService saleProductService;
     @Autowired
-    @Lazy
-    private ToolProductInstanceService toolProductInstanceService;
-    @Autowired
     private ToolProductService toolProductService;
     @Autowired
-    @Lazy
+    private EquipmentProductService equipmentProductService;
+
+    @Autowired
+    private SaleProductRepo saleProductRepo;
+    @Autowired
+    private ToolProductRepo toolProductRepo;
+    @Autowired
+    private EquipmentProductRepo equipmentProductRepo;
+    @Autowired
+    private ToolProductInstanceService toolProductInstanceService;
+    @Autowired
     private EquipmentProductInstanceService equipmentProductInstanceService;
     @Autowired
-    private EquipmentProductService equipmentProductService;
+    private OrderProductRepo orderProductRepo;
+
 
     @Autowired
     public OrderService(OrderRepo orderRepo){
@@ -163,31 +170,196 @@ public class OrderService {
         }
     }
 
-    @Transactional
-    public Order updateOrder(Long orderId, OrderDTO updatedOrderDTO){
-        Order existingOrder = getOrderById(orderId);
+    private Map<Long, ProductStatusSnapshot> manageProductStatusSnapshot (OrderProduct orderProduct, Map<Long, ProductStatusSnapshot> productSnapshotMap){
+        Long productId = orderProductService.defineProductId(orderProduct);
+        int quantityToDelete = orderProduct.getQuantity();
+        Long orderId = orderProduct.getOrder().getId();
 
-        for(OrderProductDTO orderProductDTO : updatedOrderDTO.getOrderProductDTOList()){
-            orderProductService.validateOrderProductDTO(orderProductDTO);
+        ProductStatusSnapshot snapshot = productSnapshotMap.getOrDefault(productId, new ProductStatusSnapshot());
+        snapshot.setProductId(productId);
+        snapshot.setTotalToDeleteQty(snapshot.getTotalToDeleteQty() + quantityToDelete);
+
+        if(orderProduct.getSaleProductId() != null) {
+            SaleProduct saleProduct = saleProductService.getSaleProductById(orderProduct.getSaleProductId());
+            snapshot.setTotalInstancesQty(saleProduct.getProductInstances().size());
+            snapshot.setTotalActiveInstancesQty(saleProductService.getActiveInstances(productId).size());
+            snapshot.setReferencesInThisOrder(orderProductRepo.countSaleProductInOrder(productId, orderId));
+            snapshot.setReferencesInOtherOrders(orderProductRepo.countOrdersWithSaleProductReferenceExceptOrder(productId, orderId));
+            snapshot.setCategory("Sale");
+        } else if(orderProduct.getToolProductId() != null) {
+            ToolProduct toolProduct = toolProductService.getToolProductById(orderProduct.getToolProductId());
+            snapshot.setTotalInstancesQty(toolProduct.getProductInstances().size());
+            snapshot.setTotalActiveInstancesQty(toolProductService.getActiveInstances(productId).size());
+            snapshot.setReferencesInThisOrder(orderProductRepo.countToolProductInOrder(productId, orderId));
+            snapshot.setReferencesInOtherOrders(orderProductRepo.countOrdersWithToolProductReferenceExceptOrder(productId, orderId));
+            snapshot.setCategory("Tool");
+        } else if(orderProduct.getEquipmentProductId() != null) {
+            EquipmentProduct equipmentProduct = equipmentProductService.getEquipmentProductById(orderProduct.getEquipmentProductId());
+            snapshot.setTotalInstancesQty(equipmentProduct.getProductInstances().size());
+            snapshot.setTotalActiveInstancesQty(equipmentProductService.getActiveInstances(productId).size());
+            snapshot.setReferencesInThisOrder(orderProductRepo.countEquipmentProductInOrder(productId, orderId));
+            snapshot.setReferencesInOtherOrders(orderProductRepo.countOrdersWithEquipmentProductReferenceExceptOrder(productId, orderId));
+            snapshot.setCategory("Equipment");
         }
 
-        adjustOrderProducts(existingOrder, updatedOrderDTO);
+        productSnapshotMap.put(productId, snapshot);
+        return productSnapshotMap;
+    }
 
-        Order updatedOrder = orderDtoToOrderConversion(existingOrder, updatedOrderDTO, "Edit");
+    @Transactional
+    public Order updateOrder(Long orderId, OrderDTO updatedOrderDTO){
+        try{
+            Order existingOrder = getOrderById(orderId);
+            Date orderDate = updatedOrderDTO.getOrderDate() != null ? updatedOrderDTO.getOrderDate() : existingOrder.getOrderDate();
+            boolean updated = false;
 
-        try {
-            return orderRepo.save(updatedOrder);
+            if(updatedOrderDTO.getSupplierId() != null) {
+                existingOrder.setSupplier(supplierService.getSupplierById(updatedOrderDTO.getSupplierId()));
+                updated = true;
+            }
+            if(updatedOrderDTO.getOrderDate() != null) {
+                existingOrder.setOrderDate(updatedOrderDTO.getOrderDate());
+                updated = true;
+            }
+            if(updatedOrderDTO.getShippingCost() != null) {
+                existingOrder.setShippingCost(updatedOrderDTO.getShippingCost());
+                updated = true;
+            }
+            if(updatedOrderDTO.getRemovedOrderProducts() != null && !updatedOrderDTO.getRemovedOrderProducts().isEmpty()) {
+                List<OrderProduct> orderProductsToRemove = existingOrder.getOrderProducts().stream()
+                        .filter(op -> updatedOrderDTO.getRemovedOrderProducts().contains(op.getId()))
+                        .toList();
+
+                Map<Long, ProductStatusSnapshot> productSnapshotMap = new HashMap<>();
+
+                for (OrderProduct orderProduct : orderProductsToRemove) {
+                    manageProductStatusSnapshot(orderProduct, productSnapshotMap);
+                    orderProductService.removeInstancesByOrderProduct(orderProduct, orderProduct.getQuantity(), orderId);
+                }
+
+                for (OrderProduct orderProduct : orderProductsToRemove) {
+                    orderProductService.deleteOrderProduct(orderProduct.getId());
+                }
+
+                existingOrder.getOrderProducts().removeAll(orderProductsToRemove);
+                updated = true;
+                orderProductService.manageProductDeleteStatus(productSnapshotMap);
+            }
+            if(updatedOrderDTO.getEditedOrderProducts() != null && !updatedOrderDTO.getEditedOrderProducts().isEmpty()) {
+                for(OrderProductDTO editedOrderProductDTO : updatedOrderDTO.getEditedOrderProducts()) {
+                    OrderProduct existingOrderProduct = existingOrder.getOrderProducts().stream()
+                            .filter(op -> op.getId().equals(editedOrderProductDTO.getOrderProductId()))
+                            .findFirst()
+                            .orElseThrow(() -> new OrderProductNotFoundException("OrderProduct not found with ID: " + editedOrderProductDTO.getOrderProductId()));
+                    orderProductService.updateOrderProduct(existingOrderProduct, editedOrderProductDTO, orderDate);
+                }
+                updated = true;
+            }
+            if(updatedOrderDTO.getAddedOrderProducts() != null && !updatedOrderDTO.getAddedOrderProducts().isEmpty()) {
+                for(OrderProductDTO orderProductDTO : updatedOrderDTO.getAddedOrderProducts()) {
+                    OrderProduct orderProduct = new OrderProduct();
+                    orderProduct = orderProductService.createOrderProduct(existingOrder, orderProductDTO);
+                    createProductInstances(updatedOrderDTO, orderProduct, orderProduct.getQuantity());
+                    existingOrder.getOrderProducts().add(orderProduct);
+                }
+                updated = true;
+            }
+            if(updatedOrderDTO.getOrderProductDTOList() != null && !updatedOrderDTO.getOrderProductDTOList().isEmpty()){
+                existingOrder = calculateOrderCosts(existingOrder, updatedOrderDTO, "Edit");
+                updated = true;
+            }
+
+            if(updated) {
+                return orderRepo.save(existingOrder);
+            }
+            return existingOrder;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new OrderCreationException("Failed to update existing Order.", e);
         }
     }
 
+
+    /*@Transactional
+    public Order updateOrder(Long orderId, OrderDTO updatedOrderDTO){
+        try{
+            Order existingOrder = getOrderById(orderId);
+            boolean updated = false;
+
+            Date orderDate = existingOrder.getOrderDate();
+            if(updatedOrderDTO.getSupplierId() != null) {
+                existingOrder.setSupplier(supplierService.getSupplierById(updatedOrderDTO.getSupplierId()));
+                updated = true;
+            }
+            if(updatedOrderDTO.getOrderDate() != null) {
+                existingOrder.setOrderDate(updatedOrderDTO.getOrderDate());
+                orderDate = updatedOrderDTO.getOrderDate();
+                updated = true;
+            }
+            if(updatedOrderDTO.getShippingCost() != null) {
+                existingOrder.setShippingCost(updatedOrderDTO.getShippingCost());
+                updated = true;
+            }
+            if(updatedOrderDTO.getRemovedOrderProducts() != null && !updatedOrderDTO.getRemovedOrderProducts().isEmpty()) {
+                List<OrderProduct> orderProductsToRemove = existingOrder.getOrderProducts().stream()
+                        .filter(op -> updatedOrderDTO.getRemovedOrderProducts().contains(op.getId()))
+                        .toList();
+                System.out.println("Removed Product IDs: " + updatedOrderDTO.getRemovedOrderProducts());
+                System.out.println("Existing Order Products: " + existingOrder.getOrderProducts().stream().map(OrderProduct::getId).toList());
+                System.out.println("Order Products To Remove: " + orderProductsToRemove.stream().map(OrderProduct::getId).toList());
+
+
+                for (OrderProduct orderProduct : orderProductsToRemove) {
+                    existingOrder.getOrderProducts().remove(orderProduct);
+                    orderProductService.deleteOrderProduct(orderProduct);
+                }
+
+                updated = true;
+            }
+            if(updatedOrderDTO.getEditedOrderProducts() != null && !updatedOrderDTO.getEditedOrderProducts().isEmpty()) {
+                for(OrderProductDTO editedOrderProductDTO : updatedOrderDTO.getEditedOrderProducts()) {
+                    OrderProduct existingOrderProduct = existingOrder.getOrderProducts().stream()
+                            .filter(op -> op.getId().equals(editedOrderProductDTO.getOrderProductId()))
+                            .findFirst()
+                            .orElseThrow(() -> new OrderProductNotFoundException("OrderProduct not found with ID: " + editedOrderProductDTO.getOrderProductId()));
+                    orderProductService.updateOrderProduct(existingOrderProduct, editedOrderProductDTO, orderDate);
+                }
+                updated = true;
+            }
+            if(updatedOrderDTO.getAddedOrderProducts() != null && !updatedOrderDTO.getAddedOrderProducts().isEmpty()) {
+                for(OrderProductDTO orderProductDTO : updatedOrderDTO.getAddedOrderProducts()) {
+                    OrderProduct orderProduct = new OrderProduct();
+                    orderProduct = orderProductService.createOrderProduct(existingOrder, orderProductDTO);
+                    createProductInstances(updatedOrderDTO, orderProduct, orderProduct.getQuantity());
+                }
+                updated = true;
+            }
+            if(updatedOrderDTO.getOrderProductDTOList() != null && !updatedOrderDTO.getOrderProductDTOList().isEmpty()){
+                existingOrder = calculateOrderCosts(existingOrder, updatedOrderDTO, "Edit");
+                updated = true;
+            }
+
+            if(updated) {
+                System.out.println("B4 save" + existingOrder.getOrderProducts());
+                return orderRepo.save(existingOrder);
+
+            }
+            return existingOrder;
+        } catch (Exception e) {
+
+            System.err.println("Order update error: " + e.getMessage());
+            throw new OrderCreationException("Failed to update existing Order.", e);
+        }
+    }*/
+
     @Transactional
     public void deleteOrder(Long orderId) {
         Order existingOrder = getOrderById(orderId);
-
         try {
-            orderRepo.deleteById(orderId);
+        for(OrderProduct orderProduct : existingOrder.getOrderProducts()) {
+              orderProductService.deleteOrderProduct(orderProduct.getId());
+        }
+        orderRepo.deleteById(orderId);
         } catch (EmptyResultDataAccessException e) {
             throw new OrderDeletionException("Order with ID " + orderId + " does not exist.", e);
         } catch (DataIntegrityViolationException e) {
@@ -207,13 +379,29 @@ public class OrderService {
         existingOrder.setOrderDate(orderDTO.getOrderDate());
         existingOrder.setSupplier(supplierService.findOrCreateSupplier(supplierService.getSupplierById(orderDTO.getSupplierId()).getSupplierName()));
 
+        existingOrder = calculateOrderCosts(existingOrder, orderDTO, action);
+
+        if(action.equals("Create") ) {
+            for (OrderProduct orderProduct : existingOrder.getOrderProducts()) {
+                try {
+                    createProductInstances(orderDTO, orderProduct, orderProduct.getQuantity());
+                } catch (Exception e) {
+                    log.error("Error creating product instances for OrderProduct: {}", orderProduct, e);
+                    throw new ProductInstanceCreationException("Failed to create product instances for OrderProduct ID: " + orderProduct.getId(), e);
+                }
+            }
+        }
+        return existingOrder;
+    }
+
+    private Order calculateOrderCosts(Order existingOrder, OrderDTO orderDTO, String action){
         Double totalValue = 0.0;
         Double totalNet = 0.0;
         Double totalVat = 0.0;
         for(OrderProductDTO orderProductDTO : orderDTO.getOrderProductDTOList()) {
             OrderProduct orderProduct = new OrderProduct();
             if(action.equals("Edit")) {
-                orderProduct = orderProductService.getOrderProductById(orderProductDTO.getProductId());
+                orderProduct = orderProductService.orderProductDtoToOrderProductConversion(existingOrder, orderProductDTO);
             } else if ( action.equals("Create")) {
                 orderProduct = orderProductService.createOrderProduct(existingOrder, orderProductDTO);
                 existingOrder.getOrderProducts().add(orderProduct);
@@ -228,29 +416,25 @@ public class OrderService {
             totalVat += productVat * orderProduct.getQuantity();
         }
 
-        if(orderDTO.getShippingCost() < 0) {
-            log.error("Shipping cost must be greater than or equal to zero.");
-            throw new IllegalArgumentException("Shipping cost must be greater than or equal to zero.");
-        }
+        double shippingCostNet = 0;
 
-        double shippingCostNet = orderDTO.getShippingCost()/ (1 +  VatRate.VAT_23.getRate() / 100);
-
-        existingOrder.setShippingCost(orderDTO.getShippingCost());
-        existingOrder.setShippingVatRate(VatRate.VAT_23);
-        existingOrder.setTotalValue(totalValue + orderDTO.getShippingCost());
-        existingOrder.setTotalNet(totalNet +  shippingCostNet);
-        existingOrder.setTotalVat(totalVat + orderDTO.getShippingCost() - shippingCostNet);
-
-        if(action.equals("Create") ) {
-            for (OrderProduct orderProduct : existingOrder.getOrderProducts()) {
-                try {
-                    createProductInstances(orderDTO, orderProduct, orderProduct.getQuantity());
-                } catch (Exception e) {
-                    log.error("Error creating product instances for OrderProduct: {}", orderProduct, e);
-                    throw new ProductInstanceCreationException("Failed to create product instances for OrderProduct ID: " + orderProduct.getId(), e);
-                }
+        if(action.equals("Create")) {
+            if (orderDTO.getShippingCost() < 0) {
+                log.error("Shipping cost must be greater than or equal to zero.");
+                throw new IllegalArgumentException("Shipping cost must be greater than or equal to zero.");
             }
+            shippingCostNet = orderDTO.getShippingCost()/ (1 +  VatRate.VAT_23.getRate() / 100);
+            existingOrder.setShippingCost(orderDTO.getShippingCost());
+            existingOrder.setShippingVatRate(VatRate.VAT_23);
+            existingOrder.setTotalValue(totalValue + orderDTO.getShippingCost());
+            existingOrder.setTotalVat(totalVat + orderDTO.getShippingCost() - shippingCostNet);
+        } else if(action.equals("Edit")) {
+            shippingCostNet = existingOrder.getShippingCost()/ (1 +  VatRate.VAT_23.getRate() / 100);
+            existingOrder.setTotalValue(totalValue + existingOrder.getShippingCost());
+            existingOrder.setTotalVat(totalVat + existingOrder.getShippingCost() - shippingCostNet);
         }
+        existingOrder.setTotalNet(totalNet +  shippingCostNet);
+
         return existingOrder;
     }
 
@@ -278,21 +462,18 @@ public class OrderService {
     @Transactional(rollbackFor = {ProductInstanceCreationException.class})
     private void createProductInstances(OrderDTO orderDTO, OrderProduct orderProduct, int quantity) {
         try {
-            Order order = orderProduct.getOrder();
+            Date orderDate =orderDTO.getOrderDate() != null ? orderDTO.getOrderDate() : orderProduct.getOrder().getOrderDate();
 
             for (int i = 0; i < quantity; i++) {
-                if (orderProduct.getSaleProduct() != null) {
-                    SaleProductInstanceDTO saleProductInstanceDTO = createHelperSaleProductInstanceDtoObject(orderDTO, orderProduct);
-                    SaleProductInstance saleProductInstance = saleProductInstanceService.createInstance(saleProductInstanceDTO);
-
-                } else if (orderProduct.getToolProduct() != null) {
-                    ToolProductInstanceDTO toolProductInstanceDTO = createHelperToolProductInstanceDtoObject(orderDTO, orderProduct);
-                    ToolProductInstance toolProductInstance = toolProductInstanceService.createInstance(toolProductInstanceDTO);
-
-                } else if (orderProduct.getEquipmentProduct() != null) {
-                    EquipmentProductInstanceDTO equipmentProductInstanceDTO = createHelperEquipmentProductInstanceDtoObject(orderDTO, orderProduct);
-                    EquipmentProductInstance equipmentProductInstance = equipmentProductInstanceService.createInstance(equipmentProductInstanceDTO);
-
+                if (orderProduct.getSaleProductId() != null) {
+                    SaleProductInstanceDTO saleProductInstanceDTO = createHelperSaleProductInstanceDtoObject(orderDate, orderProduct);
+                    saleProductInstanceService.createInstance(saleProductInstanceDTO);
+                } else if (orderProduct.getToolProductId() != null) {
+                    ToolProductInstanceDTO toolProductInstanceDTO = createHelperToolProductInstanceDtoObject(orderDate, orderProduct);
+                    toolProductInstanceService.createInstance(toolProductInstanceDTO);
+                } else if (orderProduct.getEquipmentProductId() != null) {
+                    EquipmentProductInstanceDTO equipmentProductInstanceDTO = createHelperEquipmentProductInstanceDtoObject(orderDate, orderProduct);
+                    equipmentProductInstanceService.createInstance(equipmentProductInstanceDTO);
                 }
             }
         } catch (Exception e) {
@@ -302,109 +483,30 @@ public class OrderService {
     }
 
 
-    private SaleProductInstanceDTO createHelperSaleProductInstanceDtoObject(OrderDTO orderDTO, OrderProduct orderProduct) {
+    private SaleProductInstanceDTO createHelperSaleProductInstanceDtoObject(Date orderDate, OrderProduct orderProduct) {
         SaleProductInstanceDTO saleProductInstanceDTO = new SaleProductInstanceDTO();
-        saleProductInstanceDTO.setProductId(orderProduct.getSaleProduct().getId());
-        saleProductInstanceDTO.setPurchaseDate(orderDTO.getOrderDate());
-        saleProductInstanceDTO.setSellingPrice(orderProduct.getSaleProduct().getSellingPrice());
+        saleProductInstanceDTO.setProductId(orderProduct.getSaleProductId());
+        saleProductInstanceDTO.setPurchaseDate(orderDate);
+        saleProductInstanceDTO.setSellingPrice(saleProductService.getSaleProductById(orderProduct.getSaleProductId()).getSellingPrice());
 
         return saleProductInstanceDTO;
     }
-    private ToolProductInstanceDTO createHelperToolProductInstanceDtoObject(OrderDTO orderDTO, OrderProduct orderProduct) {
+    private ToolProductInstanceDTO createHelperToolProductInstanceDtoObject(Date orderDate, OrderProduct orderProduct) {
         ToolProductInstanceDTO toolProductInstanceDTO = new ToolProductInstanceDTO();
-        toolProductInstanceDTO.setProductId(orderProduct.getToolProduct().getId());
-        toolProductInstanceDTO.setPurchaseDate(orderDTO.getOrderDate());
+        toolProductInstanceDTO.setProductId(orderProduct.getToolProductId());
+        toolProductInstanceDTO.setPurchaseDate(orderDate);
 
         return toolProductInstanceDTO;
     }
-    private EquipmentProductInstanceDTO createHelperEquipmentProductInstanceDtoObject(OrderDTO orderDTO, OrderProduct orderProduct) {
+    private EquipmentProductInstanceDTO createHelperEquipmentProductInstanceDtoObject(Date orderDate, OrderProduct orderProduct) {
         EquipmentProductInstanceDTO equipmentProductInstanceDTO = new EquipmentProductInstanceDTO();
-        equipmentProductInstanceDTO.setProductId(orderProduct.getEquipmentProduct().getId());
-        equipmentProductInstanceDTO.setPurchaseDate(orderDTO.getOrderDate());
+        equipmentProductInstanceDTO.setProductId(orderProduct.getEquipmentProductId());
+        equipmentProductInstanceDTO.setPurchaseDate(orderDate);
 
         return equipmentProductInstanceDTO;
     }
 
-    private Long getProductId(OrderProduct orderProduct) {
-        if (orderProduct.getSaleProduct() != null) {
-            return orderProduct.getSaleProduct().getId();
-        } else if (orderProduct.getToolProduct() != null){
-            return orderProduct.getToolProduct().getId();
-        } else if (orderProduct.getEquipmentProduct() != null){
-            return orderProduct.getEquipmentProduct().getId();
-        } else {
-            throw new ProductNotFoundException("Product not found.");
-        }
-    }
 
-    private void adjustOrderProducts(Order order, OrderDTO orderDTO) {
-        for(OrderProductDTO orderProductDTO : orderDTO.getOrderProductDTOList()) {
-            OrderProduct existingOrderProduct = order.getOrderProducts().stream()
-                    .filter(op -> op.getId().equals(orderProductDTO.getOrderProductId()))
-                    .findFirst()
-                    .orElse(null);
-
-            if (existingOrderProduct != null) {
-                orderProductService.updateOrderProduct(existingOrderProduct.getId(), orderProductDTO);
-            } else {
-                addOrderProduct(order, orderProductDTO);
-            }
-        }
-        deleteRemovedOrderProducts(order,orderDTO);
-    }
-
-    private void addOrderProduct(Order order, OrderProductDTO orderProductDTO) {
-        OrderProduct newOrderProduct = orderProductService.createOrderProduct(order, orderProductDTO);
-        order.getOrderProducts().add(newOrderProduct);
-    }
-
-    private void deleteRemovedOrderProducts(Order order, OrderDTO orderDTO) {
-        List<Long> updatedOrderProductIds = orderDTO.getOrderProductDTOList().stream()
-                .map(OrderProductDTO::getOrderProductId)
-                .toList();
-
-        List<OrderProduct> removedOrderProducts = order.getOrderProducts().stream()
-                .filter(op -> !updatedOrderProductIds.contains(op.getId()))
-                .toList();
-
-        for(OrderProduct removedProduct : removedOrderProducts) {
-            orderProductService.deleteOrderProduct(removedProduct.getId());
-        }
-    }
-
-    private List<?> getValidProductInstancesToRemove(OrderProduct existingOrderProduct, int numberOfInstancesToRemove) {
-        Date orderDate = existingOrderProduct.getOrder().getOrderDate();
-
-        if(existingOrderProduct.getSaleProduct() != null) {
-            List<SaleProductInstance> activeInstances = saleProductInstanceService.getClosestDateSortedAllInstanceList(existingOrderProduct.getSaleProduct().getId(), orderDate);
-            return activeInstances.subList(0,numberOfInstancesToRemove);
-        } else if (existingOrderProduct.getToolProduct() != null) {
-            List<ToolProductInstance> activeInstances = toolProductInstanceService.getClosestDateSortedAllInstanceList(existingOrderProduct.getToolProduct().getId(), orderDate);
-            return activeInstances.subList(0,numberOfInstancesToRemove);
-        } else if (existingOrderProduct.getEquipmentProduct() != null) {
-            List<EquipmentProductInstance> activeInstances = equipmentProductInstanceService.getClosestDateSortedActiveInstanceList(existingOrderProduct.getEquipmentProduct().getId(), orderDate);
-            return activeInstances.subList(0,numberOfInstancesToRemove);
-        }
-        return Collections.emptyList();
-    }
-
-    private void removeProductInstances(List<?> instancesToRemove) {
-        if (instancesToRemove != null && !instancesToRemove.isEmpty()) {
-
-            for (Object instance : instancesToRemove) {
-                if (instance instanceof SaleProductInstance saleProductInstance) {
-                    saleProductInstanceService.deleteInstance(saleProductInstance.getId());
-
-                } else if (instance instanceof ToolProductInstance toolProductInstance) {
-                    toolProductInstanceService.deleteInstance(toolProductInstance.getId());
-
-                } else if (instance instanceof EquipmentProductInstance equipmentProductInstance) {
-                    equipmentProductInstanceService.deleteInstance(equipmentProductInstance.getId());
-
-                }
-            }
-        }
-    }
 
     private long generateOrderNumber() {
         try {

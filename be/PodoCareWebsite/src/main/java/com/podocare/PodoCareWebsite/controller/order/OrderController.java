@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -41,20 +42,13 @@ public class OrderController {
         return new ResponseEntity<>(matchingOrders, matchingOrders.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
-    //to imo useless bedzie
-    @GetMapping("/{orderId}/forEditing")
-    public ResponseEntity<OrderDTO> getOrderForEditing(@PathVariable Long orderId) {
-        OrderDTO orderDTO = orderService.getOrderDTOByOrderId(orderId);
-        return new ResponseEntity<>(orderDTO, HttpStatus.OK);
-    }
-
     @PostMapping("/createOrder")
     public ResponseEntity<Order> createOrder(@RequestBody OrderDTO orderDTO) {
         Order createdOrder = orderService.createOrder(orderDTO);
         return new ResponseEntity<>(createdOrder, HttpStatus.OK);
     }
 
-    @PutMapping("/{orderId}/update")
+    @PatchMapping("/{orderId}/update")
     public ResponseEntity<Order> updateOrder(@PathVariable Long orderId, @RequestBody OrderDTO updatedOrderDTO) {
         Order updatedOrder = orderService.updateOrder(orderId, updatedOrderDTO);
         return new ResponseEntity<>(updatedOrder, HttpStatus.OK);
@@ -63,6 +57,6 @@ public class OrderController {
     @DeleteMapping("/{orderId}")
     public ResponseEntity<String> deleteOrder(@PathVariable Long orderId) {
         orderService.deleteOrder(orderId);
-        return new ResponseEntity<>("Successfully deleted Order", HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("Successfully deleted Order", HttpStatus.OK);
     }
 }

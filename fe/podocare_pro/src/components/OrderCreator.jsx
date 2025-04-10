@@ -16,8 +16,15 @@ const OrderCreator = ({
   selectedOrderProduct,
   setSelectedOrderProduct,
   setExpandedOrderIds,
+  action,
+  selectedOrder,
+  setOrderDTO,
+  setHasWarning,
 }) => {
+  const [initialOrderProductList, setInitialOrderProductList] = useState([]);
   const [orderProductDTOList, setOrderProductDTOList] = useState([]);
+  const [currentOrderProductList, setCurrentOrderProductList] = useState([]);
+  const [orderProductListChanges, setOrderProductListChanges] = useState(null);
   const [shippingCost, setShippingCost] = useState(0);
   const [orderDate, setOrderDate] = useState(new Date());
   const [suppliers, setSuppliers] = useState([]);
@@ -64,20 +71,47 @@ const OrderCreator = ({
   }, []);
 
   useEffect(() => {
-    if (selectedOrderProduct) {
-      setOrderProductDTOList((prevList) => [
-        ...prevList,
-        {
-          id: Date.now(),
-          productName: selectedOrderProduct.productName,
-          price: selectedOrderProduct.price,
-          quantity: 1,
-          VATrate: selectedOrderProduct.VATrate,
-          orderPrice: selectedOrderProduct.price,
-        },
-      ]);
+    if (selectedOrder) {
+      setOrderProductDTOList(selectedOrder.orderProductDTOList);
+      setOrderDate(new Date(selectedOrder.orderDate));
+      setShippingCost(selectedOrder.shippingCost);
+      handleOnSelectSupplier(
+        suppliers.find(
+          (supplier) => supplier.id === selectedOrder.supplierId
+        ) || null
+      );
+      const fetchedOrderProductList = selectedOrder.orderProductDTOList.map(
+        (item) => ({
+          id: item.orderProductId ?? item.id,
+          productId: item.productId,
+          productName: item.productName,
+          price: item.price,
+          quantity: item.quantity,
+          VATrate: item.VATrate,
+          orderPrice: item.price * item.quantity,
+        })
+      );
+      setInitialOrderProductList(fetchedOrderProductList);
     }
-    setSelectedOrderProduct(null);
+  }, [selectedOrder, suppliers]);
+
+  useEffect(() => {
+    if (action === "Create") {
+      if (selectedOrderProduct) {
+        setOrderProductDTOList((prevList) => [
+          ...prevList,
+          {
+            id: Date.now(),
+            productName: selectedOrderProduct.productName,
+            price: selectedOrderProduct.price,
+            quantity: 1,
+            VATrate: selectedOrderProduct.VATrate,
+            orderPrice: selectedOrderProduct.price,
+          },
+        ]);
+      }
+      setSelectedOrderProduct(null);
+    }
   }, [selectedOrderProduct]);
 
   const handleAddSupplier = async (newSupplier) => {
@@ -90,8 +124,58 @@ const OrderCreator = ({
   };
 
   const handleOrderProductDTOListChange = (updatedList) => {
-    setOrderProductDTOList(updatedList);
+    if (action === "Create") {
+      setOrderProductDTOList(updatedList);
+    } else if (action === "Edit") {
+      setOrderProductListChanges(updatedList);
+    }
   };
+
+  const getOrderChanges = (initial, edited) => {
+    if (!initial || !edited) return {};
+
+    const orderChanges = {};
+    Object.keys(edited).forEach((key) => {
+      if (JSON.stringify(edited[key]) !== JSON.stringify(initial[key])) {
+        orderChanges[key] = edited[key];
+      }
+    });
+    if (Object.keys(orderChanges).length > 0) {
+      orderChanges["orderId"] = initial.orderId;
+    }
+    return orderChanges;
+  };
+
+  useEffect(() => {
+    let orderDTO = {};
+    if (action === "Edit" && selectedSupplier) {
+      const initialOrder = {
+        orderId: selectedOrder.orderId,
+        orderDate: new Date(selectedOrder.orderDate),
+        supplierId: selectedOrder.supplierId,
+        shippingCost: selectedOrder.shippingCost,
+        removedOrderProducts: [],
+        addedOrderProducts: [],
+        editedOrderProducts: [],
+        orderProductDTOList: initialOrderProductList,
+      };
+      const editedOrder = {
+        orderId: selectedOrder.orderId,
+        orderDate: orderDate,
+        supplierId: selectedSupplier.id,
+        shippingCost: shippingCost,
+        removedOrderProducts: orderProductListChanges.removedOrderProducts,
+        addedOrderProducts: orderProductListChanges.addedOrderProducts,
+        editedOrderProducts: orderProductListChanges.editedOrderProducts,
+        orderProductDTOList: currentOrderProductList,
+      };
+      orderDTO = getOrderChanges(initialOrder, editedOrder);
+      if (orderDTO.shippingCost && !orderDTO.orderProductDTOList) {
+        orderDTO = { ...orderDTO, orderProductDTOList };
+      }
+      setOrderDTO(orderDTO);
+    }
+  }, [orderProductListChanges, selectedSupplier, orderDate, shippingCost]);
 
   const handleOrderDateChange = (newDate) => {
     setOrderDate(newDate);
@@ -186,65 +270,39 @@ const OrderCreator = ({
     return false;
   };
 
-  const handleValidateOrder = async () => {
+  const handleValidateOrder = async (orderProductDTOList) => {
     if (checkForErrors()) return;
-    console.log("orderProdDTRO", orderProductDTOList);
-    return AllProductService.validateProducts(orderProductDTOList)
-      .then((response) => {
-        const { existingProducts, nonExistingProducts } = response.data;
-        const updatedOrderProductList = orderProductDTOList.map((product) => {
-          const existingProduct = existingProducts.find(
-            (p) =>
-              p.productName === product.productName &&
-              p.quantity === product.quantity &&
-              p.VATRate == product.VATRate &&
-              p.price == product.price
-          );
-          return existingProduct ? existingProduct : product;
-        });
+    let nonExistingProducts = orderProductDTOList.filter(
+      (product) => !product.productId
+    );
 
-        setOrderProductDTOList(updatedOrderProductList);
-
-        if (response.data.nonExistingProducts.length > 0) {
-          const uniqueNonExistingProducts = Array.from(
-            new Set(nonExistingProducts.map((p) => p.productName))
-          ).map((productName) =>
-            nonExistingProducts.find((p) => p.productName === productName)
-          );
-
-          setNonExistingProducts(uniqueNonExistingProducts);
-          isOrderNewProductsPopupOpen
-            ? showAlert("Coś poszło nie tak...", "error")
-            : setIsOrderNewProductsPopupOpen(true);
-        } else {
-          finalizeOrder(updatedOrderProductList);
-        }
-      })
-      .catch((error) => {
-        console.error("Error validating orderProducts.", error);
-        showAlert("Error validating orderProducts.", "error");
-      });
+    if (nonExistingProducts.length > 0) {
+      setNonExistingProducts(nonExistingProducts);
+      setIsOrderNewProductsPopupOpen(true);
+      return;
+    }
+    finalizeOrder(orderProductDTOList);
   };
 
-  useEffect(() => {
-    console.log("non", nonExistingProducts);
-  }, [nonExistingProducts]);
-
   const resetFormState = () => {
-    setOrderProductDTOList([]);
-    setShippingCost(0);
-    setOrderDate(new Date());
-    setSelectedSupplier(null);
-    setNonExistingProducts([]);
-    setIsOrderNewProductsPopupOpen(false);
-    setSelectedOrderProduct();
-    setExpandedOrderIds([]);
+    if (action === "Create") {
+      setOrderProductDTOList([]);
+      setShippingCost(0);
+      setOrderDate(new Date());
+      setSelectedSupplier(null);
+      setNonExistingProducts([]);
+      setIsOrderNewProductsPopupOpen(false);
+      setSelectedOrderProduct();
+      setExpandedOrderIds([]);
+    }
   };
 
   return (
-    <div className="order-display-container">
-      <div className="order-display-interior">
-        <h1>Nowe zamówienie</h1>
+    <div
+      className={`order-display-container ${action === "Edit" ? "popup" : ""}`}
+    >
+      <div className={`order-display-interior ${action === "Edit" ? "popup" : ""}`}>
+        {action === "Create" && <h1>Nowe zamówienie</h1>}
         <section className="order-supplier-date-addProduct-section">
           <SupplierDropdown
             items={suppliers}
@@ -267,7 +325,12 @@ const OrderCreator = ({
         </section>
         <OrderProductList
           items={orderProductDTOList}
+          setItems={setOrderProductDTOList}
           onItemsChange={handleOrderProductDTOListChange}
+          action={action}
+          initialOrderProductList={initialOrderProductList}
+          setCurrentOrderProductList={setCurrentOrderProductList}
+          setHasWarning={setHasWarning}
         />
         <div className="shipping-summary-section">
           <div className="order-shipping">
@@ -284,37 +347,58 @@ const OrderCreator = ({
           <div className="order-cost-summary">
             <a>Netto:</a>
             <a className="order-total-value">
-              {calculateOrderNetValue(
-                shippingCost,
-                orderProductDTOList
-              ).toFixed(2)}{" "}
+              {action === "Edit"
+                ? calculateOrderNetValue(
+                    shippingCost,
+                    currentOrderProductList
+                  ).toFixed(2)
+                : calculateOrderNetValue(
+                    shippingCost,
+                    orderProductDTOList
+                  ).toFixed(2)}{" "}
               zł
             </a>
             <a>VAT:</a>
             <a className="order-total-value">
-              {(
-                calculateOrderTotal(shippingCost, orderProductDTOList) -
-                calculateOrderNetValue(shippingCost, orderProductDTOList)
-              ).toFixed(2)}{" "}
+              {action === "Edit"
+                ? (
+                    calculateOrderTotal(shippingCost, currentOrderProductList) -
+                    calculateOrderNetValue(
+                      shippingCost,
+                      currentOrderProductList
+                    )
+                  ).toFixed(2)
+                : (
+                    calculateOrderTotal(shippingCost, orderProductDTOList) -
+                    calculateOrderNetValue(shippingCost, orderProductDTOList)
+                  ).toFixed(2)}{" "}
               zł
             </a>
             <a>Total:</a>
             <a className="order-total-value">
-              {calculateOrderTotal(shippingCost, orderProductDTOList).toFixed(
-                2
-              )}{" "}
+              {action === "Edit"
+                ? calculateOrderTotal(
+                    shippingCost,
+                    currentOrderProductList
+                  ).toFixed(2)
+                : calculateOrderTotal(
+                    shippingCost,
+                    orderProductDTOList
+                  ).toFixed(2)}{" "}
               zł
             </a>
           </div>
         </div>
-        <div className="order-confirm-button">
-          <ProductActionButton
-            src={"src/assets/tick.svg"}
-            alt={"Zapisz"}
-            text={"Zapisz"}
-            onClick={() => handleValidateOrder()}
-          />
-        </div>
+        {action === "Create" && (
+          <div className="order-confirm-button">
+            <ProductActionButton
+              src={"src/assets/tick.svg"}
+              alt={"Zapisz"}
+              text={"Zapisz"}
+              onClick={() => handleValidateOrder(orderProductDTOList)}
+            />
+          </div>
+        )}
         {alertVisible && (
           <CustomAlert
             message={errorMessage || successMessage}
@@ -324,8 +408,11 @@ const OrderCreator = ({
         {isOrderNewProductsPopupOpen && (
           <OrderNewProductsPopup
             nonExistingProducts={nonExistingProducts}
+            orderProductDTOList={orderProductDTOList}
+            setOrderProductDTOList={setOrderProductDTOList}
             onClose={handleCloseOrderNewProductPopup}
-            onFinalizeOrder={handleValidateOrder}
+            onFinalizeOrder={(list) => handleValidateOrder(list)}
+            action={"Create"}
           />
         )}
       </div>

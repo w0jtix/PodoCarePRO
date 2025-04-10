@@ -67,28 +67,63 @@ public class AllProductsService {
         }
       }
 
-    public OrderProductValidator validateProducts(List<OrderProductDTO> orderProductDTOList) {
+    public Object getProductById(Long productId) {
+        Object product = new Object();
+        if(saleProductService.getSaleProductByIdNullable(productId) != null){
+            return product = saleProductService.getSaleProductById(productId);
+        } else if (toolProductService.getToolProductByIdNullable(productId) != null) {
+            return product = toolProductService.getToolProductById(productId);
+        } else if (equipmentProductService.getEquipmentProductByIdNullable(productId) != null){
+            return product = equipmentProductService.getEquipmentProductById(productId);
+        }
+        return null;
+    }
 
+    public Object getProductByIdAndIncludeActiveInstances(Long productId){
+        Object product = new Object();
+        if(saleProductService.getSaleProductByIdNullable(productId) != null){
+            return saleProductService.getSaleProductDTOIncludeActiveInstances(productId);
+        } else if (toolProductService.getToolProductByIdNullable(productId) != null) {
+            return toolProductService.getToolProductDTOIncludeActiveInstances(productId);
+        } else if (equipmentProductService.getEquipmentProductByIdNullable(productId) != null){
+            return equipmentProductService.getEquipmentProductDTOIncludeActiveInstances(productId);
+        }
+        return null;
+
+    }
+
+    public OrderProductValidator validateProducts(List<OrderProductDTO> orderProductDTOList) {
         OrderProductValidator orderProductValidator = new OrderProductValidator();
 
-        for(OrderProductDTO orderProductDTO : orderProductDTOList) {
-            String productName = orderProductDTO.getProductName();
+        for (OrderProductDTO orderProductDTO : orderProductDTOList) {
+            Long productId = orderProductDTO.getProductId();
+            boolean isExisting = false;
 
-            if (saleProductService.saleProductAlreadyExists(productName)) {
-                SaleProduct saleProduct = saleProductService.findBySaleProductName(productName);
-                orderProductDTO.setProductId(saleProduct.getId());
-                orderProductValidator.getExistingProducts().add(orderProductDTO);
-            } else if (toolProductService.toolProductAlreadyExists(productName)) {
-                ToolProduct toolProduct = toolProductService.findByToolProductName(productName);
-                orderProductDTO.setProductId(toolProduct.getId());
-                orderProductValidator.getExistingProducts().add(orderProductDTO);
-            } else if (equipmentProductService.equipmentProductAlreadyExists(productName)) {
-                EquipmentProduct equipmentProduct = equipmentProductService.findByEquipmentProductName(productName);
-                orderProductDTO.setProductId(equipmentProduct.getId());
-                orderProductValidator.getExistingProducts().add(orderProductDTO);
-            } else {
-                orderProductValidator.getNonExistingProducts().add(orderProductDTO);
+            if (productId != null) {
+                try {
+                    if (saleProductService.getSaleProductById(productId) != null) {
+                        isExisting = true;
+                    }
+                } catch (ProductNotFoundException ignored) {}
+
+                try {
+                    if (toolProductService.getToolProductById(productId) != null) {
+                        isExisting = true;
+                    }
+                } catch (ProductNotFoundException ignored) {}
+
+                try {
+                    if (equipmentProductService.getEquipmentProductById(productId) != null) {
+                        isExisting = true;
+                    }
+                } catch (ProductNotFoundException ignored) {}
+
+                if (isExisting) {
+                    orderProductValidator.getExistingProducts().add(orderProductDTO);
+                    continue;
+                }
             }
+            orderProductValidator.getNonExistingProducts().add(orderProductDTO);
         }
         return orderProductValidator;
     }
@@ -221,21 +256,21 @@ public class AllProductsService {
     public void deleteProductById(Long productId){
         try {
             if (saleProductService.getSaleProductById(productId) != null) {
-                saleProductService.deleteSaleProduct(productId);
+                saleProductService.deleteSaleProductAndActiveInstances(productId);
                 return;
             }
         } catch (ProductNotFoundException ignored) {}
 
         try {
             if (toolProductService.getToolProductById(productId) != null) {
-                toolProductService.deleteToolProduct(productId);
+                toolProductService.deleteToolProductAndActiveInstances(productId);
                 return;
             }
         } catch (ProductNotFoundException ignored) {}
 
         try {
             if (equipmentProductService.getEquipmentProductById(productId) != null) {
-                equipmentProductService.deleteEquipmentProduct(productId);
+                equipmentProductService.deleteEquipmentProductAndActiveInstances(productId);
             }
         } catch (ProductNotFoundException ignored) {}
     }

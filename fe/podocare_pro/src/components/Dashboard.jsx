@@ -6,7 +6,7 @@ import ProductActionButton from "./ProductActionButton";
 import AddProductPopup from "./AddProductPopup";
 import EditProductPopup from "./EditProductPopup";
 import RemoveProductPopup from "./RemoveProductPopup";
-
+import CustomAlert from "./CustomAlert";
 
 const Dashboard = () => {
   const [isAddNewProductsPopupOpen, setIsAddNewProductsPopupOpen] =
@@ -22,11 +22,34 @@ const Dashboard = () => {
   const [resetTriggered, setResetTriggered] = useState(false);
   const [showZeroProducts, setShowZeroProducts] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
+  const [alertVisible, setAlertVisible] = useState(false);
 
+  const showAlert = (message, variant) => {
+    if (variant === "success") {
+      setSuccessMessage(message);
+      setErrorMessage(null);
+    } else {
+      setErrorMessage(message);
+      setSuccessMessage(null);
+    }
 
-  
+    setAlertVisible(true);
+    setTimeout(() => {
+      setAlertVisible(false);
+    }, 2500);
+  };
 
-  const handleResetAllFilters = () => {
+  const handleResetAllFilters = (success, mode) => {
+    if (success) {
+      if(mode === "Remove") {
+        showAlert("Produkt usunięty!", "success");
+      } else if( mode === "Edit") {
+        showAlert("Produkt zaktualizowany!", "success");
+      }
+      
+    }
     setProductFilterDTO({
       productTypes: ["Sale", "Tool", "Equipment"],
       selectedBrandIds: [],
@@ -95,6 +118,12 @@ const Dashboard = () => {
           onClose={() => setIsRemoveProductsPopupOpen(false)}
           handleResetAllFilters={handleResetAllFilters}
           selectedProduct={selectedProduct}
+        />
+      )}
+      {alertVisible && (
+        <CustomAlert
+          message={errorMessage || successMessage}
+          variant={errorMessage ? "error" : "success"}
         />
       )}
     </div>

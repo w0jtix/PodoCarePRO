@@ -48,7 +48,7 @@ public class ToolProductController{
 
     @DeleteMapping("/{toolProductId}")
     public ResponseEntity<String> deleteToolProduct(@PathVariable Long toolProductId){
-        toolProductService.deleteToolProduct(toolProductId);
+        toolProductService.deleteToolProductAndActiveInstances(toolProductId);
         return new ResponseEntity<>("ToolProduct successfully deleted.", HttpStatus.OK);
     }
 

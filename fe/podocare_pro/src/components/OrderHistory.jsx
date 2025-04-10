@@ -70,7 +70,6 @@ const OrderHistory = () => {
           (a, b) => new Date(b.orderDate) - new Date(a.orderDate)
         );
         setOrders(sortedOrders);
-        console.log("orders", sortedOrders);
       })
       .catch((error) => {
         setOrders([]);
@@ -129,7 +128,14 @@ const OrderHistory = () => {
     }
   };
 
-  const handleResetAllFilters = () => {
+  const handleResetAllFilters = (success, mode) => {
+    if(success ) {
+      if(mode === "Remove") {
+        showAlert("Zamówienie usunięte!", "success");
+      } else if (mode === "Edit") {
+        showAlert("Zamówienie zaktualizowane!", "success");
+      }
+    }
     setSelectedSupplier([]);
     setDateFrom(null);
     setDateTo(null);
@@ -201,7 +207,7 @@ const OrderHistory = () => {
         <>
           <OrderList
             attributes={attributes}
-            orders={orders}
+            orders={currentItems}
             currentPage={currentPage}
             itemsPerPage={itemsPerPage}
             handleResetAllFilters={handleResetAllFilters}

@@ -17,6 +17,7 @@ const OrderCreate = () => {
         selectedOrderProduct={selectedOrderProduct}
         setSelectedOrderProduct={setSelectedOrderProduct}
         setExpandedOrderIds={setExpandedOrderIds}
+        action={"Create"}
       />
       <OrdersListBySupplier
         selectedSupplier={selectedSupplier}

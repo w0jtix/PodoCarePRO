@@ -48,7 +48,7 @@ public class EquipmentProductController{
 
     @DeleteMapping("/{equipmentProductId}")
     public ResponseEntity<String> deleteEquipmentProduct(@PathVariable Long equipmentProductId){
-        equipmentProductService.deleteEquipmentProduct(equipmentProductId);
+        equipmentProductService.deleteEquipmentProductAndActiveInstances(equipmentProductId);
         return new ResponseEntity<>("EquipmentProduct successfully deleted.", HttpStatus.OK);
     }
 

@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.ToString;
 
 @Entity
 @Data
@@ -23,17 +24,15 @@ public class OrderProduct {
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "order_id", nullable = false)
     @JsonBackReference
+    @ToString.Exclude
     private Order order;
 
-    @ManyToOne
-    @JoinColumn(name = "sale_product_id")
-    private SaleProduct saleProduct;
-    @ManyToOne
-    @JoinColumn(name = "tool_product_id")
-    private ToolProduct toolProduct;
-    @ManyToOne
-    @JoinColumn(name = "equipment_product_id")
-    private EquipmentProduct equipmentProduct;
+    @Column(name = "sale_product_id")
+    private Long saleProductId;
+    @Column(name = "tool_product_id")
+    private Long toolProductId;
+    @Column(name = "equipment_product_id")
+    private Long equipmentProductId;
 
     private Integer quantity;
     private VatRate VATrate;

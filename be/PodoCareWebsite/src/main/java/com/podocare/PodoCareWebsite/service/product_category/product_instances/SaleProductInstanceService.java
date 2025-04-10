@@ -19,6 +19,7 @@ import com.podocare.PodoCareWebsite.model.product.product_category.product_insta
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.ToolProductInstance;
 import com.podocare.PodoCareWebsite.repo.product_category.SaleProductRepo;
 import com.podocare.PodoCareWebsite.repo.product_category.product_instances.SaleProductInstanceRepo;
+import com.podocare.PodoCareWebsite.service.order.OrderProductService;
 import com.podocare.PodoCareWebsite.service.order.OrderService;
 import com.podocare.PodoCareWebsite.service.order.SupplierService;
 import com.podocare.PodoCareWebsite.service.product_category.SaleProductService;
@@ -26,13 +27,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -69,7 +68,12 @@ public class SaleProductInstanceService {
 
         try {
             saleProductInstanceRepo.save(saleProductInstanceToSave);
-            incrementCurrentSupply(saleProductInstanceToSave.getSaleProduct());
+            SaleProduct saleProduct = saleProductInstanceToSave.getSaleProduct();
+            incrementCurrentSupply(saleProduct);
+            if(saleProduct.getIsDeleted()) {
+                saleProduct.setIsDeleted(false);
+                saleProductRepo.save(saleProduct);
+            }
         } catch (Exception e) {
             throw new ProductInstanceCreationException("Failed to create SaleProductInstance.", e);
         }
@@ -149,6 +153,81 @@ public class SaleProductInstanceService {
         }
     }
 
+    public void deleteInstancesByOrderProduct(OrderProductDTO orderProductDTO, int deleteQty, Long orderId) {
+        SaleProduct saleProduct = saleProductService.getSaleProductById(orderProductDTO.getProductId());
+        Date orderDate = orderService.getOrderById(orderId).getOrderDate();
+
+        List<SaleProductInstance> availableInstances = saleProduct.getProductInstances().stream()
+                .filter(SaleProductInstance::getIsAvailable)
+                .toList();
+
+        Map<Date, List<SaleProductInstance>> instancesByDate = availableInstances.stream()
+                .collect(Collectors.groupingBy(SaleProductInstance::getPurchaseDate));
+
+        int remainingToDelete = deleteQty;
+
+        List<SaleProductInstance> instancesForOrderDate = instancesByDate.get(orderDate);
+
+        if (instancesForOrderDate != null && !instancesForOrderDate.isEmpty()) {
+
+            for (SaleProductInstance instance : instancesForOrderDate) {
+                try {
+                    deleteInstance(instance.getId());
+                    remainingToDelete--;
+                    if (remainingToDelete <= 0) {
+                        return;
+                    }
+                } catch (Exception e) {
+                    continue;
+                }
+            }
+        }
+
+        if (remainingToDelete > 0) {
+            for (Map.Entry<Date, List<SaleProductInstance>> entry : instancesByDate.entrySet()) {
+                Date purchaseDate = entry.getKey();
+                if (purchaseDate.equals(orderDate)) {
+                    continue;
+                }
+
+                List<SaleProductInstance> instancesForOtherDate = entry.getValue();
+                for (SaleProductInstance instance : instancesForOtherDate) {
+                    try {
+                        deleteInstance(instance.getId());
+                        remainingToDelete--;
+                        if (remainingToDelete <= 0) {
+                            return;
+                        }
+                    } catch (Exception e) {
+                        continue;
+                    }
+                }
+            }
+        }
+
+        if (remainingToDelete > 0) {
+            List<SaleProductInstance> remainingInstances = availableInstances.stream()
+                    .filter(SaleProductInstance::getIsAvailable)
+                    .limit(remainingToDelete)
+                    .toList();
+
+            for (SaleProductInstance instance : remainingInstances) {
+                try {
+                    deleteInstance(instance.getId());
+                    remainingToDelete--;
+                    if (remainingToDelete <= 0) {
+                        return;
+                    }
+                } catch (Exception e) {
+                    continue;
+                }
+            }
+        }
+        if (remainingToDelete > 0) {
+            System.out.println("Not enough instances to delete. Remaining to delete: " + remainingToDelete);
+        }
+    }
+
     public void hardDeleteAllActiveInstances(List<SaleProductInstance> saleProductInstances) {
         if(saleProductInstances == null || saleProductInstances.isEmpty()) {
             return;
@@ -199,7 +278,9 @@ public class SaleProductInstanceService {
         saleProductInstance.setSaleProduct(saleProductService.getSaleProductById(saleProductInstanceDTO.getProductId()));
         saleProductInstance.setPurchaseDate(saleProductInstanceDTO.getPurchaseDate());
         saleProductInstance.setSellingPrice(saleProductInstanceDTO.getSellingPrice());
-        saleProductInstance.setDescription(saleProductInstanceDTO.getDescription());
+        if(saleProductInstanceDTO.getDescription() != null) {
+            saleProductInstance.setDescription(saleProductInstanceDTO.getDescription());
+        }
         saleProductInstance.setIsSold(saleProductInstanceDTO.getIsSold() != null ? saleProductInstanceDTO.getIsSold() : false);
         saleProductInstance.setIsUsed(saleProductInstanceDTO.getIsUsed()!= null ? saleProductInstanceDTO.getIsUsed() : false);
         calculateAndSetShelfLife(saleProductInstance,saleProductInstanceDTO);

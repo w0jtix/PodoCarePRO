@@ -40,6 +40,18 @@ public class GeneralProductController {
         return new ResponseEntity<>(productsList, productsList.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
+    @GetMapping("/{productId}/find")
+    public ResponseEntity<Object> findProductById(@PathVariable Long productId) {
+        Object product = allProductsService.getProductById(productId);
+        return new ResponseEntity<>(product, product != null ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/{productId}")
+    public ResponseEntity<Object> findProductByIdAndIncludeActiveInstancesList(@PathVariable Long productId) {
+        Object productDTO = allProductsService.getProductByIdAndIncludeActiveInstances((productId));
+        return new ResponseEntity<>(productDTO, productDTO != null ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+    }
+
     @PostMapping("/filterAll")
     public ResponseEntity<List<Object>> getFilteredProducts(@RequestBody ProductFilterDTO productFilterDTO) {
         List<Object> matchingProducts = allProductsService.getFilteredProducts(productFilterDTO);

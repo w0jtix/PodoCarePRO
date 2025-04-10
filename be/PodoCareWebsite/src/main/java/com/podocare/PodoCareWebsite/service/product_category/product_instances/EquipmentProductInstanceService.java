@@ -5,8 +5,9 @@ import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_insta
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_instance.ProductInstanceDeletionException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_instance.ProductInstanceNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_instance.ProductInstanceUpdateException;
+import com.podocare.PodoCareWebsite.model.order.DTOs.OrderProductDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.EquipmentProduct;
-import com.podocare.PodoCareWebsite.model.product.product_category.SaleProduct;
+import com.podocare.PodoCareWebsite.model.product.product_category.EquipmentProduct;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.EquipmentProductInstanceDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.SaleProductInstanceDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.EquipmentProductInstance;
@@ -23,9 +24,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -61,7 +61,12 @@ public class EquipmentProductInstanceService {
 
         try {
             equipmentProductInstanceRepo.save(equipmentProductInstanceToSave);
-            incrementCurrentSupply(equipmentProductInstanceToSave.getEquipmentProduct());
+            EquipmentProduct equipmentProduct = equipmentProductInstanceToSave.getEquipmentProduct();
+            incrementCurrentSupply(equipmentProduct);
+            if(equipmentProduct.getIsDeleted()) {
+                equipmentProduct.setIsDeleted(false);
+                equipmentProductRepo.save(equipmentProduct);
+            }
         } catch (Exception e) {
             throw new ProductInstanceCreationException("Failed to create EquipmentProductInstance.", e);
         }
@@ -134,6 +139,34 @@ public class EquipmentProductInstanceService {
         } catch (Exception e) {
             log.error("Failed to hard delete EquipmentProductInstance ID: {}", equipmentProductInstanceId, e);
             throw new ProductInstanceDeletionException("Failed to hard delete EquipmentProductInstance.", e);
+        }
+    }
+
+    public void deleteInstancesByOrderProduct(OrderProductDTO orderProductDTO, int deleteQty, Long orderId) {
+        EquipmentProduct equipmentProduct = equipmentProductService.getEquipmentProductById(orderProductDTO.getProductId());
+        Date orderDate = orderService.getOrderById(orderId).getOrderDate();
+
+        List<EquipmentProductInstance> availableInstancesByDate = equipmentProduct.getProductInstances().stream()
+                .filter(EquipmentProductInstance::getIsAvailable)
+                .filter(instance -> Objects.equals(instance.getPurchaseDate(), orderDate))
+                .limit(deleteQty)
+                .toList();
+        Set<Long> usedInstanceIds = availableInstancesByDate.stream()
+                .map(EquipmentProductInstance::getId)
+                .collect(Collectors.toSet());
+
+        int remainingToDelete = deleteQty - availableInstancesByDate.size();
+
+        if (remainingToDelete > 0) {
+            List<EquipmentProductInstance> availableInstances = equipmentProduct.getProductInstances().stream()
+                    .filter(EquipmentProductInstance::getIsAvailable)
+                    .filter(instance -> !usedInstanceIds.contains(instance.getId()))
+                    .limit(remainingToDelete)
+                    .toList();
+            availableInstancesByDate.forEach(instance -> deleteInstance(instance.getId()));
+            availableInstances.forEach(instance -> deleteInstance(instance.getId()));
+        } else {
+            availableInstancesByDate.forEach(instance -> deleteInstance(instance.getId()));
         }
     }
 

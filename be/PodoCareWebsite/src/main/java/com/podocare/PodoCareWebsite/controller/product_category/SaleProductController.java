@@ -49,7 +49,7 @@ public class SaleProductController{
 
     @DeleteMapping("/{saleProductId}")
     public ResponseEntity<String> deleteSaleProduct(@PathVariable Long saleProductId){
-        saleProductService.deleteSaleProduct(saleProductId);
+        saleProductService.deleteSaleProductAndActiveInstances(saleProductId);
         return new ResponseEntity<>("SaleProduct successfully deleted.", HttpStatus.OK);
     }
 

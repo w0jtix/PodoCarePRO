@@ -150,6 +150,30 @@ class AllProductService {
       throw error;
     }
   }
+
+  static async getProductById(productId) {
+    try {
+      const response = await axios.get(`${this.API_URL}/${productId}/find`);
+      return response.status === 204 ? null : response.data;
+    } catch (error) {
+      console.error(
+        "Product not found", error
+      )
+      throw error;
+    }
+  }
+
+  static async findProductByIdAndIncludeActiveInstances(productId) {
+    try {
+      const response = await axios.get(`${this.API_URL}/${productId}`);
+      return response.status === 204 ? null : response.data;
+    } catch (error) {
+      console.error(
+        "Product not found", error
+      )
+      throw error;
+    }
+  }
 }
 
 export default AllProductService;

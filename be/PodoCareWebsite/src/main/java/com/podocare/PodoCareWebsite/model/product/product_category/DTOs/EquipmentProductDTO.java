@@ -22,4 +22,6 @@ public class EquipmentProductDTO {
     private Boolean isDeleted;
 
     private Integer warrantyLength;
+
+    private List<EquipmentProductInstanceDTO> activeProductInstances;
 }

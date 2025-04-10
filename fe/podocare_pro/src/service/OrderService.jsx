@@ -38,6 +38,32 @@ class OrderService {
     }
   }
 
+  static async updateOrder(OrderDTO) {
+    try{
+      const response = await axios.patch(
+      `${this.API_URL}/${OrderDTO.orderId}/update`,
+        OrderDTO
+      );
+      return response;
+    } catch (error) {
+      console.error("Error updating Order.", error);
+      throw error;
+    }
+  }
+
+  static async deleteOrder(orderId) {
+    try{
+      const response = await axios.delete(
+        `${this.API_URL}/${orderId}`);
+        return response.data;
+    } catch (error) {
+      console.error("Error deleting Order.", 
+        error?.response?.data || error.message
+      );
+      throw error;
+    }
+  }
+
   static async filterOrdersBySupplier(supplier) {
     try {
       const allOrders = (await this.getAllOrders()) || [];

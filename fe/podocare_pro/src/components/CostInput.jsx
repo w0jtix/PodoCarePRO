@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 
-const CostInput = ({ startValue, onChange, selectedCost, defaultValue, disabled }) => {
+const CostInput = ({ startValue, onChange, selectedCost, defaultValue, disabled, placeholder }) => {
   const [cost, setCost] = useState(selectedCost ?? startValue);
 
   useEffect(() => {
@@ -15,11 +15,6 @@ const CostInput = ({ startValue, onChange, selectedCost, defaultValue, disabled 
         setCost(startValue);
       }
     }, [defaultValue]);
-
-
-/*   useEffect(() => {
-      selectedCost  === null ? setCost(null) : setCost(selectedCost);
-    }, [selectedCost]); */
 
     useEffect(() => {
       if (selectedCost !== undefined && selectedCost !== cost) {
@@ -40,7 +35,7 @@ const CostInput = ({ startValue, onChange, selectedCost, defaultValue, disabled 
           setCost(newCost);
           onChange?.(newCost);
         }}
-        placeholder="0.00"
+        placeholder= {placeholder ?? "0.00"}
         step="0.01"
       />
     </div>

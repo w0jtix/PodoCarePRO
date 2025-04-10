@@ -4,6 +4,7 @@ import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product.Produ
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product.ProductDeletionException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product.ProductNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product.ProductUpdateException;
+import com.podocare.PodoCareWebsite.model.product.product_category.DTOs.SaleProductDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.DTOs.ToolProductDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.DTOs.ToolProductDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.EquipmentProduct;
@@ -62,6 +63,11 @@ public class ToolProductService{
     public ToolProduct getToolProductById(Long toolProductId) {
         return toolProductRepo.findById(toolProductId)
                 .orElseThrow(() -> new ProductNotFoundException("ToolProduct not found with ID: " + toolProductId));
+    }
+
+    public ToolProduct getToolProductByIdNullable(Long toolProductId) {
+        return toolProductRepo.findById(toolProductId)
+                .orElse(null);
     }
 
     public ToolProduct createToolProduct(ToolProductDTO toolProductDTO) {
@@ -123,6 +129,24 @@ public class ToolProductService{
     }
 
     public void deleteToolProduct(Long toolProductId) {
+        try{
+            toolProductRepo.deleteById(toolProductId);
+        } catch (Exception e){
+            throw new ProductDeletionException("Failed to delete existing Product.", e);
+        }
+    }
+
+    public void softDeleteToolProduct(Long toolProductId) {
+        try{
+            ToolProduct existingProduct = getToolProductById(toolProductId);
+            existingProduct.setIsDeleted(true);
+            toolProductRepo.save(existingProduct);
+        } catch (Exception e){
+            throw new ProductDeletionException("Failed to delete existing Product.", e);
+        }
+    }
+
+    public void deleteToolProductAndActiveInstances(Long toolProductId) {
         ToolProduct existingProduct = getToolProductById(toolProductId);
         boolean hasOrderProductReference = orderProductRepo.hasToolProductReference(toolProductId);
 
@@ -181,6 +205,20 @@ public class ToolProductService{
         List<ToolProductInstance> allInstances =  toolProduct.getProductInstances();
 
         return allInstances.stream().filter(ToolProductInstance::getIsAvailable).toList();
+    }
+
+    public ToolProductDTO getToolProductDTOIncludeActiveInstances(Long productId){
+        ToolProduct product = getToolProductById(productId);
+        ToolProductDTO toolProductDTO = toolProductToToolProductDTOConversion(product, new ToolProductDTO());
+        List<ToolProductInstanceDTO> activeInstanceDTOList = new ArrayList<>();
+        for(ToolProductInstance toolProductInstance : getActiveInstances(productId)) {
+            ToolProductInstanceDTO toolProductInstanceDTO = new ToolProductInstanceDTO();
+            activeInstanceDTOList.add(
+                    toolProductInstanceService.toolProductInstanceToToolProductInstanceDTO(toolProductInstance,toolProductInstanceDTO)
+            );
+        }
+        toolProductDTO.setActiveProductInstances(activeInstanceDTOList);
+        return toolProductDTO;
     }
 
     public List<ToolProductInstance> getAllInstances(Long toolProductId) {

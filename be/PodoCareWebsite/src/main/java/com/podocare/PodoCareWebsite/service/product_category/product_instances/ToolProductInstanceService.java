@@ -5,6 +5,7 @@ import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_insta
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_instance.ProductInstanceDeletionException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_instance.ProductInstanceNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.specific_exceptions.product_instance.ProductInstanceUpdateException;
+import com.podocare.PodoCareWebsite.model.order.DTOs.OrderProductDTO;
 import com.podocare.PodoCareWebsite.model.product.product_category.SaleProduct;
 import com.podocare.PodoCareWebsite.model.product.product_category.ToolProduct;
 import com.podocare.PodoCareWebsite.model.product.product_category.product_instances.DTOs.SaleProductInstanceDTO;
@@ -24,6 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -59,7 +63,12 @@ public class ToolProductInstanceService {
 
         try {
             toolProductInstanceRepo.save(toolProductInstanceToSave);
-            incrementCurrentSupply(toolProductInstanceToSave.getToolProduct());
+            ToolProduct toolProduct = toolProductInstanceToSave.getToolProduct();
+            incrementCurrentSupply(toolProduct);
+            if(toolProduct.getIsDeleted()) {
+                toolProduct.setIsDeleted(false);
+                toolProductRepo.save(toolProduct);
+            }
         } catch (Exception e) {
             throw new ProductInstanceCreationException("Failed to create ToolProductInstance.", e);
         }
@@ -153,6 +162,34 @@ public class ToolProductInstanceService {
         } catch (Exception e) {
             log.error("Failed to hard delete ToolProductInstance ID: {}", toolProductInstanceId, e);
             throw new ProductInstanceDeletionException("Failed to hard delete ToolProductInstance.", e);
+        }
+    }
+
+    public void deleteInstancesByOrderProduct(OrderProductDTO orderProductDTO, int deleteQty, Long orderId) {
+        ToolProduct toolProduct = toolProductService.getToolProductById(orderProductDTO.getProductId());
+        Date orderDate = orderService.getOrderById(orderId).getOrderDate();
+
+        List<ToolProductInstance> availableInstancesByDate = toolProduct.getProductInstances().stream()
+                .filter(ToolProductInstance::getIsAvailable)
+                .filter(instance -> Objects.equals(instance.getPurchaseDate(), orderDate))
+                .limit(deleteQty)
+                .toList();
+        Set<Long> usedInstanceIds = availableInstancesByDate.stream()
+                .map(ToolProductInstance::getId)
+                .collect(Collectors.toSet());
+
+        int remainingToDelete = deleteQty - availableInstancesByDate.size();
+
+        if (remainingToDelete > 0) {
+            List<ToolProductInstance> availableInstances = toolProduct.getProductInstances().stream()
+                    .filter(ToolProductInstance::getIsAvailable)
+                    .filter(instance -> !usedInstanceIds.contains(instance.getId()))
+                    .limit(remainingToDelete)
+                    .toList();
+            availableInstancesByDate.forEach(instance -> deleteInstance(instance.getId()));
+            availableInstances.forEach(instance -> deleteInstance(instance.getId()));
+        } else {
+            availableInstancesByDate.forEach(instance -> deleteInstance(instance.getId()));
         }
     }
 

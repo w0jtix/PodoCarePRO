@@ -61,6 +61,11 @@ public class SaleProductService{
                 .orElseThrow(() -> new ProductNotFoundException("SaleProduct not found with ID: " + saleProductId));
     }
 
+    public SaleProduct getSaleProductByIdNullable(Long saleProductId) {
+        return saleProductRepo.findById(saleProductId)
+                .orElse(null);
+    }
+
     public SaleProduct createSaleProduct(SaleProductDTO saleProductDTO) {
         isValid(saleProductDTO.getProductName());
 
@@ -127,6 +132,24 @@ public class SaleProductService{
     }
 
     public void deleteSaleProduct(Long saleProductId) {
+        try{
+            saleProductRepo.deleteById(saleProductId);
+        } catch (Exception e){
+            throw new ProductDeletionException("Failed to delete existing Product.", e);
+        }
+    }
+
+    public void softDeleteSaleProduct(Long saleProductId) {
+        try{
+            SaleProduct existingProduct = getSaleProductById(saleProductId);
+            existingProduct.setIsDeleted(true);
+            saleProductRepo.save(existingProduct);
+        } catch (Exception e){
+            throw new ProductDeletionException("Failed to delete existing Product.", e);
+        }
+    }
+
+    public void deleteSaleProductAndActiveInstances(Long saleProductId) {
         SaleProduct existingProduct = getSaleProductById(saleProductId);
         boolean hasOrderProductReference = orderProductRepo.hasSaleProductReference(saleProductId);
 
@@ -185,6 +208,20 @@ public class SaleProductService{
             );
         }
         saleProductDTO.setProductInstances(instanceDTOList);
+        return saleProductDTO;
+    }
+
+    public SaleProductDTO getSaleProductDTOIncludeActiveInstances(Long productId){
+        SaleProduct product = getSaleProductById(productId);
+        SaleProductDTO saleProductDTO = saleProductToSaleProductDTOConversion(product, new SaleProductDTO());
+        List<SaleProductInstanceDTO> activeInstanceDTOList = new ArrayList<>();
+        for(SaleProductInstance saleProductInstance : getActiveInstances(productId)) {
+            SaleProductInstanceDTO saleProductInstanceDTO = new SaleProductInstanceDTO();
+            activeInstanceDTOList.add(
+                    saleProductInstanceService.saleProductInstanceToSaleProductInstanceDTO(saleProductInstance,saleProductInstanceDTO)
+            );
+        }
+        saleProductDTO.setActiveProductInstances(activeInstanceDTOList);
         return saleProductDTO;
     }
 

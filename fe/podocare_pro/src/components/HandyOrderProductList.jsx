@@ -1,12 +1,17 @@
 import React from "react";
+import { useState, useEffect } from "react";
+import AllProductService from "../service/AllProductService";
 
 const HandyOrderProductList = ({
   attributes,
   order,
   setSelectedOrderProduct,
   action,
+  mode,
+  setHasWarning,
 }) => {
-/*   const getOrderProductCategoryAndDetails = (orderProduct) => {
+  const [warningVisible, setWarningVisible] = useState({});
+  /*   const getOrderProductCategoryAndDetails = (orderProduct) => {
     if (orderProduct.saleProduct) {
       return { category: "saleProduct", product: orderProduct.saleProduct };
     } else if (orderProduct.toolProduct) {
@@ -26,6 +31,36 @@ const HandyOrderProductList = ({
     Equipment: "pink",
   };
 
+  useEffect(() => {
+    if (action === "History" && mode === "Popup") {
+      order.orderProductDTOList.map((orderProduct) => {
+        const productId = orderProduct.productId;
+        if (productId) {
+          return AllProductService.findProductByIdAndIncludeActiveInstances(
+            productId
+          )
+            .then((data) => {
+              const activeCount = data.activeProductInstances.length;
+              const qtyDifference = orderProduct.quantity;
+              const shouldWarn =
+                qtyDifference > 0 && qtyDifference > activeCount;
+              setWarningVisible((prevVisibility) => ({
+                ...prevVisibility,
+                [orderProduct.orderProductId]: shouldWarn,
+              }));
+
+              if (shouldWarn) {
+                setHasWarning(true);
+              }
+            })
+            .catch((error) => {
+              console.error("Error checking supply count:", error);
+            });
+        }
+      });
+    }
+  }, [order]);
+
   const getArrowSrc = (category) => {
     return `src/assets/${categoryColors[category]}Arrow.svg`;
   };
@@ -36,11 +71,15 @@ const HandyOrderProductList = ({
   };
 
   return (
-    <div className="handy-order-product-list-container">
+    <div
+      className={`handy-order-product-list-container ${
+        mode === "Popup" ? "popup" : ""
+      }`}
+    >
       {order.orderProductDTOList.map((orderProduct, index) => {
         return (
           <div
-            key={`${orderProduct.id}-${index}`}
+            key={`${orderProduct.orderProductId}-${index}`}
             className="handy-order-product-item"
           >
             {attributes.map((attr) => (
@@ -57,7 +96,9 @@ const HandyOrderProductList = ({
                 {attr.name === "" ? (
                   action === "History" ? (
                     <div
-                      className={`category-container ${categoryColors[orderProduct.category]}`}
+                      className={`category-container ${
+                        categoryColors[orderProduct.category]
+                      }`}
                       /* style={{
                       backgroundColor: categoryColors[category],
                     }} */
@@ -75,20 +116,77 @@ const HandyOrderProductList = ({
                     </button>
                   ) : null
                 ) : attr.name === "Nazwa" ? (
-                  <span>{orderProduct.productName}</span>
+                  <div className="handy-order-product-list-product-name-display">
+                    <span
+                      className={`order-product-list-span ${
+                        warningVisible[orderProduct.orderProductId] === true &&
+                        action === "History" &&
+                        mode === "Popup"
+                          ? "warning-visible"
+                          : ""
+                      }`}
+                    >
+                      {orderProduct.productName}
+                    </span>
+                    {warningVisible[orderProduct.orderProductId] === true &&
+                      action === "History" &&
+                      mode === "Popup" && (
+                        <img
+                          src="src/assets/warning.svg"
+                          alt="Warning"
+                          className="order-item-warning-icon"
+                        />
+                      )}
+                  </div>
                 ) : attr.name === "Ilość" ? (
-                  <span>{orderProduct.quantity}</span>
+                  <span
+                    className={`order-product-list-span ${
+                      warningVisible[orderProduct.orderProductId] === true &&
+                      action === "History" &&
+                      mode === "Popup"
+                        ? "warning-visible"
+                        : ""
+                    }`}
+                  >
+                    {orderProduct.quantity}
+                  </span>
                 ) : attr.name === "Netto [szt]" ? (
-                  <span>
+                  <span
+                    className={`order-product-list-span ${
+                      warningVisible[orderProduct.orderProductId] === true &&
+                      action === "History" &&
+                      mode === "Popup"
+                        ? "warning-visible"
+                        : ""
+                    }`}
+                  >
                     {calculateNetPrice(
                       orderProduct.price,
                       orderProduct.VATrate
                     )}
                   </span>
                 ) : attr.name === "VAT" ? (
-                  <span>{`${orderProduct.VATrate}%`}</span>
+                  <span
+                    className={`order-product-list-span ${
+                      warningVisible[orderProduct.orderProductId] === true &&
+                      action === "History" &&
+                      mode === "Popup"
+                        ? "warning-visible"
+                        : ""
+                    }`}
+                  >{`${orderProduct.VATrate}%`}</span>
                 ) : attr.name === "Cena [szt]" ? (
-                  <span>{orderProduct.price.toFixed(2)}</span>
+                  <span
+                    className={`order-product-list-span ${
+                      warningVisible[orderProduct.orderProductId] === true &&
+                      action === "History" &&
+                      mode === "Popup"
+                        ? "warning-visible"
+                        : ""
+                    }`}
+                  >
+                    {orderProduct.price.toFixed(2)}
+                  </span>
                 ) : (
                   "N/A"
                 )}
@@ -110,16 +208,18 @@ const HandyOrderProductList = ({
                 justifyContent: attr.justify,
               }}
             >
-              {attr.name ==="" ? (
-                <img src="src/assets/shipping.svg" alt="Shipping" className="order-history-order-details-shipping-icon">
-                </img>
+              {attr.name === "" ? (
+                <img
+                  src="src/assets/shipping.svg"
+                  alt="Shipping"
+                  className="order-history-order-details-shipping-icon"
+                ></img>
               ) : attr.name === "Nazwa" ? (
                 <span>Koszt wysyłki</span>
               ) : attr.name === "Netto [szt]" ? (
-                <span>{calculateNetPrice(
-                  order.shippingCost,
-                  order.shippingVatRate
-                )}</span>
+                <span>
+                  {calculateNetPrice(order.shippingCost, order.shippingVatRate)}
+                </span>
               ) : attr.name === "VAT" ? (
                 <span>{`${order.shippingVatRate}%`}</span>
               ) : attr.name === "Cena [szt]" ? (

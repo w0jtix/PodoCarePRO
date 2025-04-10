@@ -1,13 +1,11 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 
-const DigitInput = ({ onInputValue, startValue, disabled }) => {
+const DigitInput = ({ onInputValue, startValue, disabled, placeholder }) => {
   const [number, setNumber] = useState(startValue);
 
   useEffect(() => {
-
-      setNumber(startValue);
-
+    setNumber(startValue);
   }, [startValue]);
 
   const handleDigitInputChange = (value) => {
@@ -30,7 +28,7 @@ const DigitInput = ({ onInputValue, startValue, disabled }) => {
         className={`new-products-popup-digit-input ${
           disabled ? "disabled" : ""
         }`}
-        placeholder=""
+        placeholder={placeholder ?? ""}
         value={number}
         onChange={(e) => {
           handleDigitInputChange(e.target.value);

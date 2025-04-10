@@ -51,11 +51,14 @@ const EditProductPopup = ({
     if (await checkForErrors(productCreationDTO)) return false;
     return AllProductService.updateProduct(productCreationDTO)
       .then((response) => {
-        showAlert("Produkt zaktualizowany!", "success");
-        handleResetAllFilters();
+        const success = true;
+        const mode = "Edit";
+        handleResetAllFilters(success, mode);
+
         setTimeout(() => {
           onClose();
-        }, 1200);
+        }, 600);
+
       })
       .catch((error) => {
         console.error("Error updating new Product.", error);

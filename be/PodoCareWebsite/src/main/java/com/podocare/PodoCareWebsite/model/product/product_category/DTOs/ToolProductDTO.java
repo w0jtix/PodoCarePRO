@@ -20,4 +20,6 @@ public class ToolProductDTO {
     private List<ToolProductInstanceDTO> productInstances;
     private String category;
     private Boolean isDeleted;
+
+    private List<ToolProductInstanceDTO> activeProductInstances;
 }

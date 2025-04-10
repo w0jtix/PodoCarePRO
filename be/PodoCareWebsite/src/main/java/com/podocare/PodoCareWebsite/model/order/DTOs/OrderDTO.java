@@ -21,4 +21,8 @@ public class OrderDTO {
     private Double totalNet;
     private Double totalVat;
     private Double totalValue;
+
+    private List<Long> removedOrderProducts; // only Ids
+    private List<OrderProductDTO> editedOrderProducts;
+    private List<OrderProductDTO> addedOrderProducts;
 }

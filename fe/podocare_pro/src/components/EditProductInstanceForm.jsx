@@ -68,6 +68,7 @@ const EditProductInstanceForm = ({
 
   useEffect(() => {
     if (!initialInstance) return;
+    
     const newInstance = {
       id: initialInstance.id,
       productId: initialInstance.productId,
