@@ -275,7 +275,7 @@ public class AllProductsService {
         } catch (ProductNotFoundException ignored) {}
     }
 
-    //returns a list of products present in DB, nonExisting are discarded, use case - validate products when finalizing Order
+    //returns a list of products present in DB, nonExisting are discarded, use case - validate products when finalizing Order.
     public List<Object> searchProductsByProductName(List<Object> productList, List<String> productNamesList) {
         List<Object> matchingProducts = new ArrayList<>();
         for(String productName : productNamesList) {
