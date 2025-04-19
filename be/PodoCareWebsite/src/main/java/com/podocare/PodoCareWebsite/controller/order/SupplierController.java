@@ -27,27 +27,26 @@ public class SupplierController {
     }
 
     @GetMapping("/{supplierId}")
-    public ResponseEntity<Supplier> getSupplierById(@PathVariable Long supplierId){
-        Supplier supplier = supplierService.getSupplierById(supplierId);
+    public ResponseEntity<SupplierDTO> getSupplierById(@PathVariable Long supplierId){
+        SupplierDTO supplier = supplierService.getSupplierDTOById(supplierId);
         return new ResponseEntity<>(supplier, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<?> createSupplier(@RequestBody SupplierDTO supplierDTO) {
-        SupplierDTO newSupplierDTO = supplierService.createSupplier(supplierDTO);
-        return new ResponseEntity<>(newSupplierDTO, HttpStatus.CREATED);
+        SupplierDTO newSupplier = supplierService.createSupplier(supplierDTO);
+        return new ResponseEntity<>(newSupplier, HttpStatus.CREATED);
     }
 
     @PutMapping("/{supplierId}")
-    public ResponseEntity<SupplierDTO> updateProduct(@PathVariable Long supplierId, @RequestBody SupplierDTO supplierDTO) {
+    public ResponseEntity<SupplierDTO> updateSupplier(@PathVariable Long supplierId, @RequestBody SupplierDTO supplierDTO) {
         SupplierDTO updatedSupplier = supplierService.updateSupplier(supplierId, supplierDTO);
         return new ResponseEntity<>(updatedSupplier, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{supplierId}") //OK
-    public ResponseEntity<String> deleteSupplier(@PathVariable Long supplierId) {
-
-            supplierService.deleteSupplier(supplierId);
-            return new ResponseEntity<>("Supplier successfully deleted.", HttpStatus.OK);
+    @DeleteMapping("/{supplierId}")
+    public ResponseEntity<Void> deleteSupplier(@PathVariable Long supplierId) {
+        supplierService.deleteSupplier(supplierId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

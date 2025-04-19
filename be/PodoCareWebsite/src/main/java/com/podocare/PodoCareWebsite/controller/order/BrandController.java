@@ -32,7 +32,6 @@ public class BrandController {
         return new ResponseEntity<>(brandDTO, HttpStatus.OK);
     }
 
-
     @PostMapping
     public ResponseEntity<BrandDTO> createBrand(@RequestBody BrandDTO brandDTO) {
         BrandDTO newBrand = brandService.createBrand(brandDTO);
@@ -40,7 +39,7 @@ public class BrandController {
     }
 
     @PutMapping("/{brandId}")
-    public ResponseEntity<BrandDTO> updateProduct(@PathVariable Long brandId, @RequestBody BrandDTO brandDTO){
+    public ResponseEntity<BrandDTO> updateBrand(@PathVariable Long brandId, @RequestBody BrandDTO brandDTO){
         BrandDTO updatedBrand = brandService.updateBrand(brandId, brandDTO);
         return new ResponseEntity<>(updatedBrand, HttpStatus.OK);
     }
