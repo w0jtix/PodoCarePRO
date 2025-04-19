@@ -27,7 +27,11 @@ public class SupplierService {
     @Autowired
     OrderRepo orderRepo;
 
-
+    public SupplierDTO getSupplierDTOById(Long supplierId){
+        Supplier supplier = supplierRepo.findById(supplierId)
+                .orElseThrow(() -> new SupplierNotFoundException("Supplier not found with ID: " + supplierId));
+        return supplierToSupplierDTO(supplier);
+    }
 
     public Supplier getSupplierById(Long supplierId){
         return supplierRepo.findById(supplierId)
@@ -38,10 +42,10 @@ public class SupplierService {
         return supplierRepo.findAll();
     }
 
-    public List<SupplierDTO> getAllSuppliers() {
+    public List<SupplierDTO> getSupplierDTOs() {
         List<Supplier> supplierList = getSuppliers();
         return supplierList.stream()
-                .map(this::supplierToSupplierDTOConversion)
+                .map(this::supplierToSupplierDTO)
                 .toList();
     }
 
@@ -60,14 +64,6 @@ public class SupplierService {
                 });
     }
 
-    public long countProductsBySupplier(Supplier supplier) {
-        long totalProductCount = 0;
-
-        totalProductCount += orderRepo.countProductsBySupplier(supplier);
-        return totalProductCount;
-    }
-
-
     public SupplierDTO createSupplier(SupplierDTO supplierDTO) {
         isValid(supplierDTO.getName());
 
@@ -79,32 +75,37 @@ public class SupplierService {
         Supplier supplierToSave = supplierDtoToSupplierConversion(supplier, supplierDTO);
         try {
             Supplier newSupplier = supplierRepo.save(supplierToSave);
-            return supplierToSupplierDTOConversion(newSupplier);
+            return supplierToSupplierDTO(newSupplier);
         } catch (Exception e) {
             throw new SupplierCreationException("Failed to create Supplier.", e);
         }
     }
 
-
-    public Supplier updateSupplier(Long supplierId, SupplierDTO supplierDTO){
-        Supplier existingSupplier = getSupplierById(supplierId);
-
-        isValid(supplierDTO.getName());
-        Supplier supplierToUpdate = supplierDtoToSupplierConversion(existingSupplier, supplierDTO);
-
+    public SupplierDTO updateSupplier(Long supplierId, SupplierDTO supplierDTO){
         try {
-            return supplierRepo.save(existingSupplier);
+            Supplier existingSupplier = getSupplierById(supplierId);
+            boolean updated = false;
+            if(supplierDTO.getName() != null) {
+                existingSupplier.setSupplierName(supplierDTO.getName());
+                updated = true;
+            }
+            if(supplierDTO.getWebsiteUrl() != null) {
+                existingSupplier.setWebsiteUrl(supplierDTO.getWebsiteUrl());
+                updated = true;
+            }
+            if(!updated) {
+                throw new SupplierUpdateException("No valid fields provided for update.");
+            }
+           Supplier updatedSupplier = supplierRepo.save(existingSupplier);
+            return supplierToSupplierDTO(updatedSupplier);
         } catch (Exception e) {
             throw new SupplierCreationException("Failed to update existing Supplier.", e);
         }
     }
 
-
     public void deleteSupplier(Long supplierId) {
         Supplier supplier = getSupplierById(supplierId);
-
         long associatedProductsCount = countProductsBySupplier(supplier);
-
         try {
             if(associatedProductsCount > 0) {
                 supplier.setDeleted(true);
@@ -112,14 +113,9 @@ public class SupplierService {
             } else {
                 supplierRepo.deleteById(supplierId);
             }
-
         } catch (Exception e) {
             throw new SupplierDeletionException("Failed to delete existing Supplier", e);
         }
-    }
-
-    public List<Supplier> searchSuppliers(String keyword) {
-        return supplierRepo.searchSuppliers(keyword);
     }
 
     public boolean supplierAlreadyExists(SupplierDTO supplierDTO) {
@@ -127,14 +123,16 @@ public class SupplierService {
     }
 
     private Supplier supplierDtoToSupplierConversion(Supplier supplier, SupplierDTO supplierDTO) {
-        supplier.setSupplierName(supplierDTO.getName());
+        if(supplierDTO.getName() != null) {
+            supplier.setSupplierName(supplierDTO.getName());
+        }
         if(supplierDTO.getWebsiteUrl() != null) {
             supplier.setWebsiteUrl(supplierDTO.getWebsiteUrl());
         }
         return supplier;
     }
 
-    private SupplierDTO supplierToSupplierDTOConversion(Supplier supplier) {
+    private SupplierDTO supplierToSupplierDTO(Supplier supplier) {
         SupplierDTO supplierDTO = new SupplierDTO();
         supplierDTO.setName(supplier.getSupplierName());
         supplierDTO.setId(supplier.getId());
@@ -148,5 +146,12 @@ public class SupplierService {
         } else if (supplierName.length() < 2) {
             throw new SupplierCreationException("SupplierName requires 2+ characters.");
         }
+    }
+
+    public long countProductsBySupplier(Supplier supplier) {
+        long totalProductCount = 0;
+
+        totalProductCount += orderRepo.countProductsBySupplier(supplier);
+        return totalProductCount;
     }
 }

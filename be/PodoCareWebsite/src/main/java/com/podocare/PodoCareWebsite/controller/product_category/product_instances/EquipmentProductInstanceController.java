@@ -10,17 +10,17 @@ import com.podocare.PodoCareWebsite.model.product.product_category.product_insta
 import com.podocare.PodoCareWebsite.service.order.OrderService;
 import com.podocare.PodoCareWebsite.service.product_category.product_instances.EquipmentProductInstanceService;
 import com.podocare.PodoCareWebsite.service.product_category.product_instances.EquipmentProductInstanceService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/equipmentProductInstance")
 public class EquipmentProductInstanceController {
-
-    @Autowired
-    private EquipmentProductInstanceService equipmentProductInstanceService;
+    private final EquipmentProductInstanceService equipmentProductInstanceService;
 
     @GetMapping("/{equipmentProductInstanceId}")
     public ResponseEntity<EquipmentProductInstance> getEquipmentProductInstanceById(@PathVariable Long equipmentProductInstanceId) {

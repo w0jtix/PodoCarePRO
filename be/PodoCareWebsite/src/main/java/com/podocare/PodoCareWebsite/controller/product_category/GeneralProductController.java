@@ -10,6 +10,7 @@ import com.podocare.PodoCareWebsite.service.product_category.AllProductsService;
 import com.podocare.PodoCareWebsite.service.product_category.EquipmentProductService;
 import com.podocare.PodoCareWebsite.service.product_category.SaleProductService;
 import com.podocare.PodoCareWebsite.service.product_category.ToolProductService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.web.JsonPath;
@@ -22,17 +23,11 @@ import java.util.Map;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/products")
 public class GeneralProductController {
 
-    @Autowired
-    private SaleProductService saleProductService;
-    @Autowired
-    private ToolProductService toolProductService;
-    @Autowired
-    private EquipmentProductService equipmentProductService;
-    @Autowired
-    private AllProductsService allProductsService;
+    private final AllProductsService allProductsService;
 
     @GetMapping
     public ResponseEntity<List<Object>> getAllProducts() {
