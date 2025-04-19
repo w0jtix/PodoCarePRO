@@ -28,19 +28,19 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BrandDeleteRestrictionException.class)
     public ResponseEntity<String> handleBrandDeleteRestrictionException(BrandDeleteRestrictionException ex) {
         log.error("Existing product has this Brand as an attribute: {}", ex.getMessage());
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(SupplierDeleteRestrictionException.class)
     public ResponseEntity<String> handleSupplierDeleteRestrictionException(SupplierDeleteRestrictionException ex) {
         log.error("Existing product instance has this Supplier as an attribute: {}", ex.getMessage());
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(BrandDeletionException.class)
     public ResponseEntity<String> handleBrandDeletionException(BrandDeletionException ex) {
         log.error("Brand deletion failed: {}", ex.getMessage());
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(BrandNotFoundException.class)
@@ -52,24 +52,36 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BrandCreationException.class)
     public ResponseEntity<String> handleBrandCreationException(BrandCreationException ex) {
         log.error("Brand creation failed: {}", ex.getMessage());
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BrandUpdateException.class)
+    public ResponseEntity<String> handleBrandUpdateException(BrandUpdateException ex) {
+        log.error("Brand update failed: {}", ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(SupplierUpdateException.class)
+    public ResponseEntity<String> handleSupplierUpdateException(SupplierUpdateException ex) {
+        log.error("Supplier update failed: {}", ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(SupplierNotFoundException.class)
     public ResponseEntity<String> handleSupplierNotFoundException(SupplierNotFoundException ex) {
         log.error("Supplier not found or failed to create: {}", ex.getMessage());
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(SupplierCreationException.class)
     public ResponseEntity<String> handleSupplierCreationException(SupplierCreationException ex) {
         log.error("Supplier creation failed: {}", ex.getMessage());
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(SupplierDeletionException.class)
     public ResponseEntity<String> handleSupplierDeletionException(SupplierDeletionException ex) {
         log.error("Supplier deletion failed: {}", ex.getMessage());
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
 
@@ -173,6 +185,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    // UNIVERSAL
 
 
 

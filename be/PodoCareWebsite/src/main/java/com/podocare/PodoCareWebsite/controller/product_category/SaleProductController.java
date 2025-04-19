@@ -17,10 +17,8 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping("/products/saleProducts")
 public class SaleProductController{
-    @Autowired
-    private SaleProductService saleProductService;
-    @Autowired
-    private SaleProductInstanceService saleProductInstanceService;
+    private final SaleProductService saleProductService;
+    private final SaleProductInstanceService saleProductInstanceService;
 
     @GetMapping
     public ResponseEntity<List<SaleProduct>> getSaleProductsWithActiveInstances(){

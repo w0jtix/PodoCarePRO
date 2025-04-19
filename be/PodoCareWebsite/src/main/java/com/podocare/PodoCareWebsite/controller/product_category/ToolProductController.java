@@ -17,10 +17,8 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping("/products/toolProducts")
 public class ToolProductController{
-    @Autowired
-    private ToolProductService toolProductService;
-    @Autowired
-    private ToolProductInstanceService toolProductInstanceService;
+    private final ToolProductService toolProductService;
+    private final ToolProductInstanceService toolProductInstanceService;
 
     @GetMapping
     public ResponseEntity<List<ToolProduct>> getToolProductsWithActiveInstances(){

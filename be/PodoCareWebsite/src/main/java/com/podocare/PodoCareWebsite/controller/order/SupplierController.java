@@ -4,6 +4,7 @@ import com.podocare.PodoCareWebsite.model.Brand_Supplier.DTOs.SupplierDTO;
 import com.podocare.PodoCareWebsite.model.Brand_Supplier.Supplier;
 import com.podocare.PodoCareWebsite.service.order.SupplierService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,16 +14,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/suppliers")
 public class SupplierController {
 
-    @Autowired
-    SupplierService supplierService;
+    private final SupplierService supplierService;
 
     @GetMapping
     public ResponseEntity<List<SupplierDTO>> getSuppliers() {
-        List<SupplierDTO> supplierList = supplierService.getAllSuppliers();
+        List<SupplierDTO> supplierList = supplierService.getSupplierDTOs();
         return new ResponseEntity<>(supplierList, supplierList.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
@@ -39,8 +39,8 @@ public class SupplierController {
     }
 
     @PutMapping("/{supplierId}")
-    public ResponseEntity<Supplier> updateProduct(@PathVariable Long supplierId, @RequestBody SupplierDTO supplierDTO) {
-        Supplier updatedSupplier = supplierService.updateSupplier(supplierId, supplierDTO);
+    public ResponseEntity<SupplierDTO> updateProduct(@PathVariable Long supplierId, @RequestBody SupplierDTO supplierDTO) {
+        SupplierDTO updatedSupplier = supplierService.updateSupplier(supplierId, supplierDTO);
         return new ResponseEntity<>(updatedSupplier, HttpStatus.OK);
     }
 
