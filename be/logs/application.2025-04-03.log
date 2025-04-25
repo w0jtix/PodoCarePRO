@@ -1,0 +1,774 @@
+2025-04-03 16:09:29 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 10560 (C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be\PodoCareWebsite\target\classes started by Wojtek in C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be)
+2025-04-03 16:09:29 INFO  - No active profile set, falling back to 1 default profile: "default"
+2025-04-03 16:09:30 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-04-03 16:09:30 INFO  - Finished Spring Data repository scanning in 91 ms. Found 10 JPA repository interfaces.
+2025-04-03 16:09:31 INFO  - Tomcat initialized with port 8080 (http)
+2025-04-03 16:09:31 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2025-04-03 16:09:31 INFO  - Starting service [Tomcat]
+2025-04-03 16:09:31 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2025-04-03 16:09:31 INFO  - Initializing Spring embedded WebApplicationContext
+2025-04-03 16:09:31 INFO  - Root WebApplicationContext: initialization completed in 1364 ms
+2025-04-03 16:09:31 INFO  - HikariPool-1 - Starting...
+2025-04-03 16:09:31 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@71936a92
+2025-04-03 16:09:31 INFO  - HikariPool-1 - Start completed.
+2025-04-03 16:09:31 INFO  - Set default schema name to public
+2025-04-03 16:09:32 INFO  - Reading from public.databasechangelog
+2025-04-03 16:09:32 INFO  - Reading from public.databasechangelog
+2025-04-03 16:09:32 INFO  - UPDATE SUMMARY
+2025-04-03 16:09:32 INFO  - Run:                          0
+2025-04-03 16:09:32 INFO  - Previously run:               4
+2025-04-03 16:09:32 INFO  - Filtered out:                 0
+2025-04-03 16:09:32 INFO  - -------------------------------
+2025-04-03 16:09:32 INFO  - Total change sets:            4
+
+2025-04-03 16:09:32 INFO  - Update summary generated
+2025-04-03 16:09:32 INFO  - Successfully released change log lock
+2025-04-03 16:09:32 INFO  - Command execution complete
+2025-04-03 16:09:32 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-04-03 16:09:32 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2025-04-03 16:09:32 INFO  - HHH000026: Second-level cache disabled
+2025-04-03 16:09:32 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-04-03 16:09:32 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-04-03 16:09:33 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-04-03 16:09:33 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 16:09:34 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-04-03 16:09:36 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-04-03 16:09:36 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2025-04-03 16:09:36 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2025-04-03 16:09:36 INFO  - Started PodoCareWebsiteApplication in 6.918 seconds (process running for 7.932)
+2025-04-03 16:11:36 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-04-03 16:11:36 INFO  - Initializing Servlet 'dispatcherServlet'
+2025-04-03 16:11:36 INFO  - Completed initialization in 1 ms
+2025-04-03 16:28:26 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 16:28:26 INFO  - HikariPool-1 - Shutdown initiated...
+2025-04-03 16:28:26 INFO  - HikariPool-1 - Shutdown completed.
+2025-04-03 16:28:29 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 3944 (C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be\PodoCareWebsite\target\classes started by Wojtek in C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be)
+2025-04-03 16:28:29 INFO  - No active profile set, falling back to 1 default profile: "default"
+2025-04-03 16:28:30 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-04-03 16:28:30 INFO  - Finished Spring Data repository scanning in 87 ms. Found 10 JPA repository interfaces.
+2025-04-03 16:28:31 INFO  - Tomcat initialized with port 8080 (http)
+2025-04-03 16:28:31 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2025-04-03 16:28:31 INFO  - Starting service [Tomcat]
+2025-04-03 16:28:31 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2025-04-03 16:28:31 INFO  - Initializing Spring embedded WebApplicationContext
+2025-04-03 16:28:31 INFO  - Root WebApplicationContext: initialization completed in 1268 ms
+2025-04-03 16:28:31 INFO  - HikariPool-1 - Starting...
+2025-04-03 16:28:31 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@1a1c21b4
+2025-04-03 16:28:31 INFO  - HikariPool-1 - Start completed.
+2025-04-03 16:28:31 INFO  - Set default schema name to public
+2025-04-03 16:28:32 INFO  - Reading from public.databasechangelog
+2025-04-03 16:28:32 INFO  - Reading from public.databasechangelog
+2025-04-03 16:28:32 INFO  - UPDATE SUMMARY
+2025-04-03 16:28:32 INFO  - Run:                          0
+2025-04-03 16:28:32 INFO  - Previously run:               4
+2025-04-03 16:28:32 INFO  - Filtered out:                 0
+2025-04-03 16:28:32 INFO  - -------------------------------
+2025-04-03 16:28:32 INFO  - Total change sets:            4
+
+2025-04-03 16:28:32 INFO  - Update summary generated
+2025-04-03 16:28:32 INFO  - Successfully released change log lock
+2025-04-03 16:28:32 INFO  - Command execution complete
+2025-04-03 16:28:32 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-04-03 16:28:32 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2025-04-03 16:28:32 INFO  - HHH000026: Second-level cache disabled
+2025-04-03 16:28:32 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-04-03 16:28:32 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-04-03 16:28:33 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-04-03 16:28:33 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 16:28:33 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-04-03 16:28:35 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-04-03 16:28:36 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2025-04-03 16:28:36 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2025-04-03 16:28:36 INFO  - Started PodoCareWebsiteApplication in 6.509 seconds (process running for 7.129)
+2025-04-03 16:29:13 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-04-03 16:29:13 INFO  - Initializing Servlet 'dispatcherServlet'
+2025-04-03 16:29:13 INFO  - Completed initialization in 1 ms
+2025-04-03 16:29:13 ERROR - Product creation failed: Product already exists.
+2025-04-03 16:29:40 ERROR - Order creation failed: Failed to update existing Order.
+2025-04-03 16:30:39 ERROR - Order creation failed: Failed to update existing Order.
+2025-04-03 16:35:35 WARN  - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m3s361ms406µs).
+2025-04-03 16:35:55 ERROR - Order creation failed: Failed to update existing Order.
+2025-04-03 16:35:55 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 16:35:55 INFO  - HikariPool-1 - Shutdown initiated...
+2025-04-03 16:35:55 INFO  - HikariPool-1 - Shutdown completed.
+2025-04-03 16:35:57 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 12528 (C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be\PodoCareWebsite\target\classes started by Wojtek in C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be)
+2025-04-03 16:35:57 INFO  - No active profile set, falling back to 1 default profile: "default"
+2025-04-03 16:35:57 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-04-03 16:35:57 INFO  - Finished Spring Data repository scanning in 100 ms. Found 10 JPA repository interfaces.
+2025-04-03 16:35:58 INFO  - Tomcat initialized with port 8080 (http)
+2025-04-03 16:35:58 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2025-04-03 16:35:58 INFO  - Starting service [Tomcat]
+2025-04-03 16:35:58 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2025-04-03 16:35:58 INFO  - Initializing Spring embedded WebApplicationContext
+2025-04-03 16:35:58 INFO  - Root WebApplicationContext: initialization completed in 1291 ms
+2025-04-03 16:35:58 INFO  - HikariPool-1 - Starting...
+2025-04-03 16:35:58 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@67b61834
+2025-04-03 16:35:58 INFO  - HikariPool-1 - Start completed.
+2025-04-03 16:35:58 INFO  - Set default schema name to public
+2025-04-03 16:35:59 INFO  - Reading from public.databasechangelog
+2025-04-03 16:35:59 INFO  - Reading from public.databasechangelog
+2025-04-03 16:35:59 INFO  - UPDATE SUMMARY
+2025-04-03 16:35:59 INFO  - Run:                          0
+2025-04-03 16:35:59 INFO  - Previously run:               4
+2025-04-03 16:35:59 INFO  - Filtered out:                 0
+2025-04-03 16:35:59 INFO  - -------------------------------
+2025-04-03 16:35:59 INFO  - Total change sets:            4
+
+2025-04-03 16:35:59 INFO  - Update summary generated
+2025-04-03 16:35:59 INFO  - Successfully released change log lock
+2025-04-03 16:35:59 INFO  - Command execution complete
+2025-04-03 16:35:59 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-04-03 16:35:59 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2025-04-03 16:35:59 INFO  - HHH000026: Second-level cache disabled
+2025-04-03 16:35:59 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-04-03 16:36:00 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-04-03 16:36:00 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-04-03 16:36:01 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 16:36:01 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-04-03 16:36:03 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-04-03 16:36:03 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2025-04-03 16:36:03 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2025-04-03 16:36:03 INFO  - Started PodoCareWebsiteApplication in 6.975 seconds (process running for 7.819)
+2025-04-03 16:36:05 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-04-03 16:36:05 INFO  - Initializing Servlet 'dispatcherServlet'
+2025-04-03 16:36:05 INFO  - Completed initialization in 1 ms
+2025-04-03 16:37:03 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 16:37:03 INFO  - HikariPool-1 - Shutdown initiated...
+2025-04-03 16:37:03 INFO  - HikariPool-1 - Shutdown completed.
+2025-04-03 16:37:09 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 2820 (C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be\PodoCareWebsite\target\classes started by Wojtek in C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be)
+2025-04-03 16:37:09 INFO  - No active profile set, falling back to 1 default profile: "default"
+2025-04-03 16:37:10 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-04-03 16:37:10 INFO  - Finished Spring Data repository scanning in 88 ms. Found 10 JPA repository interfaces.
+2025-04-03 16:37:11 INFO  - Tomcat initialized with port 8080 (http)
+2025-04-03 16:37:11 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2025-04-03 16:37:11 INFO  - Starting service [Tomcat]
+2025-04-03 16:37:11 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2025-04-03 16:37:11 INFO  - Initializing Spring embedded WebApplicationContext
+2025-04-03 16:37:11 INFO  - Root WebApplicationContext: initialization completed in 1304 ms
+2025-04-03 16:37:11 INFO  - HikariPool-1 - Starting...
+2025-04-03 16:37:11 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@2ca54da9
+2025-04-03 16:37:11 INFO  - HikariPool-1 - Start completed.
+2025-04-03 16:37:11 INFO  - Set default schema name to public
+2025-04-03 16:37:12 INFO  - Reading from public.databasechangelog
+2025-04-03 16:37:12 INFO  - Reading from public.databasechangelog
+2025-04-03 16:37:12 INFO  - UPDATE SUMMARY
+2025-04-03 16:37:12 INFO  - Run:                          0
+2025-04-03 16:37:12 INFO  - Previously run:               4
+2025-04-03 16:37:12 INFO  - Filtered out:                 0
+2025-04-03 16:37:12 INFO  - -------------------------------
+2025-04-03 16:37:12 INFO  - Total change sets:            4
+
+2025-04-03 16:37:12 INFO  - Update summary generated
+2025-04-03 16:37:12 INFO  - Successfully released change log lock
+2025-04-03 16:37:12 INFO  - Command execution complete
+2025-04-03 16:37:12 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-04-03 16:37:12 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2025-04-03 16:37:12 INFO  - HHH000026: Second-level cache disabled
+2025-04-03 16:37:12 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-04-03 16:37:12 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-04-03 16:37:13 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-04-03 16:37:13 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 16:37:13 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-04-03 16:37:16 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-04-03 16:37:16 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2025-04-03 16:37:16 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2025-04-03 16:37:16 INFO  - Started PodoCareWebsiteApplication in 7.286 seconds (process running for 8.066)
+2025-04-03 16:37:32 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-04-03 16:37:32 INFO  - Initializing Servlet 'dispatcherServlet'
+2025-04-03 16:37:32 INFO  - Completed initialization in 1 ms
+2025-04-03 16:37:39 ERROR - Order creation failed: Failed to update existing Order.
+2025-04-03 16:41:14 ERROR - Order creation failed: Failed to update existing Order.
+2025-04-03 16:41:41 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 16:41:41 INFO  - HikariPool-1 - Shutdown initiated...
+2025-04-03 16:41:41 INFO  - HikariPool-1 - Shutdown completed.
+2025-04-03 16:41:45 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 14636 (C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be\PodoCareWebsite\target\classes started by Wojtek in C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be)
+2025-04-03 16:41:45 INFO  - No active profile set, falling back to 1 default profile: "default"
+2025-04-03 16:41:46 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-04-03 16:41:46 INFO  - Finished Spring Data repository scanning in 89 ms. Found 10 JPA repository interfaces.
+2025-04-03 16:41:46 INFO  - Tomcat initialized with port 8080 (http)
+2025-04-03 16:41:46 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2025-04-03 16:41:46 INFO  - Starting service [Tomcat]
+2025-04-03 16:41:46 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2025-04-03 16:41:46 INFO  - Initializing Spring embedded WebApplicationContext
+2025-04-03 16:41:46 INFO  - Root WebApplicationContext: initialization completed in 1257 ms
+2025-04-03 16:41:47 INFO  - HikariPool-1 - Starting...
+2025-04-03 16:41:47 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@14de1901
+2025-04-03 16:41:47 INFO  - HikariPool-1 - Start completed.
+2025-04-03 16:41:47 INFO  - Set default schema name to public
+2025-04-03 16:41:47 INFO  - Reading from public.databasechangelog
+2025-04-03 16:41:47 INFO  - Reading from public.databasechangelog
+2025-04-03 16:41:47 INFO  - UPDATE SUMMARY
+2025-04-03 16:41:47 INFO  - Run:                          0
+2025-04-03 16:41:47 INFO  - Previously run:               4
+2025-04-03 16:41:47 INFO  - Filtered out:                 0
+2025-04-03 16:41:47 INFO  - -------------------------------
+2025-04-03 16:41:47 INFO  - Total change sets:            4
+
+2025-04-03 16:41:47 INFO  - Update summary generated
+2025-04-03 16:41:47 INFO  - Successfully released change log lock
+2025-04-03 16:41:47 INFO  - Command execution complete
+2025-04-03 16:41:47 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-04-03 16:41:48 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2025-04-03 16:41:48 INFO  - HHH000026: Second-level cache disabled
+2025-04-03 16:41:48 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-04-03 16:41:48 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-04-03 16:41:49 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-04-03 16:41:49 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 16:41:49 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-04-03 16:41:51 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-04-03 16:41:51 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2025-04-03 16:41:51 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2025-04-03 16:41:51 INFO  - Started PodoCareWebsiteApplication in 6.348 seconds (process running for 6.977)
+2025-04-03 16:42:16 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-04-03 16:42:16 INFO  - Initializing Servlet 'dispatcherServlet'
+2025-04-03 16:42:16 INFO  - Completed initialization in 1 ms
+2025-04-03 16:42:24 ERROR - Order creation failed: Failed to update existing Order.
+2025-04-03 16:47:22 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 16:47:22 INFO  - HikariPool-1 - Shutdown initiated...
+2025-04-03 16:47:22 INFO  - HikariPool-1 - Shutdown completed.
+2025-04-03 16:47:26 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 8316 (C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be\PodoCareWebsite\target\classes started by Wojtek in C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be)
+2025-04-03 16:47:26 INFO  - No active profile set, falling back to 1 default profile: "default"
+2025-04-03 16:47:27 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-04-03 16:47:27 INFO  - Finished Spring Data repository scanning in 85 ms. Found 10 JPA repository interfaces.
+2025-04-03 16:47:27 INFO  - Tomcat initialized with port 8080 (http)
+2025-04-03 16:47:27 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2025-04-03 16:47:27 INFO  - Starting service [Tomcat]
+2025-04-03 16:47:27 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2025-04-03 16:47:27 INFO  - Initializing Spring embedded WebApplicationContext
+2025-04-03 16:47:27 INFO  - Root WebApplicationContext: initialization completed in 1257 ms
+2025-04-03 16:47:27 INFO  - HikariPool-1 - Starting...
+2025-04-03 16:47:28 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@5c8d58ed
+2025-04-03 16:47:28 INFO  - HikariPool-1 - Start completed.
+2025-04-03 16:47:28 INFO  - Set default schema name to public
+2025-04-03 16:47:28 INFO  - Reading from public.databasechangelog
+2025-04-03 16:47:28 INFO  - Reading from public.databasechangelog
+2025-04-03 16:47:28 INFO  - UPDATE SUMMARY
+2025-04-03 16:47:28 INFO  - Run:                          0
+2025-04-03 16:47:28 INFO  - Previously run:               4
+2025-04-03 16:47:28 INFO  - Filtered out:                 0
+2025-04-03 16:47:28 INFO  - -------------------------------
+2025-04-03 16:47:28 INFO  - Total change sets:            4
+
+2025-04-03 16:47:28 INFO  - Update summary generated
+2025-04-03 16:47:28 INFO  - Successfully released change log lock
+2025-04-03 16:47:28 INFO  - Command execution complete
+2025-04-03 16:47:28 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-04-03 16:47:28 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2025-04-03 16:47:28 INFO  - HHH000026: Second-level cache disabled
+2025-04-03 16:47:29 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-04-03 16:47:29 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-04-03 16:47:30 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-04-03 16:47:30 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 16:47:30 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-04-03 16:47:31 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-04-03 16:47:32 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2025-04-03 16:47:32 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2025-04-03 16:47:32 INFO  - Started PodoCareWebsiteApplication in 6.177 seconds (process running for 6.875)
+2025-04-03 16:47:35 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-04-03 16:47:35 INFO  - Initializing Servlet 'dispatcherServlet'
+2025-04-03 16:47:35 INFO  - Completed initialization in 2 ms
+2025-04-03 17:02:23 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 17:02:23 INFO  - HikariPool-1 - Shutdown initiated...
+2025-04-03 17:02:23 INFO  - HikariPool-1 - Shutdown completed.
+2025-04-03 17:02:26 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 8520 (C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be\PodoCareWebsite\target\classes started by Wojtek in C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be)
+2025-04-03 17:02:26 INFO  - No active profile set, falling back to 1 default profile: "default"
+2025-04-03 17:02:27 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-04-03 17:02:27 INFO  - Finished Spring Data repository scanning in 91 ms. Found 10 JPA repository interfaces.
+2025-04-03 17:02:28 INFO  - Tomcat initialized with port 8080 (http)
+2025-04-03 17:02:28 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2025-04-03 17:02:28 INFO  - Starting service [Tomcat]
+2025-04-03 17:02:28 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2025-04-03 17:02:28 INFO  - Initializing Spring embedded WebApplicationContext
+2025-04-03 17:02:28 INFO  - Root WebApplicationContext: initialization completed in 1324 ms
+2025-04-03 17:02:28 INFO  - HikariPool-1 - Starting...
+2025-04-03 17:02:28 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3b0d3a63
+2025-04-03 17:02:28 INFO  - HikariPool-1 - Start completed.
+2025-04-03 17:02:28 INFO  - Set default schema name to public
+2025-04-03 17:02:29 INFO  - Reading from public.databasechangelog
+2025-04-03 17:02:29 INFO  - Reading from public.databasechangelog
+2025-04-03 17:02:29 INFO  - UPDATE SUMMARY
+2025-04-03 17:02:29 INFO  - Run:                          0
+2025-04-03 17:02:29 INFO  - Previously run:               4
+2025-04-03 17:02:29 INFO  - Filtered out:                 0
+2025-04-03 17:02:29 INFO  - -------------------------------
+2025-04-03 17:02:29 INFO  - Total change sets:            4
+
+2025-04-03 17:02:29 INFO  - Update summary generated
+2025-04-03 17:02:29 INFO  - Successfully released change log lock
+2025-04-03 17:02:29 INFO  - Command execution complete
+2025-04-03 17:02:29 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-04-03 17:02:29 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2025-04-03 17:02:29 INFO  - HHH000026: Second-level cache disabled
+2025-04-03 17:02:29 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-04-03 17:02:29 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-04-03 17:02:30 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-04-03 17:02:30 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 17:02:31 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-04-03 17:02:33 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-04-03 17:02:33 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2025-04-03 17:02:33 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2025-04-03 17:02:33 INFO  - Started PodoCareWebsiteApplication in 7.146 seconds (process running for 7.769)
+2025-04-03 17:02:33 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-04-03 17:02:33 INFO  - Initializing Servlet 'dispatcherServlet'
+2025-04-03 17:02:33 INFO  - Completed initialization in 1 ms
+2025-04-03 17:03:57 WARN  - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=58s602ms968µs600ns).
+2025-04-03 17:08:14 WARN  - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m8s157ms794µs500ns).
+2025-04-03 17:10:21 WARN  - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m6s602ms252µs400ns).
+2025-04-03 17:17:03 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 17:17:03 INFO  - HikariPool-1 - Shutdown initiated...
+2025-04-03 17:17:03 INFO  - HikariPool-1 - Shutdown completed.
+2025-04-03 17:17:06 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 7672 (C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be\PodoCareWebsite\target\classes started by Wojtek in C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be)
+2025-04-03 17:17:06 INFO  - No active profile set, falling back to 1 default profile: "default"
+2025-04-03 17:17:07 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-04-03 17:17:07 INFO  - Finished Spring Data repository scanning in 102 ms. Found 10 JPA repository interfaces.
+2025-04-03 17:17:07 INFO  - Tomcat initialized with port 8080 (http)
+2025-04-03 17:17:07 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2025-04-03 17:17:07 INFO  - Starting service [Tomcat]
+2025-04-03 17:17:07 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2025-04-03 17:17:07 INFO  - Initializing Spring embedded WebApplicationContext
+2025-04-03 17:17:07 INFO  - Root WebApplicationContext: initialization completed in 1325 ms
+2025-04-03 17:17:07 INFO  - HikariPool-1 - Starting...
+2025-04-03 17:17:08 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@17ff8810
+2025-04-03 17:17:08 INFO  - HikariPool-1 - Start completed.
+2025-04-03 17:17:08 INFO  - Set default schema name to public
+2025-04-03 17:17:08 INFO  - Reading from public.databasechangelog
+2025-04-03 17:17:08 INFO  - Reading from public.databasechangelog
+2025-04-03 17:17:08 INFO  - UPDATE SUMMARY
+2025-04-03 17:17:08 INFO  - Run:                          0
+2025-04-03 17:17:08 INFO  - Previously run:               4
+2025-04-03 17:17:08 INFO  - Filtered out:                 0
+2025-04-03 17:17:08 INFO  - -------------------------------
+2025-04-03 17:17:08 INFO  - Total change sets:            4
+
+2025-04-03 17:17:08 INFO  - Update summary generated
+2025-04-03 17:17:08 INFO  - Successfully released change log lock
+2025-04-03 17:17:08 INFO  - Command execution complete
+2025-04-03 17:17:08 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-04-03 17:17:08 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2025-04-03 17:17:09 INFO  - HHH000026: Second-level cache disabled
+2025-04-03 17:17:09 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-04-03 17:17:09 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-04-03 17:17:10 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-04-03 17:17:10 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 17:17:10 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-04-03 17:17:12 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-04-03 17:17:12 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2025-04-03 17:17:12 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2025-04-03 17:17:12 INFO  - Started PodoCareWebsiteApplication in 6.868 seconds (process running for 7.458)
+2025-04-03 17:17:12 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-04-03 17:17:12 INFO  - Initializing Servlet 'dispatcherServlet'
+2025-04-03 17:17:12 INFO  - Completed initialization in 2 ms
+2025-04-03 18:35:21 ERROR - Order creation failed: Failed to update existing Order.
+2025-04-03 18:35:29 ERROR - Product creation failed: Product already exists.
+2025-04-03 18:38:21 ERROR - Order creation failed: Failed to update existing Order.
+2025-04-03 19:35:00 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 19:35:00 INFO  - HikariPool-1 - Shutdown initiated...
+2025-04-03 19:35:00 INFO  - HikariPool-1 - Shutdown completed.
+2025-04-03 19:35:04 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 1504 (C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be\PodoCareWebsite\target\classes started by Wojtek in C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be)
+2025-04-03 19:35:04 INFO  - No active profile set, falling back to 1 default profile: "default"
+2025-04-03 19:35:04 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-04-03 19:35:04 INFO  - Finished Spring Data repository scanning in 92 ms. Found 10 JPA repository interfaces.
+2025-04-03 19:35:05 INFO  - Tomcat initialized with port 8080 (http)
+2025-04-03 19:35:05 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2025-04-03 19:35:05 INFO  - Starting service [Tomcat]
+2025-04-03 19:35:05 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2025-04-03 19:35:05 INFO  - Initializing Spring embedded WebApplicationContext
+2025-04-03 19:35:05 INFO  - Root WebApplicationContext: initialization completed in 1369 ms
+2025-04-03 19:35:05 INFO  - HikariPool-1 - Starting...
+2025-04-03 19:35:05 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@691567ea
+2025-04-03 19:35:05 INFO  - HikariPool-1 - Start completed.
+2025-04-03 19:35:05 INFO  - Set default schema name to public
+2025-04-03 19:35:06 INFO  - Reading from public.databasechangelog
+2025-04-03 19:35:06 INFO  - Reading from public.databasechangelog
+2025-04-03 19:35:06 INFO  - UPDATE SUMMARY
+2025-04-03 19:35:06 INFO  - Run:                          0
+2025-04-03 19:35:06 INFO  - Previously run:               4
+2025-04-03 19:35:06 INFO  - Filtered out:                 0
+2025-04-03 19:35:06 INFO  - -------------------------------
+2025-04-03 19:35:06 INFO  - Total change sets:            4
+
+2025-04-03 19:35:06 INFO  - Update summary generated
+2025-04-03 19:35:06 INFO  - Successfully released change log lock
+2025-04-03 19:35:06 INFO  - Command execution complete
+2025-04-03 19:35:06 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-04-03 19:35:06 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2025-04-03 19:35:06 INFO  - HHH000026: Second-level cache disabled
+2025-04-03 19:35:06 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-04-03 19:35:07 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-04-03 19:35:07 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-04-03 19:35:07 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 19:35:08 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-04-03 19:35:09 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-04-03 19:35:09 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2025-04-03 19:35:09 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2025-04-03 19:35:09 INFO  - Started PodoCareWebsiteApplication in 6.158 seconds (process running for 6.742)
+2025-04-03 19:35:46 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-04-03 19:35:46 INFO  - Initializing Servlet 'dispatcherServlet'
+2025-04-03 19:35:46 INFO  - Completed initialization in 1 ms
+2025-04-03 19:45:14 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 19:45:14 INFO  - HikariPool-1 - Shutdown initiated...
+2025-04-03 19:45:14 INFO  - HikariPool-1 - Shutdown completed.
+2025-04-03 19:45:17 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 16056 (C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be\PodoCareWebsite\target\classes started by Wojtek in C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be)
+2025-04-03 19:45:17 INFO  - No active profile set, falling back to 1 default profile: "default"
+2025-04-03 19:45:18 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-04-03 19:45:18 INFO  - Finished Spring Data repository scanning in 88 ms. Found 10 JPA repository interfaces.
+2025-04-03 19:45:18 INFO  - Tomcat initialized with port 8080 (http)
+2025-04-03 19:45:18 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2025-04-03 19:45:18 INFO  - Starting service [Tomcat]
+2025-04-03 19:45:18 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2025-04-03 19:45:18 INFO  - Initializing Spring embedded WebApplicationContext
+2025-04-03 19:45:18 INFO  - Root WebApplicationContext: initialization completed in 1237 ms
+2025-04-03 19:45:18 INFO  - HikariPool-1 - Starting...
+2025-04-03 19:45:19 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@14de1901
+2025-04-03 19:45:19 INFO  - HikariPool-1 - Start completed.
+2025-04-03 19:45:19 INFO  - Set default schema name to public
+2025-04-03 19:45:19 INFO  - Reading from public.databasechangelog
+2025-04-03 19:45:19 INFO  - Reading from public.databasechangelog
+2025-04-03 19:45:19 INFO  - UPDATE SUMMARY
+2025-04-03 19:45:19 INFO  - Run:                          0
+2025-04-03 19:45:19 INFO  - Previously run:               4
+2025-04-03 19:45:19 INFO  - Filtered out:                 0
+2025-04-03 19:45:19 INFO  - -------------------------------
+2025-04-03 19:45:19 INFO  - Total change sets:            4
+
+2025-04-03 19:45:19 INFO  - Update summary generated
+2025-04-03 19:45:19 INFO  - Successfully released change log lock
+2025-04-03 19:45:19 INFO  - Command execution complete
+2025-04-03 19:45:19 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-04-03 19:45:19 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2025-04-03 19:45:20 INFO  - HHH000026: Second-level cache disabled
+2025-04-03 19:45:20 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-04-03 19:45:20 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-04-03 19:45:21 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-04-03 19:45:21 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 19:45:21 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-04-03 19:45:23 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-04-03 19:45:23 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2025-04-03 19:45:23 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2025-04-03 19:45:23 INFO  - Started PodoCareWebsiteApplication in 6.229 seconds (process running for 6.8)
+2025-04-03 19:45:42 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-04-03 19:45:42 INFO  - Initializing Servlet 'dispatcherServlet'
+2025-04-03 19:45:42 INFO  - Completed initialization in 2 ms
+2025-04-03 19:51:39 WARN  - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=50s962ms786µs800ns).
+2025-04-03 19:53:35 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 19:53:35 INFO  - HikariPool-1 - Shutdown initiated...
+2025-04-03 19:53:35 INFO  - HikariPool-1 - Shutdown completed.
+2025-04-03 19:53:38 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 2992 (C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be\PodoCareWebsite\target\classes started by Wojtek in C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be)
+2025-04-03 19:53:38 INFO  - No active profile set, falling back to 1 default profile: "default"
+2025-04-03 19:53:39 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-04-03 19:53:39 INFO  - Finished Spring Data repository scanning in 91 ms. Found 10 JPA repository interfaces.
+2025-04-03 19:53:39 INFO  - Tomcat initialized with port 8080 (http)
+2025-04-03 19:53:39 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2025-04-03 19:53:39 INFO  - Starting service [Tomcat]
+2025-04-03 19:53:39 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2025-04-03 19:53:39 INFO  - Initializing Spring embedded WebApplicationContext
+2025-04-03 19:53:39 INFO  - Root WebApplicationContext: initialization completed in 1251 ms
+2025-04-03 19:53:39 INFO  - HikariPool-1 - Starting...
+2025-04-03 19:53:39 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@1a1c21b4
+2025-04-03 19:53:39 INFO  - HikariPool-1 - Start completed.
+2025-04-03 19:53:40 INFO  - Set default schema name to public
+2025-04-03 19:53:40 INFO  - Reading from public.databasechangelog
+2025-04-03 19:53:40 INFO  - Reading from public.databasechangelog
+2025-04-03 19:53:40 INFO  - UPDATE SUMMARY
+2025-04-03 19:53:40 INFO  - Run:                          0
+2025-04-03 19:53:40 INFO  - Previously run:               4
+2025-04-03 19:53:40 INFO  - Filtered out:                 0
+2025-04-03 19:53:40 INFO  - -------------------------------
+2025-04-03 19:53:40 INFO  - Total change sets:            4
+
+2025-04-03 19:53:40 INFO  - Update summary generated
+2025-04-03 19:53:40 INFO  - Successfully released change log lock
+2025-04-03 19:53:40 INFO  - Command execution complete
+2025-04-03 19:53:40 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-04-03 19:53:40 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2025-04-03 19:53:40 INFO  - HHH000026: Second-level cache disabled
+2025-04-03 19:53:41 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-04-03 19:53:41 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-04-03 19:53:42 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-04-03 19:53:42 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 19:53:42 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-04-03 19:53:44 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-04-03 19:53:44 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2025-04-03 19:53:44 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2025-04-03 19:53:44 INFO  - Started PodoCareWebsiteApplication in 6.332 seconds (process running for 6.895)
+2025-04-03 19:53:50 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-04-03 19:53:50 INFO  - Initializing Servlet 'dispatcherServlet'
+2025-04-03 19:53:50 INFO  - Completed initialization in 2 ms
+2025-04-03 19:53:57 ERROR - Order creation failed: Failed to update existing Order.
+2025-04-03 19:55:40 WARN  - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m30s833ms388µs800ns).
+2025-04-03 19:55:40 ERROR - Order creation failed: Failed to update existing Order.
+2025-04-03 19:55:50 ERROR - Order creation failed: Failed to update existing Order.
+2025-04-03 20:01:48 WARN  - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=3m7s520ms750µs299ns).
+2025-04-03 20:01:48 ERROR - Order creation failed: Failed to update existing Order.
+2025-04-03 20:01:51 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 20:01:51 INFO  - HikariPool-1 - Shutdown initiated...
+2025-04-03 20:01:51 INFO  - HikariPool-1 - Shutdown completed.
+2025-04-03 20:04:19 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 9288 (C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be\PodoCareWebsite\target\classes started by Wojtek in C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be)
+2025-04-03 20:04:19 INFO  - No active profile set, falling back to 1 default profile: "default"
+2025-04-03 20:04:20 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-04-03 20:04:20 INFO  - Finished Spring Data repository scanning in 86 ms. Found 10 JPA repository interfaces.
+2025-04-03 20:04:20 INFO  - Tomcat initialized with port 8080 (http)
+2025-04-03 20:04:20 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2025-04-03 20:04:20 INFO  - Starting service [Tomcat]
+2025-04-03 20:04:20 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2025-04-03 20:04:21 INFO  - Initializing Spring embedded WebApplicationContext
+2025-04-03 20:04:21 INFO  - Root WebApplicationContext: initialization completed in 1236 ms
+2025-04-03 20:04:21 INFO  - HikariPool-1 - Starting...
+2025-04-03 20:04:21 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@691567ea
+2025-04-03 20:04:21 INFO  - HikariPool-1 - Start completed.
+2025-04-03 20:04:21 INFO  - Set default schema name to public
+2025-04-03 20:04:21 INFO  - Reading from public.databasechangelog
+2025-04-03 20:04:21 INFO  - Reading from public.databasechangelog
+2025-04-03 20:04:21 INFO  - UPDATE SUMMARY
+2025-04-03 20:04:21 INFO  - Run:                          0
+2025-04-03 20:04:21 INFO  - Previously run:               4
+2025-04-03 20:04:21 INFO  - Filtered out:                 0
+2025-04-03 20:04:21 INFO  - -------------------------------
+2025-04-03 20:04:21 INFO  - Total change sets:            4
+
+2025-04-03 20:04:21 INFO  - Update summary generated
+2025-04-03 20:04:21 INFO  - Successfully released change log lock
+2025-04-03 20:04:21 INFO  - Command execution complete
+2025-04-03 20:04:22 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-04-03 20:04:22 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2025-04-03 20:04:22 INFO  - HHH000026: Second-level cache disabled
+2025-04-03 20:04:22 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-04-03 20:04:22 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-04-03 20:04:23 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-04-03 20:04:23 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 20:04:23 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-04-03 20:04:25 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-04-03 20:04:25 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2025-04-03 20:04:25 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2025-04-03 20:04:25 INFO  - Started PodoCareWebsiteApplication in 6.422 seconds (process running for 7.001)
+2025-04-03 20:04:38 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-04-03 20:04:38 INFO  - Initializing Servlet 'dispatcherServlet'
+2025-04-03 20:04:38 INFO  - Completed initialization in 2 ms
+2025-04-03 20:05:07 ERROR - Order creation failed: Failed to update existing Order.
+2025-04-03 20:08:50 ERROR - Order creation failed: Failed to update existing Order.
+2025-04-03 20:09:39 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 20:09:39 INFO  - HikariPool-1 - Shutdown initiated...
+2025-04-03 20:09:39 INFO  - HikariPool-1 - Shutdown completed.
+2025-04-03 20:09:42 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 15632 (C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be\PodoCareWebsite\target\classes started by Wojtek in C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be)
+2025-04-03 20:09:42 INFO  - No active profile set, falling back to 1 default profile: "default"
+2025-04-03 20:09:42 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-04-03 20:09:42 INFO  - Finished Spring Data repository scanning in 88 ms. Found 10 JPA repository interfaces.
+2025-04-03 20:09:43 INFO  - Tomcat initialized with port 8080 (http)
+2025-04-03 20:09:43 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2025-04-03 20:09:43 INFO  - Starting service [Tomcat]
+2025-04-03 20:09:43 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2025-04-03 20:09:43 INFO  - Initializing Spring embedded WebApplicationContext
+2025-04-03 20:09:43 INFO  - Root WebApplicationContext: initialization completed in 1233 ms
+2025-04-03 20:09:43 INFO  - HikariPool-1 - Starting...
+2025-04-03 20:09:43 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@11f23038
+2025-04-03 20:09:43 INFO  - HikariPool-1 - Start completed.
+2025-04-03 20:09:43 INFO  - Set default schema name to public
+2025-04-03 20:09:44 INFO  - Reading from public.databasechangelog
+2025-04-03 20:09:44 INFO  - Reading from public.databasechangelog
+2025-04-03 20:09:44 INFO  - UPDATE SUMMARY
+2025-04-03 20:09:44 INFO  - Run:                          0
+2025-04-03 20:09:44 INFO  - Previously run:               4
+2025-04-03 20:09:44 INFO  - Filtered out:                 0
+2025-04-03 20:09:44 INFO  - -------------------------------
+2025-04-03 20:09:44 INFO  - Total change sets:            4
+
+2025-04-03 20:09:44 INFO  - Update summary generated
+2025-04-03 20:09:44 INFO  - Successfully released change log lock
+2025-04-03 20:09:44 INFO  - Command execution complete
+2025-04-03 20:09:44 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-04-03 20:09:44 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2025-04-03 20:09:44 INFO  - HHH000026: Second-level cache disabled
+2025-04-03 20:09:44 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-04-03 20:09:45 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-04-03 20:09:46 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-04-03 20:09:46 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 20:09:46 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-04-03 20:09:47 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-04-03 20:09:48 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2025-04-03 20:09:48 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2025-04-03 20:09:48 INFO  - Started PodoCareWebsiteApplication in 6.313 seconds (process running for 6.897)
+2025-04-03 20:09:53 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-04-03 20:09:53 INFO  - Initializing Servlet 'dispatcherServlet'
+2025-04-03 20:09:53 INFO  - Completed initialization in 1 ms
+2025-04-03 20:10:19 ERROR - Order creation failed: Failed to update existing Order.
+2025-04-03 20:20:17 WARN  - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=7m56s839ms512µs601ns).
+2025-04-03 20:20:17 ERROR - Order creation failed: Failed to update existing Order.
+2025-04-03 20:20:17 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 20:20:17 INFO  - HikariPool-1 - Shutdown initiated...
+2025-04-03 20:20:17 INFO  - HikariPool-1 - Shutdown completed.
+2025-04-03 20:20:21 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 6948 (C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be\PodoCareWebsite\target\classes started by Wojtek in C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be)
+2025-04-03 20:20:21 INFO  - No active profile set, falling back to 1 default profile: "default"
+2025-04-03 20:20:21 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-04-03 20:20:21 INFO  - Finished Spring Data repository scanning in 87 ms. Found 10 JPA repository interfaces.
+2025-04-03 20:20:22 INFO  - Tomcat initialized with port 8080 (http)
+2025-04-03 20:20:22 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2025-04-03 20:20:22 INFO  - Starting service [Tomcat]
+2025-04-03 20:20:22 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2025-04-03 20:20:22 INFO  - Initializing Spring embedded WebApplicationContext
+2025-04-03 20:20:22 INFO  - Root WebApplicationContext: initialization completed in 1216 ms
+2025-04-03 20:20:22 INFO  - HikariPool-1 - Starting...
+2025-04-03 20:20:22 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@50598a1a
+2025-04-03 20:20:22 INFO  - HikariPool-1 - Start completed.
+2025-04-03 20:20:22 INFO  - Set default schema name to public
+2025-04-03 20:20:23 INFO  - Reading from public.databasechangelog
+2025-04-03 20:20:23 INFO  - Reading from public.databasechangelog
+2025-04-03 20:20:23 INFO  - UPDATE SUMMARY
+2025-04-03 20:20:23 INFO  - Run:                          0
+2025-04-03 20:20:23 INFO  - Previously run:               4
+2025-04-03 20:20:23 INFO  - Filtered out:                 0
+2025-04-03 20:20:23 INFO  - -------------------------------
+2025-04-03 20:20:23 INFO  - Total change sets:            4
+
+2025-04-03 20:20:23 INFO  - Update summary generated
+2025-04-03 20:20:23 INFO  - Successfully released change log lock
+2025-04-03 20:20:23 INFO  - Command execution complete
+2025-04-03 20:20:23 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-04-03 20:20:23 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2025-04-03 20:20:23 INFO  - HHH000026: Second-level cache disabled
+2025-04-03 20:20:23 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-04-03 20:20:23 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-04-03 20:20:24 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-04-03 20:20:24 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 20:20:24 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-04-03 20:20:26 WARN  - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'orderController' defined in file [C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be\PodoCareWebsite\target\classes\com\podocare\PodoCareWebsite\controller\order\OrderController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'orderService': Unsatisfied dependency expressed through field 'orderProductService': Error creating bean with name 'orderProductService': Unsatisfied dependency expressed through field 'saleProductInstanceService': Error creating bean with name 'saleProductInstanceService': Unsatisfied dependency expressed through field 'orderProductService': Error creating bean with name 'orderProductService': Requested bean is currently in creation: Is there an unresolvable circular reference?
+2025-04-03 20:20:26 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 20:20:26 INFO  - HikariPool-1 - Shutdown initiated...
+2025-04-03 20:20:26 INFO  - HikariPool-1 - Shutdown completed.
+2025-04-03 20:20:26 INFO  - Stopping service [Tomcat]
+2025-04-03 20:20:26 INFO  - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-04-03 20:20:26 ERROR - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+The dependencies of some of the beans in the application context form a cycle:
+
+   orderController defined in file [C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be\PodoCareWebsite\target\classes\com\podocare\PodoCareWebsite\controller\order\OrderController.class]
+      ↓
+   orderService (field private com.podocare.PodoCareWebsite.service.OrderProductService com.podocare.PodoCareWebsite.service.OrderService.orderProductService)
+┌─────┐
+|  orderProductService (field private com.podocare.PodoCareWebsite.service.product_category.product_instances.SaleProductInstanceService com.podocare.PodoCareWebsite.service.OrderProductService.saleProductInstanceService)
+↑     ↓
+|  saleProductInstanceService (field private com.podocare.PodoCareWebsite.service.OrderProductService com.podocare.PodoCareWebsite.service.product_category.product_instances.SaleProductInstanceService.orderProductService)
+└─────┘
+
+
+Action:
+
+Relying upon circular references is discouraged and they are prohibited by default. Update your application to remove the dependency cycle between beans. As a last resort, it may be possible to break the cycle automatically by setting spring.main.allow-circular-references to true.
+
+2025-04-03 20:25:53 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 19092 (C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be\PodoCareWebsite\target\classes started by Wojtek in C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be)
+2025-04-03 20:25:53 INFO  - No active profile set, falling back to 1 default profile: "default"
+2025-04-03 20:25:54 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-04-03 20:25:54 INFO  - Finished Spring Data repository scanning in 99 ms. Found 10 JPA repository interfaces.
+2025-04-03 20:25:55 INFO  - Tomcat initialized with port 8080 (http)
+2025-04-03 20:25:55 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2025-04-03 20:25:55 INFO  - Starting service [Tomcat]
+2025-04-03 20:25:55 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2025-04-03 20:25:55 INFO  - Initializing Spring embedded WebApplicationContext
+2025-04-03 20:25:55 INFO  - Root WebApplicationContext: initialization completed in 1305 ms
+2025-04-03 20:25:55 INFO  - HikariPool-1 - Starting...
+2025-04-03 20:25:55 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@17ff8810
+2025-04-03 20:25:55 INFO  - HikariPool-1 - Start completed.
+2025-04-03 20:25:55 INFO  - Set default schema name to public
+2025-04-03 20:25:55 INFO  - Reading from public.databasechangelog
+2025-04-03 20:25:56 INFO  - Reading from public.databasechangelog
+2025-04-03 20:25:56 INFO  - UPDATE SUMMARY
+2025-04-03 20:25:56 INFO  - Run:                          0
+2025-04-03 20:25:56 INFO  - Previously run:               4
+2025-04-03 20:25:56 INFO  - Filtered out:                 0
+2025-04-03 20:25:56 INFO  - -------------------------------
+2025-04-03 20:25:56 INFO  - Total change sets:            4
+
+2025-04-03 20:25:56 INFO  - Update summary generated
+2025-04-03 20:25:56 INFO  - Successfully released change log lock
+2025-04-03 20:25:56 INFO  - Command execution complete
+2025-04-03 20:25:56 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-04-03 20:25:56 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2025-04-03 20:25:56 INFO  - HHH000026: Second-level cache disabled
+2025-04-03 20:25:56 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-04-03 20:25:56 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-04-03 20:25:57 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-04-03 20:25:57 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 20:25:57 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-04-03 20:25:59 WARN  - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'orderController' defined in file [C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be\PodoCareWebsite\target\classes\com\podocare\PodoCareWebsite\controller\order\OrderController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'orderService': Unsatisfied dependency expressed through field 'orderProductService': Error creating bean with name 'orderProductService': Unsatisfied dependency expressed through field 'saleProductInstanceService': Error creating bean with name 'saleProductInstanceService': Unsatisfied dependency expressed through field 'orderProductService': Error creating bean with name 'orderProductService': Requested bean is currently in creation: Is there an unresolvable circular reference?
+2025-04-03 20:25:59 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 20:25:59 INFO  - HikariPool-1 - Shutdown initiated...
+2025-04-03 20:25:59 INFO  - HikariPool-1 - Shutdown completed.
+2025-04-03 20:25:59 INFO  - Stopping service [Tomcat]
+2025-04-03 20:25:59 INFO  - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-04-03 20:25:59 ERROR - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+The dependencies of some of the beans in the application context form a cycle:
+
+   orderController defined in file [C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be\PodoCareWebsite\target\classes\com\podocare\PodoCareWebsite\controller\order\OrderController.class]
+      ↓
+   orderService (field private com.podocare.PodoCareWebsite.service.OrderProductService com.podocare.PodoCareWebsite.service.OrderService.orderProductService)
+┌─────┐
+|  orderProductService (field private com.podocare.PodoCareWebsite.service.product_category.product_instances.SaleProductInstanceService com.podocare.PodoCareWebsite.service.OrderProductService.saleProductInstanceService)
+↑     ↓
+|  saleProductInstanceService (field private com.podocare.PodoCareWebsite.service.OrderProductService com.podocare.PodoCareWebsite.service.product_category.product_instances.SaleProductInstanceService.orderProductService)
+└─────┘
+
+
+Action:
+
+Relying upon circular references is discouraged and they are prohibited by default. Update your application to remove the dependency cycle between beans. As a last resort, it may be possible to break the cycle automatically by setting spring.main.allow-circular-references to true.
+
+2025-04-03 20:26:51 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 13692 (C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be\PodoCareWebsite\target\classes started by Wojtek in C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be)
+2025-04-03 20:26:51 INFO  - No active profile set, falling back to 1 default profile: "default"
+2025-04-03 20:26:52 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-04-03 20:26:52 INFO  - Finished Spring Data repository scanning in 91 ms. Found 10 JPA repository interfaces.
+2025-04-03 20:26:52 INFO  - Tomcat initialized with port 8080 (http)
+2025-04-03 20:26:52 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2025-04-03 20:26:52 INFO  - Starting service [Tomcat]
+2025-04-03 20:26:52 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2025-04-03 20:26:52 INFO  - Initializing Spring embedded WebApplicationContext
+2025-04-03 20:26:52 INFO  - Root WebApplicationContext: initialization completed in 1226 ms
+2025-04-03 20:26:52 INFO  - HikariPool-1 - Starting...
+2025-04-03 20:26:53 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@6a567f7b
+2025-04-03 20:26:53 INFO  - HikariPool-1 - Start completed.
+2025-04-03 20:26:53 INFO  - Set default schema name to public
+2025-04-03 20:26:53 INFO  - Reading from public.databasechangelog
+2025-04-03 20:26:53 INFO  - Reading from public.databasechangelog
+2025-04-03 20:26:53 INFO  - UPDATE SUMMARY
+2025-04-03 20:26:53 INFO  - Run:                          0
+2025-04-03 20:26:53 INFO  - Previously run:               4
+2025-04-03 20:26:53 INFO  - Filtered out:                 0
+2025-04-03 20:26:53 INFO  - -------------------------------
+2025-04-03 20:26:53 INFO  - Total change sets:            4
+
+2025-04-03 20:26:53 INFO  - Update summary generated
+2025-04-03 20:26:53 INFO  - Successfully released change log lock
+2025-04-03 20:26:53 INFO  - Command execution complete
+2025-04-03 20:26:53 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-04-03 20:26:53 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2025-04-03 20:26:53 INFO  - HHH000026: Second-level cache disabled
+2025-04-03 20:26:54 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-04-03 20:26:54 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-04-03 20:26:55 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-04-03 20:26:55 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 20:26:55 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-04-03 20:26:57 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-04-03 20:26:57 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2025-04-03 20:26:57 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2025-04-03 20:26:57 INFO  - Started PodoCareWebsiteApplication in 6.37 seconds (process running for 6.933)
+2025-04-03 20:27:19 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-04-03 20:27:19 INFO  - Initializing Servlet 'dispatcherServlet'
+2025-04-03 20:27:19 INFO  - Completed initialization in 0 ms
+2025-04-03 20:31:51 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-04-03 20:31:51 INFO  - HikariPool-1 - Shutdown initiated...
+2025-04-03 20:31:51 INFO  - HikariPool-1 - Shutdown completed.
