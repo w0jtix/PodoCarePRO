@@ -8,4 +8,5 @@
 # Java
 /be/target/
 /be/.idea/
+/be/logs/
 /be/PodoCareWebsite/logs/*.log
