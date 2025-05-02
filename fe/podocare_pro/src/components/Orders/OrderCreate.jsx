@@ -8,7 +8,6 @@ const OrderCreate = () => {
   const [selectedOrderProduct, setSelectedOrderProduct] = useState();
   const [expandedOrderIds, setExpandedOrderIds] = useState([]);
 
-
   return (
     <div className="orders-container">
       <OrderCreator

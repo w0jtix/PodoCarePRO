@@ -1,10 +1,8 @@
 import React from "react";
 import { useState, useEffect, useRef } from "react";
 import DateInput from "./DateInput";
-import SelectVATButton from "./SelectVATButton";
 import CostInput from "./CostInput";
-import SupplierDropdown from "./SupplierDropdown";
-import SupplierService from "../service/SupplierService";
+
 
 const ProductInstanceForm = ({
   category,

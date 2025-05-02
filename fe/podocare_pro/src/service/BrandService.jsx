@@ -3,9 +3,9 @@ import axios from "axios";
 class BrandService {
   static API_URL = "http://localhost:8080/brands";
 
-  static async getAllBrands() {
+  static async getBrands(filterDTO) {
     try {
-      const response = await axios.get(`${this.API_URL}/all`, {});
+      const response = await axios.post(`${this.API_URL}/get`, filterDTO ?? {} );
       return response.status === 204 ? [] : response.data;
     } catch (error) {
       console.error("Error fetching brands. ", error);
@@ -13,7 +13,17 @@ class BrandService {
     }
   }
 
-  static async getFilteredBrands(productTypes, keyword) {
+  static async createBrand(brandDTO) {
+    try {
+      const response = await axios.post(`${this.API_URL}`, brandDTO);
+      return response.data;
+    } catch (error) {
+      console.error("Error creating brand. ", error);
+      throw error;
+    }
+  }
+
+  /* static async getFilteredBrands(productTypes, keyword) {
     try {
       const response = await axios.post(`${this.API_URL}/filter`, {
         productTypes: productTypes,
@@ -38,7 +48,7 @@ class BrandService {
       console.error("Error filtering Brands. ", error);
       throw error;
     }
-  }
+  } */
 }
 
 export default BrandService;

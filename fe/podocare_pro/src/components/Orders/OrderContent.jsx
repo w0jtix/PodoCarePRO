@@ -1,10 +1,16 @@
 import React from "react";
-import HandyOrderProductList from "./HandyOrderProductList";
+import HandyOrderProductList from "../HandyOrderProductList";
 import OrderProductListHeader from "./OrderProductListHeader";
 
-const OrderContent = ({ order, setSelectedOrderProduct, action, mode, setHasWarning }) => {
+const OrderContent = ({
+  order,
+  setSelectedOrderProduct,
+  action,
+  mode,
+  setHasWarning,
+}) => {
   const attributes = [
-    { name: "", width: "6%", justify: "start"  },
+    { name: "", width: "6%", justify: "start" },
     { name: "Nazwa", width: "70%", justify: "start" },
     { name: "Ilość", width: "10%", justify: "center" },
     { name: "Cena [szt]", width: "14%", justify: "center" },
@@ -30,9 +36,23 @@ const OrderContent = ({ order, setSelectedOrderProduct, action, mode, setHasWarn
 
   return (
     <div className={`order-content ${action.toLowerCase()}`}>
-      <OrderProductListHeader attributes={(action === "History" && mode ==="Popup") ? attributesPopupHistory : action === "History" ? attributesHistory : attributes} />
+      <OrderProductListHeader
+        attributes={
+          action === "History" && mode === "Popup"
+            ? attributesPopupHistory
+            : action === "History"
+            ? attributesHistory
+            : attributes
+        }
+      />
       <HandyOrderProductList
-        attributes={(action === "History" && mode ==="Popup") ?attributesPopupHistory : action === "History" ? attributesHistory : attributes}
+        attributes={
+          action === "History" && mode === "Popup"
+            ? attributesPopupHistory
+            : action === "History"
+            ? attributesHistory
+            : attributes
+        }
         order={order}
         setSelectedOrderProduct={setSelectedOrderProduct}
         action={action}

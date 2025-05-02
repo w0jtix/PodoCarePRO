@@ -46,7 +46,7 @@ public class OrderService {
     @Transactional
     public OrderDTO createOrder (OrderDTO orderToCreate) {
         try{
-            orderToCreate = generateOrderNumber(orderToCreate);
+            generateOrderNumber(orderToCreate);
             Order orderToSave = orderToCreate.toEntity();
             orderToSave.setOrderProducts(new ArrayList<>());
             Order savedOrder = orderRepo.save(orderToSave);
@@ -88,11 +88,10 @@ public class OrderService {
         }
     }
 
-    private OrderDTO generateOrderNumber(OrderDTO orderDTO) {
+    private void generateOrderNumber(OrderDTO orderDTO) {
         try {
             Optional<Order> lastOrder = orderRepo.findTopByOrderByOrderNumberDesc();
             orderDTO.setOrderNumber(lastOrder.map(order -> order.getOrderNumber() + 1).orElse(1L));
-            return orderDTO;
         } catch (DataAccessException e) {
             throw new CreationException("Failed to generate order number.", e);
         }

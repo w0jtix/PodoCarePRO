@@ -16,8 +16,8 @@ import java.util.List;
 public class BrandController {
     private final BrandService brandService;
 
-    @GetMapping
-    public ResponseEntity<List<BrandDTO>> getBrands(@RequestBody(required = false) FilterDTO filter) {
+    @PostMapping("/get")
+    public ResponseEntity<List<BrandDTO>> getBrands(@RequestBody FilterDTO filter) {
         List<BrandDTO> brandDTOList = brandService.getBrands(filter);
         return new ResponseEntity<>(brandDTOList, brandDTOList.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }

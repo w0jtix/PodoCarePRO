@@ -1,10 +1,10 @@
 import React from "react";
 import { useState, useEffect, useRef } from "react";
-import SelectVATButton from "./SelectVATButton";
-import AllProductService from "../service/AllProductService";
-import ProductActionButton from "./ProductActionButton";
-import CostInput from "./CostInput";
-import DigitInput from "./DigitInput";
+import SelectVATButton from "../SelectVATButton";
+import AllProductService from "../../service/AllProductService";
+import ProductActionButton from "../ProductActionButton";
+import CostInput from "../CostInput";
+import DigitInput from "../DigitInput";
 
 const OrderItemList = ({
   attributes,

@@ -1,30 +1,21 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import CustomAlert from "./CustomAlert";
+import CustomAlert from "../CustomAlert";
 import ReactDOM from "react-dom";
-import ProductForm from "./ProductForm";
-import AllProductService from "../service/AllProductService";
-import ProductActionButton from "./ProductActionButton";
+import ProductForm from "../ProductForm";
+import AllProductService from "../../service/AllProductService";
+import ProductActionButton from "../ProductActionButton";
 
 const EditProductPopup = ({
   onClose,
-  handleResetAllFilters,
+  handleResetFiltersAndData,
   selectedProduct,
 }) => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [infoMessage, setInfoMessage] = useState(null);
   const [alertVisible, setAlertVisible] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("Sale");
-  const [productCreationDTO, setProductCreationDTO] = useState(null);
-  const [categoryChanged, setCategoryChanged] = useState(false);
-
-  const categories = ["Sale", "Tool", "Equipment"];
-  const categoryMap = {
-    Sale: "Produkty",
-    Tool: "Narzędzia",
-    Equipment: "Sprzęt",
-  };
+  const [productDTO, setProductDTO] = useState(null);
 
   const showAlert = (message, variant) => {
     if (variant === "success") {
@@ -47,18 +38,17 @@ const EditProductPopup = ({
     }, 3000);
   };
 
-  const handleSaveProduct = async (productCreationDTO) => {
-    if (await checkForErrors(productCreationDTO)) return false;
-    return AllProductService.updateProduct(productCreationDTO)
+  const handleSaveProduct = async (productDTO) => {
+    if (await checkForErrors(productDTO)) return false;
+    return AllProductService.updateProduct(productDTO)
       .then((response) => {
         const success = true;
         const mode = "Edit";
-        handleResetAllFilters(success, mode);
+        handleResetFiltersAndData(success, mode);
 
         setTimeout(() => {
           onClose();
         }, 600);
-
       })
       .catch((error) => {
         console.error("Error updating new Product.", error);
@@ -103,7 +93,7 @@ const EditProductPopup = ({
 
   useEffect(() => {
     if (selectedProduct) {
-      setSelectedCategory(selectedProduct.category);
+
     }
   }, [selectedProduct]);
 
@@ -113,7 +103,7 @@ const EditProductPopup = ({
         className="new-product-popup-content"
         onClick={(e) => e.stopPropagation()}
       >
-        <section className="edit-product-popup-header">
+        <section className="product-popup-header">
           <h2 className="popup-title">Edytuj Produkt</h2>
           <button className="popup-close-button" onClick={onClose}>
             <img
@@ -123,15 +113,11 @@ const EditProductPopup = ({
             />
           </button>
         </section>
-        <section className="new-product-popup-interior">
+        <section className="product-popup-interior">
           {selectedProduct && (
             <ProductForm
-              selectedCategory={selectedCategory}
-              setSelectedCategory={setSelectedCategory}
               action="Edit"
               selectedProduct={selectedProduct}
-              setProductCreationDTO={setProductCreationDTO}
-              setCategoryChanged={setCategoryChanged}
             />
           )}
         </section>
@@ -142,7 +128,7 @@ const EditProductPopup = ({
               src={"src/assets/tick.svg"}
               alt={"Zapisz"}
               text={"Zapisz"}
-              onClick={async () => handleSaveProduct(productCreationDTO)}
+              onClick={async () => handleSaveProduct(productDTO)}
             />
           </>
         )}

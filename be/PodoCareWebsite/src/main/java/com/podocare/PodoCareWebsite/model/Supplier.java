@@ -17,7 +17,7 @@ public class Supplier {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "supplier_id")
     private Long id;
-    private String supplierName;
+    private String name;
     private String websiteUrl;
     private Boolean isDeleted = false;
 }

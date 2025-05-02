@@ -1,9 +1,9 @@
 import React from "react";
 
-const ProductActionButton = ({ src, alt, text, onClick, disableText }) => {
+const ProductActionButton = ({ src, alt, text, onClick, disableText, disabled = false }) => {
   return (
     <div className="product-action-button-container">
-      <button className="product-action-button" onClick={onClick}>
+      <button className="product-action-button" onClick={onClick} disabled={disabled}>
         <img
           src={src}
           alt={alt}

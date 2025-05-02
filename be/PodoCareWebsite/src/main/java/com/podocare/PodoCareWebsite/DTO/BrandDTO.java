@@ -10,17 +10,17 @@ import lombok.*;
 @NoArgsConstructor
 public class BrandDTO {
     private Long id;
-    private String brandName;
+    private String name;
 
     public BrandDTO(Brand brand) {
         this.id = brand.getId();
-        this.brandName = brand.getBrandName();
+        this.name = brand.getName();
     }
 
     public Brand toEntity() {
         return Brand.builder()
                 .id(this.id)
-                .brandName(this.brandName)
+                .name(this.name)
                 .build();
     }
 

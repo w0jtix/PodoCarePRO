@@ -1,8 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import OrderListHeader from "./OrderListHeader";
-import HandyOrderList from "./HandyOrderList";
-import OrderService from "../service/OrderService";
+import HandyOrderList from "../HandyOrderList";
+import OrderService from "../../service/OrderService";
 
 const OrdersListBySupplier = ({
   selectedSupplier,

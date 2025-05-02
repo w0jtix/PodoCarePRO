@@ -16,8 +16,8 @@ public class OrderController {
     private final OrderService orderService;
 
 
-    @GetMapping
-    public ResponseEntity<List<OrderDTO>> getOrders(@RequestBody(required = false) FilterDTO filter) {
+    @PostMapping("/get")
+    public ResponseEntity<List<OrderDTO>> getOrders(@RequestBody FilterDTO filter) {
         List<OrderDTO> ordersDTOList = orderService.getOrders(filter);
         return new ResponseEntity<>(ordersDTOList, ordersDTOList.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }

@@ -1,9 +1,9 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import ProductActionButton from "./ProductActionButton";
+import ProductActionButton from "../ProductActionButton";
 import OrderContent from "./OrderContent";
-import EditOrderPopup from "./EditOrderPopup";
-import RemoveOrderPopup from "./RemoveOrderPopup";
+import EditOrderPopup from "../Popups/EditOrderPopup";
+import RemoveOrderPopup from "../Popups/RemoveOrderPopup";
 
 const OrderList = ({
   attributes,
@@ -51,7 +51,7 @@ const OrderList = ({
     e.stopPropagation();
     setSelectedOrder(order);
     setIsRemoveOrderPopupOpen(true);
-  }
+  };
 
   const toggleOrders = (orderId) => {
     setExpandedOrderIds((prevIds) =>

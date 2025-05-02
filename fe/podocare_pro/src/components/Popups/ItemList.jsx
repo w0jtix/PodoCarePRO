@@ -1,8 +1,7 @@
 import React from "react";
-import ProductActionButton from "./ProductActionButton";
+import ProductActionButton from "../ProductActionButton";
 import { useState } from "react";
-import ProductContent from "./ProductContent";
-
+import ProductContent from "../ProductContent";
 
 const ItemList = ({
   attributes,
@@ -16,15 +15,9 @@ const ItemList = ({
   const [expandedProductIds, setExpandedProductIds] = useState([]);
 
   const attributeMap = {
-    Nazwa: "productName",
+    Nazwa: "name",
     Marka: "brandName",
-    "Stan Magazynowy": "productInstances.length",
-  };
-
-  const categoryColors = {
-    Sale: "rgb(0, 253, 0)",
-    Tool: "rgb(253, 173, 0)",
-    Equipment: "rgb(253, 0, 190)",
+    "Stan Magazynowy": "supply",
   };
 
   const getNestedValue = (obj, path) => {
@@ -41,7 +34,7 @@ const ItemList = ({
     e.stopPropagation();
     setSelectedProduct(item);
     setIsRemoveProductsPopupOpen(true);
-  }
+  };
 
   const toggleProducts = (productId) => {
     setExpandedProductIds((prevIds) =>
@@ -55,10 +48,10 @@ const ItemList = ({
   return (
     <div className={`item-list ${items.length === 0 ? "is-empty" : ""}`}>
       {items.map((item, index) => (
-        <div key={`${item.id}-${item.productName}`} className="product-wrapper">
+        <div key={`${item.id}-${item.name}`} className="product-wrapper">
           <div
             className={`item ${
-              item.productInstances.length > 0 ? "pointer" : ""
+              item.isDeleted == false ? "pointer" : ""
             }`}
             onClick={() => toggleProducts(item.id)}
           >
@@ -79,7 +72,7 @@ const ItemList = ({
                   <div
                     className="category-container"
                     style={{
-                      backgroundColor: categoryColors[item.category],
+                      backgroundColor: `rgb(${item.categoryColor})`,
                     }}
                   ></div>
                 ) : attr.name === "Opcje" ? (
@@ -105,9 +98,9 @@ const ItemList = ({
               </div>
             ))}
           </div>
-          {expandedProductIds.includes(item.id) && (
+          {/* {expandedProductIds.includes(item.id) && (
             <ProductContent product={item} />
-          )}
+          )} */}
         </div>
       ))}
     </div>

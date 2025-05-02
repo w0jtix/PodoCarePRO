@@ -3,9 +3,9 @@ import NavigationBar from "./NavigationBar";
 import SupplyList from "./SupplyList";
 import { useState } from "react";
 import ProductActionButton from "./ProductActionButton";
-import AddProductPopup from "./AddProductPopup";
-import EditProductPopup from "./EditProductPopup";
-import RemoveProductPopup from "./RemoveProductPopup";
+import AddProductPopup from "./Popups/AddProductPopup";
+import EditProductPopup from "./Popups/EditProductPopup";
+import RemoveProductPopup from "./Popups/RemoveProductPopup";
 import CustomAlert from "./CustomAlert";
 
 const Dashboard = () => {
@@ -14,13 +14,14 @@ const Dashboard = () => {
   const [isEditProductsPopupOpen, setIsEditProductsPopupOpen] = useState(false);
   const [isRemoveProductsPopupOpen, setIsRemoveProductsPopupOpen] =
     useState(false);
-  const [productFilterDTO, setProductFilterDTO] = useState({
-    productTypes: ["Sale", "Tool", "Equipment"],
-    selectedBrandIds: [],
+  const [filters, setFilters] = useState({
+    categoryIds: [],
+    brandIds: [],
     keyword: "",
+    includeZero: false,
   });
   const [resetTriggered, setResetTriggered] = useState(false);
-  const [showZeroProducts, setShowZeroProducts] = useState(false);
+  const [includeZero, setIncludeZero] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -41,60 +42,78 @@ const Dashboard = () => {
     }, 2500);
   };
 
-  const handleResetAllFilters = (success, mode) => {
+  useEffect(() => {
+    console.log("sel", selectedProduct);
+  }, [selectedProduct]);
+
+  const handleResetFiltersAndData = (success, mode) => {
     if (success) {
-      if(mode === "Remove") {
+      if (mode === "Remove") {
         showAlert("Produkt usunięty!", "success");
-      } else if( mode === "Edit") {
+      } else if (mode === "Edit") {
         showAlert("Produkt zaktualizowany!", "success");
       }
-      
     }
-    setProductFilterDTO({
-      productTypes: ["Sale", "Tool", "Equipment"],
-      selectedBrandIds: [],
+    setFilters({
+      categoryIds: [],
+      brandIds: [],
       keyword: "",
+      includeZero: false,
     });
+    setIncludeZero(false);
     setResetTriggered((prev) => !prev);
   };
 
   const handleFilterChange = (newFilter) => {
-    setProductFilterDTO(newFilter);
+    setFilters(newFilter);
   };
+
+  useEffect(() => {
+    const newFilterDTO = {
+      ...filters,
+      includeZero,
+    };
+    handleFilterChange(newFilterDTO);
+  }, [includeZero]);
 
   return (
     <div className="dashboard-panel">
       <NavigationBar
         onFilter={handleFilterChange}
-        productFilterDTO={productFilterDTO}
-        handleResetAllFilters={handleResetAllFilters}
+        filters={filters}
+        handleResetFiltersAndData={handleResetFiltersAndData}
         resetTriggered={resetTriggered}
       />
       <section className="action-buttons-section">
-        <div className={`button-layer ${showZeroProducts ? "selected" : ""}`}>
+        <div className={`button-layer ${includeZero ? "selected" : ""}`}>
           <ProductActionButton
             src={
-              showZeroProducts
+              includeZero
                 ? "src/assets/toggleSelected.svg"
                 : "src/assets/toggle.svg"
             }
-            alt={"Dodaj Produkt"}
+            alt={"Include Zero"}
             text={"St. Mag = 0"}
-            onClick={() => setShowZeroProducts((prev) => !prev)}
+            onClick={() => setIncludeZero((prev) => !prev)}
           />
         </div>
         <section className="products-action-buttons">
           <ProductActionButton
             src={"src/assets/addNew.svg"}
-            alt={"Dodaj Produkt"}
-            text={"Dodaj nowy"}
+            alt={"Nowy Produkt"}
+            text={"Nowy Produkt"}
             onClick={() => setIsAddNewProductsPopupOpen(true)}
+          />
+          <ProductActionButton
+            src={"src/assets/addNew.svg"}
+            alt={"Nowa Kategoria"}
+            text={"Nowa Kategoria"}
+            /* onClick={() => setIsAddNewProductsPopupOpen(true)} */
           />
         </section>
       </section>
       <SupplyList
-        productFilterDTO={productFilterDTO}
-        showZeroProducts={showZeroProducts}
+        filters={filters}
         setIsAddNewProductsPopupOpen={setIsAddNewProductsPopupOpen}
         setIsEditProductsPopupOpen={setIsEditProductsPopupOpen}
         setIsRemoveProductsPopupOpen={setIsRemoveProductsPopupOpen}
@@ -103,20 +122,20 @@ const Dashboard = () => {
       {isAddNewProductsPopupOpen && (
         <AddProductPopup
           onClose={() => setIsAddNewProductsPopupOpen(false)}
-          handleResetAllFilters={handleResetAllFilters}
+          handleResetFiltersAndData={handleResetFiltersAndData}
         />
       )}
       {isEditProductsPopupOpen && (
-        <EditProductPopup
+        <AddProductPopup
           onClose={() => setIsEditProductsPopupOpen(false)}
-          handleResetAllFilters={handleResetAllFilters}
+          handleResetFiltersAndData={handleResetFiltersAndData}
           selectedProduct={selectedProduct}
         />
       )}
       {isRemoveProductsPopupOpen && (
         <RemoveProductPopup
           onClose={() => setIsRemoveProductsPopupOpen(false)}
-          handleResetAllFilters={handleResetAllFilters}
+          handleResetFiltersAndData={handleResetFiltersAndData}
           selectedProduct={selectedProduct}
         />
       )}

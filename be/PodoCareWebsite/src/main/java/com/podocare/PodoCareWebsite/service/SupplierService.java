@@ -62,6 +62,6 @@ public class SupplierService {
     }
 
     private boolean supplierAlreadyExists(SupplierDTO supplierDTO) {
-        return supplierRepo.findBySupplierName(supplierDTO.getSupplierName()).isPresent();
+        return supplierRepo.findBySupplierName(supplierDTO.getName()).isPresent();
     }
 }

@@ -1,16 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import ProductContent from "./ProductContent";
-import ProductActionButton from "./ProductActionButton";
-import AllProductService from "../service/AllProductService";
-import CustomAlert from "./CustomAlert";
-import { useState } from "react";
+import OrderContent from "../Orders/OrderContent";
+import ProductActionButton from "../ProductActionButton";
+import CustomAlert from "../CustomAlert";
+import { useState, useEffect } from "react";
+import OrderService from "../../service/OrderService";
 
-const RemoveProductPopup = ({
+const RemoveOrderPopup = ({
   onClose,
   handleResetAllFilters,
-  selectedProduct,
+  selectedOrder,
 }) => {
+  const [hasWarning, setHasWarning] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [infoMessage, setInfoMessage] = useState(null);
@@ -37,9 +38,13 @@ const RemoveProductPopup = ({
     }, 3000);
   };
 
-  const handleProductRemove = async (productId) => {
-    AllProductService.deleteProductAndActiveInstances(productId)
-      .then((response) => {
+  useEffect(() => {
+    console.log("s", selectedOrder);
+  }, [selectedOrder]);
+
+  const handleOrderRemove = async (orderId) => {
+    OrderService.deleteOrder(orderId)
+      .then((data) => {
         const success = true;
         const mode = "Remove";
         handleResetAllFilters(success, mode);
@@ -48,20 +53,20 @@ const RemoveProductPopup = ({
         }, 600);
       })
       .catch((error) => {
-        console.error("Error removing Product", error);
-        showAlert("Błąd usuwania produktu.", "error");
+        console.error("Error removing Order", error);
+        showAlert("Błąd usuwania zamówienia.", "error");
       });
   };
 
   return ReactDOM.createPortal(
     <div
-      className={`add-popup-overlay ${
-        selectedProduct.productInstances.length === 0 ? "short-version" : ""
+      className={`add-popup-overlay remove-order ${
+        selectedOrder.orderProductDTOList.length === 0 ? "short-version" : ""
       } `}
       onClick={onClose}
     >
       <div
-        className="remove-product-popup-content"
+        className="remove-order-popup-content"
         onClick={(e) => e.stopPropagation()}
       >
         <section className="edit-product-popup-header">
@@ -75,10 +80,10 @@ const RemoveProductPopup = ({
           </button>
         </section>
         <section className="remove-product-popup-interior">
-          {selectedProduct.productInstances.length === 0 ? (
+          {selectedOrder.orderProductDTOList.length === 0 ? (
             <section>
               <a className="remove-popup-warning-a">
-                ❗❗❗ Zatwierdzenie spowoduje usunięcie informacji o produkcie.
+                ❗❗❗ Zatwierdzenie spowoduje usunięcie Zamówienia.
               </a>
               <br />
             </section>
@@ -87,17 +92,38 @@ const RemoveProductPopup = ({
               <section>
                 <a className="remove-popup-warning-a">
                   ❗❗❗ Zatwierdzenie spowoduje usunięcie informacji o
-                  produkcie i dostępnych zapasów na stanie:
+                  Zamówieniu oraz Produktów z Magazynu:
                 </a>
                 <br />
-                <a className="remove-popup-warning-a-list-length">{`Razem: ${selectedProduct.productInstances.length}`}</a>
+                <a className="remove-popup-warning-a-list-length">{`Ilość Produktów: ${selectedOrder.orderProductDTOList.length}`}</a>
               </section>
-              {selectedProduct && <ProductContent product={selectedProduct} />}
-              <a className="remove-popup-warning-a"></a>
+              {selectedOrder && (
+                <OrderContent
+                  order={selectedOrder}
+                  action={"History"}
+                  mode={"Popup"}
+                  setHasWarning={setHasWarning}
+                />
+              )}
+              {hasWarning && (
+                <div className="popup-warning-explanation-display">
+                  <img
+                    src="src/assets/warning.svg"
+                    alt="Warning"
+                    className="order-item-warning-icon"
+                  />
+                  <a className="warning-explanation">
+                    Konflikt: Chcesz usunąć więcej Produktów niż masz w
+                    Magazynie!
+                    <br />
+                    Po zatwierdzeniu usuniesz dostępne Produkty.
+                  </a>
+                </div>
+              )}
             </>
           )}
         </section>
-        {selectedProduct && (
+        {selectedOrder && (
           <>
             <section className="footer-popup-action-buttons">
               <div className="footer-cancel-button">
@@ -113,14 +139,14 @@ const RemoveProductPopup = ({
                   src={"src/assets/tick.svg"}
                   alt={"Zatwierdź"}
                   text={"Zatwierdź"}
-                  onClick={() => handleProductRemove(selectedProduct.id)}
+                  onClick={() => handleOrderRemove(selectedOrder.orderId)}
                 />
               </div>
             </section>
-            {selectedProduct.productInstances.length > 0 && (
+            {selectedOrder.orderProductDTOList.length > 0 && (
               <a className="popup-category-description">
-                Jeśli chcesz usunąć pojedynczy produkt z zapasów skorzystaj z
-                zakładki - <i>Edytuj Produkt</i>
+                Jeśli chcesz usunąć pojedynczy Produkt z Zamówienia skorzystaj z
+                zakładki - <i>Edytuj Zamówienie</i>
               </a>
             )}
           </>
@@ -139,4 +165,4 @@ const RemoveProductPopup = ({
   );
 };
 
-export default RemoveProductPopup;
+export default RemoveOrderPopup;

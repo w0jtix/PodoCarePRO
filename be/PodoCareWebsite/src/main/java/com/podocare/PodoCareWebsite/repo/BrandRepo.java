@@ -13,13 +13,13 @@ import java.util.Optional;
 public interface BrandRepo extends JpaRepository<Brand, Long> {
 
     @Query("SELECT b FROM Brand b WHERE "
-            + "(COALESCE(:keyword, '') = '' OR LOWER(b.brandName) LIKE LOWER(CONCAT('%', :keyword, '%'))) ")
+            + "(COALESCE(:keyword, '') = '' OR LOWER(b.name) LIKE LOWER(CONCAT(:keyword, '%'))) ")
     List<Brand> findAllWithFilters(
             @Param("keyword") String keyword
     );
 
-    @Query("SELECT b FROM Brand b WHERE LOWER(TRIM(b.brandName)) = LOWER(TRIM(:brandName))")
-    Optional<Brand> findByBrandName(String brandName);
+    @Query("SELECT b FROM Brand b WHERE LOWER(TRIM(b.name)) = LOWER(TRIM(:name))")
+    Optional<Brand> findByBrandName(String name);
 
 
 }

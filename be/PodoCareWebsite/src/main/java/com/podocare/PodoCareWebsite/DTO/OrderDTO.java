@@ -35,7 +35,7 @@ public class OrderDTO {
     public OrderDTO(Order order) {
         this.id = order.getId();
         this.supplierId = order.getSupplier().getId();
-        this.supplierName = order.getSupplier().getSupplierName();
+        this.supplierName = order.getSupplier().getName();
         this.orderNumber = order.getOrderNumber();
         this.orderDate = order.getOrderDate();
         this.orderProductDTOList = order.getOrderProducts().stream().map(OrderProductDTO::new).toList();

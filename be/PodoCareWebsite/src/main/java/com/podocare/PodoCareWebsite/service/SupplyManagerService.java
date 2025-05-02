@@ -21,11 +21,26 @@ public class SupplyManagerService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with given id.")));
     }
 
-    public void createManager(Long productId) {
-        try {
-            supplyManagerRepo.save(new SupplyManager(productId));
+
+    public void createManager(Long productId, Integer supply) {
+        try{
+            if(supply == null ){
+                supplyManagerRepo.save(new SupplyManager(productId));
+            } else {
+                supplyManagerRepo.save(new SupplyManager(productId, supply));
+            }
         } catch (Exception e) {
             throw new CreationException("Failed to create SupplyManager for productId: " + productId + ". Reason: " + e.getMessage(), e);
+        }
+    }
+
+    public void changeSupply(SupplyManagerDTO requestDTO) {
+        try {
+            SupplyManagerDTO managerDTO =  getManagerByProductId(requestDTO.getProductId());
+            managerDTO.setSupply(requestDTO.getSupply());
+            supplyManagerRepo.save(managerDTO.toEntity());
+        } catch (Exception e) {
+            throw new UpdateException("Failed to update SupplyManager for productId: " + requestDTO.getProductId() + ". Reason: " + e.getMessage(), e);
         }
     }
 

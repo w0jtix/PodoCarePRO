@@ -90,5 +90,88 @@
         <renameColumn tableName="supplier" oldColumnName="id" newColumnName="supplier_id" columnDataType="BIGINT"/>
     </changeSet>
 
+    <changeSet id="4.5" author="Wojtek">
+        <renameColumn
+                tableName="supplier"
+                oldColumnName="supplier_name"
+                newColumnName="name"
+                columnDataType="VARCHAR(255)"/>
+
+
+        <renameColumn
+                tableName="brand"
+                oldColumnName="brand_name"
+                newColumnName="name"
+                columnDataType="VARCHAR(255)"/>
+
+
+        <renameColumn
+                tableName="product"
+                oldColumnName="product_name"
+                newColumnName="name"
+                columnDataType="VARCHAR(255)"/>
+    </changeSet>
+
+    <changeSet id="4.6" author="your_username">
+        <createTable tableName="product_category">
+            <column name="id" type="BIGINT" >
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="color" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <addColumn tableName="product">
+            <column name="category_id" type="BIGINT"/>
+        </addColumn>
+
+        <addForeignKeyConstraint
+                baseTableName="product"
+                baseColumnNames="category_id"
+                constraintName="fk_product_category"
+                referencedTableName="product_category"
+                referencedColumnNames="id"
+                onDelete="SET NULL"/>
+
+        <dropColumn tableName="product" columnName="category"/>
+    </changeSet>
+
+    <changeSet id="4.7" author="Wojtek">
+
+        <dropForeignKeyConstraint
+                baseTableName="product"
+                constraintName="fk_product_category"/>
+
+
+        <dropPrimaryKey tableName="product_category"/>
+
+
+        <addAutoIncrement
+                tableName="product_category"
+                columnName="id"
+                columnDataType="BIGINT"
+                incrementBy="1"
+                startWith="1"/>
+
+
+        <addPrimaryKey
+                tableName="product_category"
+                columnNames="id"
+                constraintName="product_category_pkey"/>
+
+
+        <addForeignKeyConstraint
+                baseTableName="product"
+                baseColumnNames="category_id"
+                constraintName="fk_product_category"
+                referencedTableName="product_category"
+                referencedColumnNames="id"
+                onDelete="SET NULL"/>
+    </changeSet>
 
 </databaseChangeLog>

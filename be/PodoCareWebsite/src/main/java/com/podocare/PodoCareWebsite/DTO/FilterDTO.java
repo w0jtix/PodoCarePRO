@@ -10,10 +10,11 @@ import java.util.List;
 @Getter
 @Setter
 public class FilterDTO {
-    private List<String> categories;
+    private List<Long> categoryIds;
     private List<Long> brandIds;
     private String keyword;
     private Boolean available;
+    private Boolean includeZero;
     private List<Long> supplierIds;
     private Date dateFrom;
     private Date dateTo;

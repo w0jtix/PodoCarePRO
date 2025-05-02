@@ -1,14 +1,14 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
-import CustomAlert from "./CustomAlert";
-import BrandInput from "./BrandInput";
-import DigitInput from "./DigitInput";
-import SelectProductCategory from "./SelectProductCategory";
-import OrderListHeader from "./OrderListHeader";
-import AllProductService from "../service/AllProductService";
-import ProductActionButton from "./ProductActionButton";
-import CostInput from "./CostInput";
+import CustomAlert from "../CustomAlert";
+import BrandInput from "../BrandInput";
+import DigitInput from "../DigitInput";
+import SelectProductCategory from "../SelectProductCategory";
+import OrderListHeader from "../Orders/OrderListHeader";
+import AllProductService from "../../service/AllProductService";
+import ProductActionButton from "../ProductActionButton";
+import CostInput from "../CostInput";
 
 const OrderNewProductsPopup = ({
   nonExistingProducts,
@@ -129,14 +129,16 @@ const OrderNewProductsPopup = ({
           setOrderProductDTOList(updatedOrderProductList);
           onFinalizeOrder(updatedOrderProductList);
         } else if (action === "Edit") {
-          const updatedTrueOrderProductList = trueOrderProductDTOList.map((product) => {
-            const matchingProduct = data.find(
-              (newProduct) => newProduct.productName === product.productName
-            );
-            return matchingProduct
-              ? { ...product, productId: matchingProduct.id }
-              : product;
-          });
+          const updatedTrueOrderProductList = trueOrderProductDTOList.map(
+            (product) => {
+              const matchingProduct = data.find(
+                (newProduct) => newProduct.productName === product.productName
+              );
+              return matchingProduct
+                ? { ...product, productId: matchingProduct.id }
+                : product;
+            }
+          );
           const updatedOrderDTO = {
             ...orderDTO,
             addedOrderProducts: updatedOrderProductList,

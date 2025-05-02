@@ -68,6 +68,6 @@ public class BrandService {
     }
 
     private boolean brandAlreadyExists(BrandDTO brandDTO) {
-        return brandRepo.findByBrandName(brandDTO.getBrandName()).isPresent();
+        return brandRepo.findByBrandName(brandDTO.getName()).isPresent();
     }
 }

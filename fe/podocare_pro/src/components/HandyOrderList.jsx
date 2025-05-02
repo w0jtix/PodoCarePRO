@@ -1,9 +1,14 @@
 import React from "react";
 import { useState } from "react";
-import OrderContent from "./OrderContent";
+import OrderContent from "./Orders/OrderContent";
 
-const HandyOrderList = ({ attributes, orders, setSelectedOrderProduct, expandedOrderIds, setExpandedOrderIds }) => {
-
+const HandyOrderList = ({
+  attributes,
+  orders,
+  setSelectedOrderProduct,
+  expandedOrderIds,
+  setExpandedOrderIds,
+}) => {
   const attributeMap = {
     Numer: "orderNumber",
     Data: "orderDate",
@@ -18,11 +23,9 @@ const HandyOrderList = ({ attributes, orders, setSelectedOrderProduct, expandedO
     const year = date.getFullYear();
     return `${day}.${month}.${year}`;
   };
- 
+
   const calculateOrderItems = (order) => {
-    return (
-      order.orderProductDTOList.length
-    );
+    return order.orderProductDTOList.length;
   };
 
   const toggleOrderProducts = (orderId) => {
@@ -60,7 +63,9 @@ const HandyOrderList = ({ attributes, orders, setSelectedOrderProduct, expandedO
                         src="src/assets/arrow_down.svg"
                         alt="Expand order"
                         className={`expand-order-icon ${
-                          expandedOrderIds.includes(order.orderId) ? "rotated" : ""
+                          expandedOrderIds.includes(order.orderId)
+                            ? "rotated"
+                            : ""
                         }`}
                       />
                     </button>

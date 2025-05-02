@@ -23,6 +23,11 @@ public class SupplyManagerDTO {
         this.supply = manager.getSupply();
     }
 
+    public SupplyManagerDTO(Long productId, Integer supply) {
+        this.productId = productId;
+        this.supply = supply;
+    }
+
     public SupplyManagerDTO(Long productId, Integer supply, String action) {
         this.productId = productId;
         this.supply = supply;
@@ -35,5 +40,12 @@ public class SupplyManagerDTO {
                 .productId(this.productId)
                 .supply(this.supply)
                 .build();
+    }
+
+    public static SupplyManager toSupplyManagerReference(Long productId) {
+        if(productId == null){
+            return null;
+        }
+        return SupplyManager.builder().productId(productId).build();
     }
 }

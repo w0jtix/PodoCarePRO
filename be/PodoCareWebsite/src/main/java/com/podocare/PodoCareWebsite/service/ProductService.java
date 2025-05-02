@@ -1,17 +1,18 @@
 package com.podocare.PodoCareWebsite.service;
 
-import com.podocare.PodoCareWebsite.DTO.ProductDTO;
+import com.podocare.PodoCareWebsite.DTO.*;
 import com.podocare.PodoCareWebsite.exceptions.CreationException;
 import com.podocare.PodoCareWebsite.exceptions.DeletionException;
 import com.podocare.PodoCareWebsite.exceptions.ResourceNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.UpdateException;
-import com.podocare.PodoCareWebsite.DTO.FilterDTO;
+import com.podocare.PodoCareWebsite.model.Product;
 import com.podocare.PodoCareWebsite.repo.ProductRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
@@ -26,42 +27,59 @@ public class ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with given id." + productId)));
     }
 
-    public List<ProductDTO> getProducts(FilterDTO filter) {
+    public ProductDisplayDTO getProductDisplayById(Long productId) {
+        return productRepo.findProductDisplayById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with given id." + productId));
+    }
+
+    public List<ProductDisplayDTO> getProducts(FilterDTO filter) {
         if(isNull(filter)) {
             filter = new FilterDTO();
         }
-
         return productRepo.findAllWithFilters(
-                filter.getCategories(), filter.getBrandIds(), filter.getKeyword(), filter.getAvailable())
-                .stream()
-                .map(ProductDTO::new)
-                .toList();
+                filter.getCategoryIds(), filter.getBrandIds(), filter.getKeyword(), filter.getIncludeZero()) ;
     }
 
     @Transactional
-    public List<ProductDTO> createProducts(List<ProductDTO> productsToCreate) {
-        try {
-            for (ProductDTO product : productsToCreate) {
-                if (productAlreadyExists(product)) {
-                    throw new CreationException("Product already exists: " + product.getProductName());
+    public ProductDisplayDTO createProduct(ProductRequestDTO productToCreate) {
+        try{
+            Optional<ProductDTO> existingProductOptional = productRepo.findByProductName(productToCreate.getName());
+            if (existingProductOptional.isPresent()) {
+                ProductDTO existingProductDTO = existingProductOptional.get();
+                if(Boolean.FALSE.equals(existingProductDTO.getIsDeleted())){
+                    throw new CreationException("Product already exists: " + productToCreate.getName());
+                } else {
+                    productToCreate.setId(existingProductDTO.getId());
+                    return this.updateProduct(existingProductDTO.getId(), productToCreate);
                 }
             }
-            return productsToCreate.stream()
-                    .map(ProductDTO::toEntity)
-                    .map(productRepo::save)
-                    .peek(savedProduct -> supplyManagerService.createManager(savedProduct.getId()))
-                    .map(ProductDTO::new)
-                    .toList();
+            Product savedProduct = productRepo.save(productToCreate.toEntity());
+            supplyManagerService.createManager(savedProduct.getId(), productToCreate.getSupply());
+            return getProductDisplayById(savedProduct.getId());
         } catch (Exception e) {
             throw new CreationException("Failed to create Product. Reason: " + e.getMessage(), e);
         }
     }
 
     @Transactional
-    public ProductDTO updateProduct(Long productId, ProductDTO updatedProduct) {
+    public List<ProductDisplayDTO> createProducts(List<ProductRequestDTO> productsToCreate) {
+        return productsToCreate.stream()
+                .map(this::createProduct)
+                .toList();
+    }
+
+    @Transactional
+    public ProductDisplayDTO updateProduct(Long productId, ProductRequestDTO updatedProduct) {
         try {
             getProductById(productId);
-            return new ProductDTO(productRepo.save(updatedProduct.toEntity()));
+            supplyManagerService.changeSupply(
+                    new SupplyManagerDTO(
+                            updatedProduct.getId(),
+                            updatedProduct.getSupply()
+                    )
+            );
+            Product savedProduct = productRepo.save(updatedProduct.toEntity());
+            return getProductDisplayById(savedProduct.getId());
         } catch (Exception e) {
             throw new UpdateException("Failed to update Product, Reason: " + e.getMessage(), e);
         }
@@ -77,7 +95,4 @@ public class ProductService {
         }
     }
 
-    private boolean productAlreadyExists(ProductDTO productDTO) {
-        return productRepo.findByProductName(productDTO.getProductName()).isPresent();
-    }
 }

@@ -28,7 +28,7 @@ public class OrderProductDTO {
         this.id = orderProduct.getId();
         this.orderId = orderProduct.getOrder().getId();
         this.productId = orderProduct.getProduct().getId();
-        this.productName = orderProduct.getProduct().getProductName();
+        this.productName = orderProduct.getProduct().getName();
         this.quantity = orderProduct.getQuantity();
         this.VATrate = orderProduct.getVATrate();
         this.price = orderProduct.getPrice();

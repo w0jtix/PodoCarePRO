@@ -3,11 +3,11 @@ import SearchBar from './SearchBar'
 import UserMenu from './UserMenu'
 import ListActionSection from './ListActionSection'
 
-const NavigationBar = ( { onFilter, productFilterDTO, handleResetAllFilters, resetTriggered }) => {
+const NavigationBar = ( { onFilter, filters, handleResetAllFilters, resetTriggered }) => {
 
   const handleFilterChange = (newKeyword) => {
     const updatedFilterDTO = {
-      ...productFilterDTO,
+      ...filters,
       keyword: newKeyword
     }
 
@@ -16,19 +16,19 @@ const NavigationBar = ( { onFilter, productFilterDTO, handleResetAllFilters, res
 
   useEffect(() => {
 
-  },[productFilterDTO]);
+  },[filters]);
 
 
   return (
     <div className="navigation-bar">
       <section className="navigation-bar-interior">
         <SearchBar 
-        onKeywordChange={handleFilterChange}
+        onKeywordChange={(newKeyword) => handleFilterChange(newKeyword)}
         resetTriggered={resetTriggered}
         />
         <ListActionSection 
         onFilter={onFilter} 
-        productFilterDTO={productFilterDTO}
+        filters={filters}
         handleResetAllFilters={handleResetAllFilters}
         resetTriggered={resetTriggered}
         />

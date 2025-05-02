@@ -1,6 +1,5 @@
 import React from "react";
-import OrderProductListHeader from "./OrderProductListHeader";
-import HandyProductInstanceList from "./HandyProductInstanceList";
+import OrderProductListHeader from "./Orders/OrderProductListHeader";
 
 const ProductContent = ({ product }) => {
   let attributes = [
@@ -18,18 +17,12 @@ const ProductContent = ({ product }) => {
     return attr;
   });
 
-  if (product.category === "Equipment" || product.category === "Tool") {
-    attributes = attributes.filter((attr) => attr.name !== "Cena sprzedaży");
-  }
 
   return (
     <div className="product-content">
-      {product.productInstances.length > 0 && (
         <>
           <OrderProductListHeader attributes={attributes} />
-          <HandyProductInstanceList attributes={attributes} product={product} />
         </>
-      )}
     </div>
   );
 };

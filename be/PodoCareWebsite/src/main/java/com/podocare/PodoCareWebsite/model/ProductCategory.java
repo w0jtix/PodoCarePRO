@@ -14,20 +14,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SupplyManager {
+public class ProductCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long productId;
-    private Integer supply = 1;
 
-    public SupplyManager(Long productId) {
-        this.productId = productId;
-        this.supply = 1;
-    }
-
-    public SupplyManager(Long productId, Integer supply) {
-        this.productId = productId;
-        this.supply = supply;
-    }
+    private String name;
+    private String color;
 }

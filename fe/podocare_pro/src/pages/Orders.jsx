@@ -1,6 +1,6 @@
 import React from 'react'
 import Navbar from '../components/Navbar'
-import OrdersDashboard from '../components/OrdersDashboard'
+import OrdersDashboard from '../components/Orders/OrdersDashboard'
 
 const Orders = () => {
   return (

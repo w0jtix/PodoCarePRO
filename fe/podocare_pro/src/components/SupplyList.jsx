@@ -1,13 +1,11 @@
 import React from "react";
-import ListHeader from "./ListHeader";
-import ItemList from "./ItemList";
-import axios from "axios";
+import ListHeader from "./ListHeader.jsx";
+import ItemList from "./Popups/ItemList";
 import { useState, useEffect } from "react";
 import AllProductService from "../service/AllProductService";
 
 const SupplyList = ({
-  productFilterDTO,
-  showZeroProducts,
+  filters,
   setIsAddNewProductsPopupOpen,
   setIsEditProductsPopupOpen,
   setIsRemoveProductsPopupOpen,
@@ -28,26 +26,34 @@ const SupplyList = ({
     { name: "Opcje", width: "8%", justify: "center" },
   ];
 
-  const fetchItems = async (productFilterDTO) => {
-    const { productTypes, selectedIds, keyword } = productFilterDTO;
+  const buildFilterDTO = (filters) => {
+    const filterDTO = {};
+    if (filters.categoryIds.length > 0) {
+      filterDTO.categoryIds = filters.categoryIds;
+    }
+    if (filters.brandIds.length > 0) {
+      filterDTO.brandIds = filters.brandIds;
+    }
+    if (filters.keyword.trim() !== "") {
+      filterDTO.keyword = filters.keyword;
+    }
+    if (filters.includeZero !== null) {
+      filterDTO.includeZero = filters.includeZero;
+    }
 
-    AllProductService.getFilteredActiveProductsWithActiveInstances(
-      productTypes,
-      selectedIds,
-      keyword
-    )
+    return filterDTO;
+  };
+
+  const fetchItems = async (filters) => {
+    const filterDTO = buildFilterDTO(filters);
+    console.log("fff", filterDTO);
+
+    AllProductService.getProducts(filterDTO)
       .then((response) => {
         const sortedItems = response.sort((a, b) =>
-          a.productName.localeCompare(b.productName)
+          a.name.localeCompare(b.name)
         );
-        if (showZeroProducts) {
-          setItems(sortedItems);
-        } else {
-          const productsWithActiveInstances = sortedItems.filter(
-            (item) => item.productInstances.length > 0
-          );
-          setItems(productsWithActiveInstances);
-        }
+        setItems(sortedItems);
       })
       .catch((error) => {
         setItems([]);
@@ -60,14 +66,13 @@ const SupplyList = ({
 
   useEffect(() => {
     setLoading(true);
-    fetchItems(productFilterDTO);
+    fetchItems(filters);
     setCurrentPage(1);
-  }, [productFilterDTO, showZeroProducts]);
+  }, [filters]);
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentItems = items.slice(startIndex, endIndex);
-
   const totalPages = Math.ceil(items.length / itemsPerPage);
 
   const handlePreviousPage = () => {

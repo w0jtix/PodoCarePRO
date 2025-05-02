@@ -1,11 +1,11 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import CustomAlert from "./CustomAlert";
+import CustomAlert from "../CustomAlert";
 import ReactDOM from "react-dom";
 import OrderNewProductsPopup from "./OrderNewProductsPopup";
-import OrderService from "../service/OrderService";
-import ProductActionButton from "./ProductActionButton";
-import OrderCreator from "./OrderCreator";
+import OrderService from "../../service/OrderService";
+import ProductActionButton from "../ProductActionButton";
+import OrderCreator from "../Orders/OrderCreator";
 
 const EditOrderPopup = ({ onClose, handleResetAllFilters, selectedOrder }) => {
   const [selectedSupplier, setSelectedSupplier] = useState(null);

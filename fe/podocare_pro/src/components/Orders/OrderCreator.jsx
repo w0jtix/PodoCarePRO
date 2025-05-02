@@ -1,14 +1,13 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import OrderProductList from "./OrderProductList";
-import DateInput from "./DateInput";
-import SupplierDropdown from "./SupplierDropdown";
-import CustomAlert from "./CustomAlert";
-import OrderNewProductsPopup from "./OrderNewProductsPopup";
-import ProductActionButton from "./ProductActionButton";
-import OrderService from "../service/OrderService";
-import AllProductService from "../service/AllProductService";
-import SupplierService from "../service/SupplierService";
+import DateInput from "../DateInput";
+import SupplierDropdown from "../SupplierDropdown";
+import CustomAlert from "../CustomAlert";
+import OrderNewProductsPopup from "../Popups/OrderNewProductsPopup";
+import ProductActionButton from "../ProductActionButton";
+import OrderService from "../../service/OrderService";
+import SupplierService from "../../service/SupplierService";
 
 const OrderCreator = ({
   selectedSupplier,

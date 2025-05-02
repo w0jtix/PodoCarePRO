@@ -12,14 +12,14 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SupplierDTO {
     private Long id;
-    private String supplierName;
+    private String name;
     private String websiteUrl;
     private Boolean isDeleted;
 
 
     public SupplierDTO(Supplier supplier) {
         this.id = supplier.getId();
-        this.supplierName = supplier.getSupplierName();
+        this.name = supplier.getName();
         this.websiteUrl = supplier.getWebsiteUrl();
         this.isDeleted = (supplier.getIsDeleted() == null) ? false : supplier.getIsDeleted();
     }
@@ -27,7 +27,7 @@ public class SupplierDTO {
     public Supplier toEntity() {
         return Supplier.builder()
                 .id(this.id)
-                .supplierName(this.supplierName)
+                .name(this.name)
                 .websiteUrl(this.websiteUrl)
                 .isDeleted(this.isDeleted != null ? this.isDeleted : false)
                 .build();

@@ -2,8 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { useState } from "react";
 import axios from "axios";
-import CustomAlert from "./CustomAlert";
-import SupplierService from "../service/SupplierService";
+import CustomAlert from "../CustomAlert";
+import SupplierService from "../../service/SupplierService";
 
 const AddSupplierPopup = ({ onClose, onAddSupplier }) => {
   const [supplierName, setSupplierName] = useState("");

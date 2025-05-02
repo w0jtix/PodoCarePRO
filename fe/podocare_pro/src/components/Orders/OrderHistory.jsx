@@ -1,13 +1,13 @@
 import React from "react";
-import ListHeader from "./ListHeader";
+import ListHeader from "../ListHeader.jsx";
 import OrderList from "./OrderList";
 import { useState, useEffect } from "react";
-import OrderService from "../service/OrderService";
-import ProductActionButton from "./ProductActionButton";
-import SupplierDropdown from "./SupplierDropdown";
-import DateInput from "./DateInput";
-import SupplierService from "../service/SupplierService";
-import CustomAlert from "./CustomAlert";
+import OrderService from "../../service/OrderService.jsx";
+import ProductActionButton from "../ProductActionButton.jsx";
+import SupplierDropdown from "../SupplierDropdown";
+import DateInput from "../DateInput.jsx";
+import SupplierService from "../../service/SupplierService.jsx";
+import CustomAlert from "../CustomAlert.jsx";
 
 const OrderHistory = () => {
   const [orders, setOrders] = useState([]);

@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useRef, useEffect } from "react";
-import AddSupplierPopup from "./AddSupplierPopup";
+import AddSupplierPopup from "./Popups/AddSupplierPopup";
 
 const SupplierDropdown = ({
   items,

@@ -1,23 +1,26 @@
 package com.podocare.PodoCareWebsite.DTO;
 
 import com.podocare.PodoCareWebsite.model.Product;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDTO {
-
+public class ProductRequestDTO {
     private Long id;
     private String name;
     private Long categoryId;
     private Long brandId;
     private String description;
     private Boolean isDeleted;
+    private Integer supply;
 
 
-    public ProductDTO(Product product) {
+    public ProductRequestDTO(Product product) {
         this.id = product.getId();
         this.name = product.getName();
         this.categoryId = product.getCategory().getId();
@@ -25,7 +28,6 @@ public class ProductDTO {
         this.description = product.getDescription();
         this.isDeleted = (product.getIsDeleted() == null) ? false : product.getIsDeleted();
     }
-
 
     public Product toEntity() {
         return Product.builder()
@@ -36,12 +38,5 @@ public class ProductDTO {
                 .description(this.description)
                 .isDeleted(this.isDeleted != null ? this.isDeleted : false)
                 .build();
-    }
-
-    public static Product toProductReference(Long productId) {
-        if (productId == null) {
-            return null;
-        }
-        return Product.builder().id(productId).build();
     }
 }
