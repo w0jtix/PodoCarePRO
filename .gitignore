@@ -6,7 +6,7 @@
 .idea/
 
 # Java
-/be/target/
+/be/PodoCareWebsite/target/
 /be/.idea/
 /be/logs/
 /be/PodoCareWebsite/logs/*.log
