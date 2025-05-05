@@ -1,7 +1,7 @@
 import React from "react";
-import ProductActionButton from "../ProductActionButton";
+import ProductActionButton from "./ProductActionButton";
 import { useState } from "react";
-import ProductContent from "../ProductContent";
+import ProductContent from "./ProductContent";
 
 const ItemList = ({
   attributes,
@@ -50,9 +50,7 @@ const ItemList = ({
       {items.map((item, index) => (
         <div key={`${item.id}-${item.name}`} className="product-wrapper">
           <div
-            className={`item ${
-              item.isDeleted == false ? "pointer" : ""
-            }`}
+            className={`item ${item.isDeleted == false ? "pointer" : ""}`}
             onClick={() => toggleProducts(item.id)}
           >
             {attributes.map((attr) => (

@@ -1,6 +1,6 @@
 import React from "react";
 import ListHeader from "./ListHeader.jsx";
-import ItemList from "./Popups/ItemList";
+import ItemList from "./ItemList.jsx";
 import { useState, useEffect } from "react";
 import AllProductService from "../service/AllProductService";
 
@@ -46,7 +46,6 @@ const SupplyList = ({
 
   const fetchItems = async (filters) => {
     const filterDTO = buildFilterDTO(filters);
-    console.log("fff", filterDTO);
 
     AllProductService.getProducts(filterDTO)
       .then((response) => {

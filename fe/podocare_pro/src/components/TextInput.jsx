@@ -17,20 +17,25 @@ const TextInput = ({
   const [isUserInteracting, setIsUserInteracting] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
+  const capitalizeFirstLetter = (string) => {
+    if (!string) return "";
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
   useEffect(() => {
     if (!isUserInteracting) {
-      setKeyword(value ?? "");
+      setKeyword(capitalizeFirstLetter(value ?? ""));
     }
   }, [value]);
 
   useEffect(() => {
-    if(value.length > 0) {
+    if (value.length > 0) {
       const matchedSuggestion = suggestions.find(
         (s) => s[displayValue].toLowerCase() === value.toLowerCase()
       );
       setSelectedItem(matchedSuggestion);
     }
-  },[])
+  }, []);
 
   useEffect(() => {
     setIsDropdownOpen(dropdown && isUserInteracting && keyword.length > 0);
@@ -38,7 +43,8 @@ const TextInput = ({
 
   const handleInputChange = (e) => {
     const inputValue = e.target.value;
-    setKeyword(inputValue);
+    const capitalizedValue = capitalizeFirstLetter(inputValue);
+    setKeyword(capitalizedValue);
     if (multiline) {
       if (onSelect) onSelect(inputValue);
     } else {

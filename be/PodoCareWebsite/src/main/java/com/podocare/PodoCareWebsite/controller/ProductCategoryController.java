@@ -28,8 +28,8 @@ public class ProductCategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO brandToCreate) {
-        CategoryDTO newCategory = productCategoryService.createCategory(brandToCreate);
+    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO categoryToCreate) {
+        CategoryDTO newCategory = productCategoryService.createCategory(categoryToCreate);
         return new ResponseEntity<>(newCategory, HttpStatus.CREATED);
     }
 

@@ -259,3 +259,51 @@ Caused by: org.hibernate.query.SemanticException: Missing constructor for type '
 2025-05-02 16:10:51 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
 2025-05-02 16:10:51 INFO  - Initializing Servlet 'dispatcherServlet'
 2025-05-02 16:10:51 INFO  - Completed initialization in 2 ms
+2025-05-05 13:58:07 INFO  - Starting PodoCareWebsiteApplication using Java 21.0.2 with PID 6052 (C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be\PodoCareWebsite\target\classes started by Wojtek in C:\Users\Wojtek\Desktop\nowy projekt\PodoCarePRO\be)
+2025-05-05 13:58:07 INFO  - No active profile set, falling back to 1 default profile: "default"
+2025-05-05 13:58:07 INFO  - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-05 13:58:07 INFO  - Finished Spring Data repository scanning in 63 ms. Found 7 JPA repository interfaces.
+2025-05-05 13:58:08 INFO  - Tomcat initialized with port 8080 (http)
+2025-05-05 13:58:08 INFO  - Initializing ProtocolHandler ["http-nio-8080"]
+2025-05-05 13:58:08 INFO  - Starting service [Tomcat]
+2025-05-05 13:58:08 INFO  - Starting Servlet engine: [Apache Tomcat/10.1.30]
+2025-05-05 13:58:08 INFO  - Initializing Spring embedded WebApplicationContext
+2025-05-05 13:58:08 INFO  - Root WebApplicationContext: initialization completed in 1252 ms
+2025-05-05 13:58:08 INFO  - HikariPool-1 - Starting...
+2025-05-05 13:58:08 INFO  - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@5fdfe8cf
+2025-05-05 13:58:08 INFO  - HikariPool-1 - Start completed.
+2025-05-05 13:58:08 INFO  - Set default schema name to public
+2025-05-05 13:58:09 INFO  - Reading from public.databasechangelog
+2025-05-05 13:58:09 INFO  - Reading from public.databasechangelog
+2025-05-05 13:58:09 INFO  - UPDATE SUMMARY
+2025-05-05 13:58:09 INFO  - Run:                          0
+2025-05-05 13:58:09 INFO  - Previously run:              14
+2025-05-05 13:58:09 INFO  - Filtered out:                 0
+2025-05-05 13:58:09 INFO  - -------------------------------
+2025-05-05 13:58:09 INFO  - Total change sets:           14
+
+2025-05-05 13:58:09 INFO  - Update summary generated
+2025-05-05 13:58:09 INFO  - Successfully released change log lock
+2025-05-05 13:58:09 INFO  - Command execution complete
+2025-05-05 13:58:09 INFO  - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-05 13:58:09 INFO  - HHH000412: Hibernate ORM core version 6.5.3.Final
+2025-05-05 13:58:09 INFO  - HHH000026: Second-level cache disabled
+2025-05-05 13:58:10 INFO  - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-05 13:58:10 WARN  - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-05-05 13:58:10 INFO  - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-05 13:58:10 INFO  - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-05 13:58:11 INFO  - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-05-05 13:58:12 WARN  - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-05 13:58:12 INFO  - Starting ProtocolHandler ["http-nio-8080"]
+2025-05-05 13:58:12 INFO  - Tomcat started on port 8080 (http) with context path '/'
+2025-05-05 13:58:12 INFO  - Started PodoCareWebsiteApplication in 5.418 seconds (process running for 5.999)
+2025-05-05 13:58:28 INFO  - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-05-05 13:58:28 INFO  - Initializing Servlet 'dispatcherServlet'
+2025-05-05 13:58:28 INFO  - Completed initialization in 1 ms
+2025-05-05 14:33:08 WARN  - Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long'; For input string: "undefined"]
+2025-05-05 18:00:15 WARN  - Resolved [org.springframework.http.converter.HttpMessageNotReadableException: Required request body is missing: public org.springframework.http.ResponseEntity<com.podocare.PodoCareWebsite.DTO.CategoryDTO> com.podocare.PodoCareWebsite.controller.ProductCategoryController.createCategory(com.podocare.PodoCareWebsite.DTO.CategoryDTO)]
+2025-05-05 18:27:59 ERROR - Creation failed: Failed to create Category. Reason: Category already exists.
+2025-05-05 18:28:03 ERROR - Creation failed: Failed to create Category. Reason: Category already exists.
+2025-05-05 18:46:15 INFO  - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-05 18:46:15 INFO  - HikariPool-1 - Shutdown initiated...
+2025-05-05 18:46:15 INFO  - HikariPool-1 - Shutdown completed.

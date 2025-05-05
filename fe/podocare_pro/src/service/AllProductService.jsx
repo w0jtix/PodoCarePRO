@@ -43,21 +43,11 @@ class AllProductService {
     }
   }
 
-
-
-
-
-
-
-
-
-
-  
-  static async updateProduct(productCreationDTO) {
+  static async updateProduct(productRequestDTO) {
     try {
-      const response = await axios.patch(
-        `${this.API_URL}/${productCreationDTO.id}`,
-        productCreationDTO
+      const response = await axios.put(
+        `${this.API_URL}/${productRequestDTO.id}`,
+        productRequestDTO
       );
       return response.data;
     } catch (error) {
@@ -66,10 +56,10 @@ class AllProductService {
     }
   }
 
-  static async deleteProductAndActiveInstances(productId) {
+  static async deleteProduct(productId) {
     try {
       const response = await axios.delete(`${this.API_URL}/${productId}`);
-      return response.data;
+      return response;
     } catch (error) {
       console.error(
         "Error removing Product",
@@ -79,21 +69,16 @@ class AllProductService {
     }
   }
 
+
+
+
+
+
+
+
   static async getProductById(productId) {
     try {
       const response = await axios.get(`${this.API_URL}/${productId}/find`);
-      return response.status === 204 ? null : response.data;
-    } catch (error) {
-      console.error(
-        "Product not found", error
-      )
-      throw error;
-    }
-  }
-
-  static async findProductByIdAndIncludeActiveInstances(productId) {
-    try {
-      const response = await axios.get(`${this.API_URL}/${productId}`);
       return response.status === 204 ? null : response.data;
     } catch (error) {
       console.error(

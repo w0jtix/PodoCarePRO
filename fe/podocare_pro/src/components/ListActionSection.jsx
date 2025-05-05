@@ -1,6 +1,5 @@
 import React from "react";
 import CategoryButtons from "./CategoryButtons";
-import BrandButton from "./BrandButton";
 import ProductActionButton from "./ProductActionButton";
 import DropdownSelect from "./DropdownSelect";
 import BrandService from "../service/BrandService";
@@ -9,7 +8,7 @@ import { useState, useEffect } from "react";
 const ListActionSection = ({
   onFilter,
   filters,
-  handleResetAllFilters,
+  handleResetFiltersAndData,
   resetTriggered,
 }) => {
   const [brands, setBrands] = useState([]);
@@ -78,7 +77,7 @@ const ListActionSection = ({
         src={"src/assets/reset.svg"}
         alt={"Reset"}
         text={"Reset"}
-        onClick={() => handleResetAllFilters()}
+        onClick={() => handleResetFiltersAndData()}
         disableText={true}
       />
     </div>

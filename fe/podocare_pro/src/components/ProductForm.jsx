@@ -1,5 +1,4 @@
 import React from "react";
-import BrandInput from "./BrandInput";
 import DigitInput from "./DigitInput";
 import { useState, useEffect } from "react";
 import CategoryButtons from "./CategoryButtons";
@@ -13,20 +12,16 @@ const ProductForm = ({
   onForwardBrand,
 }) => {
   const [productData, setProductData] = useState({
-    id: selectedProduct.id ?? null,
-    name: selectedProduct.name ?? "",
-    categoryId: selectedProduct.categoryId ?? null,
-    brandId: selectedProduct.brandId ?? null,
-    brandName: selectedProduct.brandName ?? null,
-    description: selectedProduct.description ?? null,
-    supply: selectedProduct.supply ?? 0,
+    id: selectedProduct?.id ?? null,
+    name: selectedProduct?.name ?? "",
+    categoryId: selectedProduct?.categoryId ?? null,
+    brandId: selectedProduct?.brandId ?? null,
+    brandName: selectedProduct?.brandName ?? null,
+    description: selectedProduct?.description ?? null,
+    supply: selectedProduct?.supply ?? 0,
   });
   const [brandSuggestions, setBrandSuggestions] = useState([]);
   const [brandToCreate, setBrandToCreate] = useState(null);
-
-  useEffect(() => {
-    console.log("sss", selectedProduct);
-  }, [selectedProduct]);
 
   useEffect(() => {
     if (brandToCreate && brandToCreate?.name.trim().length > 0) {
@@ -42,8 +37,8 @@ const ProductForm = ({
   }, [brandToCreate?.name]);
 
   useEffect(() => {
-    console.log("prd", productData);
     const productForm = {
+      id: productData.id,
       name: productData.name,
       categoryId: productData.categoryId,
       brandId: productData.brandId,
@@ -92,11 +87,6 @@ const ProductForm = ({
     }));
   };
 
-  useEffect(() => {
-    console.log("p", productData);
-    console.log("BRtoCreate", brandToCreate);
-  }, [productData]);
-
   return (
     <div className={`product-form-container ${action.toLowerCase()}`}>
       <section className="product-form-categories">
@@ -107,13 +97,13 @@ const ProductForm = ({
               handleCategory(selectedCategoryId)
             }
             multiSelect={false}
-            selectedId={selectedProduct.categoryId}
+            selectedId={selectedProduct?.categoryId}
           />
         </div>
       </section>
       <section className="product-form-core-section">
         <ul className="product-form-inputs-section">
-          <li className="new-product-popup-common-section-row product-name">
+          <li className="popup-common-section-row name">
             <a className="product-form-input-title">Nazwa:</a>
             <TextInput
               dropdown={false}
@@ -125,7 +115,7 @@ const ProductForm = ({
               }}
             />
           </li>
-          <li className="new-product-popup-common-section-row">
+          <li className="popup-common-section-row">
             <a className="product-form-input-title">Marka Produktu:</a>
             <TextInput
               dropdown={true}
@@ -151,14 +141,14 @@ const ProductForm = ({
               }}
             />
           </li>
-          <li className="new-product-popup-common-section-row">
+          <li className="popup-common-section-row">
             <a className="product-form-input-title">Produkty na stanie:</a>
             <DigitInput
               onInputValue={(newSupply) => handleSupply(newSupply)}
               startValue={selectedProduct?.supply ?? 0}
             />
           </li>
-          <li className="new-product-popup-common-section-row description">
+          <li className="popup-common-section-row description">
             <a className="product-form-input-title">Dodatkowe informacje:</a>
             <TextInput
               value={selectedProduct?.description ?? ""}

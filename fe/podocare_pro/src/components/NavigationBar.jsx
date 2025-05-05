@@ -3,7 +3,7 @@ import SearchBar from './SearchBar'
 import UserMenu from './UserMenu'
 import ListActionSection from './ListActionSection'
 
-const NavigationBar = ( { onFilter, filters, handleResetAllFilters, resetTriggered }) => {
+const NavigationBar = ( { onFilter, filters, handleResetFiltersAndData, resetTriggered }) => {
 
   const handleFilterChange = (newKeyword) => {
     const updatedFilterDTO = {
@@ -18,7 +18,6 @@ const NavigationBar = ( { onFilter, filters, handleResetAllFilters, resetTrigger
 
   },[filters]);
 
-
   return (
     <div className="navigation-bar">
       <section className="navigation-bar-interior">
@@ -29,7 +28,7 @@ const NavigationBar = ( { onFilter, filters, handleResetAllFilters, resetTrigger
         <ListActionSection 
         onFilter={onFilter} 
         filters={filters}
-        handleResetAllFilters={handleResetAllFilters}
+        handleResetFiltersAndData={handleResetFiltersAndData}
         resetTriggered={resetTriggered}
         />
         <UserMenu />

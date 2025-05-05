@@ -7,7 +7,7 @@ import AllProductService from "../../service/AllProductService";
 import ProductActionButton from "../ProductActionButton";
 import BrandService from "../../service/BrandService";
 
-const AddProductPopup = ({ onClose, handleResetFiltersAndData, selectedProduct }) => {
+const AddEditProductPopup = ({ onClose, handleResetFiltersAndData, selectedProduct }) => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [infoMessage, setInfoMessage] = useState(null);
@@ -51,7 +51,7 @@ const AddProductPopup = ({ onClose, handleResetFiltersAndData, selectedProduct }
     }
   };
 
-  const handleCreateProduct = async (productDTO) => {
+  const handleProductAction = async (productDTO) => {
 
     let productRequestDTO = { ...productDTO };
 
@@ -62,11 +62,11 @@ const AddProductPopup = ({ onClose, handleResetFiltersAndData, selectedProduct }
       }
       productRequestDTO.brandId = newBrand.id;
     }
-    if (await checkForErrorsProductCreate(productRequestDTO)) {
+    if (await checkForErrorsProductAction(productRequestDTO)) {
       return false;
     }
-
-    return AllProductService.createNewProduct(productRequestDTO)
+    if(action == "Create") {
+      return AllProductService.createNewProduct(productRequestDTO)
       .then((data) => {
         showAlert(
           `Produkt ${productRequestDTO.name} został utworzony!`,
@@ -82,6 +82,24 @@ const AddProductPopup = ({ onClose, handleResetFiltersAndData, selectedProduct }
         showAlert("Błąd tworzenia produktu.", "error");
         return false;
       })
+    } else if (action == "Edit") {
+      return AllProductService.updateProduct(productRequestDTO)
+      .then((data) => {
+        showAlert(
+          `Produkt ${productRequestDTO.name} zaktualizowany!`,
+          "success"
+        );
+        handleResetFiltersAndData();
+        setTimeout(() => {
+          onClose();
+        }, 1200);
+      })
+      .catch((error) => {
+        console.error("Error updating Product.", error);
+        showAlert("Błąd aktualizacji produktu.", "error");
+        return false;
+      })    
+  }
   };
 
   const checkForErrorsBrandCreate = async (brandToCreate) => {
@@ -92,7 +110,7 @@ const AddProductPopup = ({ onClose, handleResetFiltersAndData, selectedProduct }
     return false;
   };
 
-  const checkForErrorsProductCreate = async (productForm) => {
+  const checkForErrorsProductAction = async (productForm) => {
     if (
       Object.values(productForm).some(
         (value) => value === null || value === undefined
@@ -107,7 +125,17 @@ const AddProductPopup = ({ onClose, handleResetFiltersAndData, selectedProduct }
       return true;
     }
 
-    // add checker for no changes detected
+    const noChangesDetected =
+    productForm.name === selectedProduct.name &&
+    productForm.categoryId === selectedProduct.categoryId &&
+    productForm.brandId === selectedProduct.brandId &&
+    (productForm.description ?? "") === (selectedProduct.description ?? "") &&
+    productForm.supply === selectedProduct.supply;
+
+    if (action =="Edit" && noChangesDetected) {
+      showAlert("Brak zmian!", "error");
+      return true;
+    }
 
     return false;
   };
@@ -115,7 +143,7 @@ const AddProductPopup = ({ onClose, handleResetFiltersAndData, selectedProduct }
   return ReactDOM.createPortal(
     <div className="add-popup-overlay" onClick={onClose}>
       <div
-        className="new-product-popup-content"
+        className="product-popup-content"
         onClick={(e) => e.stopPropagation()}
       >
         <section className="product-popup-header">
@@ -143,7 +171,7 @@ const AddProductPopup = ({ onClose, handleResetFiltersAndData, selectedProduct }
           src={"src/assets/tick.svg"}
           alt={"Zapisz"}
           text={"Zapisz"}
-          onClick={async () => handleCreateProduct(productDTO)}
+          onClick={async () => handleProductAction(productDTO)}
         />
         <a className="popup-category-description">
           Jeśli chcesz przypisać produkt do zamówienia skorzystaj z zakładki -{" "}
@@ -163,4 +191,4 @@ const AddProductPopup = ({ onClose, handleResetFiltersAndData, selectedProduct }
   );
 };
 
-export default AddProductPopup;
+export default AddEditProductPopup;

@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import ProductContent from "../ProductContent";
 import ProductActionButton from "../ProductActionButton";
 import AllProductService from "../../service/AllProductService";
 import CustomAlert from "../CustomAlert";
@@ -38,8 +37,8 @@ const RemoveProductPopup = ({
   };
 
   const handleProductRemove = async (productId) => {
-    AllProductService.deleteProductAndActiveInstances(productId)
-      .then((response) => {
+    AllProductService.deleteProduct(productId)
+      .then(() => {
         const success = true;
         const mode = "Remove";
         handleResetFiltersAndData(success, mode);
@@ -55,17 +54,15 @@ const RemoveProductPopup = ({
 
   return ReactDOM.createPortal(
     <div
-      className={`add-popup-overlay ${
-        selectedProduct.productInstances.length === 0 ? "short-version" : ""
-      } `}
+      className="add-popup-overlay short-version"
       onClick={onClose}
     >
       <div
         className="remove-product-popup-content"
         onClick={(e) => e.stopPropagation()}
       >
-        <section className="edit-product-popup-header">
-          <h2 className="popup-title">Na pewno? ⛔</h2>
+        <section className="product-popup-header">
+          <h2 className="popup-title">Na pewno? ⚠️</h2>
           <button className="popup-close-button" onClick={onClose}>
             <img
               src="src/assets/close.svg"
@@ -75,27 +72,12 @@ const RemoveProductPopup = ({
           </button>
         </section>
         <section className="remove-product-popup-interior">
-          {selectedProduct.productInstances.length === 0 ? (
             <section>
               <a className="remove-popup-warning-a">
                 ❗❗❗ Zatwierdzenie spowoduje usunięcie informacji o produkcie.
               </a>
               <br />
-            </section>
-          ) : (
-            <>
-              <section>
-                <a className="remove-popup-warning-a">
-                  ❗❗❗ Zatwierdzenie spowoduje usunięcie informacji o
-                  produkcie i dostępnych zapasów na stanie:
-                </a>
-                <br />
-                <a className="remove-popup-warning-a-list-length">{`Razem: ${selectedProduct.productInstances.length}`}</a>
-              </section>
-              {selectedProduct && <ProductContent product={selectedProduct} />}
-              <a className="remove-popup-warning-a"></a>
-            </>
-          )}
+            </section>          
         </section>
         {selectedProduct && (
           <>
@@ -117,12 +99,10 @@ const RemoveProductPopup = ({
                 />
               </div>
             </section>
-            {selectedProduct.productInstances.length > 0 && (
               <a className="popup-category-description">
-                Jeśli chcesz usunąć pojedynczy produkt z zapasów skorzystaj z
+                Jeśli chcesz edytować liczbę produktów w zapasie skorzystaj z
                 zakładki - <i>Edytuj Produkt</i>
               </a>
-            )}
           </>
         )}
         {alertVisible && (

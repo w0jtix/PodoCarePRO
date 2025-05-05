@@ -3,17 +3,16 @@ import NavigationBar from "./NavigationBar";
 import SupplyList from "./SupplyList";
 import { useState } from "react";
 import ProductActionButton from "./ProductActionButton";
-import AddProductPopup from "./Popups/AddProductPopup";
-import EditProductPopup from "./Popups/EditProductPopup";
+import AddEditProductPopup from "./Popups/AddEditProductPopup";
 import RemoveProductPopup from "./Popups/RemoveProductPopup";
+import CategoryPopup from "./Popups/CategoryPopup";
 import CustomAlert from "./CustomAlert";
 
 const Dashboard = () => {
-  const [isAddNewProductsPopupOpen, setIsAddNewProductsPopupOpen] =
-    useState(false);
+  const [isAddNewProductsPopupOpen, setIsAddNewProductsPopupOpen] = useState(false);
   const [isEditProductsPopupOpen, setIsEditProductsPopupOpen] = useState(false);
-  const [isRemoveProductsPopupOpen, setIsRemoveProductsPopupOpen] =
-    useState(false);
+  const [isRemoveProductsPopupOpen, setIsRemoveProductsPopupOpen] = useState(false);
+  const [isCategoryPopupOpen, setIsCategoryPopupOpen] = useState(false);
   const [filters, setFilters] = useState({
     categoryIds: [],
     brandIds: [],
@@ -41,10 +40,6 @@ const Dashboard = () => {
       setAlertVisible(false);
     }, 2500);
   };
-
-  useEffect(() => {
-    console.log("sel", selectedProduct);
-  }, [selectedProduct]);
 
   const handleResetFiltersAndData = (success, mode) => {
     if (success) {
@@ -108,7 +103,7 @@ const Dashboard = () => {
             src={"src/assets/addNew.svg"}
             alt={"Nowa Kategoria"}
             text={"Nowa Kategoria"}
-            /* onClick={() => setIsAddNewProductsPopupOpen(true)} */
+            onClick={() => setIsCategoryPopupOpen(true)}
           />
         </section>
       </section>
@@ -120,13 +115,13 @@ const Dashboard = () => {
         setSelectedProduct={setSelectedProduct}
       />
       {isAddNewProductsPopupOpen && (
-        <AddProductPopup
+        <AddEditProductPopup
           onClose={() => setIsAddNewProductsPopupOpen(false)}
           handleResetFiltersAndData={handleResetFiltersAndData}
         />
       )}
       {isEditProductsPopupOpen && (
-        <AddProductPopup
+        <AddEditProductPopup
           onClose={() => setIsEditProductsPopupOpen(false)}
           handleResetFiltersAndData={handleResetFiltersAndData}
           selectedProduct={selectedProduct}
@@ -137,6 +132,12 @@ const Dashboard = () => {
           onClose={() => setIsRemoveProductsPopupOpen(false)}
           handleResetFiltersAndData={handleResetFiltersAndData}
           selectedProduct={selectedProduct}
+        />
+      )}
+      {isCategoryPopupOpen && (
+        <CategoryPopup
+        onClose={() => setIsCategoryPopupOpen(false)}
+        handleResetFiltersAndData={handleResetFiltersAndData}
         />
       )}
       {alertVisible && (
