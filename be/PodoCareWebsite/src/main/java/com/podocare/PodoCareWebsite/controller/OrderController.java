@@ -1,7 +1,8 @@
 package com.podocare.PodoCareWebsite.controller;
 
 import com.podocare.PodoCareWebsite.DTO.FilterDTO;
-import com.podocare.PodoCareWebsite.DTO.OrderDTO;
+import com.podocare.PodoCareWebsite.DTO.OrderDisplayDTO;
+import com.podocare.PodoCareWebsite.DTO.OrderRequestDTO;
 import com.podocare.PodoCareWebsite.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,26 +18,26 @@ public class OrderController {
 
 
     @PostMapping("/get")
-    public ResponseEntity<List<OrderDTO>> getOrders(@RequestBody FilterDTO filter) {
-        List<OrderDTO> ordersDTOList = orderService.getOrders(filter);
+    public ResponseEntity<List<OrderDisplayDTO>> getOrders(@RequestBody FilterDTO filter) {
+        List<OrderDisplayDTO> ordersDTOList = orderService.getOrders(filter);
         return new ResponseEntity<>(ordersDTOList, ordersDTOList.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long orderId) {
-        OrderDTO orderDTO = orderService.getOrderById(orderId);
+    public ResponseEntity<OrderDisplayDTO> getOrderById(@PathVariable Long orderId) {
+        OrderDisplayDTO orderDTO = orderService.getOrderDisplayById(orderId);
         return new ResponseEntity<>(orderDTO, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderToCreate) {
-        OrderDTO newOrder = orderService.createOrder(orderToCreate);
+    public ResponseEntity<OrderDisplayDTO> createOrder(@RequestBody OrderRequestDTO orderToCreate) {
+        OrderDisplayDTO newOrder = orderService.createOrder(orderToCreate);
         return new ResponseEntity<>(newOrder, HttpStatus.CREATED);
     }
 
     @PutMapping("/{orderId}")
-    public ResponseEntity<OrderDTO> updateOrder(@PathVariable Long orderId, @RequestBody OrderDTO updatedOrder) {
-        OrderDTO order = orderService.updateOrder(orderId, updatedOrder);
+    public ResponseEntity<OrderDisplayDTO> updateOrder(@PathVariable Long orderId, @RequestBody OrderRequestDTO updatedOrder) {
+        OrderDisplayDTO order = orderService.updateOrder(orderId, updatedOrder);
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 

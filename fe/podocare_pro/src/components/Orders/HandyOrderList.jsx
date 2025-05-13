@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import OrderContent from "./Orders/OrderContent";
+import OrderContent from "./OrderContent";
 
 const HandyOrderList = ({
   attributes,
@@ -41,15 +41,15 @@ const HandyOrderList = ({
       {[...orders]
         .sort((a, b) => b.orderNumber - a.orderNumber)
         .map((order, index) => (
-          <div key={`${order.orderId}-${index}`} className="order-wrapper">
+          <div key={`${order.id}-${index}`} className="order-wrapper">
             <div
               className="handy-order-item"
-              onClick={() => toggleOrderProducts(order.orderId)}
+              onClick={() => toggleOrderProducts(order.id)}
             >
               {attributes.map((attr) => (
                 <div
-                  key={`${order.orderId}-${attr.name}`}
-                  className={`order-attribute-item ${
+                  key={`${order.id}-${attr.name}`}
+                  className={`attribute-item order ${
                     attr.name === "" ? "order-category-column" : ""
                   }`}
                   style={{
@@ -63,7 +63,7 @@ const HandyOrderList = ({
                         src="src/assets/arrow_down.svg"
                         alt="Expand order"
                         className={`expand-order-icon ${
-                          expandedOrderIds.includes(order.orderId)
+                          expandedOrderIds.includes(order.id)
                             ? "rotated"
                             : ""
                         }`}
@@ -87,7 +87,7 @@ const HandyOrderList = ({
                 </div>
               ))}
             </div>
-            {expandedOrderIds.includes(order.orderId) && (
+            {expandedOrderIds.includes(order.id) && (
               <OrderContent
                 order={order}
                 setSelectedOrderProduct={setSelectedOrderProduct}

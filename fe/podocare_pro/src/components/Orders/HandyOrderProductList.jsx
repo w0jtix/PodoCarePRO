@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import AllProductService from "../service/AllProductService";
+import SupplyManagerService from "../../service/SupplyManagerService";
 
 const HandyOrderProductList = ({
   attributes,
@@ -11,62 +11,47 @@ const HandyOrderProductList = ({
   setHasWarning,
 }) => {
   const [warningVisible, setWarningVisible] = useState({});
-  /*   const getOrderProductCategoryAndDetails = (orderProduct) => {
-    if (orderProduct.saleProduct) {
-      return { category: "saleProduct", product: orderProduct.saleProduct };
-    } else if (orderProduct.toolProduct) {
-      return { category: "toolProduct", product: orderProduct.toolProduct };
-    } else if (orderProduct.equipmentProduct) {
-      return {
-        category: "equipmentProduct",
-        product: orderProduct.equipmentProduct,
-      };
-    }
-    return { category: "Unknown", product: null };
-  }; */
 
-  const categoryColors = {
-    Sale: "green",
-    Tool: "yellow",
-    Equipment: "pink",
+  const fetchManagers = async (filterDTO) => {
+    return SupplyManagerService.getManagers(filterDTO)
+      .then((data) => {
+        order.orderProductDTOList.forEach((orderProduct) => {
+          const productId = orderProduct.productId;
+          const supplyData = data.find((d) => d.productId === productId);
+          const activeCount = supplyData ? supplyData.supply : 0;
+          const opQuantity = orderProduct.quantity;
+          const shouldWarn = opQuantity > 0 && opQuantity > activeCount;
+          setWarningVisible((prevVisibility) => ({
+            ...prevVisibility,
+            [orderProduct.id]: shouldWarn,
+          }));
+          if (shouldWarn) {
+            setHasWarning(true);
+          }
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching supply managers:", error);
+      });
   };
 
   useEffect(() => {
     if (action === "History" && mode === "Popup") {
-      order.orderProductDTOList.map((orderProduct) => {
-        const productId = orderProduct.productId;
-        if (productId) {
-          return AllProductService.findProductByIdAndIncludeActiveInstances(
-            productId
-          )
-            .then((data) => {
-              const activeCount = data.activeProductInstances.length;
-              const qtyDifference = orderProduct.quantity;
-              const shouldWarn =
-                qtyDifference > 0 && qtyDifference > activeCount;
-              setWarningVisible((prevVisibility) => ({
-                ...prevVisibility,
-                [orderProduct.orderProductId]: shouldWarn,
-              }));
-
-              if (shouldWarn) {
-                setHasWarning(true);
-              }
-            })
-            .catch((error) => {
-              console.error("Error checking supply count:", error);
-            });
-        }
-      });
+      const productIds = order.orderProductDTOList.map(
+        (orderProduct) => orderProduct.productId
+      );
+      if (productIds.length > 0) {
+        const filterDTO = { productIds: productIds };
+        fetchManagers(filterDTO);
+      }
     }
   }, [order]);
 
-  const getArrowSrc = (category) => {
-    return `src/assets/${categoryColors[category]}Arrow.svg`;
-  };
-
-  const calculateNetPrice = (total, vatrate) => {
-    const result = total / (1 + vatrate / 100);
+  const calculateNetPrice = (total, vatRate) => {
+    if (typeof vatRate === "string") {
+      vatRate = 0;
+    }
+    const result = total / (1 + vatRate / 100);
     return result.toFixed(2);
   };
 
@@ -79,13 +64,13 @@ const HandyOrderProductList = ({
       {order.orderProductDTOList.map((orderProduct, index) => {
         return (
           <div
-            key={`${orderProduct.orderProductId}-${index}`}
+            key={`${orderProduct.id}-${index}`}
             className="handy-order-product-item"
           >
             {attributes.map((attr) => (
               <div
                 key={`${order.id}-${attr.name}`}
-                className={`order-attribute-item ${
+                className={`attribute-item order ${
                   attr.name === "" ? "order-category-column" : ""
                 }`}
                 style={{
@@ -97,29 +82,34 @@ const HandyOrderProductList = ({
                   action === "History" ? (
                     <div
                       className={`category-container ${
-                        categoryColors[orderProduct.category]
+                        mode ? mode.toLowerCase() : ""
                       }`}
-                      /* style={{
-                      backgroundColor: categoryColors[category],
-                    }} */
+                      style={{
+                        backgroundColor: `rgb(${orderProduct.productCategoryColor})`,
+                      }}
                     ></div>
                   ) : action === "Create" ? (
                     <button
                       className="order-product-move-button"
                       onClick={() => setSelectedOrderProduct(orderProduct)}
+                      style={{
+                        border: `1px solid rgb(${orderProduct.productCategoryColor})`,
+                        borderRadius: "50%",
+                      }}
                     >
-                      <img
-                        src={getArrowSrc(orderProduct.category)}
-                        alt="Move orderProduct"
-                        className="move-order-product-icon"
-                      />
+                      <div
+                        className="order-product-move-icon"
+                        style={{
+                          backgroundColor: `rgb(${orderProduct.productCategoryColor})`,
+                        }}
+                      ></div>
                     </button>
                   ) : null
                 ) : attr.name === "Nazwa" ? (
                   <div className="handy-order-product-list-product-name-display">
                     <span
                       className={`order-product-list-span ${
-                        warningVisible[orderProduct.orderProductId] === true &&
+                        warningVisible[orderProduct.id] === true &&
                         action === "History" &&
                         mode === "Popup"
                           ? "warning-visible"
@@ -128,7 +118,7 @@ const HandyOrderProductList = ({
                     >
                       {orderProduct.productName}
                     </span>
-                    {warningVisible[orderProduct.orderProductId] === true &&
+                    {warningVisible[orderProduct.id] === true &&
                       action === "History" &&
                       mode === "Popup" && (
                         <img
@@ -141,7 +131,7 @@ const HandyOrderProductList = ({
                 ) : attr.name === "Ilość" ? (
                   <span
                     className={`order-product-list-span ${
-                      warningVisible[orderProduct.orderProductId] === true &&
+                      warningVisible[orderProduct.id] === true &&
                       action === "History" &&
                       mode === "Popup"
                         ? "warning-visible"
@@ -153,7 +143,7 @@ const HandyOrderProductList = ({
                 ) : attr.name === "Netto [szt]" ? (
                   <span
                     className={`order-product-list-span ${
-                      warningVisible[orderProduct.orderProductId] === true &&
+                      warningVisible[orderProduct.id] === true &&
                       action === "History" &&
                       mode === "Popup"
                         ? "warning-visible"
@@ -162,23 +152,25 @@ const HandyOrderProductList = ({
                   >
                     {calculateNetPrice(
                       orderProduct.price,
-                      orderProduct.VATrate
+                      orderProduct.vatRate
                     )}
                   </span>
                 ) : attr.name === "VAT" ? (
                   <span
                     className={`order-product-list-span ${
-                      warningVisible[orderProduct.orderProductId] === true &&
+                      warningVisible[orderProduct.id] === true &&
                       action === "History" &&
                       mode === "Popup"
                         ? "warning-visible"
                         : ""
                     }`}
-                  >{`${orderProduct.VATrate}%`}</span>
+                  >{`${orderProduct.vatRate}${
+                    typeof orderProduct.vatRate === "string" ? "" : "%"
+                  }`}</span>
                 ) : attr.name === "Cena [szt]" ? (
                   <span
                     className={`order-product-list-span ${
-                      warningVisible[orderProduct.orderProductId] === true &&
+                      warningVisible[orderProduct.id] === true &&
                       action === "History" &&
                       mode === "Popup"
                         ? "warning-visible"
@@ -200,7 +192,7 @@ const HandyOrderProductList = ({
           {attributes.map((attr) => (
             <div
               key={`shipping-${attr.name}`}
-              className={`order-attribute-item ${
+              className={`attribute-item order${
                 attr.name === "" ? "order-category-column" : ""
               }`}
               style={{

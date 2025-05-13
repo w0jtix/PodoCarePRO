@@ -2,45 +2,37 @@ import React from "react";
 import { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import CustomAlert from "../CustomAlert";
-import BrandInput from "../BrandInput";
-import DigitInput from "../DigitInput";
-import SelectProductCategory from "../SelectProductCategory";
-import OrderListHeader from "../Orders/OrderListHeader";
 import AllProductService from "../../service/AllProductService";
 import ProductActionButton from "../ProductActionButton";
-import CostInput from "../CostInput";
+import CategoryButtons from "../CategoryButtons";
+import ListHeader from "../ListHeader";
+import TextInput from "../TextInput";
+import BrandService from "../../service/BrandService";
+import DropdownSelect from "../DropdownSelect";
+import CategoryService from "../../service/CategoryService";
 
 const OrderNewProductsPopup = ({
   nonExistingProducts,
-  orderProductDTOList,
-  setOrderProductDTOList,
-  trueOrderProductDTOList,
-  orderDTO,
-  setOrderDTO,
+  orderData,
   onClose,
   onFinalizeOrder,
-  action,
 }) => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [alertVisible, setAlertVisible] = useState(false);
-  const [adjustedProducts, setAdjustedProducts] = useState([]);
-  const [globalCategory, setGlobalCategory] = useState(null);
 
-  const categories = ["Sale", "Tool", "Equipment"];
-  const categoryMap = {
-    Sale: "Produkty",
-    Tool: "Narzędzia",
-    Equipment: "Sprzęt",
-  };
+  const [categories, setCategories] = useState([]);
+  const [productList, setProductList] = useState([]);
+  const [globalCategory, setGlobalCategory] = useState(null);
+  const [resetTriggered, setResetTriggered] = useState(false);
+  const [productBrandManager, setProductBrandManager] = useState([]);
 
   const attributes = [
     { name: "", width: "2%", justify: "flex-start" },
-    { name: "Nazwa", width: "26.5%", justify: "flex-start" },
-    { name: "Marka", width: "24%", justify: "center" },
-    { name: "[Msc]*", width: "10%", justify: "center" },
-    { name: "Kategoria", width: "21%", justify: "center" },
-    { name: "Cena**", width: "17%", justify: "center" },
+    { name: "Nazwa", width: "50%", justify: "flex-start" },
+    { name: "Marka", width: "25%", justify: "center" },
+    { name: "Kategoria", width: "25%", justify: "center" },
+    { name: "", width: "3%", justify: "flex-start" },
   ];
 
   const showAlert = (message, variant) => {
@@ -58,17 +50,111 @@ const OrderNewProductsPopup = ({
     }, 2500);
   };
 
-  const handleSelectCategory = (productId, category) => {
-    setAdjustedProducts((prevProducts) =>
+  const fetchCategories = async () => {
+    CategoryService.getCategories()
+      .then((data) => {
+        setCategories(data);
+        return data;
+      })
+      .catch((error) => {
+        setCategories([]);
+        console.error("Error fetching categories:", error);
+        return [];
+      });
+  };
+
+  useEffect(() => {
+    fetchCategories();
+    if (productList.length === 0 && nonExistingProducts.length > 0) {
+      const initProducts = nonExistingProducts.map((product) => ({
+        id: product.id,
+        name: product.productName,
+        categoryId: null,
+        brandId: null,
+        brandName: null,
+        description: null,
+        supply: 0,
+      }));
+      setProductList(initProducts);
+
+      const initBrandsManager = nonExistingProducts.map((product) => ({
+        productId: product.id,
+        brandId: null,
+        brandName: "",
+        brandSuggestions: [],
+      }));
+      setProductBrandManager(initBrandsManager);
+    }
+  }, [nonExistingProducts]);
+
+  const handleSelectCategory = (productId, categoryId) => {
+    setProductList((prevProducts) =>
       prevProducts.map((product) =>
-        product.id === productId ? { ...product, category } : product
+        product.id === productId ? { ...product, categoryId } : product
       )
     );
   };
 
-  const checkForErrors = () => {
-    const missingFields = adjustedProducts.filter(
-      (product) => !product.brandName || !product.category
+  const handleGlobalCategoryChange = (categoryId) => {
+    setProductList(productList.map((product) => ({ ...product, categoryId })));
+    setGlobalCategory(categoryId);
+  };
+
+  const handleGlobalCategoryReset = () => {
+    setProductList(
+      productList.map((product) => ({ ...product, categoryId: null }))
+    );
+    setGlobalCategory(null);
+    setResetTriggered((prev) => !prev);
+  };
+
+  const handleBrand = (productId, brandId, brandName) => {
+    setProductBrandManager((prev) =>
+      prev.map((entry) =>
+        entry.productId === productId ? { ...entry, brandName, brandId } : entry
+      )
+    );
+
+    if (brandName.trim().length > 0) {
+      const filterDTO = { keyword: brandName };
+      BrandService.getBrands(filterDTO)
+        .then((data) => {
+          setProductBrandManager((prev) =>
+            prev.map((entry) =>
+              entry.productId === productId
+                ? { ...entry, brandSuggestions: data }
+                : entry
+            )
+          );
+        })
+        .catch((error) => {
+          console.error("Error fetching filtered brands:", error.message);
+        });
+    }
+
+    setProductList((prevProducts) =>
+      prevProducts.map((product) =>
+        product.id === productId ? { ...product, brandId, brandName } : product
+      )
+    );
+  };
+
+  const checkForErrorsBrandsCreate = async (brandsToCreate) => {
+    for (const brand of brandsToCreate) {
+      if (brand.name.trim() === "") {
+        showAlert("Niepoprawna nazwy marki!", "error");
+        return true;
+      } else if (brand.name.trim().length <= 2) {
+        showAlert("Nazwa marki za krótka! (2+)", "error");
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const checkForErrorsProduct = async (productList) => {
+    const missingFields = productList.filter(
+      (product) => !product.brandId || !product.categoryId
     );
 
     if (missingFields.length > 0) {
@@ -83,7 +169,7 @@ const OrderNewProductsPopup = ({
       return true;
     }
 
-    const productNames = adjustedProducts.map((product) =>
+    const productNames = productList.map((product) =>
       product.name.trim().toLowerCase()
     );
     const uniqueProductNames = new Set(productNames);
@@ -92,61 +178,97 @@ const OrderNewProductsPopup = ({
       return true;
     }
 
-    if (adjustedProducts.some((product) => product.brandName.trim() === "")) {
-      showAlert("Niepoprawna nazwy marki!", "error");
-      return true;
-    } else if (
-      adjustedProducts.some((product) => product.brandName.trim().length <= 2)
-    ) {
-      showAlert("Nazwa marki za krótka! (2+)", "error");
-      return true;
-    }
-
-    if (adjustedProducts.some((product) => product.shelfLife === 0)) {
-      showAlert("Okres przydatności musi być  > 0!", "error");
-      return true;
-    }
     return false;
   };
 
-  const createNewProducts = async (adjustedProducts) => {
-    if (checkForErrors()) return false;
-    return AllProductService.createNewProducts(adjustedProducts)
+  const handleBrandsToCreate = async (brandsToCreate) => {
+    if (await checkForErrorsBrandsCreate(brandsToCreate)) return false;
+
+    try {
+      const data = await BrandService.createBrands(brandsToCreate);
+      return data;
+    } catch (error) {
+      console.error("Error creating new Brand.", error);
+      showAlert("Błąd w trakcie tworzenia produktu.", "error");
+      return false;
+    }
+  };
+
+  const createProductRequestDTOList = (productList) => {
+    return productList.map((product) => ({
+      id: null,
+      name: product.name,
+      categoryId: product.categoryId,
+      brandId: product.brandId,
+      description: product.description,
+      supply: product.supply,
+    }));
+  };
+
+  const createNewProducts = async (productList) => {
+    let productsWithUpdatedBrands = [...productList];
+
+    const brandsToCreate = Array.from(
+      new Set(
+        productBrandManager
+          .filter((entry) => entry.brandId == null)
+          .map((entry) => entry.brandName.trim())
+      )
+    ).map((name) => ({ id: null, name }));
+
+    if (brandsToCreate.length > 0) {
+      const newBrands = await handleBrandsToCreate(brandsToCreate);
+      if (!newBrands) {
+        return false;
+      }
+
+      productsWithUpdatedBrands = productsWithUpdatedBrands.map((product) => {
+        const matchingBrand = newBrands.find(
+          (brand) => brand.name === product.brandName
+        );
+        return matchingBrand
+          ? { ...product, brandId: matchingBrand.id }
+          : product;
+      });
+    }
+
+    const productRequestDTOList = createProductRequestDTOList(
+      productsWithUpdatedBrands
+    );
+
+    if (await checkForErrorsProduct(productRequestDTOList)) {
+      return false;
+    }
+
+    console.log("req", productRequestDTOList);
+
+    return AllProductService.createNewProducts(productRequestDTOList)
       .then((data) => {
-        if (!data || data.length === 0) {
-          showAlert("Błąd tworzenia produktu.", "error");
-          return false;
-        }
-        const updatedOrderProductList = orderProductDTOList.map((product) => {
-          const matchingProduct = data.find(
-            (newProduct) => newProduct.productName === product.productName
-          );
-          return matchingProduct
-            ? { ...product, productId: matchingProduct.id }
-            : product;
-        });
-        if (action === "Create") {
-          setOrderProductDTOList(updatedOrderProductList);
-          onFinalizeOrder(updatedOrderProductList);
-        } else if (action === "Edit") {
-          const updatedTrueOrderProductList = trueOrderProductDTOList.map(
-            (product) => {
-              const matchingProduct = data.find(
-                (newProduct) => newProduct.productName === product.productName
-              );
-              return matchingProduct
-                ? { ...product, productId: matchingProduct.id }
-                : product;
-            }
-          );
-          const updatedOrderDTO = {
-            ...orderDTO,
-            addedOrderProducts: updatedOrderProductList,
-            orderProductDTOList: updatedTrueOrderProductList,
-          };
-          setOrderDTO(updatedOrderDTO);
-          onFinalizeOrder(updatedOrderDTO);
-        }
+        const updatedOrderProductRequestDTOList = nonExistingProducts.map(
+          (product) => {
+            const matchingProduct = data.find(
+              (newProduct) => newProduct.name === product.productName
+            );
+            return matchingProduct
+              ? { ...product, productId: matchingProduct.id }
+              : product;
+          }
+        );
+
+        const finalOrderProductDTOList = orderData.orderProductDTOList.map(
+          (product) => {
+            const updatedProduct = updatedOrderProductRequestDTOList.find(
+              (op) => op.id === product.id
+            );
+            return updatedProduct ? updatedProduct : product;
+          }
+        );
+
+        const finalOrderData = {
+          ...orderData,
+          orderProductDTOList: finalOrderProductDTOList,
+        };
+        onFinalizeOrder(finalOrderData);
         return true;
       })
       .catch((error) => {
@@ -155,60 +277,6 @@ const OrderNewProductsPopup = ({
         return false;
       });
   };
-
-  const handleGlobalCategoryChange = (category) => {
-    setAdjustedProducts(
-      adjustedProducts.map((product) => ({ ...product, category }))
-    );
-    setGlobalCategory(category);
-  };
-
-  const handleGlobalCategoryReset = () => {
-    setAdjustedProducts(
-      adjustedProducts.map((product) => ({ ...product, category: null }))
-    );
-    setGlobalCategory(null);
-  };
-
-  const handleBrand = (productId, brandName) => {
-    setAdjustedProducts((prevProducts) =>
-      prevProducts.map((product) =>
-        product.id === productId ? { ...product, brandName } : product
-      )
-    );
-  };
-
-  const handleShelfLife = (productId, shelfLife) => {
-    setAdjustedProducts((prevProducts) =>
-      prevProducts.map((product) =>
-        product.id === productId ? { ...product, shelfLife } : product
-      )
-    );
-  };
-
-  const handleSuggestedSellingPrice = (productId, estimatedSellingPrice) => {
-    setAdjustedProducts((prevProducts) =>
-      prevProducts.map((product) =>
-        product.id === productId
-          ? { ...product, estimatedSellingPrice }
-          : product
-      )
-    );
-  };
-
-  useEffect(() => {
-    if (adjustedProducts.length === 0 && nonExistingProducts.length > 0) {
-      const initProducts = nonExistingProducts.map((product, index) => ({
-        id: index,
-        name: product.productName,
-        category: null,
-        brandName: null,
-        shelfLife: 24,
-        estimatedSellingPrice: 0,
-      }));
-      setAdjustedProducts(initProducts);
-    }
-  }, [nonExistingProducts]);
 
   return ReactDOM.createPortal(
     <div className="add-popup-overlay" onClick={onClose}>
@@ -233,19 +301,13 @@ const OrderNewProductsPopup = ({
             Przypisz dla wszystkich:
           </a>
           <div className="order-new-products-popup-category-buttons">
-            {categories.map((category) => (
-              <button
-                key={category}
-                className={`order-new-products-popup-category-button ${category.toLowerCase()} ${
-                  globalCategory === category ? "active" : ""
-                }`}
-                onClick={() => handleGlobalCategoryChange(category)}
-              >
-                <h2 className="order-new-products-popup-category-button-h2">
-                  {categoryMap[category]}
-                </h2>
-              </button>
-            ))}
+            <CategoryButtons
+              onSelect={(selectedCategoryId) =>
+                handleGlobalCategoryChange(selectedCategoryId)
+              }
+              multiSelect={false}
+              resetTriggered={resetTriggered}
+            />
             <ProductActionButton
               src={"src/assets/reset.svg"}
               alt={"Reset"}
@@ -255,40 +317,43 @@ const OrderNewProductsPopup = ({
             />
           </div>
         </section>
-        <OrderListHeader attributes={attributes} />
+        <ListHeader attributes={attributes} module={"popup"}/>
         <ul className="order-new-products-popup-list">
-          {adjustedProducts.map((product) => (
+          {productList.map((product) => (
             <li key={product.id} className="order-new-products-popup-list-item">
               {product.name}
               <section className="order-new-products-popup-input-section">
-                <BrandInput
-                  onBrandSelect={(brandName) =>
-                    handleBrand(product.id, brandName)
+                <TextInput
+                  dropdown={true}
+                  value={
+                    productBrandManager.find(
+                      (entry) => entry.productId === product.id
+                    )?.brandName || ""
                   }
-                />
-                <DigitInput
-                  onInputValue={(shelfLife) =>
-                    handleShelfLife(product.id, shelfLife)
+                  displayValue={"name"}
+                  suggestions={
+                    productBrandManager.find(
+                      (entry) => entry.productId === product.id
+                    )?.brandSuggestions || []
                   }
-                  startValue={24}
-                  disabled={product.category === "Tool"}
+                  onSelect={(selected) => {
+                    if (typeof selected === "string") {
+                      handleBrand(product.id, null, selected);
+                    } else {
+                      handleBrand(product.id, selected.id, selected.name);
+                    }
+                  }}
                 />
-
-                <SelectProductCategory
-                  selectedCategory={product.category}
+                <DropdownSelect
+                  items={categories}
+                  placeholder="---------"
                   onSelect={(selectedCategory) =>
-                    handleSelectCategory(product.id, selectedCategory)
+                    handleSelectCategory(product.id, selectedCategory.id)
                   }
-                />
-                <CostInput
-                  startValue={0.0}
-                  onChange={(price) =>
-                    handleSuggestedSellingPrice(product.id, price)
-                  }
-                  disabled={
-                    product.category === "Tool" ||
-                    product.category === "Equipment"
-                  }
+                  selectedItemId={product.categoryId}
+                  searchbarVisible={false}
+                  addNewVisible={false}
+                  showTick={false}
                 />
               </section>
             </li>
@@ -299,16 +364,8 @@ const OrderNewProductsPopup = ({
             src={"src/assets/tick.svg"}
             alt={"Zapisz"}
             text={"Zapisz"}
-            onClick={async () => await createNewProducts(adjustedProducts)}
+            onClick={async () => await createNewProducts(productList)}
           />
-        </div>
-        <div className="popup-description-display">
-          <a className="popup-category-description">
-            * Okres przydatności/ długość gwarancji
-          </a>
-          <a className="popup-category-description">
-            ** Szacowana cena sprzedaży
-          </a>
         </div>
         {alertVisible && (
           <CustomAlert

@@ -10,7 +10,7 @@ const OrderList = ({
   orders,
   currentPage,
   itemsPerPage,
-  handleResetAllFilters,
+  handleResetFiltersAndData,
 }) => {
   const [expandedOrderIds, setExpandedOrderIds] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -25,12 +25,6 @@ const OrderList = ({
     Netto: "totalNet",
     VAT: "totalVat",
     Brutto: "totalValue",
-  };
-
-  const categoryColors = {
-    Sale: "rgb(0, 253, 0)",
-    Tool: "rgb(253, 173, 0)",
-    Equipment: "rgb(253, 0, 190)",
   };
 
   const formatDate = (date) => {
@@ -60,23 +54,22 @@ const OrderList = ({
         : [...prevIds, orderId]
     );
   };
-  const startIndex = (currentPage - 1) * itemsPerPage;
   return (
     <div className={`item-list ${orders.length === 0 ? "is-empty" : ""}`}>
       {orders.map((order, index) => (
         <div
-          key={`${order.orderId}-${order.orderNumber}`}
+          key={`${order.id}-${order.orderNumber}`}
           className="product-wrapper"
         >
           <div
             className={`item ${
               order.orderProductDTOList.length > 0 ? "pointer" : ""
             }`}
-            onClick={() => toggleOrders(order.orderId)}
+            onClick={() => toggleOrders(order.id)}
           >
             {attributes.map((attr) => (
               <div
-                key={`${order.orderId}-${attr.name}`}
+                key={`${order.id}-${attr.name}`}
                 className={`attribute-item ${
                   attr.name === "" ? "category-column" : ""
                 }`}
@@ -90,7 +83,7 @@ const OrderList = ({
                     src="src/assets/arrow_down.svg"
                     alt="arrow down"
                     className={`arrow-down ${
-                      expandedOrderIds.includes(order.orderId) ? "rotated" : ""
+                      expandedOrderIds.includes(order.id) ? "rotated" : ""
                     }`}
                   />
                 ) : attr.name === "Numer" ? (
@@ -132,7 +125,7 @@ const OrderList = ({
               </div>
             ))}
           </div>
-          {expandedOrderIds.includes(order.orderId) && (
+          {expandedOrderIds.includes(order.id) && (
             <OrderContent order={order} action={"History"} />
           )}
         </div>
@@ -140,14 +133,14 @@ const OrderList = ({
       {isEditOrderPopupOpen && (
         <EditOrderPopup
           onClose={() => setIsEditOrderPopupOpen(false)}
-          handleResetAllFilters={handleResetAllFilters}
+          handleResetFiltersAndData={handleResetFiltersAndData}
           selectedOrder={selectedOrder}
         />
       )}
       {isRemoveOrderPopupOpen && (
         <RemoveOrderPopup
           onClose={() => setIsRemoveOrderPopupOpen(false)}
-          handleResetAllFilters={handleResetAllFilters}
+          handleResetFiltersAndData={handleResetFiltersAndData}
           selectedOrder={selectedOrder}
         />
       )}

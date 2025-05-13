@@ -4,20 +4,20 @@ import { useState, useRef, useEffect } from "react";
 /* single select -> item
 multi select -> array of items */
 
-/* FOR DASHBOARD BRAND SELECT -> BRANDBUTTON FOR clear and save buttons logic */
-
 const DropdownSelect = ({
   items,
   placeholder,
   onSelect,
-  onAddNew,
+  selectedItemId = null,
+  searchbarVisible = true,
   addNewVisible = true,
+  showTick = true,
   multiSelect = false,
   displayPopup = false,
   allowColors = false,
   PopupComponent,
   popupProps = {},
-  reset
+  reset,
 }) => {
   const [searchValue, setSearchValue] = useState("");
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -25,12 +25,35 @@ const DropdownSelect = ({
   const [isAddNewPopupOpen, setIsAddNewPopupOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  useEffect(() =>{
-      setSearchValue("");
-      setSelected([]);
-      setIsDropdownVisible(false);
-      setIsAddNewPopupOpen(false);
-    },[reset]);
+  useEffect(() => {
+    setSearchValue("");
+    setSelected([]);
+    setIsDropdownVisible(false);
+    setIsAddNewPopupOpen(false);
+  }, [reset]);
+
+  useEffect(() => {
+    if (selectedItemId) {
+      const itemToSelect = items.find((item) => item.id === selectedItemId);
+      if (itemToSelect) {
+        setSelected(itemToSelect);
+      }
+    } else {
+      setSelected(multiSelect ? [] : null);
+    }
+  }, [selectedItemId]);
+
+  useEffect(() => {
+    if (selectedItemId) {
+      const itemToSelect = items.find((item) => item.id === selectedItemId);
+      if (itemToSelect) {
+        setSelected(itemToSelect);
+        setTimeout(() => {
+          setIsAddNewPopupOpen(false);
+        }, 1500);
+      }
+    }
+  }, [items]);
 
   const filteredItems = items.filter((item) =>
     item.name.toLowerCase().startsWith(searchValue.toLowerCase())
@@ -52,10 +75,10 @@ const DropdownSelect = ({
           ? selected.filter((s) => s.id !== item.id)
           : [...selected, item]
       );
-
     } else {
-      setSelected((prev) => (prev?.id === item.id ? null : item));
-      onSelect(item);
+      const newSelected = selected?.id === item.id ? null : item;
+      setSelected(newSelected);
+      onSelect(newSelected);
       setIsDropdownVisible(false);
     }
   };
@@ -114,27 +137,29 @@ const DropdownSelect = ({
       </button>
       {isDropdownVisible && !isAddNewPopupOpen && (
         <div className="dropdown-menu">
-          <section className="dropdown-search-and-add-new">
-            <input
-              type="text"
-              className={`dropdown-search ${!addNewVisible ? "wide" : ""}`}
-              placeholder="Szukaj..."
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-            />
-            {addNewVisible && (
-              <button
-                className="add-new-dropdown-button"
-                onClick={handleOpenAddNewPopup}
-              >
-                <img
-                  src="src/assets/addNew.svg"
-                  alt="add new"
-                  className="dropdown-add-new-icon"
-                />
-              </button>
-            )}
-          </section>
+          {searchbarVisible && (
+            <section className="dropdown-search-and-add-new">
+              <input
+                type="text"
+                className={`dropdown-search ${!addNewVisible ? "wide" : ""}`}
+                placeholder="Szukaj..."
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+              />
+              {addNewVisible && (
+                <button
+                  className="add-new-dropdown-button"
+                  onClick={handleOpenAddNewPopup}
+                >
+                  <img
+                    src="src/assets/addNew.svg"
+                    alt="add new"
+                    className="dropdown-add-new-icon"
+                  />
+                </button>
+              )}
+            </section>
+          )}
           <ul className="dropdown-list">
             {filteredItems.length > 0 ? (
               filteredItems.map((item) => (
@@ -152,7 +177,8 @@ const DropdownSelect = ({
                           className="dropdown-tick-icon"
                         />
                       )
-                    : selected?.id === item.id && (
+                    : showTick &&
+                      selected?.id === item.id && (
                         <img
                           src="src/assets/tick.svg"
                           alt="selected"
@@ -165,24 +191,10 @@ const DropdownSelect = ({
               <li className="dropdown-item disabled">Nie znaleziono 🙄</li>
             )}
           </ul>
-          {/* <div className="action-buttons">
-            <button onClick={handleClear} className="clear-button">
-              <h2>Wyczyść</h2>
-            </button>
-            <button onClick={handleSave} className="save-button">
-              <h2>Zapisz</h2>
-            </button>
-          </div> */}
         </div>
       )}
       {displayPopup && isAddNewPopupOpen && PopupComponent && (
-        <PopupComponent
-          onClose={handleCloseAddNewPopup}
-          onAddNew={(newItem) => {
-            onAddNew(newItem);
-            handleSelect(newItem);
-          }}
-        />
+        <PopupComponent onClose={handleCloseAddNewPopup} {...popupProps} />
       )}
     </div>
   );

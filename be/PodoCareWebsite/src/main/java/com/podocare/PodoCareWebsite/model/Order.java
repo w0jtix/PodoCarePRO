@@ -27,7 +27,7 @@ public class Order {
     private Long orderNumber;
     private Date orderDate;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     @ToString.Exclude
     private List<OrderProduct> orderProducts = new ArrayList<>();

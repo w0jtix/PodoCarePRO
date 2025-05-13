@@ -49,6 +49,14 @@ public class BrandService {
     }
 
     @Transactional
+    public List<BrandDTO> createBrands(List<BrandDTO> brandsToCreate) {
+        return brandsToCreate.stream()
+                .map(this::createBrand)
+                .toList();
+    }
+
+
+    @Transactional
     public BrandDTO updateBrand(Long brandId, BrandDTO updatedBrand) {
         try{
             getBrandById(brandId);

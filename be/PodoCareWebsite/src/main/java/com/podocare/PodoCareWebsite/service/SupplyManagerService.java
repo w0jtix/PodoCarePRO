@@ -1,5 +1,6 @@
 package com.podocare.PodoCareWebsite.service;
 
+import com.podocare.PodoCareWebsite.DTO.FilterDTO;
 import com.podocare.PodoCareWebsite.DTO.SupplyManagerDTO;
 import com.podocare.PodoCareWebsite.exceptions.CreationException;
 import com.podocare.PodoCareWebsite.exceptions.DeletionException;
@@ -9,6 +10,8 @@ import com.podocare.PodoCareWebsite.model.SupplyManager;
 import com.podocare.PodoCareWebsite.repo.SupplyManagerRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -21,6 +24,11 @@ public class SupplyManagerService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with given id.")));
     }
 
+    public List<SupplyManagerDTO> getManagersByProductIds (FilterDTO filterDTO) {
+        return filterDTO.getProductIds().stream()
+                .map(this::getManagerByProductId)
+                .toList();
+    }
 
     public void createManager(Long productId, Integer supply) {
         try{

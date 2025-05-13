@@ -26,6 +26,7 @@ public class OrderProduct {
     private Product product;
 
     private Integer quantity;
-    private VatRate VATrate;
+    @Column(name = "vat_rate")
+    private VatRate vatRate;
     private Double price;
 }

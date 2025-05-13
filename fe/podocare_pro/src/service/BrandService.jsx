@@ -5,7 +5,7 @@ class BrandService {
 
   static async getBrands(filterDTO) {
     try {
-      const response = await axios.post(`${this.API_URL}/get`, filterDTO ?? {} );
+      const response = await axios.post(`${this.API_URL}/get`, filterDTO ?? {});
       return response.status === 204 ? [] : response.data;
     } catch (error) {
       console.error("Error fetching brands. ", error);
@@ -15,10 +15,23 @@ class BrandService {
 
   static async createBrand(brandDTO) {
     try {
-      const response = await axios.post(`${this.API_URL}`, brandDTO);
+      const response = await axios.post(`${this.API_URL}/create`, brandDTO);
       return response.data;
     } catch (error) {
       console.error("Error creating brand. ", error);
+      throw error;
+    }
+  }
+
+  static async createBrands(brandsToCreate) {
+    try {
+      const response = await axios.post(
+        `${this.API_URL}/create/batch`,
+        brandsToCreate
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error batch creating brands. ", error);
       throw error;
     }
   }

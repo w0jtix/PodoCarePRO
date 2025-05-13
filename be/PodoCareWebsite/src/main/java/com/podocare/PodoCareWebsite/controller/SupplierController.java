@@ -16,7 +16,7 @@ public class SupplierController {
 
     private final SupplierService supplierService;
 
-    @PostMapping("/get")
+    @GetMapping
     public ResponseEntity<List<SupplierDTO>> getSuppliers() {
         List<SupplierDTO> supplierList = supplierService.getSuppliers();
         return new ResponseEntity<>(supplierList, supplierList.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);

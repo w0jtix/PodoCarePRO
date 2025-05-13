@@ -5,138 +5,205 @@ import AllProductService from "../../service/AllProductService";
 import ProductActionButton from "../ProductActionButton";
 import CostInput from "../CostInput";
 import DigitInput from "../DigitInput";
+import TextInput from "../TextInput";
+import SupplyManagerService from "../../service/SupplyManagerService";
 
 const OrderItemList = ({
   attributes,
   items,
-  setItems,
   onItemsChange,
   action,
-  initialOrderProductList,
-  setCurrentOrderProductList,
+
   setHasWarning,
 }) => {
-  const dropdownRef = useRef(null);
-  const [adjustedItems, setAdjustedItems] = useState([]);
-  const [matchingProducts, setMatchingProducts] = useState({});
-  const [mountDone, setMountDone] = useState(false);
-  const [dropdownVisibility, setDropdownVisibility] = useState({});
   const [warningVisible, setWarningVisible] = useState({});
+  const [orderProductDTOList, setOrderProductDTOList] = useState(items ?? []);
+  const [productSuggestions, setProductSuggestions] = useState({});
+  const [changesFlag, setChangesFlag] = useState(false);
+  const [availableSupply, setAvailableSupply] = useState({});
+  const [initialQuantities, setInitialQuantities] = useState({});
+
+  useEffect(() => {
+    setOrderProductDTOList(items ?? []);
+    if (action === "Edit") {
+      fetchSupply();
+    }
+  }, [items]);
+
+  useEffect(() => {
+    if (items && items.length > 0) {
+      const quantitiesMap = items.reduce((acc, item) => {
+        if (item.id != null) {
+          acc[item.id] = item.quantity;
+        }
+        return acc;
+      }, {});
+      setInitialQuantities(quantitiesMap);
+    }
+  }, []);
 
   const attributeMap = {
     Nazwa: "productName",
     "Cena jedn.": "price",
     Ilość: "quantity",
-    VAT: "VATrate",
+    VAT: "vatRate",
     Cena: "orderPrice",
   };
 
   useEffect(() => {
-    if (JSON.stringify(items) !== JSON.stringify(adjustedItems)) {
-      if (action === "Edit") {
-        if (mountDone) {
-          const newOrderProducts = items.filter(
-            (item) =>
-              !initialOrderProductList.some(
-                (initialItem) => initialItem.id === item.orderProductId
-              ) || !item.orderProductId
-          );
-          const newUniqueOrderProducts = newOrderProducts.filter(
-            (newItem) =>
-              !adjustedItems.some(
-                (adjustedItem) => adjustedItem.id === newItem.id
-              )
-          );
+    onItemsChange(orderProductDTOList);
+  }, [changesFlag]);
 
-          if (newUniqueOrderProducts.length > 0) {
-            setAdjustedItems((prev) => [
-              ...prev,
-              ...newUniqueOrderProducts.map((item) => ({
-                id: item.orderProductId ?? item.id,
-                productId: item.productId,
-                productName: item.productName,
-                price: item.price,
-                quantity: item.quantity,
-                VATrate: item.VATrate,
-                orderPrice: item.price * item.quantity,
-              })),
-            ]);
-          }
-        } else {
-          const fetchedOrderProductList = items.map((item) => ({
-            id: item.orderProductId ?? item.id,
-            productId: item.productId,
-            productName: item.productName,
-            price: item.price,
-            quantity: item.quantity,
-            VATrate: item.VATrate,
-            orderPrice: item.price * item.quantity,
-          }));
-          setAdjustedItems(fetchedOrderProductList);
-          setMountDone(true);
-        }
-      } else {
-        setAdjustedItems([...items]);
-      }
-    }
-  }, [items]);
+  const fetchSupply = async () => {
+    const productIdsToCheckSupplyFor = items
+      .map((item) => item.productId)
+      .filter((id) => id != null);
 
-  useEffect(() => {
-    if (action === "Edit") {
-      setCurrentOrderProductList(adjustedItems);
-    }
-  }, [adjustedItems]);
+    const filterDTO = { productIds: [...new Set(productIdsToCheckSupplyFor)] };
 
-  const getOrderProductListChanges = (initial, edited) => {
-    const removedOrderProducts = [];
-    const addedOrderProducts = [];
-    const editedOrderProducts = [];
-
-    const initialMap = new Map(initial.map((op) => [op.id, op]));
-    const editedMap = new Map(edited.map((op) => [op.id, op]));
-
-    initial.forEach((op) => {
-      if (!editedMap.has(op.id)) {
-        removedOrderProducts.push(op.id);
-      } else {
-        const editedOrderProduct = editedMap.get(op.id);
-        const orderProductChanges = {};
-
-        let isProductReplaced = false;
-
-        Object.keys(op).forEach((key) => {
-          if (op[key] !== editedOrderProduct[key]) {
-            if (key === "productName" || key === "productId") {
-              isProductReplaced = true;
-            } else {
-              orderProductChanges[key] = editedOrderProduct[key];
-            }
-          }
+    return SupplyManagerService.getManagers(filterDTO)
+      .then((data) => {
+        const supplyMap = {};
+        data.forEach((manager) => {
+          supplyMap[manager.productId] = manager.supply;
         });
-        if (isProductReplaced) {
-          removedOrderProducts.push(op.id);
-          addedOrderProducts.push(editedOrderProduct);
-        } else if (Object.keys(orderProductChanges).length > 0) {
-          editedOrderProducts.push({
-            orderProductId: op.id,
-            productId: op.productId,
-            ...orderProductChanges,
-          });
+        setAvailableSupply(supplyMap);
+      })
+      .catch((error) => {
+        console.error("Error fetching supply managers:", error);
+      });
+  };
+
+  const updateSupplyWarnings = (idToCheck, initialQty, currentQty) => {
+    const availableStock = availableSupply[idToCheck];
+    const differenceQty = initialQty - currentQty;
+
+    const orderProductIds = orderProductDTOList
+      .filter((orderProduct) => orderProduct.productId === idToCheck)
+      .map((orderProduct) => orderProduct.id);
+
+    if (differenceQty > 0 && differenceQty > availableStock) {
+      orderProductIds.forEach((id) =>
+        setWarningVisible((prevVisibility) => ({
+          ...prevVisibility,
+          [id]: true,
+        }))
+      );
+      setHasWarning(true);
+    } else {
+      orderProductIds.forEach((id) =>
+        setWarningVisible((prevVisibility) => {
+          const newVisibility = { ...prevVisibility };
+          delete newVisibility[id];
+          return newVisibility;
+        })
+      );
+      setHasWarning((prev) => {
+        const otherWarnings = Object.keys(warningVisible).filter(
+          (id) => !orderProductIds.includes(id)
+        );
+        return otherWarnings.length > 0;
+      });
+    }
+  };
+
+  const handleItemRemove = (itemId) => {
+    const qtyBeforeChange = initialQuantities[itemId];
+    setOrderProductDTOList((prevItems) =>
+      prevItems.filter((item) => item.id !== itemId)
+    );
+    setChangesFlag((prev) => !prev);
+    if (action === "Edit") {
+      const productId = orderProductDTOList.find(
+        (item) => item.id === itemId
+      )?.productId;
+      updateSupplyWarnings(productId, qtyBeforeChange, 0);
+    }
+  };
+
+  const handleProductNameChange = async (itemId, selection) => {
+    if (typeof selection === "string") {
+      fetchProductSuggestions(itemId, selection);
+      setOrderProductDTOList((prevItems) =>
+        prevItems.map((item) =>
+          item.id === itemId
+            ? { ...item, productId: null, productName: selection }
+            : item
+        )
+      );
+    } else {
+      setOrderProductDTOList((prevItems) =>
+        prevItems.map((item) =>
+          item.id === itemId
+            ? { ...item, productId: selection.id, productName: selection.name }
+            : item
+        )
+      );
+    }
+
+    setChangesFlag((prev) => !prev);
+  };
+
+  const fetchProductSuggestions = async (itemId, keyword) => {
+    if (keyword.trim().length === 0) {
+      setProductSuggestions((prev) => ({
+        ...prev,
+        [itemId]: [],
+      }));
+      return;
+    }
+    const filterDTO = { keyword: keyword, includeZero: true };
+
+    AllProductService.getProducts(filterDTO)
+      .then((data) => {
+        setProductSuggestions((prev) => ({
+          ...prev,
+          [itemId]: data,
+        }));
+      })
+      .catch((error) => {
+        console.error("Error fetching filtered products:", error.message);
+      });
+  };
+
+  const handleInputChange = (itemId, field, value) => {
+    const qtyBeforeChange = initialQuantities[itemId];
+
+    const roundedValue =
+      field === "price" ? parseFloat(value).toFixed(2) : value;
+
+    setOrderProductDTOList((prevItems) =>
+      prevItems.map((item) =>
+        item.id === itemId
+          ? {
+              ...item,
+              [field]: parseFloat(roundedValue),
+            }
+          : item
+      )
+    );
+    setChangesFlag((prev) => !prev);
+    if (action === "Edit") {
+      if (field === "quantity") {
+        const productId = orderProductDTOList.find(
+          (item) => item.id === itemId
+        )?.productId;
+        if (value < qtyBeforeChange) {
+          updateSupplyWarnings(productId, qtyBeforeChange, value);
+        } else {
+          updateSupplyWarnings(productId, qtyBeforeChange, value);
         }
       }
-    });
+    }
+  };
 
-    edited.forEach((op) => {
-      if (!initialMap.has(op.id)) {
-        addedOrderProducts.push(op);
-      }
-    });
-
-    return {
-      removedOrderProducts,
-      addedOrderProducts,
-      editedOrderProducts,
-    };
+  const handleVatSelect = (itemId, selectedVAT) => {
+    setOrderProductDTOList((prevItems) =>
+      prevItems.map((item) =>
+        item.id === itemId ? { ...item, vatRate: selectedVAT } : item
+      )
+    );
+    setChangesFlag((prev) => !prev);
   };
 
   const getNestedValue = (obj, path) => {
@@ -145,203 +212,9 @@ const OrderItemList = ({
       : null;
   };
 
-  const toggleDropdown = (itemId, isOpen) => {
-    setDropdownVisibility((prevVisibility) => ({
-      ...prevVisibility,
-      [itemId]: isOpen,
-    }));
-  };
-
-  const handleProductNameChange = async (itemId, value) => {
-    setAdjustedItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === itemId ? { ...item, productName: value } : item
-      )
-    );
-
-    toggleDropdown(itemId, true);
-
-    if (value.trim() === "") {
-      setMatchingProducts((prevProducts) => ({
-        ...prevProducts,
-        [itemId]: [],
-      }));
-      setAdjustedItems((prevItems) =>
-        prevItems.map((item) =>
-          item.id === itemId ? { ...item, productId: null } : item
-        )
-      );
-      toggleDropdown(itemId, false);
-      return;
-    }
-
-    if (value.trim().length > 0) {
-      AllProductService.getFilteredProducts(value)
-        .then((filteredData) => {
-          setMatchingProducts((prevProducts) => ({
-            ...prevProducts,
-            [itemId]: filteredData,
-          }));
-
-          const matchingProduct = filteredData.find(
-            (product) => product.productName === value
-          );
-          if (matchingProduct) {
-            setAdjustedItems((prevItems) =>
-              prevItems.map((item) =>
-                item.id === itemId
-                  ? { ...item, productId: matchingProduct.id }
-                  : item
-              )
-            );
-          } else {
-            setAdjustedItems((prevItems) =>
-              prevItems.map((item) =>
-                item.id === itemId ? { ...item, productId: null } : item
-              )
-            );
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching product suggestions: ", error);
-          setMatchingProducts((prevProducts) => ({
-            ...prevProducts,
-            [itemId]: [],
-          }));
-          setAdjustedItems((prevItems) =>
-            prevItems.map((item) =>
-              item.id === itemId ? { ...item, productId: null } : item
-            )
-          );
-        });
-    }
-  };
-
-  const handleInputChange = (itemId, field, value) => {
-    const roundedValue =
-      field === "price" ? parseFloat(value).toFixed(2) : value;
-    setAdjustedItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === itemId
-          ? {
-              ...item,
-              [field]: parseFloat(roundedValue),
-              orderPrice:
-                field === "price"
-                  ? parseFloat(value || 0) * item.quantity
-                  : item.price * parseInt(value || 1, 10),
-            }
-          : item
-      )
-    );
-
-    if (field === "quantity" && action === "Edit") {
-      const item = adjustedItems.find((item) => item.id === itemId);
-      const initialItem = initialOrderProductList.find(
-        (item) => item.id === itemId
-      );
-      const productId = item ? item.productId : null;
-      if (productId) {
-        return AllProductService.findProductByIdAndIncludeActiveInstances(
-          productId
-        )
-          .then((data) => {
-            const activeCount = data.activeProductInstances.length;
-            const initialQty = initialItem.quantity;
-            const newQty = parseInt(value, 10);
-            const qtyDifference = initialQty - newQty;
-            const shouldWarn = qtyDifference > 0 && qtyDifference > activeCount;
-            setWarningVisible((prevVisibility) => ({
-              ...prevVisibility,
-              [itemId]: shouldWarn,
-            }));
-            setHasWarning(shouldWarn);
-          })
-          .catch((error) => {
-            console.error("Error checking supply count:", error);
-          });
-      }
-    }
-  };
-
-  const handleVatSelect = (itemId, selectedVAT) => {
-    setAdjustedItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === itemId ? { ...item, VATrate: selectedVAT } : item
-      )
-    );
-  };
-
-  const handleItemRemove = (itemId) => {
-    setAdjustedItems((prevItems) =>
-      prevItems.filter((item) => item.id !== itemId)
-    );
-    if (action === "Edit") {
-      setItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
-    }
-  };
-
-  const handleProductSelect = (itemId, productId, productName) => {
-    const selectedProduct = matchingProducts[itemId]?.find(
-      (p) => p.productName === productName && p.id === productId
-    );
-    if (selectedProduct) {
-      setAdjustedItems((prevItems) =>
-        prevItems.map((item) =>
-          item.id === itemId
-            ? {
-                ...item,
-                productId: selectedProduct.id,
-                productName: selectedProduct.productName,
-              }
-            : item
-        )
-      );
-    }
-    toggleDropdown(itemId, false);
-  };
-
-  useEffect(() => {
-    if (action === "Create") {
-      const updatedList = adjustedItems.map((item) => ({
-        id: item.id,
-        productName: item.productName,
-        price: item.price,
-        quantity: item.quantity,
-        VATrate: item.VATrate,
-        orderPrice: item.orderPrice,
-        productId: item.productId,
-      }));
-      onItemsChange(updatedList);
-    } else if (action === "Edit") {
-      const orderProductChangesObject = getOrderProductListChanges(
-        initialOrderProductList,
-        adjustedItems
-      );
-
-      onItemsChange(orderProductChangesObject);
-    }
-  }, [adjustedItems]);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      const isInsideDropdown =
-        dropdownRef.current && dropdownRef.current.contains(event.target);
-
-      if (!isInsideDropdown) {
-        setTimeout(() => {
-          setDropdownVisibility({});
-        }, 100);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
   return (
     <div className="order-item-list">
-      {adjustedItems.map((item, index) => (
+      {items.map((item, index) => (
         <div key={`${item.id}-${index}`} className="order-item">
           {attributes.map((attr) => (
             <div
@@ -351,7 +224,7 @@ const OrderItemList = ({
               }`}
               style={{
                 width: attr.width,
-                justifyContent: attr.justify,
+                justifyItems: attr.justify,
               }}
             >
               {attr.name === "" ? (
@@ -363,54 +236,23 @@ const OrderItemList = ({
                   disableText={true}
                 />
               ) : attr.name === "Nazwa" ? (
-                <div className="product-name-container" ref={dropdownRef}>
-                  <input
-                    type="text"
-                    className="order-table-input-product-name"
-                    placeholder=""
+                <div className="order-item-list-product-name-with-warning">
+                  <TextInput
+                    dropdown={true}
                     value={item.productName}
-                    onFocus={() => toggleDropdown(item.id, true)}
-                    onChange={(e) => {
-                      handleProductNameChange(item.id, e.target.value);
+                    displayValue="name"
+                    suggestions={productSuggestions[item.id]}
+                    onSelect={(selected) => {
+                      handleProductNameChange(item.id, selected);
                     }}
                   />
-                  {warningVisible[item.id] && action === "Edit" && (
+                  {warningVisible[item.id] && (
                     <img
                       src="src/assets/warning.svg"
                       alt="Warning"
                       className="order-item-warning-icon"
                     />
                   )}
-                  {dropdownVisibility[item.id] &&
-                    item.productName &&
-                    matchingProducts[item.id]?.length > 0 && (
-                      <ul
-                        className="product-name-dropdown"
-                        style={{
-                          top: index >= 6 ? "auto" : "100%",
-                          bottom: index >= 6 ? "100%" : "auto",
-                        }}
-                      >
-                        {matchingProducts[item.id]
-                          .slice(0, 3)
-                          .map((suggestion) => (
-                            <li
-                              key={`${item.id}-${suggestion.productName}`}
-                              className="product-name-dropdown-item"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleProductSelect(
-                                  item.id,
-                                  suggestion.id,
-                                  suggestion.productName
-                                );
-                              }}
-                            >
-                              {suggestion.productName}
-                            </li>
-                          ))}
-                      </ul>
-                    )}
                 </div>
               ) : attr.name === "Cena jedn." ? (
                 <CostInput
@@ -425,24 +267,38 @@ const OrderItemList = ({
                   placeholder={"1"}
                   startValue={item.quantity}
                   onInputValue={(value) =>
-                    handleInputChange(
-                      item.id,
-                      "quantity",
-                      parseInt(value, 10) || 1
-                    )
+                    handleInputChange(item.id, "quantity", value)
                   }
                 />
               ) : attr.name === "VAT" ? (
-                <SelectVATButton
-                  selectedVAT={item.VATrate}
-                  onSelect={(selectedVAT) =>
-                    handleVatSelect(item.id, selectedVAT)
-                  }
-                />
+                <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: attr.justify,
+                  }}
+                >
+                  <SelectVATButton
+                    selectedVAT={item.vatRate}
+                    onSelect={(selectedVAT) =>
+                      handleVatSelect(item.id, selectedVAT)
+                    }
+                  />
+                </div>
               ) : attr.name === "Cena" ? (
-                <span>
-                  {isNaN(item.orderPrice) ? "0.00" : item.orderPrice.toFixed(2)}
-                </span>
+                <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: attr.justify,
+                  }}
+                >
+                  <span>
+                    {isNaN(item.price * item.quantity)
+                      ? "0.00"
+                      : (item.price * item.quantity).toFixed(2)}
+                  </span>
+                </div>
               ) : (
                 getNestedValue(item, attributeMap[attr.name])
               )}

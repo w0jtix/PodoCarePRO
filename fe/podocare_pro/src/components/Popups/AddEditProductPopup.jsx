@@ -2,12 +2,16 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import CustomAlert from "../CustomAlert";
 import ReactDOM from "react-dom";
-import ProductForm from "../ProductForm";
+import ProductForm from "../Products/ProductForm";
 import AllProductService from "../../service/AllProductService";
 import ProductActionButton from "../ProductActionButton";
 import BrandService from "../../service/BrandService";
 
-const AddEditProductPopup = ({ onClose, handleResetFiltersAndData, selectedProduct }) => {
+const AddEditProductPopup = ({
+  onClose,
+  handleResetFiltersAndData,
+  selectedProduct,
+}) => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [infoMessage, setInfoMessage] = useState(null);
@@ -52,7 +56,6 @@ const AddEditProductPopup = ({ onClose, handleResetFiltersAndData, selectedProdu
   };
 
   const handleProductAction = async (productDTO) => {
-
     let productRequestDTO = { ...productDTO };
 
     if (brandToCreate) {
@@ -65,41 +68,41 @@ const AddEditProductPopup = ({ onClose, handleResetFiltersAndData, selectedProdu
     if (await checkForErrorsProductAction(productRequestDTO)) {
       return false;
     }
-    if(action == "Create") {
+    if (action == "Create") {
       return AllProductService.createNewProduct(productRequestDTO)
-      .then((data) => {
-        showAlert(
-          `Produkt ${productRequestDTO.name} został utworzony!`,
-          "success"
-        );
-        handleResetFiltersAndData();
-        setTimeout(() => {
-          onClose();
-        }, 1200);
-      })
-      .catch((error) => {
-        console.error("Error creating new Product.", error);
-        showAlert("Błąd tworzenia produktu.", "error");
-        return false;
-      })
+        .then((data) => {
+          showAlert(
+            `Produkt ${productRequestDTO.name} został utworzony!`,
+            "success"
+          );
+          handleResetFiltersAndData();
+          setTimeout(() => {
+            onClose();
+          }, 1200);
+        })
+        .catch((error) => {
+          console.error("Error creating new Product.", error);
+          showAlert("Błąd tworzenia produktu.", "error");
+          return false;
+        });
     } else if (action == "Edit") {
       return AllProductService.updateProduct(productRequestDTO)
-      .then((data) => {
-        showAlert(
-          `Produkt ${productRequestDTO.name} zaktualizowany!`,
-          "success"
-        );
-        handleResetFiltersAndData();
-        setTimeout(() => {
-          onClose();
-        }, 1200);
-      })
-      .catch((error) => {
-        console.error("Error updating Product.", error);
-        showAlert("Błąd aktualizacji produktu.", "error");
-        return false;
-      })    
-  }
+        .then((data) => {
+          showAlert(
+            `Produkt ${productRequestDTO.name} zaktualizowany!`,
+            "success"
+          );
+          handleResetFiltersAndData();
+          setTimeout(() => {
+            onClose();
+          }, 1200);
+        })
+        .catch((error) => {
+          console.error("Error updating Product.", error);
+          showAlert("Błąd aktualizacji produktu.", "error");
+          return false;
+        });
+    }
   };
 
   const checkForErrorsBrandCreate = async (brandToCreate) => {
@@ -126,13 +129,13 @@ const AddEditProductPopup = ({ onClose, handleResetFiltersAndData, selectedProdu
     }
 
     const noChangesDetected =
-    productForm.name === selectedProduct.name &&
-    productForm.categoryId === selectedProduct.categoryId &&
-    productForm.brandId === selectedProduct.brandId &&
-    (productForm.description ?? "") === (selectedProduct.description ?? "") &&
-    productForm.supply === selectedProduct.supply;
+      productForm.name === selectedProduct.name &&
+      productForm.categoryId === selectedProduct.categoryId &&
+      productForm.brandId === selectedProduct.brandId &&
+      (productForm.description ?? "") === (selectedProduct.description ?? "") &&
+      productForm.supply === selectedProduct.supply;
 
-    if (action =="Edit" && noChangesDetected) {
+    if (action == "Edit" && noChangesDetected) {
       showAlert("Brak zmian!", "error");
       return true;
     }
@@ -147,7 +150,9 @@ const AddEditProductPopup = ({ onClose, handleResetFiltersAndData, selectedProdu
         onClick={(e) => e.stopPropagation()}
       >
         <section className="product-popup-header">
-          <h2 className="popup-title">{action === "Create" ? "Dodaj Nowy Produkt" : "Edytuj Produkt"}</h2>
+          <h2 className="popup-title">
+            {action === "Create" ? "Dodaj Nowy Produkt" : "Edytuj Produkt"}
+          </h2>
           <button className="popup-close-button" onClick={onClose}>
             <img
               src="src/assets/close.svg"

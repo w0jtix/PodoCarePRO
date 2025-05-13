@@ -50,7 +50,7 @@ const ListActionSection = ({
       categoryIds: selectedCategoryIds
     }
 
-    onFilter(updatedFilterDTO);;
+    onFilter(updatedFilterDTO);
   }, [selectedBrandIds, selectedCategoryIds])
 
   useEffect(() => {

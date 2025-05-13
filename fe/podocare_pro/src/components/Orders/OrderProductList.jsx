@@ -1,15 +1,13 @@
-import React from "react";
-import OrderListHeader from "./OrderListHeader";
+import React, { useEffect } from "react";
+import ListHeader from "../ListHeader";
 import OrderItemList from "./OrderItemList";
 import { useCallback } from "react";
 
 const OrderProductList = ({
   items,
-  setItems,
   onItemsChange,
   action,
-  initialOrderProductList,
-  setCurrentOrderProductList,
+
   setHasWarning,
 }) => {
   const attributes = [
@@ -27,18 +25,15 @@ const OrderProductList = ({
     },
     [onItemsChange]
   );
-
+  
   return (
     <div className="order-productList">
-      <OrderListHeader attributes={attributes} />
+      <ListHeader attributes={attributes} module={"order"} />
       <OrderItemList
         attributes={attributes}
         items={items}
-        setItems={setItems}
         onItemsChange={handleItemsChange}
         action={action}
-        initialOrderProductList={initialOrderProductList}
-        setCurrentOrderProductList={setCurrentOrderProductList}
         setHasWarning={setHasWarning}
       />
     </div>

@@ -5,9 +5,16 @@ import "react-datepicker/dist/react-datepicker.css";
 import { pl } from "date-fns/locale";
 
 const DateInput = ({ onChange, selectedDate, showPlaceholder = false }) => {
-  const [orderDate, setOrderDate] = useState(
-    selectedDate ?? (showPlaceholder ? null : new Date())
-  );
+
+  const initialDate =
+    selectedDate
+      ? new Date(selectedDate)
+      : showPlaceholder
+      ? null
+      : new Date();
+
+
+  const [orderDate, setOrderDate] = useState(initialDate);
 
   const handleDateChange = (date) => {
     onChange(date);
@@ -16,11 +23,11 @@ const DateInput = ({ onChange, selectedDate, showPlaceholder = false }) => {
   useEffect(() => {
     if (selectedDate === null) {
       setOrderDate(null);
-    } else if (
-      selectedDate &&
-      (!orderDate || selectedDate.getTime() !== orderDate.getTime())
-    ) {
-      setOrderDate(selectedDate);
+    } else if (selectedDate) {
+      const dateObj = new Date(selectedDate);
+      if (!orderDate || dateObj.getTime() !== orderDate.getTime()) {
+        setOrderDate(dateObj);
+      }
     }
   }, [selectedDate]);
 

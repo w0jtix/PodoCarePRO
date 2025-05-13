@@ -8,7 +8,7 @@ import OrderService from "../../service/OrderService";
 
 const RemoveOrderPopup = ({
   onClose,
-  handleResetAllFilters,
+  handleResetFiltersAndData,
   selectedOrder,
 }) => {
   const [hasWarning, setHasWarning] = useState(false);
@@ -38,16 +38,13 @@ const RemoveOrderPopup = ({
     }, 3000);
   };
 
-  useEffect(() => {
-    console.log("s", selectedOrder);
-  }, [selectedOrder]);
-
-  const handleOrderRemove = async (orderId) => {
-    OrderService.deleteOrder(orderId)
-      .then((data) => {
+  const handleOrderRemove = async (id) => {
+    if (!hasWarning) {
+      OrderService.deleteOrder(id)
+      .then((status) => {
         const success = true;
         const mode = "Remove";
-        handleResetAllFilters(success, mode);
+        handleResetFiltersAndData(success, mode);
         setTimeout(() => {
           onClose();
         }, 600);
@@ -56,6 +53,9 @@ const RemoveOrderPopup = ({
         console.error("Error removing Order", error);
         showAlert("Błąd usuwania zamówienia.", "error");
       });
+    } else {
+      showAlert("Konflikt stanu magazynowego!", "error");
+    }
   };
 
   return ReactDOM.createPortal(
@@ -70,7 +70,7 @@ const RemoveOrderPopup = ({
         onClick={(e) => e.stopPropagation()}
       >
         <section className="edit-product-popup-header">
-          <h2 className="popup-title">Na pewno? ⛔</h2>
+          <h2 className="popup-title">Na pewno? ⚠️</h2>
           <button className="popup-close-button" onClick={onClose}>
             <img
               src="src/assets/close.svg"
@@ -85,7 +85,6 @@ const RemoveOrderPopup = ({
               <a className="remove-popup-warning-a">
                 ❗❗❗ Zatwierdzenie spowoduje usunięcie Zamówienia.
               </a>
-              <br />
             </section>
           ) : (
             <>
@@ -94,7 +93,6 @@ const RemoveOrderPopup = ({
                   ❗❗❗ Zatwierdzenie spowoduje usunięcie informacji o
                   Zamówieniu oraz Produktów z Magazynu:
                 </a>
-                <br />
                 <a className="remove-popup-warning-a-list-length">{`Ilość Produktów: ${selectedOrder.orderProductDTOList.length}`}</a>
               </section>
               {selectedOrder && (
@@ -139,7 +137,7 @@ const RemoveOrderPopup = ({
                   src={"src/assets/tick.svg"}
                   alt={"Zatwierdź"}
                   text={"Zatwierdź"}
-                  onClick={() => handleOrderRemove(selectedOrder.orderId)}
+                  onClick={() => handleOrderRemove(selectedOrder.id)}
                 />
               </div>
             </section>

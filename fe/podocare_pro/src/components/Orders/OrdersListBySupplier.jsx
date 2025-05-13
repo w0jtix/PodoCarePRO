@@ -1,8 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import OrderListHeader from "./OrderListHeader";
-import HandyOrderList from "../HandyOrderList";
+import HandyOrderList from "./HandyOrderList";
 import OrderService from "../../service/OrderService";
+import ListHeader from "../ListHeader";
 
 const OrdersListBySupplier = ({
   selectedSupplier,
@@ -20,13 +20,23 @@ const OrdersListBySupplier = ({
     { name: "Wartość", width: "18%", justify: "center" },
   ];
 
+  const fetchOrders = async (filterDTO) => {
+    OrderService.getOrders(filterDTO)
+    .then((data) => {
+      setFilteredOrders(data);
+    })
+    .catch((error) => {
+      console.error("Error fetching orders:", error);
+      setFilteredOrders([]);
+    });
+  }
+
   useEffect(() => {
     if (selectedSupplier !== null) {
-      OrderService.filterOrdersBySupplier(selectedSupplier)
-        .then((filteredOrders) => {
-          setFilteredOrders(filteredOrders);
-        })
-        .catch((error) => console.error(error.message));
+        const filterDTO = {
+          supplierIds: [selectedSupplier.id],
+        }
+        fetchOrders(filterDTO);
     } else {
       setFilteredOrders([]);
     }
@@ -44,7 +54,7 @@ const OrdersListBySupplier = ({
             Wybierz sklep by wyświetlić zamówienia
           </h1>
         )}
-        <OrderListHeader attributes={attributes} />
+        <ListHeader attributes={attributes} module={"order"}/>
         <HandyOrderList
           attributes={attributes}
           orders={filteredOrders}

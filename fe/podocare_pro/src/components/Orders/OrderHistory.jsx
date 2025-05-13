@@ -4,24 +4,21 @@ import OrderList from "./OrderList";
 import { useState, useEffect } from "react";
 import OrderService from "../../service/OrderService.jsx";
 import ProductActionButton from "../ProductActionButton.jsx";
-import SupplierDropdown from "../SupplierDropdown";
+import DropdownSelect from "../DropdownSelect.jsx";
 import DateInput from "../DateInput.jsx";
 import SupplierService from "../../service/SupplierService.jsx";
 import CustomAlert from "../CustomAlert.jsx";
 
 const OrderHistory = () => {
   const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [suppliers, setSuppliers] = useState([]);
-  const [selectedSupplier, setSelectedSupplier] = useState([]);
-  const [dateFrom, setDateFrom] = useState(null);
-  const [dateTo, setDateTo] = useState(null);
-  const [orderFilterDTO, setOrderFilterDTO] = useState({
-    supplierIds: selectedSupplier.map((supplier) => supplier.id),
-    dateFrom,
-    dateTo,
+  const [filters, setFilters] = useState({
+    supplierIds: null,
+    dateFrom: null,
+    dateTo: null,
   });
+  const [resetTriggered, setResetTriggered] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [alertVisible, setAlertVisible] = useState(false);
@@ -55,16 +52,25 @@ const OrderHistory = () => {
     }, 2500);
   };
 
-  useEffect(() => {
-    setOrderFilterDTO({
-      supplierIds: selectedSupplier.map((supplier) => supplier.id),
-      dateFrom,
-      dateTo,
+  const handleResetFiltersAndData = (success, mode) => {
+    if (success) {
+      if (mode === "Remove") {
+        showAlert("Zamówienie usunięte!", "success");
+      } else if (mode === "Edit") {
+        showAlert("Zamówienie zaktualizowane!", "success");
+      }
+    }
+    setFilters({
+      supplierIds: null,
+      dateFrom: null,
+      dateTo: null,
     });
-  }, [selectedSupplier, dateFrom, dateTo]);
+    setCurrentPage(1);
+    setResetTriggered((prev) => !prev);
+  };
 
-  const fetchOrders = async (orderFilterDTO) => {
-    OrderService.getFilteredOrders(orderFilterDTO)
+  const fetchOrders = async (filters) => {
+    OrderService.getOrders(filters)
       .then((data) => {
         const sortedOrders = data.sort(
           (a, b) => new Date(b.orderDate) - new Date(a.orderDate)
@@ -82,18 +88,18 @@ const OrderHistory = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetchOrders(orderFilterDTO);
+    fetchOrders(filters);
     setCurrentPage(1);
-  }, [orderFilterDTO]);
+  }, [filters]);
 
   useEffect(() => {
     fetchSuppliers();
   }, []);
 
   const fetchSuppliers = async () => {
-    SupplierService.getAllSuppliers()
-      .then((response) => {
-        const sortedSuppliers = response.data.sort((a, b) =>
+    SupplierService.getSuppliers()
+      .then((data) => {
+        const sortedSuppliers = data.sort((a, b) =>
           a.name.localeCompare(b.name)
         );
         setSuppliers(sortedSuppliers);
@@ -106,39 +112,42 @@ const OrderHistory = () => {
       });
   };
 
-  const handleOnSelectSupplier = (suppliers) => {
-    setSelectedSupplier(suppliers.map((s) => s));
+  const handleOnSelectSupplier = (selectedSuppliers) => {
+    const selectedIds = selectedSuppliers.map((supplier) => supplier.id);
+    setFilters((prev) => ({
+      ...prev,
+      supplierIds: selectedIds.length == 0 ? null : selectedIds,
+    }));
   };
 
   const handleDateFromChange = (newDate) => {
-    if (newDate && dateTo && newDate > dateTo) {
+    if (newDate && filters.dateTo && newDate > filters.dateTo) {
       showAlert("Błędne daty:  Data od > Data do!", "error");
-      setDateFrom(null);
+      setFilters((prev) => ({
+        ...prev,
+        dateFrom: null,
+      }));
     } else {
-      setDateFrom(newDate);
+      setFilters((prev) => ({
+        ...prev,
+        dateFrom: newDate,
+      }));
     }
   };
 
   const handleDateToChange = (newDate) => {
-    if (newDate && dateFrom && newDate < dateFrom) {
+    if (newDate && filters.dateFrom && newDate < filters.dateFrom) {
       showAlert("Błędne daty:  Data do < Data od!", "error");
-      setDateTo(null);
+      setFilters((prev) => ({
+        ...prev,
+        dateTo: null,
+      }));
     } else {
-      setDateTo(newDate);
+      setFilters((prev) => ({
+        ...prev,
+        dateTo: newDate,
+      }));
     }
-  };
-
-  const handleResetAllFilters = (success, mode) => {
-    if(success ) {
-      if(mode === "Remove") {
-        showAlert("Zamówienie usunięte!", "success");
-      } else if (mode === "Edit") {
-        showAlert("Zamówienie zaktualizowane!", "success");
-      }
-    }
-    setSelectedSupplier([]);
-    setDateFrom(null);
-    setDateTo(null);
   };
 
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -158,20 +167,23 @@ const OrderHistory = () => {
   return (
     <>
       <section className="order-history-action-buttons">
-        <SupplierDropdown
+        <DropdownSelect
           items={suppliers}
-          placeholder="Wybierz Sklep"
-          selectedSupplier={selectedSupplier}
-          onSelect={handleOnSelectSupplier}
-          addSupplierVisible={false}
+          placeholder="Wybierz sklep"
+          onSelect={(selectedSuppliers) =>
+            handleOnSelectSupplier(selectedSuppliers)
+          }
+          addNewVisible={false}
           multiSelect={true}
+          allowColors={true}
+          reset={resetTriggered}
         />
 
         <section className="order-history-action-button-title">
           <a className="order-history-action-buttons-a">Data od:</a>
           <DateInput
             onChange={handleDateFromChange}
-            selectedDate={dateFrom}
+            selectedDate={filters.dateFrom}
             showPlaceholder={true}
           />
         </section>
@@ -179,7 +191,7 @@ const OrderHistory = () => {
           <a className="order-history-action-buttons-a">Data do:</a>
           <DateInput
             onChange={handleDateToChange}
-            selectedDate={dateTo}
+            selectedDate={filters.dateTo}
             showPlaceholder={true}
           />
         </section>
@@ -187,7 +199,7 @@ const OrderHistory = () => {
           src={"src/assets/reset.svg"}
           alt={"Reset"}
           text={"Reset"}
-          onClick={() => handleResetAllFilters()}
+          onClick={() => handleResetFiltersAndData()}
           disableText={true}
         />
       </section>
@@ -199,10 +211,6 @@ const OrderHistory = () => {
           <div className="loading-dot"></div>
           <div className="loading-dot"></div>
         </div>
-      ) : error ? (
-        <div className="list-error">
-          <h2>Coś poszło nie tak 😵</h2>
-        </div>
       ) : (
         <>
           <OrderList
@@ -210,7 +218,7 @@ const OrderHistory = () => {
             orders={currentItems}
             currentPage={currentPage}
             itemsPerPage={itemsPerPage}
-            handleResetAllFilters={handleResetAllFilters}
+            handleResetFiltersAndData={handleResetFiltersAndData}
           />
           {orders.length > itemsPerPage && (
             <div className="list-pagination">

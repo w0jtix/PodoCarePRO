@@ -3,10 +3,10 @@ import axios from "axios";
 class SupplierService {
   static API_URL = "http://localhost:8080/suppliers";
 
-  static async getAllSuppliers() {
+  static async getSuppliers() {
     try {
-      const response = await axios.get(`${this.API_URL}`, {});
-      return response.status === 204 ? [] : response;
+      const response = await axios.get(`${this.API_URL}`);
+      return response.status === 204 ? [] : response.data;
     } catch (error) {
       console.error("Error fetching suppliers. ", error);
       throw error;
@@ -24,19 +24,7 @@ class SupplierService {
     }
   }
 
-  static async getFilteredSuppliersByKeyword(keyword) {
-    try {
-      const allSuppliers = await this.getAllSuppliers();
-      const filteredSuppliers = allSuppliers.data.filter((supplier) =>
-        supplier.name.toLowerCase().startsWith(keyword.trim().toLowerCase())
-      );
 
-      return filteredSuppliers;
-    } catch (error) {
-      console.error("Error filtering Suppliers. ", error);
-      throw error;
-    }
-  }
 }
 
 export default SupplierService;

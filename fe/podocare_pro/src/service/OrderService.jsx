@@ -3,9 +3,23 @@ import axios from "axios";
 class OrderService {
   static API_URL = "http://localhost:8080/orders";
 
-  static async getAllOrders() {
+
+  static async createOrder(OrderRequestDTO) {
     try {
-      const response = await axios.get(this.API_URL, {});
+      const response = await axios.post(
+        `${this.API_URL}`,
+        OrderRequestDTO
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error creating new Order.", error);
+      throw error;
+    }
+  }
+
+  static async getOrders(FilterDTO) {
+    try {
+      const response = await axios.post(`${this.API_URL}/get`, FilterDTO);
       return response.status === 204 ? [] : response.data;
     } catch (error) {
       console.error("Error fetching orders. ", error);
@@ -13,49 +27,24 @@ class OrderService {
     }
   }
 
-  static async getFilteredOrders(orderFilterDTO) {
-    try{
-      const response = await axios.post(`${this.API_URL}/filter`,
-        orderFilterDTO
-      )
-      return response.status === 204 ? [] : response.data;
-    } catch (error) {
-      console.error("Error fetching Orders.", error);
-      throw error;
+  static async updateOrder(OrderRequestDTO) {
+      try{
+        const response = await axios.put(
+        `${this.API_URL}/${OrderRequestDTO.id}`,
+          OrderRequestDTO
+        );
+        return response.data;
+      } catch (error) {
+        console.error("Error updating Order.", error);
+        throw error;
+      }
     }
-  }
-
-  static async createNewOrder(OrderDTO) {
-    try {
-      const response = await axios.post(
-        `${this.API_URL}/createOrder`,
-        OrderDTO
-      );
-      return response;
-    } catch (error) {
-      console.error("Error creating new Order.", error);
-      throw error;
-    }
-  }
-
-  static async updateOrder(OrderDTO) {
-    try{
-      const response = await axios.patch(
-      `${this.API_URL}/${OrderDTO.orderId}/update`,
-        OrderDTO
-      );
-      return response;
-    } catch (error) {
-      console.error("Error updating Order.", error);
-      throw error;
-    }
-  }
 
   static async deleteOrder(orderId) {
     try{
       const response = await axios.delete(
         `${this.API_URL}/${orderId}`);
-        return response.data;
+        return response.status;
     } catch (error) {
       console.error("Error deleting Order.", 
         error?.response?.data || error.message
@@ -64,18 +53,6 @@ class OrderService {
     }
   }
 
-  static async filterOrdersBySupplier(supplier) {
-    try {
-      const allOrders = (await this.getAllOrders()) || [];
-      const filteredOrders = allOrders.filter(
-        (order) => order.supplierId === supplier.id
-      );
-      return filteredOrders;
-    } catch (error) {
-      console.error("Error filtering Orders. ", error);
-      throw error;
-    }
-  }
 }
 
 export default OrderService;

@@ -18,4 +18,5 @@ public class FilterDTO {
     private List<Long> supplierIds;
     private Date dateFrom;
     private Date dateTo;
+    private List<Long> productIds;
 }

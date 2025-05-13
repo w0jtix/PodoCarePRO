@@ -1,12 +1,11 @@
 package com.podocare.PodoCareWebsite.DTO;
 
 import com.podocare.PodoCareWebsite.model.Order;
+import com.podocare.PodoCareWebsite.model.VatRate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import com.podocare.PodoCareWebsite.model.VatRate;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 import java.util.List;
@@ -15,24 +14,24 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderDTO {
+public class OrderRequestDTO {
     private Long id;
     private Long supplierId;
     private Long orderNumber;
     private Date orderDate;
-    private List<OrderProductDTO> orderProductDTOList;
+    private List<OrderProductRequestDTO> orderProductDTOList;
     private VatRate shippingVatRate;
     private Double shippingCost;
     private Double totalNet;
     private Double totalVat;
     private Double totalValue;
 
-    public OrderDTO(Order order) {
+    public OrderRequestDTO(Order order) {
         this.id = order.getId();
         this.supplierId = order.getSupplier().getId();
         this.orderNumber = order.getOrderNumber();
         this.orderDate = order.getOrderDate();
-        this.orderProductDTOList = order.getOrderProducts().stream().map(OrderProductDTO::new).toList();
+        this.orderProductDTOList = order.getOrderProducts().stream().map(OrderProductRequestDTO::new).toList();
         this.shippingVatRate = order.getShippingVatRate();
         this.shippingCost = order.getShippingCost();
         this.totalNet = order.getTotalNet();
@@ -46,7 +45,7 @@ public class OrderDTO {
                 .supplier(SupplierDTO.toSupplierReference(this.supplierId))
                 .orderNumber(this.orderNumber)
                 .orderDate(this.orderDate)
-                .orderProducts(this.orderProductDTOList.stream().map(OrderProductDTO::toEntity).toList())
+                .orderProducts(this.orderProductDTOList.stream().map(OrderProductRequestDTO::toEntity).toList())
                 .shippingVatRate(this.shippingVatRate)
                 .shippingCost(this.shippingCost)
                 .totalNet(this.totalNet)
@@ -54,12 +53,4 @@ public class OrderDTO {
                 .totalValue(this.totalValue)
                 .build();
     }
-
-    public static Order toOrderReference(Long orderId) {
-        if(orderId == null) {
-            return null;
-        }
-        return Order.builder().id(orderId).build();
-    }
-
 }

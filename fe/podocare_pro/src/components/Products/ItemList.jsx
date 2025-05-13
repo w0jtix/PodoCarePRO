@@ -1,7 +1,6 @@
 import React from "react";
-import ProductActionButton from "./ProductActionButton";
+import ProductActionButton from "../ProductActionButton";
 import { useState } from "react";
-import ProductContent from "./ProductContent";
 
 const ItemList = ({
   attributes,
@@ -96,9 +95,6 @@ const ItemList = ({
               </div>
             ))}
           </div>
-          {/* {expandedProductIds.includes(item.id) && (
-            <ProductContent product={item} />
-          )} */}
         </div>
       ))}
     </div>

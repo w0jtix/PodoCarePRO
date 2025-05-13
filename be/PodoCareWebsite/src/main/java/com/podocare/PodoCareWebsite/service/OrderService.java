@@ -1,13 +1,13 @@
 package com.podocare.PodoCareWebsite.service;
 
-import com.podocare.PodoCareWebsite.DTO.FilterDTO;
+import com.podocare.PodoCareWebsite.DTO.*;
 import com.podocare.PodoCareWebsite.exceptions.CreationException;
 import com.podocare.PodoCareWebsite.exceptions.DeletionException;
 import com.podocare.PodoCareWebsite.exceptions.ResourceNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.UpdateException;
-import com.podocare.PodoCareWebsite.DTO.OrderDTO;
 import com.podocare.PodoCareWebsite.model.Order;
 import com.podocare.PodoCareWebsite.model.OrderProduct;
+import com.podocare.PodoCareWebsite.model.Supplier;
 import com.podocare.PodoCareWebsite.repo.OrderRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +15,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 import static java.util.Objects.isNull;
@@ -27,51 +28,77 @@ public class OrderService {
     private final OrderRepo orderRepo;
     private final OrderProductService orderProductService;
 
-    public OrderDTO getOrderById(Long orderId) {
+    public Order getOrderById(Long orderId) {
+        return orderRepo.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + orderId));
+    }
+
+    public OrderDTO getOrderDTOById(Long orderId) {
         return new OrderDTO(orderRepo.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with given id." + orderId)));
     }
 
-    public List<OrderDTO> getOrders(FilterDTO filter){
+    public OrderDisplayDTO getOrderDisplayById(Long orderId) {
+        OrderDisplayDTO orderDisplayDTO = orderRepo.findOrderDisplayById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with given id." + orderId));
+
+        List<OrderProductDisplayDTO> orderProducts = orderProductService.getOrderProductDisplayListByOrderId(orderId);
+        orderDisplayDTO.setOrderProductDTOList(orderProducts);
+        return orderDisplayDTO;
+    }
+
+    public List<OrderDisplayDTO> getOrders(FilterDTO filter){
         if(isNull(filter)) {
             filter = new FilterDTO();
         }
 
-        return orderRepo.findAllWithFilters(filter.getSupplierIds(), filter.getDateFrom(), filter.getDateTo())
+        return orderRepo.findAllOrderIdsWithFilters(filter.getSupplierIds(), filter.getDateFrom(), filter.getDateTo())
                 .stream()
-                .map(OrderDTO::new)
+                .map(this::getOrderDisplayById)
                 .toList();
     }
 
     @Transactional
-    public OrderDTO createOrder (OrderDTO orderToCreate) {
+    public OrderDisplayDTO createOrder (OrderRequestDTO orderToCreate) {
         try{
             generateOrderNumber(orderToCreate);
             Order orderToSave = orderToCreate.toEntity();
-            orderToSave.setOrderProducts(new ArrayList<>());
+            orderToSave.setOrderProducts(new ArrayList<>()); //save without OPs to get orderId first for OP creation
+
             Order savedOrder = orderRepo.save(orderToSave);
+            List<OrderProduct> newProducts = orderProductService.createOrderProducts(orderToCreate.getOrderProductDTOList(), savedOrder);
+            savedOrder.getOrderProducts().addAll(newProducts);
 
-            List<OrderProduct> orderProductsWithOrderId = orderProductService.createOrderProducts(orderToCreate.getOrderProductDTOList(), savedOrder);
-            savedOrder.setOrderProducts(orderProductsWithOrderId);
-
-            return new OrderDTO(orderRepo.save(savedOrder));
+            return getOrderDisplayById(orderRepo.save(savedOrder).getId());
         } catch (Exception e) {
             throw new CreationException("Failed to create Order. Reason: " + e.getMessage(), e);
         }
     }
 
     @Transactional
-    public OrderDTO updateOrder(Long orderId, OrderDTO orderDTO) {
+    public OrderDisplayDTO updateOrder(Long orderId, OrderRequestDTO orderDTO) {
         try{
-            OrderDTO existingOrder = getOrderById(orderId);
+            Order existingOrder = getOrderById(orderId);
 
-            existingOrder.getOrderProductDTOList()
-                        .forEach(orderProductDTO -> orderProductService.deleteOrderProductById(orderProductDTO.getId()));
+            List<Long> existingOrderProductIds = existingOrder.getOrderProducts().stream()
+                    .map(OrderProduct::getId)
+                    .collect(Collectors.toList());
 
-            List<OrderProduct> newProducts = orderProductService.createOrderProducts(orderDTO.getOrderProductDTOList(), existingOrder.toEntity());
-            Order updatedOrder = orderDTO.toEntity();
-            updatedOrder.setOrderProducts(newProducts); // asingning with ids to prevent duplicate save
-            return new OrderDTO(updatedOrder);
+            orderProductService.batchDeleteOrderProductsBtIds(existingOrderProductIds);
+            existingOrder.getOrderProducts().clear();
+
+            List<OrderProduct> newProducts = orderProductService.createOrderProducts(orderDTO.getOrderProductDTOList(), existingOrder);
+            existingOrder.getOrderProducts().addAll(newProducts);
+
+            existingOrder.setSupplier(SupplierDTO.toSupplierReference(orderDTO.getSupplierId()));
+            existingOrder.setOrderDate(orderDTO.getOrderDate());
+            existingOrder.setShippingVatRate(orderDTO.getShippingVatRate());
+            existingOrder.setShippingCost(orderDTO.getShippingCost());
+            existingOrder.setTotalNet(orderDTO.getTotalNet());
+            existingOrder.setTotalVat(orderDTO.getTotalVat());
+            existingOrder.setTotalValue(orderDTO.getTotalValue());
+
+            return getOrderDisplayById(orderRepo.save(existingOrder).getId());
         } catch (Exception e) {
             throw new UpdateException("Failed to update Order, Reason: " + e.getMessage(), e);
         }
@@ -80,7 +107,7 @@ public class OrderService {
     @Transactional
     public void deleteOrderById(Long orderId) {
         try{
-            getOrderById(orderId).getOrderProductDTOList()
+            getOrderDTOById(orderId).getOrderProductDTOList()
                     .forEach(orderProductDTO -> orderProductService.deleteOrderProductById(orderProductDTO.getId()));
             orderRepo.deleteById(orderId);
         } catch (Exception e) {
@@ -88,7 +115,7 @@ public class OrderService {
         }
     }
 
-    private void generateOrderNumber(OrderDTO orderDTO) {
+    private void generateOrderNumber(OrderRequestDTO orderDTO) {
         try {
             Optional<Order> lastOrder = orderRepo.findTopByOrderByOrderNumberDesc();
             orderDTO.setOrderNumber(lastOrder.map(order -> order.getOrderNumber() + 1).orElse(1L));

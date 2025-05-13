@@ -44,7 +44,7 @@ public class ProductService {
     public ProductDisplayDTO createProduct(ProductRequestDTO productToCreate) {
         try{
             Optional<ProductDTO> existingProductOptional = productRepo.findByProductName(productToCreate.getName());
-            if (existingProductOptional.isPresent()) {
+            if (existingProductOptional.isPresent()) { // sprawdzic czy productToCreate.brand == exisitng.brand ??
                 ProductDTO existingProductDTO = existingProductOptional.get();
                 if(Boolean.FALSE.equals(existingProductDTO.getIsDeleted())){
                     throw new CreationException("Product already exists: " + productToCreate.getName());

@@ -1,6 +1,6 @@
 import React from "react";
-import HandyOrderProductList from "../HandyOrderProductList";
-import OrderProductListHeader from "./OrderProductListHeader";
+import HandyOrderProductList from "./HandyOrderProductList";
+import ListHeader from "../ListHeader";
 
 const OrderContent = ({
   order,
@@ -10,7 +10,7 @@ const OrderContent = ({
   setHasWarning,
 }) => {
   const attributes = [
-    { name: "", width: "6%", justify: "start" },
+    { name: "", width: "6%", justify: "center" },
     { name: "Nazwa", width: "70%", justify: "start" },
     { name: "Ilość", width: "10%", justify: "center" },
     { name: "Cena [szt]", width: "14%", justify: "center" },
@@ -19,7 +19,7 @@ const OrderContent = ({
   const attributesHistory = [
     { name: "", width: "6%", justify: "center" },
     { name: "Nazwa", width: "64%", justify: "start" },
-    { name: "Ilość", width: "12%", justify: "center" },
+    { name: "Ilość", width: "10%", justify: "center" },
     { name: "Netto [szt]", width: "6%", justify: "center" },
     { name: "VAT", width: "6%", justify: "center" },
     { name: "Cena [szt]", width: "6%", justify: "center" },
@@ -36,7 +36,7 @@ const OrderContent = ({
 
   return (
     <div className={`order-content ${action.toLowerCase()}`}>
-      <OrderProductListHeader
+      <ListHeader
         attributes={
           action === "History" && mode === "Popup"
             ? attributesPopupHistory
@@ -44,6 +44,7 @@ const OrderContent = ({
             ? attributesHistory
             : attributes
         }
+        module={"handy"}
       />
       <HandyOrderProductList
         attributes={

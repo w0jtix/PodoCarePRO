@@ -22,17 +22,29 @@ public class OrderProductService {
    private final OrderProductRepo orderProductRepo;
    private final SupplyManagerService supplyManagerService;
 
-
     public OrderProductDTO getOrderProductById(Long orderProductId) {
         return new OrderProductDTO(orderProductRepo.findById(orderProductId)
                 .orElseThrow(() -> new ResourceNotFoundException("OrderProduct not found with ID: " + orderProductId)));
     }
 
+    public OrderProductDisplayDTO getOrderProductDisplayById(Long orderProductId) {
+        return orderProductRepo.findOrderProductDisplayById(orderProductId)
+                .orElseThrow(() -> new ResourceNotFoundException("OrderProduct not found with given id." + orderProductId));
+    }
+
+    public List<OrderProductDisplayDTO> getOrderProductDisplayListByOrderId(Long orderId) {
+        List<OrderProductDisplayDTO> orderProducts = orderProductRepo.findOrderProductDisplayDTOsByOrderId(orderId);
+        if (orderProducts.isEmpty()) {
+            throw new ResourceNotFoundException("OrderProducts not found with given orderId: " + orderId);
+        }
+        return orderProducts;
+    }
+
     @Transactional
-    public List<OrderProduct> createOrderProducts(List<OrderProductDTO> orderProductDTOList, Order order) {
+    public List<OrderProduct> createOrderProducts(List<OrderProductRequestDTO> orderProductDTOList, Order order) {
         try {
              return orderProductDTOList.stream()
-                    .map(orderProductDTO -> orderProductDTO.toEntity(order))
+                    .map(orderProductRequestDTO -> orderProductRequestDTO.toEntity(order))
                     .map(orderProductRepo::save)
                     .peek(savedOrderProduct ->
                             supplyManagerService.updateSupply(
@@ -62,5 +74,10 @@ public class OrderProductService {
         }catch (Exception e) {
             throw new DeletionException("Failed to delete OrderProduct with id: " + orderProductId + ", Reason: " + e.getMessage(), e);
         }
+    }
+
+    @Transactional
+    public void batchDeleteOrderProductsBtIds(List<Long> orderProductIds) {
+        orderProductIds.forEach(this::deleteOrderProductById);
     }
 }

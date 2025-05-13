@@ -1,8 +1,8 @@
 import React from "react";
-import ListHeader from "./ListHeader.jsx";
+import ListHeader from "../ListHeader.jsx";
 import ItemList from "./ItemList.jsx";
 import { useState, useEffect } from "react";
-import AllProductService from "../service/AllProductService";
+import AllProductService from "../../service/AllProductService.jsx";
 
 const SupplyList = ({
   filters,
@@ -18,9 +18,9 @@ const SupplyList = ({
   const itemsPerPage = 14;
 
   const attributes = [
-    { name: "", width: "2%", justify: "center" },
+    { name: "", width: "2%", justify: "end" },
     { name: "#", width: "3%", justify: "center" },
-    { name: "Nazwa", width: "55%", justify: "flex-start" },
+    { name: "Nazwa", width: "56%", justify: "flex-start" },
     { name: "Marka", width: "16%", justify: "center" },
     { name: "Stan Magazynowy", width: "16%", justify: "center" },
     { name: "Opcje", width: "8%", justify: "center" },

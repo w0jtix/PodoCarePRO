@@ -1,9 +1,9 @@
 import React from "react";
-import DigitInput from "./DigitInput";
+import DigitInput from "../DigitInput";
 import { useState, useEffect } from "react";
-import CategoryButtons from "./CategoryButtons";
-import BrandService from "../service/BrandService";
-import TextInput from "./TextInput";
+import CategoryButtons from "../CategoryButtons";
+import BrandService from "../../service/BrandService";
+import TextInput from "../TextInput";
 
 const ProductForm = ({
   onForwardProductForm,

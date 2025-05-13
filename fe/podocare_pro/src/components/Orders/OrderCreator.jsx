@@ -2,37 +2,48 @@ import React from "react";
 import { useState, useEffect } from "react";
 import OrderProductList from "./OrderProductList";
 import DateInput from "../DateInput";
-import SupplierDropdown from "../SupplierDropdown";
 import CustomAlert from "../CustomAlert";
 import OrderNewProductsPopup from "../Popups/OrderNewProductsPopup";
 import ProductActionButton from "../ProductActionButton";
 import OrderService from "../../service/OrderService";
 import SupplierService from "../../service/SupplierService";
 
+import CostInput from "../CostInput";
+import DropdownSelect from "../DropdownSelect";
+import AddSupplierPopup from "../Popups/AddSupplierPopup";
+
 const OrderCreator = ({
-  selectedSupplier,
   setSelectedSupplier,
   selectedOrderProduct,
   setSelectedOrderProduct,
   setExpandedOrderIds,
-  action,
   selectedOrder,
-  setOrderDTO,
+  handleResetFiltersAndData,
+  hasWarning,
   setHasWarning,
+  onClose,
 }) => {
-  const [initialOrderProductList, setInitialOrderProductList] = useState([]);
-  const [orderProductDTOList, setOrderProductDTOList] = useState([]);
-  const [currentOrderProductList, setCurrentOrderProductList] = useState([]);
-  const [orderProductListChanges, setOrderProductListChanges] = useState(null);
-  const [shippingCost, setShippingCost] = useState(0);
-  const [orderDate, setOrderDate] = useState(new Date());
-  const [suppliers, setSuppliers] = useState([]);
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [alertVisible, setAlertVisible] = useState(false);
-  const [nonExistingProducts, setNonExistingProducts] = useState([]);
   const [isOrderNewProductsPopupOpen, setIsOrderNewProductsPopupOpen] =
     useState(false);
+  const [nonExistingProducts, setNonExistingProducts] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
+  const [orderData, setOrderData] = useState({
+    id: selectedOrder?.id ?? null,
+    supplierId: selectedOrder?.supplierId ?? null,
+    orderNumber: selectedOrder?.orderNumber ?? null,
+    orderDate: selectedOrder?.orderDate ?? new Date(),
+    orderProductDTOList: selectedOrder?.orderProductDTOList ?? [],
+    shippingVatRate: 23,
+    shippingCost: selectedOrder?.shippingCost ?? 0,
+    totalNet: selectedOrder?.totalNet ?? 0,
+    totalVat: selectedOrder?.totalVat ?? 0,
+    totalValue: selectedOrder?.totalValue ?? 0,
+  });
+
+  const action = selectedOrder ? "Edit" : "Create";
 
   const showAlert = (message, variant) => {
     if (variant === "success") {
@@ -49,10 +60,50 @@ const OrderCreator = ({
     }, 2500);
   };
 
+  useEffect(() => {
+    if (selectedOrderProduct) {
+      setOrderData((prevOrderData) => ({
+        ...prevOrderData,
+        orderProductDTOList: [
+          ...(prevOrderData.orderProductDTOList || []),
+          {
+            id: Date.now(),
+            orderId: null,
+            productId: selectedOrderProduct?.productId ?? null,
+            productName: selectedOrderProduct?.productName ?? "",
+            quantity: 1,
+            vatRate: selectedOrderProduct?.vatRate ?? 8,
+            price: selectedOrderProduct?.price ?? 0,
+          },
+        ],
+      }));
+      setSelectedOrderProduct(null);
+    }
+  }, [selectedOrderProduct]);
+
+  useEffect(() => {
+    const totalNet = calculateOrderNetValue(
+      orderData.shippingCost,
+      orderData.orderProductDTOList
+    );
+    const totalValue = calculateOrderTotal(
+      orderData.shippingCost,
+      orderData.orderProductDTOList
+    );
+    const totalVat = totalValue - totalNet;
+
+    setOrderData((prev) => ({
+      ...prev,
+      totalNet: Math.round(totalNet * 100) / 100,
+      totalVat: Math.round(totalVat * 100) / 100,
+      totalValue: Math.round(totalValue * 100) / 100,
+    }));
+  }, [orderData.shippingCost, orderData.orderProductDTOList]);
+
   const fetchSuppliers = async () => {
-    SupplierService.getAllSuppliers()
-      .then((response) => {
-        const sortedSuppliers = response.data.sort((a, b) =>
+    SupplierService.getSuppliers()
+      .then((data) => {
+        const sortedSuppliers = data.sort((a, b) =>
           a.name.localeCompare(b.name)
         );
         setSuppliers(sortedSuppliers);
@@ -69,129 +120,86 @@ const OrderCreator = ({
     fetchSuppliers();
   }, []);
 
-  useEffect(() => {
-    if (selectedOrder) {
-      setOrderProductDTOList(selectedOrder.orderProductDTOList);
-      setOrderDate(new Date(selectedOrder.orderDate));
-      setShippingCost(selectedOrder.shippingCost);
-      handleOnSelectSupplier(
-        suppliers.find(
-          (supplier) => supplier.id === selectedOrder.supplierId
-        ) || null
-      );
-      const fetchedOrderProductList = selectedOrder.orderProductDTOList.map(
-        (item) => ({
-          id: item.orderProductId ?? item.id,
-          productId: item.productId,
-          productName: item.productName,
-          price: item.price,
-          quantity: item.quantity,
-          VATrate: item.VATrate,
-          orderPrice: item.price * item.quantity,
-        })
-      );
-      setInitialOrderProductList(fetchedOrderProductList);
-    }
-  }, [selectedOrder, suppliers]);
+  const handleAddNewSupplier = async (newSupplier) => {
+    if (await checkForErrorsSupplier(newSupplier)) return false;
 
-  useEffect(() => {
+    SupplierService.createSupplier(newSupplier)
+      .then((data) => {
+        setOrderData((prev) => ({
+          ...prev,
+          supplierId: data.id,
+        }));
+        showAlert("Pomyślnie dodano nowy sklep!", "success");
+        fetchSuppliers();
+      })
+      .catch((error) => {
+        console.error("Error creating new Supplier.", error);
+        showAlert("Błąd tworzenia sklepu.", "error");
+      });
+  };
+
+  const handleOnSelectSupplier = (supplier) => {   
+    setOrderData((prev) => ({
+      ...prev,
+      supplierId: supplier ? supplier.id : null,
+    }));
+
     if (action === "Create") {
-      if (selectedOrderProduct) {
-        setOrderProductDTOList((prevList) => [
-          ...prevList,
-          {
-            id: Date.now(),
-            productName: selectedOrderProduct.productName,
-            price: selectedOrderProduct.price,
-            quantity: 1,
-            VATrate: selectedOrderProduct.VATrate,
-            orderPrice: selectedOrderProduct.price,
-          },
-        ]);
-      }
-      setSelectedOrderProduct(null);
-    }
-  }, [selectedOrderProduct]);
-
-  const handleAddSupplier = async (newSupplier) => {
-    await fetchSuppliers();
-    setSelectedSupplier(newSupplier);
-  };
-
-  const handleOnSelectSupplier = (supplier) => {
-    setSelectedSupplier(supplier);
-  };
-
-  const handleOrderProductDTOListChange = (updatedList) => {
-    if (action === "Create") {
-      setOrderProductDTOList(updatedList);
-    } else if (action === "Edit") {
-      setOrderProductListChanges(updatedList);
+      setExpandedOrderIds([]);
+      setSelectedSupplier(supplier);
     }
   };
 
-  const getOrderChanges = (initial, edited) => {
-    if (!initial || !edited) return {};
-
-    const orderChanges = {};
-    Object.keys(edited).forEach((key) => {
-      if (JSON.stringify(edited[key]) !== JSON.stringify(initial[key])) {
-        orderChanges[key] = edited[key];
-      }
-    });
-    if (Object.keys(orderChanges).length > 0) {
-      orderChanges["orderId"] = initial.orderId;
+  const checkForErrorsSupplier = async (supplierToCreate) => {
+    if (!supplierToCreate.name) {
+      showAlert("Nazwa sklepu nie może być pusta!", "error");
+      return true;
     }
-    return orderChanges;
+
+    if (supplierToCreate.name.trim().length <= 2) {
+      showAlert("Nazwa sklepu za krótka! (2+)", "error");
+      return true;
+    }
+    return false;
   };
-
-  useEffect(() => {
-    let orderDTO = {};
-    if (action === "Edit" && selectedSupplier) {
-      const initialOrder = {
-        orderId: selectedOrder.orderId,
-        orderDate: new Date(selectedOrder.orderDate),
-        supplierId: selectedOrder.supplierId,
-        shippingCost: selectedOrder.shippingCost,
-        removedOrderProducts: [],
-        addedOrderProducts: [],
-        editedOrderProducts: [],
-        orderProductDTOList: initialOrderProductList,
-      };
-      const editedOrder = {
-        orderId: selectedOrder.orderId,
-        orderDate: orderDate,
-        supplierId: selectedSupplier.id,
-        shippingCost: shippingCost,
-        removedOrderProducts: orderProductListChanges.removedOrderProducts,
-        addedOrderProducts: orderProductListChanges.addedOrderProducts,
-        editedOrderProducts: orderProductListChanges.editedOrderProducts,
-        orderProductDTOList: currentOrderProductList,
-      };
-      orderDTO = getOrderChanges(initialOrder, editedOrder);
-      if (orderDTO.shippingCost && !orderDTO.orderProductDTOList) {
-        orderDTO = { ...orderDTO, orderProductDTOList };
-      }
-      setOrderDTO(orderDTO);
-    }
-  }, [orderProductListChanges, selectedSupplier, orderDate, shippingCost]);
 
   const handleOrderDateChange = (newDate) => {
-    setOrderDate(newDate);
+    setOrderData((prev) => ({
+      ...prev,
+      orderDate: newDate,
+    }));
   };
 
   const handleAddNewProduct = () => {
-    setOrderProductDTOList((prevList) => [
-      ...prevList,
-      {
-        id: Date.now(),
-        productName: "",
-        price: 0,
-        quantity: 1,
-        VATrate: 8,
-        orderPrice: 0,
-      },
-    ]);
+    setOrderData((prevOrderData) => ({
+      ...prevOrderData,
+      orderProductDTOList: [
+        ...(prevOrderData.orderProductDTOList || []),
+        {
+          id: Date.now(),
+          orderId: null,
+          productId: null,
+          productName: "",
+          quantity: 1,
+          vatRate: 8,
+          price: 0,
+        },
+      ],
+    }));
+  };
+
+  const handleOrderProductDTOListChange = (updatedList) => {
+    setOrderData((prev) => ({
+      ...prev,
+      orderProductDTOList: updatedList,
+    }));
+  };
+
+  const handleShippingCost = (shippingCost) => {
+    setOrderData((prev) => ({
+      ...prev,
+      shippingCost: shippingCost,
+    }));
   };
 
   const calculateOrderTotal = (shippingCost, orderProductDTOList) => {
@@ -209,69 +217,135 @@ const OrderCreator = ({
       (acc, product) =>
         acc +
         ((product.price * product.quantity) /
-          (1 + optimizedVAT(product.VATrate) / 100) || 0),
+          (1 + optimizedVAT(product.vatRate) / 100) || 0),
       0
     );
     return netTotal + netShippingCost;
   };
 
-  const finalizeOrder = async (updatedOrderProductList) => {
-    const OrderDTO = {
-      orderProductDTOList: updatedOrderProductList,
-      shippingCost: shippingCost,
-      //shippingVatRate hardcoded value - 23 on BE.
-      orderDate: orderDate,
-      supplierId: selectedSupplier.id,
-    };
-    return OrderService.createNewOrder(OrderDTO)
-      .then((response) => {
-        setIsOrderNewProductsPopupOpen(false);
-        showAlert(
-          `Zamówienie #${response.data.orderNumber} zostało utworzone!`,
-          "success"
-        );
-        resetFormState();
-      })
-      .catch((error) => {
-        console.error("Error finalizing Order.", error);
-        showAlert("Error finalizing Order.", "error");
-      });
+  const areOrderProductsEqual = (opList1, opList2) => {
+    if (opList1.length != opList2.length) return false;
+
+    const sorted1 = [...opList1].sort((a, b) => a.productId - b.productId);
+    const sorted2 = [...opList2].sort((a, b) => a.productId - b.productId);
+
+    return sorted1.every((op1, index) => {
+      const op2 = sorted2[index];
+      return (
+        op1.productId === op2.productId &&
+        op1.productName === op2.productName &&
+        op1.productBrandName === op2.productBrandName &&
+        op1.price === op2.price &&
+        op1.quantity === op2.quantity &&
+        op1.vatRate === op2.vatRate
+      );
+    });
   };
 
-  const handleCloseOrderNewProductPopup = () => {
-    setIsOrderNewProductsPopupOpen(false);
-  };
-
-  const checkForErrors = () => {
-    if (!selectedSupplier) {
+  const checkForErrorsOrder = async (orderData) => {
+    if (!orderData.supplierId) {
       showAlert("Nie wybrano sklepu...", "error");
       return true;
     }
 
-    if (orderProductDTOList.length === 0) {
+    if (orderData.orderProductDTOList.length === 0) {
       showAlert("Puste zamówienie... Dodaj produkty!", "error");
       return true;
     }
 
     if (
-      orderProductDTOList.some((product) => product.productName.trim() === "")
+      orderData.orderProductDTOList.some(
+        (product) => product.productName.trim() === ""
+      )
     ) {
       showAlert("Niepoprawna nazwa produktu!", "error");
       return true;
     } else if (
-      orderProductDTOList.some(
+      orderData.orderProductDTOList.some(
         (product) => product.productName.trim().length <= 2
       )
     ) {
       showAlert("Nazwa produktu za krótka! (2+)", "error");
       return true;
     }
+
+    if (
+      orderData.orderProductDTOList.some((product) => product.quantity == 0)
+    ) {
+      showAlert(
+        action === "Edit"
+          ? "Ilość = 0, usuń produkt!"
+          : "Ilość produktów nie może wynosić 0!",
+        "error"
+      );
+      return true;
+    }
+
+    if (action == "Edit") {
+      const noOrderChangesDetected =
+        orderData.supplierId === selectedOrder.supplierId &&
+        new Date(orderData.orderDate).getTime() ===
+          new Date(selectedOrder.orderDate).getTime() &&
+        orderData.shippingCost === selectedOrder.shippingCost &&
+        orderData.totalNet === selectedOrder.totalNet &&
+        orderData.totalVat === selectedOrder.totalVat &&
+        orderData.totalValue === selectedOrder.totalValue;
+
+      const noOrderProductChangesDetected = areOrderProductsEqual(
+        selectedOrder.orderProductDTOList,
+        orderData.orderProductDTOList
+      );
+
+      if (noOrderChangesDetected && noOrderProductChangesDetected) {
+        showAlert("Brak zmian!", "error");
+        return true;
+      }
+    }
+
     return false;
   };
 
-  const handleValidateOrder = async (orderProductDTOList) => {
-    if (checkForErrors()) return;
-    let nonExistingProducts = orderProductDTOList.filter(
+  const handleCloseOrderNewProductPopup = () => {
+    setIsOrderNewProductsPopupOpen(false);
+  };
+
+  const createOrderRequestDTO = (orderData) => {
+    return {
+      ...orderData,
+      orderProductDTOList: orderData.orderProductDTOList.map((product) => ({
+        id: null,
+        orderId: product.orderId,
+        productId: product.productId,
+        quantity: product.quantity,
+        vatRate: product.vatRate,
+        price: product.price,
+      })),
+    };
+  };
+
+  const resetFormState = () => {
+    setOrderData({
+      id: null,
+      supplierId: null,
+      orderNumber: null,
+      orderDate: new Date(),
+      orderProductDTOList: [],
+      shippingVatRate: 23,
+      shippingCost: 0,
+      totalNet: 0,
+      totalVat: 0,
+      totalValue: 0,
+    });
+    setIsOrderNewProductsPopupOpen(false);
+    setSelectedOrderProduct();
+    setExpandedOrderIds([]);
+    setSelectedSupplier(null);
+  };
+
+  const handleValidateOrder = async (orderData) => {
+    if (await checkForErrorsOrder(orderData)) return;
+
+    let nonExistingProducts = orderData.orderProductDTOList.filter(
       (product) => !product.productId
     );
 
@@ -280,19 +354,45 @@ const OrderCreator = ({
       setIsOrderNewProductsPopupOpen(true);
       return;
     }
-    finalizeOrder(orderProductDTOList);
+    const OrderRequestDTO = createOrderRequestDTO(orderData);
+    finalizeOrder(OrderRequestDTO);
   };
 
-  const resetFormState = () => {
+  const finalizeOrder = async (OrderRequestDTO) => {
     if (action === "Create") {
-      setOrderProductDTOList([]);
-      setShippingCost(0);
-      setOrderDate(new Date());
-      setSelectedSupplier(null);
-      setNonExistingProducts([]);
-      setIsOrderNewProductsPopupOpen(false);
-      setSelectedOrderProduct();
-      setExpandedOrderIds([]);
+      return OrderService.createOrder(OrderRequestDTO)
+        .then((data) => {
+          setIsOrderNewProductsPopupOpen(false);
+          showAlert(
+            `Zamówienie #${data.orderNumber} zostało utworzone!`,
+            "success"
+          );
+          resetFormState();
+        })
+        .catch((error) => {
+          console.error("Error finalizing Order.", error);
+          showAlert("Error finalizing Order.", "error");
+        });
+    } else if (action === "Edit") {
+      if (!hasWarning) {
+        return OrderService.updateOrder(OrderRequestDTO)
+          .then((data) => {
+            setIsOrderNewProductsPopupOpen(false);
+            const success = true;
+            const mode = "Edit";
+            handleResetFiltersAndData(success, mode);
+            setTimeout(() => {
+              onClose();
+            }, 600);
+          })
+          .catch((error) => {
+            console.error("Error updating Order.", error);
+            showAlert("Błąd aktualizacji zamówienia.", "error");
+            return false;
+          });
+      } else {
+        showAlert("Konflikt stanu magazynowego!", "error");
+      }
     }
   };
 
@@ -300,19 +400,27 @@ const OrderCreator = ({
     <div
       className={`order-display-container ${action === "Edit" ? "popup" : ""}`}
     >
-      <div className={`order-display-interior ${action === "Edit" ? "popup" : ""}`}>
+      <div
+        className={`order-display-interior ${action === "Edit" ? "popup" : ""}`}
+      >
         {action === "Create" && <h1>Nowe zamówienie</h1>}
         <section className="order-supplier-date-addProduct-section">
-          <SupplierDropdown
+          <DropdownSelect
             items={suppliers}
             placeholder="Wybierz Sklep"
-            selectedSupplier={selectedSupplier}
-            onSelect={handleOnSelectSupplier}
-            onAddSupplier={handleAddSupplier}
+            onSelect={(selectedSupplier) =>
+              handleOnSelectSupplier(selectedSupplier)
+            }
+            selectedItemId={orderData.supplierId}
+            displayPopup={true}
+            PopupComponent={AddSupplierPopup}
+            popupProps={{
+              onAddNew: (supplier) => handleAddNewSupplier(supplier),
+            }}
           />
           <DateInput
             onChange={handleOrderDateChange}
-            selectedDate={orderDate}
+            selectedDate={orderData.orderDate}
           />
 
           <ProductActionButton
@@ -323,81 +431,39 @@ const OrderCreator = ({
           />
         </section>
         <OrderProductList
-          items={orderProductDTOList}
-          setItems={setOrderProductDTOList}
+          items={orderData.orderProductDTOList}
           onItemsChange={handleOrderProductDTOListChange}
           action={action}
-          initialOrderProductList={initialOrderProductList}
-          setCurrentOrderProductList={setCurrentOrderProductList}
           setHasWarning={setHasWarning}
         />
         <div className="shipping-summary-section">
           <div className="order-shipping">
             <a>Koszt przesyłki:</a>
-            <input
-              type="number"
-              className="shipping-cost-input"
-              value={shippingCost}
-              onChange={(e) => setShippingCost(parseFloat(e.target.value) || 0)}
-              placeholder="0.00"
-              step="0.01"
+            <CostInput
+              selectedCost={orderData.shippingCost ?? 0}
+              onChange={(value) => handleShippingCost(parseFloat(value) || 0)}
+              placeholder={"0.00"}
             />
           </div>
           <div className="order-cost-summary">
             <a>Netto:</a>
-            <a className="order-total-value">
-              {action === "Edit"
-                ? calculateOrderNetValue(
-                    shippingCost,
-                    currentOrderProductList
-                  ).toFixed(2)
-                : calculateOrderNetValue(
-                    shippingCost,
-                    orderProductDTOList
-                  ).toFixed(2)}{" "}
-              zł
-            </a>
+            <a className="order-total-value">{orderData.totalNet} zł</a>
             <a>VAT:</a>
-            <a className="order-total-value">
-              {action === "Edit"
-                ? (
-                    calculateOrderTotal(shippingCost, currentOrderProductList) -
-                    calculateOrderNetValue(
-                      shippingCost,
-                      currentOrderProductList
-                    )
-                  ).toFixed(2)
-                : (
-                    calculateOrderTotal(shippingCost, orderProductDTOList) -
-                    calculateOrderNetValue(shippingCost, orderProductDTOList)
-                  ).toFixed(2)}{" "}
-              zł
-            </a>
+            <a className="order-total-value">{orderData.totalVat} zł</a>
             <a>Total:</a>
-            <a className="order-total-value">
-              {action === "Edit"
-                ? calculateOrderTotal(
-                    shippingCost,
-                    currentOrderProductList
-                  ).toFixed(2)
-                : calculateOrderTotal(
-                    shippingCost,
-                    orderProductDTOList
-                  ).toFixed(2)}{" "}
-              zł
-            </a>
+            <a className="order-total-value">{orderData.totalValue} zł</a>
           </div>
         </div>
-        {action === "Create" && (
-          <div className="order-confirm-button">
-            <ProductActionButton
-              src={"src/assets/tick.svg"}
-              alt={"Zapisz"}
-              text={"Zapisz"}
-              onClick={() => handleValidateOrder(orderProductDTOList)}
-            />
-          </div>
-        )}
+
+        <div className={`order-confirm-button ${action.toLocaleLowerCase()}`}>
+          <ProductActionButton
+            src={"src/assets/tick.svg"}
+            alt={"Zapisz"}
+            text={"Zapisz"}
+            onClick={() => handleValidateOrder(orderData)}
+          />
+        </div>
+
         {alertVisible && (
           <CustomAlert
             message={errorMessage || successMessage}
@@ -407,10 +473,11 @@ const OrderCreator = ({
         {isOrderNewProductsPopupOpen && (
           <OrderNewProductsPopup
             nonExistingProducts={nonExistingProducts}
-            orderProductDTOList={orderProductDTOList}
-            setOrderProductDTOList={setOrderProductDTOList}
+            orderData={orderData}
             onClose={handleCloseOrderNewProductPopup}
-            onFinalizeOrder={(list) => handleValidateOrder(list)}
+            onFinalizeOrder={(updatedOrderRequestDTO) =>
+              handleValidateOrder(updatedOrderRequestDTO)
+            }
             action={"Create"}
           />
         )}

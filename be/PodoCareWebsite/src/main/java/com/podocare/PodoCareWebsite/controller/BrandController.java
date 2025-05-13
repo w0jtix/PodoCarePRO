@@ -28,10 +28,16 @@ public class BrandController {
         return new ResponseEntity<>(brandDTO, HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<BrandDTO> createBrand(@RequestBody BrandDTO brandToCreate) {
         BrandDTO newBrand = brandService.createBrand(brandToCreate);
         return new ResponseEntity<>(newBrand, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/create/batch")
+    public ResponseEntity<List<BrandDTO>> createNewBrands(@RequestBody List<BrandDTO> brandsToCreate) {
+        List<BrandDTO> createdBrands = brandService.createBrands(brandsToCreate);
+        return new ResponseEntity<>(createdBrands, HttpStatus.CREATED);
     }
 
     @PutMapping("/{brandId}")
