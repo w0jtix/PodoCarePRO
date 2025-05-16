@@ -6,6 +6,7 @@ import com.podocare.PodoCareWebsite.exceptions.DeletionException;
 import com.podocare.PodoCareWebsite.exceptions.ResourceNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.UpdateException;
 import com.podocare.PodoCareWebsite.model.Product;
+import com.podocare.PodoCareWebsite.repo.OrderProductRepo;
 import com.podocare.PodoCareWebsite.repo.ProductRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import static java.util.Objects.isNull;
 public class ProductService {
     private final ProductRepo productRepo;
     private final SupplyManagerService supplyManagerService;
+    private final OrderProductRepo orderProductRepo;
 
     public ProductDTO getProductById(Long productId) {
         return new ProductDTO(productRepo.findById(productId)
@@ -37,7 +39,7 @@ public class ProductService {
             filter = new FilterDTO();
         }
         return productRepo.findAllWithFilters(
-                filter.getCategoryIds(), filter.getBrandIds(), filter.getKeyword(), filter.getIncludeZero()) ;
+                filter.getCategoryIds(), filter.getBrandIds(), filter.getKeyword(), filter.getIncludeZero(), filter.getIsDeleted()) ;
     }
 
     @Transactional
@@ -49,13 +51,14 @@ public class ProductService {
                 if(Boolean.FALSE.equals(existingProductDTO.getIsDeleted())){
                     throw new CreationException("Product already exists: " + productToCreate.getName());
                 } else {
-                    productToCreate.setId(existingProductDTO.getId());
-                    return this.updateProduct(existingProductDTO.getId(), productToCreate);
+                    resurrectProductIfSoftDeletedAndSetSupply(existingProductDTO.getId(), 0);
+                    return getProductDisplayById(existingProductDTO.getId());
                 }
+            } else {
+                Product savedProduct = productRepo.save(productToCreate.toEntity());
+                supplyManagerService.createManager(savedProduct.getId(), productToCreate.getSupply());
+                return getProductDisplayById(savedProduct.getId());
             }
-            Product savedProduct = productRepo.save(productToCreate.toEntity());
-            supplyManagerService.createManager(savedProduct.getId(), productToCreate.getSupply());
-            return getProductDisplayById(savedProduct.getId());
         } catch (Exception e) {
             throw new CreationException("Failed to create Product. Reason: " + e.getMessage(), e);
         }
@@ -88,11 +91,47 @@ public class ProductService {
     @Transactional
     public void deleteProductById(Long productId) {
         try {
-           productRepo.deleteById(getProductById(productId).getId());
-           supplyManagerService.deleteManagerByProductId(productId);
+            supplyManagerService.deleteManagerByProductId(productId);
+            productRepo.deleteById(getProductById(productId).getId());
         } catch (Exception e) {
             throw new DeletionException("Failed to delete Product, Reason: " + e.getMessage(), e);
         }
+    }
+
+    @Transactional
+    public void manageDeletionStatusByProduct(Long productId) { //dashboardDeletion
+        long referenceCount = orderProductRepo.countByProductId(productId);
+        if(referenceCount == 0 ) {
+            deleteProductById(productId);
+        } else {
+            Product product = getProductById(productId).toEntity();
+            product.setIsDeleted(true);
+            productRepo.save(product);
+            supplyManagerService.changeSupply(new SupplyManagerDTO(productId, 0));
+        }
+    }
+
+    @Transactional
+    public void manageDeletionStatusAndSupplyByOrderProduct(Long productId, Integer quantity) {
+
+        long referenceCount = orderProductRepo.countByProductId(productId);
+        if(productRepo.isProductSoftDeleted(productId)) {
+            if(referenceCount == 0) {
+                deleteProductById(productId);
+            }
+        } else {
+            supplyManagerService.updateSupply(new SupplyManagerDTO(productId, quantity, "decrement"));
+        }
+    }
+
+    @Transactional
+    public void resurrectProductIfSoftDeletedAndSetSupply(Long productId, Integer quantity) {
+        if (productRepo.isProductSoftDeleted(productId)) {
+            Product product = getProductById(productId).toEntity();
+            product.setIsDeleted(false);
+            productRepo.save(product);
+        }
+        supplyManagerService.updateSupply(new SupplyManagerDTO(productId, quantity, "increment"));
     }
 
 }

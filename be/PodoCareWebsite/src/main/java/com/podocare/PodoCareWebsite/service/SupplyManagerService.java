@@ -20,8 +20,8 @@ public class SupplyManagerService {
     private final SupplyManagerRepo supplyManagerRepo;
 
     public SupplyManagerDTO getManagerByProductId(Long productId) {
-        return new SupplyManagerDTO(supplyManagerRepo.findByProductId(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with given id.")));
+        return supplyManagerRepo.findDTOByProductId(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with given id."));
     }
 
     public List<SupplyManagerDTO> getManagersByProductIds (FilterDTO filterDTO) {
@@ -56,7 +56,7 @@ public class SupplyManagerService {
         try {
             SupplyManagerDTO managerDTO =  getManagerByProductId(requestDTO.getProductId());
             if(requestDTO.getAction().equals("increment")) {
-                managerDTO.setSupply(managerDTO.getSupply() + requestDTO.getSupply()); //here
+                managerDTO.setSupply((managerDTO.getSupply() < 0 ? 0 : managerDTO.getSupply())  + requestDTO.getSupply()); //here; check for <0 is because of product resurrection case
             } else if (requestDTO.getAction().equals("decrement")) {
                 managerDTO.setSupply(managerDTO.getSupply() - requestDTO.getSupply()); //here
             }

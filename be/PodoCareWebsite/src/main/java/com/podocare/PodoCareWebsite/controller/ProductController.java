@@ -1,6 +1,5 @@
 package com.podocare.PodoCareWebsite.controller;
 
-import com.podocare.PodoCareWebsite.DTO.ProductDTO;
 import com.podocare.PodoCareWebsite.DTO.FilterDTO;
 import com.podocare.PodoCareWebsite.DTO.ProductDisplayDTO;
 import com.podocare.PodoCareWebsite.DTO.ProductRequestDTO;
@@ -51,7 +50,7 @@ public class ProductController {
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
-        productService.deleteProductById(productId);
+        productService.manageDeletionStatusByProduct(productId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

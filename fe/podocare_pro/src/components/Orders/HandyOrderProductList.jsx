@@ -35,6 +35,30 @@ const HandyOrderProductList = ({
       });
   };
 
+/*   const fetchSupply = async () => {
+    const productIdsToCheckSupplyFor = order.orderProductDTOList
+      .map((item) => item.productId)
+      .filter((id) => id != null);
+
+    const filterDTO = { productIds: [...new Set(productIdsToCheckSupplyFor)] };
+    return SupplyManagerService.getManagers(filterDTO)
+      .then((data) => {
+        const supplyMap = {};
+        const deletedStatusMap = {};
+
+        data.forEach((manager) => {
+          supplyMap[manager.productId] = manager.supply;
+          deletedStatusMap[manager.productId] = manager.isDeleted;
+        });
+
+        setAvailableSupply(supplyMap);
+        setSoftDeletedProducts(deletedStatusMap);
+      })
+      .catch((error) => {
+        console.error("Error fetching supply managers:", error);
+      });
+  }; */
+
   useEffect(() => {
     if (action === "History" && mode === "Popup") {
       const productIds = order.orderProductDTOList.map(

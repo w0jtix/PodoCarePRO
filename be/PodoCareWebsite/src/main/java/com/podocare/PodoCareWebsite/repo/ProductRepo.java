@@ -25,12 +25,14 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
       AND (COALESCE(:brandIds, NULL) IS NULL OR p.brand.id IN :brandIds)
       AND (COALESCE(:keyword, '') = '' OR LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')))
       AND (:includeZero = TRUE OR COALESCE(s.supply, 0) > 0)
+      AND (:isDeleted IS NULL OR p.isDeleted = :isDeleted)
 """)
     List<ProductDisplayDTO> findAllWithFilters(
             @Param("categoryIds") List<Long> categoryIds,
             @Param("brandIds") List<Long> brandIds,
             @Param("keyword") String keyword,
-            @Param("includeZero") Boolean includeZero
+            @Param("includeZero") Boolean includeZero,
+            @Param("isDeleted") Boolean isDeleted
     );
 
     @Query("""
@@ -51,4 +53,7 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
     WHERE p.id = :productId
 """)
     Optional<ProductDisplayDTO> findProductDisplayById(@Param("productId") Long productId);
+
+    @Query("SELECT p.isDeleted FROM Product p WHERE p.id = :productId")
+    Boolean isProductSoftDeleted(@Param("productId") Long productId);
 }

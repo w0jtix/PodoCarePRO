@@ -40,6 +40,9 @@ const SupplyList = ({
     if (filters.includeZero !== null) {
       filterDTO.includeZero = filters.includeZero;
     }
+    if(filters.isDeleted !== null) {
+      filterDTO.isDeleted = filters.isDeleted;
+    }
 
     return filterDTO;
   };

@@ -33,4 +33,7 @@ public interface OrderProductRepo extends JpaRepository<OrderProduct, Long> {
 """)
     List<OrderProductDisplayDTO> findOrderProductDisplayDTOsByOrderId(@Param("orderId") Long orderId);
 
+    @Query("SELECT COUNT(op) FROM OrderProduct op WHERE op.product.id = :productId")
+    long countByProductId(@Param("productId") Long productId);
+
 }

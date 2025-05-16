@@ -14,6 +14,7 @@ import lombok.Setter;
 public class SupplyManagerDTO {
     private Long id;
     private Long productId;
+    private Boolean isDeleted;
     private Integer supply;
     private String action;
 

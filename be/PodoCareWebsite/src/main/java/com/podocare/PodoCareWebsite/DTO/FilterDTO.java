@@ -15,6 +15,7 @@ public class FilterDTO {
     private String keyword;
     private Boolean available;
     private Boolean includeZero;
+    private Boolean isDeleted;
     private List<Long> supplierIds;
     private Date dateFrom;
     private Date dateTo;

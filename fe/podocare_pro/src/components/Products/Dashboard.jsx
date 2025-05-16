@@ -20,6 +20,7 @@ const Dashboard = () => {
     brandIds: [],
     keyword: "",
     includeZero: false,
+    isDeleted: false,
   });
   const [resetTriggered, setResetTriggered] = useState(false);
   const [includeZero, setIncludeZero] = useState(false);
@@ -56,6 +57,7 @@ const Dashboard = () => {
       brandIds: [],
       keyword: "",
       includeZero: false,
+      isDeleted: false,
     });
     setIncludeZero(false);
     setResetTriggered((prev) => !prev);

@@ -21,6 +21,7 @@ const OrderItemList = ({
   const [productSuggestions, setProductSuggestions] = useState({});
   const [changesFlag, setChangesFlag] = useState(false);
   const [availableSupply, setAvailableSupply] = useState({});
+  const [softDeletedProducts, setSoftDeletedProducts] = useState({});
   const [initialQuantities, setInitialQuantities] = useState({});
 
   useEffect(() => {
@@ -64,10 +65,15 @@ const OrderItemList = ({
     return SupplyManagerService.getManagers(filterDTO)
       .then((data) => {
         const supplyMap = {};
+        const deletedStatusMap = {};
+
         data.forEach((manager) => {
           supplyMap[manager.productId] = manager.supply;
+          deletedStatusMap[manager.productId] = manager.isDeleted;
         });
+
         setAvailableSupply(supplyMap);
+        setSoftDeletedProducts(deletedStatusMap);
       })
       .catch((error) => {
         console.error("Error fetching supply managers:", error);
@@ -75,6 +81,10 @@ const OrderItemList = ({
   };
 
   const updateSupplyWarnings = (idToCheck, initialQty, currentQty) => {
+    if (softDeletedProducts[idToCheck]) {
+      return;
+    }
+
     const availableStock = availableSupply[idToCheck];
     const differenceQty = initialQty - currentQty;
 
