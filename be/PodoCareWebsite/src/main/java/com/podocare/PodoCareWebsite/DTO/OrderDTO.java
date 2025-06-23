@@ -1,15 +1,16 @@
 package com.podocare.PodoCareWebsite.DTO;
 
 import com.podocare.PodoCareWebsite.model.Order;
+import com.podocare.PodoCareWebsite.model.OrderProduct;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import com.podocare.PodoCareWebsite.model.VatRate;
-import lombok.extern.slf4j.Slf4j;
+import com.podocare.PodoCareWebsite.model.constants.VatRate;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -17,10 +18,10 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderDTO {
     private Long id;
-    private Long supplierId;
+    private SupplierDTO supplier;
     private Long orderNumber;
-    private Date orderDate;
-    private List<OrderProductDTO> orderProductDTOList;
+    private LocalDate orderDate;
+    private List<OrderProductDTO> orderProducts;
     private VatRate shippingVatRate;
     private Double shippingCost;
     private Double totalNet;
@@ -29,10 +30,12 @@ public class OrderDTO {
 
     public OrderDTO(Order order) {
         this.id = order.getId();
-        this.supplierId = order.getSupplier().getId();
+        this.supplier = new SupplierDTO(order.getSupplier());
         this.orderNumber = order.getOrderNumber();
         this.orderDate = order.getOrderDate();
-        this.orderProductDTOList = order.getOrderProducts().stream().map(OrderProductDTO::new).toList();
+        this.orderProducts = order.getOrderProducts().stream()
+                .map(OrderProductDTO::new)
+                .collect(Collectors.toList());
         this.shippingVatRate = order.getShippingVatRate();
         this.shippingCost = order.getShippingCost();
         this.totalNet = order.getTotalNet();
@@ -41,25 +44,23 @@ public class OrderDTO {
     }
 
     public Order toEntity() {
-        return Order.builder()
+        Order order = Order.builder()
                 .id(this.id)
-                .supplier(SupplierDTO.toSupplierReference(this.supplierId))
+                .supplier(this.supplier.toEntity())
                 .orderNumber(this.orderNumber)
                 .orderDate(this.orderDate)
-                .orderProducts(this.orderProductDTOList.stream().map(OrderProductDTO::toEntity).toList())
                 .shippingVatRate(this.shippingVatRate)
                 .shippingCost(this.shippingCost)
                 .totalNet(this.totalNet)
                 .totalVat(this.totalVat)
                 .totalValue(this.totalValue)
                 .build();
-    }
 
-    public static Order toOrderReference(Long orderId) {
-        if(orderId == null) {
-            return null;
+        for (OrderProductDTO orderProductDTO : this.orderProducts) {
+            OrderProduct orderProduct = orderProductDTO.toEntity(order);
+            order.addOrderProduct(orderProduct);
         }
-        return Order.builder().id(orderId).build();
-    }
 
+        return order;
+    }
 }

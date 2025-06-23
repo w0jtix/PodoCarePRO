@@ -23,11 +23,4 @@ public class BrandDTO {
                 .name(this.name)
                 .build();
     }
-
-    public static Brand toBrandReference(Long brandId) {
-        if (brandId == null) {
-            return null;
-        }
-        return Brand.builder().id(brandId).build();
-    }
 }

@@ -1,445 +1,161 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
-    <changeSet author="Wojtek" id="1.1">
-<sql>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="1.1-create-supplier-table" author="Wojtek">
+        <createTable tableName="supplier">
+            <column name="supplier_id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="website_url" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.2-create-brand-table" author="Wojtek">
+        <createTable tableName="brand">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.3-create-product-category-table" author="Wojtek">
+        <createTable tableName="product_category">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="color" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.4-create-employee-table" author="Wojtek">
+        <createTable tableName="employee">
+            <column name="id" type="SERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="second_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.5-create-product-table" author="Wojtek">
+        <createTable tableName="product">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="supply" type="INTEGER" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_deleted" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="brand_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="product" baseColumnNames="category_id"
+                                 constraintName="fk_product_category"
+                                 referencedTableName="product_category" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="product" baseColumnNames="brand_id"
+                                 constraintName="fk_product_brand"
+                                 referencedTableName="brand" referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="1.6-create-internal-order-table" author="Wojtek">
+        <createTable tableName="internal_order">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="order_number" type="BIGINT">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="order_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="shipping_vat_rate" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="shipping_cost" type="DOUBLE PRECISION" defaultValue="0.0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_net" type="DOUBLE PRECISION" defaultValue="0.0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_vat" type="DOUBLE PRECISION" defaultValue="0.0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_value" type="DOUBLE PRECISION" defaultValue="0.0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="supplier_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="internal_order" baseColumnNames="supplier_id"
+                                 constraintName="fk_order_supplier"
+                                 referencedTableName="supplier" referencedColumnNames="supplier_id"/>
+    </changeSet>
+
+    <changeSet id="1.7-create-order-product-table" author="Wojtek">
+        <createTable tableName="order_product">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="quantity" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="vat_rate" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="order_product" baseColumnNames="order_id"
+                                 constraintName="fk_orderproduct_order"
+                                 referencedTableName="internal_order" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="order_product" baseColumnNames="product_id"
+                                 constraintName="fk_orderproduct_product"
+                                 referencedTableName="product" referencedColumnNames="id"/>
+    </changeSet>
 
-    CREATE TABLE public.base_product (
-    id integer NOT NULL,
-    current_supply integer,
-    description character varying(255),
-    initial_supply integer,
-    product_name character varying(255),
-    brand_id bigint NOT NULL
-    );
-
-
-    ALTER TABLE public.base_product OWNER TO postgres;
-
-    --
-    -- TOC entry 215 (class 1259 OID 25259)
-    -- Name: base_product_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
-    --
-
-    ALTER TABLE public.base_product ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.base_product_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-    );
-
-
-    --
-    -- TOC entry 218 (class 1259 OID 25268)
-    -- Name: brand; Type: TABLE; Schema: public; Owner: postgres
-    --
-
-    CREATE TABLE public.brand (
-    id bigint NOT NULL,
-    brand_name character varying(255)
-    );
-
-
-    ALTER TABLE public.brand OWNER TO postgres;
-
-    --
-    -- TOC entry 217 (class 1259 OID 25267)
-    -- Name: brand_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
-    --
-
-    ALTER TABLE public.brand ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.brand_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-    );
-
-
-    --
-    -- TOC entry 240 (class 1259 OID 25444)
-    -- Name: draft_order; Type: TABLE; Schema: public; Owner: postgres
-    --
-
-    CREATE TABLE public.draft_order (
-    id bigint NOT NULL,
-    order_number bigint,
-    order_status character varying(255)
-    );
-
-
-    ALTER TABLE public.draft_order OWNER TO postgres;
-
-    --
-    -- TOC entry 239 (class 1259 OID 25443)
-    -- Name: draft_order_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
-    --
-
-    ALTER TABLE public.draft_order ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.draft_order_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-    );
-
-
-    --
-    -- TOC entry 220 (class 1259 OID 25274)
-    -- Name: employee; Type: TABLE; Schema: public; Owner: postgres
-    --
-
-    CREATE TABLE public.employee (
-    id integer NOT NULL,
-    name character varying(255),
-    second_name character varying(255)
-    );
-
-
-    ALTER TABLE public.employee OWNER TO postgres;
-
-    --
-    -- TOC entry 219 (class 1259 OID 25273)
-    -- Name: employee_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
-    --
-
-    ALTER TABLE public.employee ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.employee_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-    );
-
-
-    --
-    -- TOC entry 222 (class 1259 OID 25282)
-    -- Name: equipment_product; Type: TABLE; Schema: public; Owner: postgres
-    --
-
-    CREATE TABLE public.equipment_product (
-    id bigint NOT NULL,
-    current_supply integer,
-    description character varying(255),
-    initial_supply integer,
-    product_name character varying(255),
-    warranty_length integer,
-    brand_id bigint NOT NULL,
-    category character varying(255),
-    is_deleted boolean
-    );
-
-
-    ALTER TABLE public.equipment_product OWNER TO postgres;
-
-    --
-    -- TOC entry 221 (class 1259 OID 25281)
-    -- Name: equipment_product_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
-    --
-
-    ALTER TABLE public.equipment_product ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.equipment_product_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-    );
-
-
-    --
-    -- TOC entry 224 (class 1259 OID 25290)
-    -- Name: equipment_product_instance; Type: TABLE; Schema: public; Owner: postgres
-    --
-
-    CREATE TABLE public.equipment_product_instance (
-    id bigint NOT NULL,
-    description character varying(255),
-    out_of_use boolean,
-    purchase_date timestamp(6) without time zone,
-    warranty_end_date timestamp(6) without time zone,
-    equipment_product_id bigint NOT NULL
-    );
-
-
-    ALTER TABLE public.equipment_product_instance OWNER TO postgres;
-
-    --
-    -- TOC entry 223 (class 1259 OID 25289)
-    -- Name: equipment_product_instance_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
-    --
-
-    ALTER TABLE public.equipment_product_instance ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.equipment_product_instance_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-    );
-
-
-    --
-    -- TOC entry 226 (class 1259 OID 25296)
-    -- Name: internal_order; Type: TABLE; Schema: public; Owner: postgres
-    --
-
-    CREATE TABLE public.internal_order (
-    id bigint NOT NULL,
-    order_date timestamp(6) without time zone,
-    order_number bigint,
-    order_status character varying(255),
-    shipping_cost double precision,
-    total_amount double precision,
-    supplier_id bigint NOT NULL,
-    shipping_vat_rate smallint,
-    total_net double precision,
-    total_value double precision,
-    total_vat double precision
-    );
-
-
-    ALTER TABLE public.internal_order OWNER TO postgres;
-
-    --
-    -- TOC entry 225 (class 1259 OID 25295)
-    -- Name: internal_order_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
-    --
-
-    ALTER TABLE public.internal_order ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.internal_order_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-    );
-
-
-    --
-    -- TOC entry 228 (class 1259 OID 25302)
-    -- Name: order_product; Type: TABLE; Schema: public; Owner: postgres
-    --
-
-    CREATE TABLE public.order_product (
-    id bigint NOT NULL,
-    description character varying(255),
-    price double precision,
-    quantity integer,
-    equipment_product_id bigint,
-    order_id bigint NOT NULL,
-    sale_product_id bigint,
-    tool_product_id bigint,
-    vatrate smallint
-    );
-
-
-    ALTER TABLE public.order_product OWNER TO postgres;
-
-    --
-    -- TOC entry 227 (class 1259 OID 25301)
-    -- Name: order_product_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
-    --
-
-    ALTER TABLE public.order_product ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.order_product_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-    );
-
-
-    --
-    -- TOC entry 241 (class 1259 OID 25607)
-    -- Name: product_id_sequence; Type: SEQUENCE; Schema: public; Owner: postgres
-    --
-
-    CREATE SEQUENCE public.product_id_sequence
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-    ALTER SEQUENCE public.product_id_sequence OWNER TO postgres;
-
-    --
-    -- TOC entry 230 (class 1259 OID 25308)
-    -- Name: sale_product; Type: TABLE; Schema: public; Owner: postgres
-    --
-
-    CREATE TABLE public.sale_product (
-    id bigint NOT NULL,
-    current_supply integer,
-    description character varying(255),
-    estimated_shelf_life integer,
-    for_sale boolean,
-    initial_supply integer,
-    internal_use boolean,
-    product_name character varying(255),
-    selling_price double precision,
-    brand_id bigint NOT NULL,
-    category character varying(255),
-    is_deleted boolean
-    );
-
-
-    ALTER TABLE public.sale_product OWNER TO postgres;
-
-    --
-    -- TOC entry 229 (class 1259 OID 25307)
-    -- Name: sale_product_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
-    --
-
-    ALTER TABLE public.sale_product ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.sale_product_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-    );
-
-
-    --
-    -- TOC entry 232 (class 1259 OID 25316)
-    -- Name: sale_product_instance; Type: TABLE; Schema: public; Owner: postgres
-    --
-
-    CREATE TABLE public.sale_product_instance (
-    id bigint NOT NULL,
-    description character varying(255),
-    is_sold boolean,
-    is_used boolean,
-    purchase_date timestamp(6) without time zone,
-    shelf_life timestamp(6) without time zone,
-    sale_product_id bigint NOT NULL,
-    sold_by_id integer,
-    used_by_id integer,
-    "sellingPrice" double precision,
-    selling_price double precision
-    );
-
-
-    ALTER TABLE public.sale_product_instance OWNER TO postgres;
-
-    --
-    -- TOC entry 231 (class 1259 OID 25315)
-    -- Name: sale_product_instance_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
-    --
-
-    ALTER TABLE public.sale_product_instance ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.sale_product_instance_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-    );
-
-
-    --
-    -- TOC entry 234 (class 1259 OID 25322)
-    -- Name: supplier; Type: TABLE; Schema: public; Owner: postgres
-    --
-
-    CREATE TABLE public.supplier (
-    id bigint NOT NULL,
-    supplier_name character varying(255),
-    website_url character varying(255),
-    is_deleted boolean NOT NULL
-    );
-
-
-    ALTER TABLE public.supplier OWNER TO postgres;
-
-    --
-    -- TOC entry 233 (class 1259 OID 25321)
-    -- Name: supplier_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
-    --
-
-    ALTER TABLE public.supplier ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.supplier_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-    );
-
-
-    --
-    -- TOC entry 236 (class 1259 OID 25330)
-    -- Name: tool_product; Type: TABLE; Schema: public; Owner: postgres
-    --
-
-    CREATE TABLE public.tool_product (
-    id bigint NOT NULL,
-    current_supply integer,
-    description character varying(255),
-    initial_supply integer,
-    product_name character varying(255),
-    brand_id bigint NOT NULL,
-    category character varying(255),
-    is_deleted boolean
-    );
-
-
-    ALTER TABLE public.tool_product OWNER TO postgres;
-
-    --
-    -- TOC entry 235 (class 1259 OID 25329)
-    -- Name: tool_product_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
-    --
-
-    ALTER TABLE public.tool_product ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.tool_product_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-    );
-
-
-    --
-    -- TOC entry 238 (class 1259 OID 25338)
-    -- Name: tool_product_instance; Type: TABLE; Schema: public; Owner: postgres
-    --
-
-    CREATE TABLE public.tool_product_instance (
-    id bigint NOT NULL,
-    description character varying(255),
-    out_of_use boolean,
-    purchase_date timestamp(6) without time zone,
-    tool_product_id bigint NOT NULL
-    );
-
-
-    ALTER TABLE public.tool_product_instance OWNER TO postgres;
-
-    --
-    -- TOC entry 237 (class 1259 OID 25337)
-    -- Name: tool_product_instance_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
-    --
-
-    ALTER TABLE public.tool_product_instance ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME public.tool_product_instance_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-    );
-
-
-</sql>
-       </changeSet>
 </databaseChangeLog>

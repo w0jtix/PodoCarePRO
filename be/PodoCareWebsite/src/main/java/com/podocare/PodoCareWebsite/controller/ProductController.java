@@ -1,9 +1,9 @@
 package com.podocare.PodoCareWebsite.controller;
 
-import com.podocare.PodoCareWebsite.DTO.FilterDTO;
-import com.podocare.PodoCareWebsite.DTO.ProductDisplayDTO;
-import com.podocare.PodoCareWebsite.DTO.ProductRequestDTO;
+import com.podocare.PodoCareWebsite.DTO.ProductDTO;
+import com.podocare.PodoCareWebsite.DTO.request.ProductFilterDTO;
 import com.podocare.PodoCareWebsite.service.ProductService;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,44 +13,44 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/products")
+@RequestMapping("/api/products")
 public class ProductController {
 
     private final ProductService productService;
 
-    @PostMapping("/get")
-    public ResponseEntity<List<ProductDisplayDTO>> getProducts(@RequestBody FilterDTO filterDTO) {
-        List<ProductDisplayDTO> productList = productService.getProducts(filterDTO);
+    @PostMapping("/search")
+    public ResponseEntity<List<ProductDTO>> searchProducts(@RequestBody ProductFilterDTO filter) {
+        List<ProductDTO> productList = productService.getProducts(filter);
         return new ResponseEntity<>(productList, productList.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
-    @GetMapping("/{productId}")
-    public ResponseEntity<ProductDisplayDTO> getProductById(@PathVariable Long productId) {
-        ProductDisplayDTO product = productService.getProductDisplayById(productId);
-        return new ResponseEntity<>(product, product != null ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable(value = "id") Long id) {
+        ProductDTO product = productService.getProductById(id);
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<ProductDisplayDTO> createNewProduct(@RequestBody ProductRequestDTO productToCreate) {
-        ProductDisplayDTO createdProduct = productService.createProduct(productToCreate);
+    @PostMapping
+    public ResponseEntity<ProductDTO> createProduct(@NonNull @RequestBody ProductDTO product) {
+        ProductDTO createdProduct = productService.createProduct(product);
         return  new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
     }
 
-    @PostMapping("/create/batch")
-    public ResponseEntity<List<ProductDisplayDTO>> createNewProducts(@RequestBody List<ProductRequestDTO> productsToCreate) {
-        List<ProductDisplayDTO> createdProducts = productService.createProducts(productsToCreate);
+    @PostMapping("/batch")
+    public ResponseEntity<List<ProductDTO>> createProducts(@NonNull @RequestBody List<ProductDTO> products) {
+        List<ProductDTO> createdProducts = productService.createProducts(products);
         return  new ResponseEntity<>(createdProducts, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{productId}")
-    public ResponseEntity<ProductDisplayDTO> updateProduct(@PathVariable Long productId, @RequestBody ProductRequestDTO updatedProduct) {
-        ProductDisplayDTO products = productService.updateProduct(productId, updatedProduct);
-        return new ResponseEntity<>(products, HttpStatus.OK);
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable(value = "id") Long id, @NonNull @RequestBody ProductDTO product) {
+        ProductDTO saved = productService.updateProduct(id, product);
+        return new ResponseEntity<>(saved, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
-        productService.manageDeletionStatusByProduct(productId);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable(value = "id") Long id) {
+        productService.deleteProductById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

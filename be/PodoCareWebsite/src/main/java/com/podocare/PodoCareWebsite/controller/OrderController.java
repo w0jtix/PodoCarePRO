@@ -1,9 +1,9 @@
 package com.podocare.PodoCareWebsite.controller;
 
-import com.podocare.PodoCareWebsite.DTO.FilterDTO;
-import com.podocare.PodoCareWebsite.DTO.OrderDisplayDTO;
-import com.podocare.PodoCareWebsite.DTO.OrderRequestDTO;
+import com.podocare.PodoCareWebsite.DTO.OrderDTO;
+import com.podocare.PodoCareWebsite.DTO.request.OrderFilterDTO;
 import com.podocare.PodoCareWebsite.service.OrderService;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,38 +12,38 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/orders")
+@RequestMapping("/api/orders")
 public class OrderController {
     private final OrderService orderService;
 
 
-    @PostMapping("/get")
-    public ResponseEntity<List<OrderDisplayDTO>> getOrders(@RequestBody FilterDTO filter) {
-        List<OrderDisplayDTO> ordersDTOList = orderService.getOrders(filter);
+    @PostMapping("/search")
+    public ResponseEntity<List<OrderDTO>> getOrders(@RequestBody OrderFilterDTO filter) {
+        List<OrderDTO> ordersDTOList = orderService.getOrders(filter);
         return new ResponseEntity<>(ordersDTOList, ordersDTOList.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
-    @GetMapping("/{orderId}")
-    public ResponseEntity<OrderDisplayDTO> getOrderById(@PathVariable Long orderId) {
-        OrderDisplayDTO orderDTO = orderService.getOrderDisplayById(orderId);
-        return new ResponseEntity<>(orderDTO, HttpStatus.OK);
-    }
-
-    @PostMapping
-    public ResponseEntity<OrderDisplayDTO> createOrder(@RequestBody OrderRequestDTO orderToCreate) {
-        OrderDisplayDTO newOrder = orderService.createOrder(orderToCreate);
-        return new ResponseEntity<>(newOrder, HttpStatus.CREATED);
-    }
-
-    @PutMapping("/{orderId}")
-    public ResponseEntity<OrderDisplayDTO> updateOrder(@PathVariable Long orderId, @RequestBody OrderRequestDTO updatedOrder) {
-        OrderDisplayDTO order = orderService.updateOrder(orderId, updatedOrder);
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderDTO> getOrderById(@PathVariable(value = "id") Long id) {
+        OrderDTO order = orderService.getOrderById(id);
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{orderId}")
-    public ResponseEntity<Void> deleteOrder(@PathVariable Long orderId) {
-        orderService.deleteOrderById(orderId);
+    @PostMapping
+    public ResponseEntity<OrderDTO> createOrder(@NonNull @RequestBody OrderDTO order) {
+        OrderDTO newOrder = orderService.createOrder(order);
+        return new ResponseEntity<>(newOrder, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<OrderDTO> updateOrder(@PathVariable(value = "id") Long id, @NonNull @RequestBody OrderDTO order) {
+        OrderDTO saved = orderService.updateOrder(id, order);
+        return new ResponseEntity<>(saved, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteOrder(@PathVariable(value = "id") Long id) {
+        orderService.deleteOrderById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

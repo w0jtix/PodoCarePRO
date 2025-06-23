@@ -2,6 +2,7 @@ package com.podocare.PodoCareWebsite.controller;
 
 import com.podocare.PodoCareWebsite.DTO.SupplierDTO;
 import com.podocare.PodoCareWebsite.service.SupplierService;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,40 +10,42 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static java.util.Objects.nonNull;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/suppliers")
+@RequestMapping("/api/suppliers")
 public class SupplierController {
 
     private final SupplierService supplierService;
 
-    @GetMapping
+    @PostMapping("/search")
     public ResponseEntity<List<SupplierDTO>> getSuppliers() {
         List<SupplierDTO> supplierList = supplierService.getSuppliers();
         return new ResponseEntity<>(supplierList, supplierList.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
-    @GetMapping("/{supplierId}")
-    public ResponseEntity<SupplierDTO> getSupplierById(@PathVariable Long supplierId){
-        SupplierDTO supplier = supplierService.getSupplierById(supplierId);
+    @GetMapping("/{id}")
+    public ResponseEntity<SupplierDTO> getSupplierById(@PathVariable(value = "id") Long id){
+        SupplierDTO supplier = supplierService.getSupplierById(id);
         return new ResponseEntity<>(supplier, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<SupplierDTO> createSupplier(@RequestBody SupplierDTO supplierToCreate) {
-        SupplierDTO newSupplier = supplierService.createSupplier(supplierToCreate);
+    public ResponseEntity<SupplierDTO> createSupplier(@NonNull @RequestBody SupplierDTO supplier) {
+        SupplierDTO newSupplier = supplierService.createSupplier(supplier);
         return new ResponseEntity<>(newSupplier, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{supplierId}")
-    public ResponseEntity<SupplierDTO> updateSupplier(@PathVariable Long supplierId, @RequestBody SupplierDTO updatedSupplier) {
-        SupplierDTO supplier = supplierService.updateSupplier(supplierId, updatedSupplier);
-        return new ResponseEntity<>(supplier, HttpStatus.OK);
+    @PutMapping("/{id}")
+    public ResponseEntity<SupplierDTO> updateSupplier(@PathVariable(value = "id") Long id, @NonNull @RequestBody SupplierDTO supplier) {
+        SupplierDTO saved = supplierService.updateSupplier(id, supplier);
+        return new ResponseEntity<>(saved, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{supplierId}")
-    public ResponseEntity<Void> deleteSupplier(@PathVariable Long supplierId) {
-        supplierService.deleteSupplierById(supplierId);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSupplier(@PathVariable(value = "id") Long id) {
+        supplierService.deleteSupplierById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

@@ -51,28 +51,27 @@ html, body {
   background-size: cover;
 }
 
-h1 {
+h1, h2, span, button > a {
   color: var(--text-color-white);
   font-family: var(--font-h1-sulphur);
   letter-spacing: 0.75px;
   margin:0;
 }
 
-h2 {
-  color: var(--text-color-white);
+h2, span, button > a {
   font-family: var(--font-h2-outfit);
-  letter-spacing: 0.75px;
-  margin:0;
   font-weight: 300;
 }
 
+span {
+  font-size: var(--font-size-text);
+  letter-spacing: 0.5px;
+  font-weight: 200;
+}
+
 button > a {
-  color: var(--text-color-white);
-  font-family: var(--font-h2-outfit);
   font-size: var(--font-size-h2-a);
   letter-spacing: 0.5px;
-  margin:0;
-  font-weight: 300;
   text-decoration: none;
 }
 
@@ -1626,6 +1625,8 @@ input[type="number"]::-webkit-inner-spin-button {
   height: 65%;
 }
 
+.add-popup-overlay.remove-order.short
+
 .add-popup-overlay.short-version {
   padding-top: 30vh;
 }
@@ -2115,7 +2116,15 @@ height:23px;
 }
 
 .popup-common-section-row.name .text-input{
-  width:auto;
+  width: auto;
+}
+
+.input-container .text-input.category {
+  width: 120px;
+}
+
+.order-new-products-popup-input-section .text-input.category{
+  width:95px;
 }
 
 .popup-common-section-row.description {
@@ -2160,6 +2169,7 @@ height:23px;
   border: none;
   width: 4vw;
   height:4vh;
+  cursor: pointer;
 }
 
 .category-select {
@@ -2863,19 +2873,19 @@ height:23px;
   animation: slideInFromTop 0.3s ease-out, fadeOut 0.3s ease-in 1.9s forwards;
 }
 
-.custom-alert-success {
+.custom-alert-0 {
   background-color: #05250d;
   border:0.25px solid #27dd51;
   color: #2bff5d;
 }
 
-.custom-alert-error {
+.custom-alert-1 {
   background-color: rgb(31, 5, 5);
   border:0.25px solid rgb(221, 38, 38);
   color: rgb(255, 77, 77);
 }
 
-.custom-alert-info {
+.custom-alert-2 {
   background-color: rgb(62, 62, 12);
   border: 0.25px solid rgb(189, 189, 27);
   color: rgb(251, 251, 33);

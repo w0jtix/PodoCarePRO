@@ -1,7 +1,8 @@
 package com.podocare.PodoCareWebsite.controller;
 
-import com.podocare.PodoCareWebsite.DTO.CategoryDTO;
+import com.podocare.PodoCareWebsite.DTO.ProductCategoryDTO;
 import com.podocare.PodoCareWebsite.service.ProductCategoryService;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,39 +10,41 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static java.util.Objects.nonNull;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/categories")
+@RequestMapping("/api/categories")
 public class ProductCategoryController {
     private final ProductCategoryService productCategoryService;
 
-    @GetMapping()
-    public ResponseEntity<List<CategoryDTO>> getCategories() {
-        List<CategoryDTO> categoryDTOList = productCategoryService.getCategories();
+    @PostMapping("/search")
+    public ResponseEntity<List<ProductCategoryDTO>> getCategories() {
+        List<ProductCategoryDTO> categoryDTOList = productCategoryService.getCategories();
         return new ResponseEntity<>(categoryDTOList, categoryDTOList.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
-    @GetMapping("/{categoryId}")
-    public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long categoryId){
-        CategoryDTO categoryDTO = productCategoryService.getCategoryById(categoryId);
-        return new ResponseEntity<>(categoryDTO, HttpStatus.OK);
-    }
-
-    @PostMapping
-    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO categoryToCreate) {
-        CategoryDTO newCategory = productCategoryService.createCategory(categoryToCreate);
-        return new ResponseEntity<>(newCategory, HttpStatus.CREATED);
-    }
-
-    @PutMapping("/{categoryId}")
-    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long categoryId, @RequestBody CategoryDTO updatedCategory){
-        CategoryDTO category = productCategoryService.updateCategory(categoryId, updatedCategory);
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductCategoryDTO> getCategoryById(@PathVariable(value = "id") Long id){
+        ProductCategoryDTO category = productCategoryService.getCategoryById(id);
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{categoryId}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId) {
-        productCategoryService.deleteCategoryById(categoryId);
+    @PostMapping
+    public ResponseEntity<ProductCategoryDTO> createCategory(@NonNull @RequestBody ProductCategoryDTO category) {
+        ProductCategoryDTO newCategory = productCategoryService.createCategory(category);
+        return new ResponseEntity<>(newCategory, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductCategoryDTO> updateCategory(@PathVariable(value = "id") Long id, @NonNull @RequestBody ProductCategoryDTO category){
+        ProductCategoryDTO saved = productCategoryService.updateCategory(id, category);
+        return new ResponseEntity<>(saved, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable(value = "id") Long id) {
+        productCategoryService.deleteCategoryById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

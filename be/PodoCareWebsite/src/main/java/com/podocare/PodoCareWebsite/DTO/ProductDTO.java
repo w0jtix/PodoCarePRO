@@ -3,6 +3,8 @@ package com.podocare.PodoCareWebsite.DTO;
 import com.podocare.PodoCareWebsite.model.Product;
 import lombok.*;
 
+import static java.util.Objects.isNull;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -11,37 +13,33 @@ public class ProductDTO {
 
     private Long id;
     private String name;
-    private Long categoryId;
-    private Long brandId;
+    private ProductCategoryDTO category;
+    private BrandDTO brand;
+    private Integer supply;
     private String description;
     private Boolean isDeleted;
 
-
     public ProductDTO(Product product) {
+        if(isNull(product))
+            return;
         this.id = product.getId();
         this.name = product.getName();
-        this.categoryId = product.getCategory().getId();
-        this.brandId = product.getBrand().getId();
+        this.category = new ProductCategoryDTO(product.getCategory());
+        this.brand = new BrandDTO(product.getBrand());
+        this.supply = product.getSupply();
         this.description = product.getDescription();
-        this.isDeleted = (product.getIsDeleted() == null) ? false : product.getIsDeleted();
+        this.isDeleted = product.getIsDeleted();
     }
-
 
     public Product toEntity() {
         return Product.builder()
                 .id(this.id)
                 .name(this.name)
-                .category(CategoryDTO.toCategoryReference(this.categoryId))
-                .brand(BrandDTO.toBrandReference(this.brandId))
+                .category(this.category.toEntity())
+                .brand(this.brand.toEntity())
+                .supply(this.supply)
                 .description(this.description)
-                .isDeleted(this.isDeleted != null ? this.isDeleted : false)
+                .isDeleted(this.isDeleted)
                 .build();
-    }
-
-    public static Product toProductReference(Long productId) {
-        if (productId == null) {
-            return null;
-        }
-        return Product.builder().id(productId).build();
     }
 }

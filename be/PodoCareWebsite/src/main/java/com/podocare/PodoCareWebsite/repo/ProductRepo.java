@@ -1,9 +1,8 @@
 package com.podocare.PodoCareWebsite.repo;
 
 import com.podocare.PodoCareWebsite.DTO.ProductDTO;
-import com.podocare.PodoCareWebsite.DTO.ProductDisplayDTO;
-import com.podocare.PodoCareWebsite.DTO.ProductRequestDTO;
 import com.podocare.PodoCareWebsite.model.Product;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,19 +14,22 @@ import java.util.Optional;
 @Repository
 public interface ProductRepo extends JpaRepository<Product, Long> {
 
+    @EntityGraph(attributePaths = {"category", "brand"})
+    Optional<Product> findOneById(Long id);
+
     @Query("""
-    SELECT new com.podocare.PodoCareWebsite.DTO.ProductDisplayDTO(
-         p.id, p.name, p.category.id, p.category.name, p.category.color, p.brand.id, p.brand.name, p.description, COALESCE(s.supply, 0)
-    )
-    FROM Product p
-    LEFT JOIN SupplyManager s ON p.id = s.productId
-    WHERE (COALESCE(:categoryIds, NULL) IS NULL OR p.category.id IN :categoryIds)
+    SELECT p FROM Product p
+    LEFT JOIN FETCH p.category c
+    LEFT JOIN FETCH p.brand b
+    WHERE (COALESCE(:productIds, NULL) IS NULL OR p.id IN :productIds)
+      AND (COALESCE(:categoryIds, NULL) IS NULL OR p.category.id IN :categoryIds)
       AND (COALESCE(:brandIds, NULL) IS NULL OR p.brand.id IN :brandIds)
       AND (COALESCE(:keyword, '') = '' OR LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')))
-      AND (:includeZero = TRUE OR COALESCE(s.supply, 0) > 0)
+      AND (:includeZero = TRUE OR p.supply > 0)
       AND (:isDeleted IS NULL OR p.isDeleted = :isDeleted)
 """)
-    List<ProductDisplayDTO> findAllWithFilters(
+    List<Product> findAllWithFilters(
+            @Param("productIds") List<Long> productIds,
             @Param("categoryIds") List<Long> categoryIds,
             @Param("brandIds") List<Long> brandIds,
             @Param("keyword") String keyword,
@@ -35,24 +37,16 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
             @Param("isDeleted") Boolean isDeleted
     );
 
-    @Query("""
-    SELECT new com.podocare.PodoCareWebsite.DTO.ProductDTO(
-        p.id, p.name, p.category.id, p.brand.id, p.description, p.isDeleted
-    )
-    FROM Product p
-    WHERE LOWER(TRIM(p.name)) = LOWER(TRIM(:name))
-""")
-    Optional<ProductDTO> findByProductName(String name);
+    @Query("SELECT p FROM Product p WHERE p.name = :name")
+    Optional<Product> findByName(
+            String name
+    );
 
-    @Query("""
-    SELECT new com.podocare.PodoCareWebsite.DTO.ProductDisplayDTO(
-        p.id, p.name, p.category.id, p.category.name, p.category.color, p.brand.id, p.brand.name, p.description, COALESCE(s.supply, 0)
-    )
-    FROM Product p
-    LEFT JOIN SupplyManager s ON p.id = s.productId
-    WHERE p.id = :productId
-""")
-    Optional<ProductDisplayDTO> findProductDisplayById(@Param("productId") Long productId);
+    @Query("SELECT p FROM Product p WHERE p.id = :id")
+    Optional<Product> findByIdIncludingDeleted(@Param("id") Long id);
+
+    @Query("SELECT p FROM Product p WHERE p.id = :id AND p.isDeleted = false")
+    Optional<Product> findByIdNotDeleted(@Param("id") Long id);
 
     @Query("SELECT p.isDeleted FROM Product p WHERE p.id = :productId")
     Boolean isProductSoftDeleted(@Param("productId") Long productId);

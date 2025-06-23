@@ -14,14 +14,12 @@ public class SupplierDTO {
     private Long id;
     private String name;
     private String websiteUrl;
-    private Boolean isDeleted;
 
 
     public SupplierDTO(Supplier supplier) {
         this.id = supplier.getId();
         this.name = supplier.getName();
         this.websiteUrl = supplier.getWebsiteUrl();
-        this.isDeleted = (supplier.getIsDeleted() == null) ? false : supplier.getIsDeleted();
     }
 
     public Supplier toEntity() {
@@ -29,14 +27,6 @@ public class SupplierDTO {
                 .id(this.id)
                 .name(this.name)
                 .websiteUrl(this.websiteUrl)
-                .isDeleted(this.isDeleted != null ? this.isDeleted : false)
                 .build();
-    }
-
-    public static Supplier toSupplierReference(Long supplierId) {
-        if (supplierId == null) {
-            return null;
-        }
-        return Supplier.builder().id(supplierId).build();
     }
 }
