@@ -14,12 +14,6 @@ export const PRODUCT_LIST_ATTRIBUTES: ListAttribute[] = [
     { name: "Opcje", width: "8%", justify: "center" },
 ];
 
-export const PRODUCT_LIST_ATTRIBUTE_MAP = {
-  Nazwa: "name",
-  Marka: "brand.name",
-  "Stan Magazynowy": "supply",
-} as const;
-
 export const ORDER_ATTRIBUTES: ListAttribute[] = [
   { name: "", width: "6%", justify: "center" },
   { name: "Nazwa", width: "70%", justify: "start" },
@@ -39,16 +33,6 @@ export const ORDER_HISTORY_ATTRIBUTES: ListAttribute[] = [
   { name: "Opcje", width: "7%", justify: "center" },
 ]
 
-export const ORDER_HISTORY_ATTRIBUTE_MAP = {
-  Numer: "orderNumber",
-  Sklep: "supplier.name",
-  Produkty: "orderProducts.length",
-  "Data Zamówienia": "orderDate",
-  Netto: "totalNet",
-  VAT: "totalVat",
-  Brutto: "totalValue",
-} as const;
-
 export const ORDER_HANDY_HISTORY_ATTRIBUTES: ListAttribute[] = [
   { name: "", width: "6%", justify: "center" },
   { name: "Nazwa", width: "64%", justify: "start" },
@@ -67,13 +51,6 @@ export const ORDER_POPUP_HISTORY_ATTRIBUTES: ListAttribute[] = [
   { name: "Cena [szt]", width: "8%", justify: "center" },
 ]
 
-export const ORDER_LIST_ATTRIBUTE_MAP = {
-  Numer: "orderNumber",
-  Data: "orderDate",
-  Produkty: "quantity",
-  Wartość: "totalValue",
-} as const;
-
 export const ORDERS_BY_SUPPLIER_ATTRIBUTES: ListAttribute[] = [
     { name: "", width: "6%", justify: "start" },
     { name: "Numer", width: "12%", justify: "center" },
@@ -90,14 +67,6 @@ export const ORDER_ITEM_LIST_ATTRIBUTES: ListAttribute[] = [
   { name: "VAT", width: "13%", justify: "center" },
   { name: "Cena", width: "13%", justify: "center" },
 ]
-
-export const ORDER_ITEM_LIST_ATTRIBUTE_MAP = {
-  Nazwa: "name",
-  "Cena jedn.": "price",
-  Ilość: "quantity",
-  VAT: "vatrate",
-  Cena: "orderPrice",
-} as const;
 
 export const ORDER_NEW_PRODUCTS_POPUP_ATTRIBUTES: ListAttribute[] =[
   { name: "", width: "2%", justify: "flex-start" },

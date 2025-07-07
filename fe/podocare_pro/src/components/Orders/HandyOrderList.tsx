@@ -1,11 +1,12 @@
-import React, { useCallback } from "react";
-import { useState } from "react";
+import React from "react";
 import OrderContent from "./OrderContent";
 import { ListAttribute } from "../../constants/list-headers";
 import { Order } from "../../models/order";
 import { OrderProduct } from "../../models/order-product";
-import { ORDER_LIST_ATTRIBUTE_MAP } from "../../constants/list-headers";
 import { Action } from "../../models/action";
+import { formatDate } from "../../utils/dateUtils";
+import { formatPrice } from "../../utils/priceUtils";
+import { calculateOrderItems } from "../../utils/orderUtils";
 
 export interface HandyOrderListProps {
   attributes: ListAttribute[];
@@ -24,32 +25,12 @@ export function HandyOrderList({
   setExpandedOrderIds,
   className = "",
 }) {
-  const formatDate = (dateString: string): string => {
-    const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-    return `${day}.${month}.${year}`;
-  };
-
-  const calculateOrderItems = (order: Order): number => {
-    return order.orderProducts.length;
-  };
-
   const toggleOrder = (orderId: number) => {
     setExpandedOrderIds((prevIds) =>
       prevIds.includes(orderId)
         ? prevIds.filter((id) => id !== orderId)
         : [...prevIds, orderId]
     );
-  };
-
-  const formatPrice = (value: number | null): string => {
-    return value !== null ? value.toFixed(2) : "—";
-  };
-
-  const getNestedValue = (obj: any, path: string): any => {
-    return path.split(".").reduce((acc, part) => acc && acc[part], obj);
   };
 
   const renderAttributeContent = (
@@ -70,30 +51,21 @@ export function HandyOrderList({
       );
     }
 
-    const path =
-      ORDER_LIST_ATTRIBUTE_MAP[
-        attr.name as keyof typeof ORDER_LIST_ATTRIBUTE_MAP
-      ];
-    if (!path) return null;
-
-    const value = getNestedValue(order, path);
-
     switch (attr.name) {
       case "Numer":
-        return <span className="order-number">#{value}</span>;
+        return <span className="order-number">#{order.orderNumber}</span>;
 
       case "Data":
-        return <span className="order-date">{formatDate(value)}</span>;
+        return <span className="order-date">{formatDate(order.orderDate)}</span>;
 
       case "Produkty":
-        const count = path === "quantity" ? value : calculateOrderItems(order); //check if qty is needed in map
-        return <span className="order-products-count">{count}</span>;
+        return <span className="order-products-count">{calculateOrderItems(order)}</span>;
 
       case "Wartość":
-        return <span className="order-value">{formatPrice(value)}</span>;
+        return <span className="order-value">{formatPrice(order.totalValue)}</span>;
 
       default:
-        return <span>{value}</span>;
+        return <span>{"-"}</span>;
     }
   };
 

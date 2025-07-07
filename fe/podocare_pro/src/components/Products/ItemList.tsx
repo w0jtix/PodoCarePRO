@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import ActionButton from "../ActionButton";
 import { useState } from "react";
-import { ListAttribute, PRODUCT_LIST_ATTRIBUTE_MAP  } from "../../constants/list-headers";
+import { ListAttribute} from "../../constants/list-headers";
 import { Product } from "../../models/product";
 
 export interface ItemListProps {
@@ -27,10 +27,6 @@ export function ItemList ({
   className = ""
 }: ItemListProps) {
   const [expandedProductIds, setExpandedProductIds] = useState<number[]>([]);
-
-  const getNestedValue = (obj: any, path: string): any => {
-    return path.split(".").reduce((acc, part) => acc && acc[part], obj);
-  };
 
   const handleOnClickEdit = useCallback((e: React.MouseEvent, item: Product) => {
     e.stopPropagation();
@@ -74,6 +70,15 @@ export function ItemList ({
           }}
           />
         );
+
+      case "Nazwa":
+        return `${item.name}`;
+      
+      case "Marka":
+        return`${item.brand.name}`;
+
+      case "Stan Magazynowy":
+        return `${item.supply}`;
         
       case "Opcje":
         return (
@@ -97,8 +102,7 @@ export function ItemList ({
           </div>
         );
       default:
-        const path = PRODUCT_LIST_ATTRIBUTE_MAP[attr.name as keyof typeof PRODUCT_LIST_ATTRIBUTE_MAP];
-        return path ? getNestedValue(item, path) : null;  
+        return <span>{"-"}</span>;
     }
   };
 

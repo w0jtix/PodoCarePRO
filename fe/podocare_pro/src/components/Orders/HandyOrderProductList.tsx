@@ -6,11 +6,8 @@ import { OrderProduct } from "../../models/order-product";
 import { Action, Mode } from "../../models/action";
 import AllProductService from "../../services/AllProductService";
 import { ProductFilterDTO } from "../../models/product";
-import {
-  VatRate,
-  VAT_NUMERIC_VALUES,
-  getVatRateDisplay,
-} from "../../models/vatrate";
+import { getVatRateDisplay } from "../../models/vatrate";
+import { calculateNetPrice } from "../../utils/priceUtils";
 
 export interface HandyOrderProductListProps {
   attributes: ListAttribute[];
@@ -71,7 +68,6 @@ export function HandyOrderProductList({
   );
 
   useEffect(() => {
-    console.log("order", order);
     if (action === Action.HISTORY && mode === Mode.POPUP) {
       const productIds = Array.from(
         new Set(
@@ -88,12 +84,6 @@ export function HandyOrderProductList({
       }
     }
   }, [action, mode, fetchProductSupply]);
-
-  const calculateNetPrice = (total: number, vatRate: VatRate) => {
-    const rate = VAT_NUMERIC_VALUES[vatRate] ?? 0;
-    const result = total / (1 + rate / 100);
-    return result.toFixed(2);
-  };
 
   const getCategoryColor = (orderProduct: OrderProduct): string | undefined => {
     const color = orderProduct.product?.category?.color;

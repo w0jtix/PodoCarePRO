@@ -10,7 +10,6 @@ import { ListAttribute } from "../../constants/list-headers";
 import { Action } from "../../models/action";
 import { Product, ProductFilterDTO } from "../../models/product";
 import { VatRate } from "../../models/vatrate";
-import { ORDER_ITEM_LIST_ATTRIBUTE_MAP } from "../../constants/list-headers";
 import {
   ProductWorkingData,
   OrderProductWorkingData,
@@ -333,12 +332,6 @@ export function OrderItemList({
     [updateOrderProduct]
   );
 
-  const getNestedValue = (obj: any, path: string): any => {
-    return path
-      ? path.split(".").reduce((acc, part) => acc && acc[part], obj)
-      : null;
-  };
-
   const calculateTotalPrice = (price: number, quantity: number): string => {
     const total = price * quantity;
     return isNaN(total) ? "0.00" : total.toFixed(2);
@@ -443,9 +436,7 @@ export function OrderItemList({
         );
 
       default:
-        return (
-          getNestedValue(item, ORDER_ITEM_LIST_ATTRIBUTE_MAP[attr.name]) || null
-        );
+        return (null);
     }
   };
 

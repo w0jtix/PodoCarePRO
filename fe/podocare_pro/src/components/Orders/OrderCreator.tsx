@@ -74,16 +74,14 @@ export function OrderCreator({
     }
   );
 
-  useEffect(() => {}, [orderWorkingData, orderWorkingData.orderProducts]);
-
   const action = selectedOrder ? Action.EDIT : Action.CREATE;
 
-  const showAlert = useCallback((message: string, variant: AlertType) => {
+  const showAlert = (message: string, variant: AlertType) => {
     setAlert({ message, variant });
     setTimeout(() => {
       setAlert(null);
     }, 3000);
-  }, []);
+  };
 
   //orderProduct choice from OrderListBySupplier
   useEffect(() => {
@@ -126,7 +124,7 @@ export function OrderCreator({
     }));
   }, [orderWorkingData.shippingCost, orderWorkingData.orderProducts]);
 
-  const fetchSuppliers = useCallback(async () => {
+  const fetchSuppliers = async () => {
     SupplierService.getSuppliers()
       .then((data) => {
         const sortedSuppliers = data.sort((a, b) =>
@@ -138,7 +136,7 @@ export function OrderCreator({
         setSuppliers([]);
         console.error("Error fetching suppliers:", error);
       });
-  }, []);
+  };
 
   useEffect(() => {
     fetchSuppliers();
@@ -176,7 +174,7 @@ export function OrderCreator({
           showAlert(errorMessage, AlertType.ERROR);
         });
     },
-    [showAlert, fetchSuppliers]
+    [showAlert]
   );
 
   const handleOnSelectSupplier = useCallback(

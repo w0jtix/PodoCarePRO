@@ -4,13 +4,11 @@ import ActionButton from "../ActionButton";
 import OrderContent from "./OrderContent";
 import EditOrderPopup from "../Popups/EditOrderPopup";
 import RemoveOrderPopup from "../Popups/RemoveOrderPopup";
-import {
-  ListAttribute,
-  ORDER_HISTORY_ATTRIBUTES,
-} from "../../constants/list-headers";
+import { ListAttribute } from "../../constants/list-headers";
 import { Order } from "../../models/order";
-import { ORDER_HISTORY_ATTRIBUTE_MAP } from "../../constants/list-headers";
 import { Action } from "../../models/action";
+import { calculateOrderItems } from "../../utils/orderUtils";
+import { formatDate } from "../../utils/dateUtils";
 
 export interface OrderListProps {
   attributes: ListAttribute[];
@@ -35,14 +33,6 @@ export function OrderList({
     useState<boolean>(false);
   const [isRemoveOrderPopupOpen, setIsRemoveOrderPopupOpen] =
     useState<boolean>(false);
-
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString("pl-PL");
-  };
-
-  const getNestedValue = (obj: any, path: string): any => {
-    return path.split(".").reduce((acc, part) => acc && acc[part], obj);
-  };
 
   const handleOnClickEdit = useCallback(
     (e: React.MouseEvent, order: Order) => {
@@ -89,8 +79,14 @@ export function OrderList({
       case "Numer":
         return `# ${order.orderNumber}`;
 
+      case "Sklep":
+        return `${order.supplier.name}`
+
       case "Data Zamówienia":
         return formatDate(order.orderDate);
+
+      case "Produkty":
+        return `${calculateOrderItems(order)}`
 
       case "Netto":
         return (
@@ -134,11 +130,7 @@ export function OrderList({
         );
 
       default:
-        const path =
-          ORDER_HISTORY_ATTRIBUTE_MAP[
-            attr.name as keyof typeof ORDER_HISTORY_ATTRIBUTES
-          ];
-        return path ? getNestedValue(order, path) : null;
+        return <span>{"-"}</span>;
     }
   };
 

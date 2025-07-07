@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 import AllProductService from "../../services/AllProductService.tsx";
 import { ProductFilterDTO } from "../../models/product.tsx";
 import { Product } from "../../models/product";
-import { ListAttribute, PRODUCT_LIST_ATTRIBUTES } from "../../constants/list-headers.ts";
+import { PRODUCT_LIST_ATTRIBUTES } from "../../constants/list-headers.ts";
 
 
 
