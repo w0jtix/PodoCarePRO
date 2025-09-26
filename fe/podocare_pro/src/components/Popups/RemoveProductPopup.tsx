@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import ActionButton from "../ActionButton";
 import AllProductService from "../../services/AllProductService";
-import CustomAlert from "../CustomAlert";
+import { useAlert } from "../Alert/AlertProvider";
 import { useState, useCallback } from "react";
 import { Product } from "../../models/product";
 import { Alert, AlertType } from "../../models/alert";
@@ -21,14 +21,7 @@ export function RemoveProductPopup ({
   selectedProduct,
   className = ""
 }: RemoveProductPopupProps) {
-  const [alert, setAlert] = useState<Alert| null>(null);
-
-  const showAlert = useCallback((message: string, variant: AlertType) => {
-    setAlert({ message, variant });
-    setTimeout(() => {
-      setAlert(null);
-    }, 3000);
-  }, []);
+  const { showAlert } = useAlert();
 
   const handleProductRemove = useCallback(async () => {
     if(!selectedProduct) return;
@@ -100,12 +93,6 @@ export function RemoveProductPopup ({
               zakładki - <i>Edytuj Produkt</i>
             </a>
           </>
-        )}
-        {alert && (
-          <CustomAlert
-            message={alert.message}
-            variant={alert.variant}
-          />
         )}
       </div>
     </div>,

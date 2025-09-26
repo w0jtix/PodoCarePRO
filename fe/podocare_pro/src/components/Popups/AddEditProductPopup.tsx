@@ -1,6 +1,5 @@
 import React from "react";
 import { useState, useCallback, useEffect } from "react";
-import CustomAlert from "../CustomAlert";
 import ReactDOM from "react-dom";
 import ProductForm from "../Products/ProductForm";
 import AllProductService from "../../services/AllProductService";
@@ -12,6 +11,7 @@ import { NewBrand } from "../../models/brand";
 import { Alert, AlertType } from "../../models/alert";
 import { validateBrandForm, validateProductForm } from "../../utils/validators";
 import { extractProductErrorMessage, extractBrandErrorMessage } from "../../utils/errorHandler";
+import { useAlert } from "../Alert/AlertProvider";
 
 export interface AddEditProductPopupProps {
   onClose: () => void;
@@ -29,16 +29,9 @@ export function AddEditProductPopup ({
 
   const [productDTO, setProductDTO] = useState<Product | NewProduct | null>(null);
   const [brandToCreate, setBrandToCreate] = useState<NewBrand | null>(null);
-  const [alert, setAlert] = useState<Alert| null>(null);
+  const { showAlert } = useAlert();
 
   const action = selectedProduct ? Action.EDIT : Action.CREATE;
-  
-  const showAlert = useCallback((message: string, variant: AlertType) => {
-    setAlert({ message, variant });
-    setTimeout(() => {
-      setAlert(null);
-    }, 3000);
-  }, []);
 
   const handleBrandToCreate = useCallback(async (brandToCreate: NewBrand) => {
     const error = validateBrandForm(brandToCreate, undefined, Action.CREATE);
@@ -140,12 +133,6 @@ const portalRoot = document.getElementById("portal-root");
           Jeśli chcesz przypisać produkt do zamówienia skorzystaj z zakładki -{" "}
           <i>Zamówienia</i>
         </a>
-        {alert && (
-          <CustomAlert
-            message={alert.message}
-            variant={alert.variant}
-          />
-        )}
       </div>
     </div>,
     portalRoot

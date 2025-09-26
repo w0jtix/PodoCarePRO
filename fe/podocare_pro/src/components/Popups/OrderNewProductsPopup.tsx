@@ -1,7 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
-import CustomAlert from "../CustomAlert";
 import AllProductService from "../../services/AllProductService";
 import ActionButton from "../ActionButton";
 import CategoryButtons from "../CategoryButtons";
@@ -27,6 +26,7 @@ import {
   OrderWorkingData,
   createNewProductWorkingData,
 } from "../../models/working-data";
+import { useAlert } from "../Alert/AlertProvider";
 
 export interface OrderNewProductsPopupProps {
   nonExistingProducts: OrderProductWorkingData[];
@@ -45,21 +45,14 @@ export function OrderNewProductsPopup({
   orderWorkingData,
   onClose,
   onFinalizeOrder,
-}) {
-  const [alert, setAlert] = useState<Alert | null>(null);
+}: OrderNewProductsPopupProps) {
+  const { showAlert } = useAlert();
   const [categories, setCategories] = useState<ProductCategory[]>([]);
   const [productItems, setProductItems] = useState<ProductWorkingDataWithOrderItems[]>([]);
   const [globalCategory, setGlobalCategory] = useState<ProductCategory | null>(
     null
   );
   const [resetTriggered, setResetTriggered] = useState<boolean>(false);
-
-  const showAlert = useCallback((message: string, variant: AlertType) => {
-    setAlert({ message, variant });
-    setTimeout(() => {
-      setAlert(null);
-    }, 3000);
-  }, []);
 
   const fetchCategories = useCallback(async () => {
     CategoryService.getCategories()
@@ -384,9 +377,6 @@ export function OrderNewProductsPopup({
             onClick={createNewProducts}
           />
         </div>
-        {alert && (
-          <CustomAlert message={alert.message} variant={alert.variant} />
-        )}
       </div>
     </div>,
     portalRoot

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Alert } from '../models/alert'
+import { Alert } from '../../models/alert'
 
 
 export function CustomAlert (props: Alert) {

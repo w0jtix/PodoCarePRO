@@ -2,12 +2,12 @@ import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 import OrderContent from "../Orders/OrderContent";
 import ActionButton from "../ActionButton";
-import CustomAlert from "../CustomAlert";
 import { useState, useCallback } from "react";
 import OrderService from "../../services/OrderService";
 import { Order } from "../../models/order";
 import { Alert, AlertType } from "../../models/alert";
 import { Action, Mode } from "../../models/action";
+import { useAlert } from "../Alert/AlertProvider";
 
 export interface RemoveOrderPopupProps {
   onClose: () => void;
@@ -23,17 +23,7 @@ export function RemoveOrderPopup({
   className = "",
 }: RemoveOrderPopupProps) {
   const [hasWarning, setHasWarning] = useState(false);
-  const [alert, setAlert] = useState<Alert | null>(null);
-
-  const showAlert = useCallback(
-    (message: string, variant: AlertType) => {
-      setAlert({ message, variant });
-      setTimeout(() => {
-        setAlert(null);
-      }, 3000);
-    },
-    []
-  );
+  const { showAlert } = useAlert();
 
   const handleOrderRemove = useCallback(async () => {
       OrderService.deleteOrder(selectedOrder.id)
@@ -147,9 +137,6 @@ export function RemoveOrderPopup({
             Jeśli chcesz usunąć pojedynczy Produkt z Zamówienia skorzystaj z
             zakładki - <i>Edytuj Zamówienie</i>
           </a>
-        )}
-        {alert && (
-          <CustomAlert message={alert.message} variant={alert.variant} />
         )}
       </div>
     </div>,

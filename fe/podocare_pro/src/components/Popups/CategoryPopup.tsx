@@ -1,11 +1,9 @@
-import React from "react";
-import CustomAlert from "../CustomAlert";
 import ReactDOM from "react-dom";
 import ActionButton from "../ActionButton";
 import { useState, useEffect, useCallback } from "react";
 import CategoryService from "../../services/CategoryService";
 import CategoryForm from "../CategoryForm";
-import { Alert, AlertType } from "../../models/alert";
+import {AlertType } from "../../models/alert";
 import {
   NewProductCategory,
   ProductCategory,
@@ -13,6 +11,7 @@ import {
 import { Action } from "../../models/action";
 import { validateProductCategoryForm } from "../../utils/validators";
 import { extractCategoryErrorMessage } from "../../utils/errorHandler";
+import { useAlert } from "../Alert/AlertProvider";
 
 export interface CategoryPopupProps {
   onClose: () => void;
@@ -33,16 +32,9 @@ export function CategoryPopup({
   const [fetchedCategories, setFetchedCategories] = useState<ProductCategory[]>(
     []
   );
-  const [alert, setAlert] = useState<Alert | null>(null);
+  const { showAlert } = useAlert();
 
   const action = selectedCategory ? Action.EDIT : Action.CREATE;
-
-  const showAlert = useCallback((message: string, variant: AlertType) => {
-    setAlert({ message, variant });
-    setTimeout(() => {
-      setAlert(null);
-    }, 3000);
-  }, []);
 
   const fetchCategories = useCallback(async () => {
     CategoryService.getCategories()
@@ -147,9 +139,6 @@ export function CategoryPopup({
             />
           </div>
         </section>
-        {alert && (
-          <CustomAlert message={alert.message} variant={alert.variant} />
-        )}
       </div>
     </div>,
     portalRoot

@@ -2,49 +2,40 @@ import axios from "axios";
 import { AxiosResponse } from "axios";
 import { Order, OrderFilterDTO, NewOrder } from "../models/order";
 
-class OrderService {
-  private static readonly API_URL = "http://localhost:8080/api/orders";
+import { sendApiRequest } from "../components/send-api-request/SendApiRequest";
 
-   static async getOrders(filter: OrderFilterDTO): Promise<Order[]> {
-    try {
-      const response: AxiosResponse<Order[]> =  await axios.post(`${this.API_URL}/search`, filter);
-      return response.status === 204 ? [] : response.data;
-    } catch (error) {
-      console.error("Error fetching orders.", error);
-      throw error;
-    }
+class OrderService {
+
+  static async getOrders(filter: OrderFilterDTO): Promise<Order[]> {
+    return await sendApiRequest<Order[]>('orders/search', {
+      method: "post",
+      body: filter,
+      errorMessage: "Error fetching orders."
+    })
   }
 
   static async createOrder(order: NewOrder): Promise<Order> {
-    try {
-      const response: AxiosResponse<Order> = await axios.post(`${this.API_URL}`, order);
-      return response.data;
-    } catch (error) {
-      console.error("Error creating new Order.", error);
-      throw error;
-    }
+    return await sendApiRequest<Order>('orders', {
+      method: "post",
+      body: order,
+      errorMessage: "Error creating new Order.",
+    })
   }
 
-
   static async updateOrder(id: number, order: Order): Promise<Order | undefined> {
-      try{
-        const response: AxiosResponse<Order> = await axios.put(`${this.API_URL}/${id}`, order);
-        return response.data;
-      } catch (error) {
-        console.error("Error updating Order.", error);
-        throw error;
-      }
+      return await sendApiRequest<Order>(`orders/${id}`, {
+        method: "put",
+        body: order,
+        errorMessage: "Error updating Order.",
+      })
     }
 
   static async deleteOrder(id: number): Promise<void> {
-    try{
-      await axios.delete(`${this.API_URL}/${id}`);
-    } catch (error) {
-      console.error("Error deleting Order.", error);
-      throw error;
-    }
+    return await sendApiRequest<void>(`orders/${id}`, {
+      method: "delete",
+      errorMessage: "Error removing Order.",
+    })
   }
-
 }
 
 export default OrderService;

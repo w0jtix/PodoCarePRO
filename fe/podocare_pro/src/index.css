@@ -85,6 +85,56 @@ button > a {
   align-items: center;
 }
 
+.login-container {
+  padding: 1rem 4rem 3rem 4rem;
+  width: fit-content;
+  height: fit-content;
+  margin: auto;
+  border: var(--border-dashboard-outer);
+  border-radius: var(--border-radius-dashboard);
+  box-shadow: inset 0 0 100px rgba(255, 255, 255, 0.1);
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+}
+.login-form-container {
+  width: 400px;
+  align-self:center;
+  padding-bottom: 2rem;
+}
+.login-input-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  align-self:center;
+}
+.login-label {
+  color: var(--text-color-white);
+  font-family: var(--font-h2-outfit);
+  font-weight: 200;
+  letter-spacing: 0.3px;
+  font-size: 16px;
+}
+.login-input {
+  background-color: transparent;
+  color:white;
+  border: 0.5px solid #ffffff87;
+  border-radius: var(--popup-border-radius);
+  font-size: var(--popup-font-size);
+  text-align: left;
+  font-family: var(--popup-font-family);
+  padding:0 0.5rem;
+  height: 30px;
+  width: 170px;
+  font-size: 14px;
+}
+.product-action-button.login-button {
+  padding: 0.5rem 0.75rem;
+}
+.product-action-button-text.login-button {
+  font-size: 14px;
+}
 /* NAVBAR*/
 
 .navbar {

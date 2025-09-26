@@ -2,7 +2,6 @@ import React from "react";
 import { useState, useEffect, useCallback, useRef } from "react";
 import OrderProductList from "./OrderProductList";
 import DateInput from "../DateInput";
-import CustomAlert from "../CustomAlert";
 import OrderNewProductsPopup from "../Popups/OrderNewProductsPopup";
 import ActionButton from "../ActionButton";
 import OrderService from "../../services/OrderService";
@@ -30,6 +29,7 @@ import {
   OrderWorkingData,
   OrderProductWorkingData,
 } from "../../models/working-data";
+import { useAlert } from "../Alert/AlertProvider";
 
 export interface OrderCreatorProps {
   setSelectedSupplier?: (supplier: Supplier | null) => void;
@@ -58,7 +58,7 @@ export function OrderCreator({
   onClose,
   className = "",
 }: OrderCreatorProps) {
-  const [alert, setAlert] = useState<Alert | null>(null);
+  const { showAlert } = useAlert();
   const [isOrderNewProductsPopupOpen, setIsOrderNewProductsPopupOpen] =
     useState<boolean>(false);
   const [nonExistingProducts, setNonExistingProducts] = useState<
@@ -75,13 +75,6 @@ export function OrderCreator({
   );
 
   const action = selectedOrder ? Action.EDIT : Action.CREATE;
-
-  const showAlert = (message: string, variant: AlertType) => {
-    setAlert({ message, variant });
-    setTimeout(() => {
-      setAlert(null);
-    }, 3000);
-  };
 
   //orderProduct choice from OrderListBySupplier
   useEffect(() => {
@@ -423,9 +416,6 @@ export function OrderCreator({
           />
         </div>
 
-        {alert && (
-          <CustomAlert message={alert.message} variant={alert.variant} />
-        )}
         {isOrderNewProductsPopupOpen && (
           <OrderNewProductsPopup
             nonExistingProducts={nonExistingProducts}

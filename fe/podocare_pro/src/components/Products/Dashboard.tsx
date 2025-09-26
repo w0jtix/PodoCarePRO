@@ -6,7 +6,7 @@ import ActionButton from "../ActionButton";
 import AddEditProductPopup from "../Popups/AddEditProductPopup";
 import RemoveProductPopup from "../Popups/RemoveProductPopup";
 import CategoryPopup from "../Popups/CategoryPopup";
-import CustomAlert from "../CustomAlert";
+import { useAlert } from "../Alert/AlertProvider";
 import { Product, ProductFilterDTO } from "../../models/product";
 import { Alert, AlertType } from "../../models/alert";
 
@@ -28,17 +28,7 @@ export function Dashboard() {
   });
   const [resetTriggered, setResetTriggered] = useState<boolean>(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [alert, setAlert] = useState<Alert | null>(null);
-
-  const showAlert = useCallback(
-    (message: string, variant: AlertType) => {
-      setAlert({ message, variant });
-      setTimeout(() => {
-        setAlert(null);
-      }, 3000);
-    },
-    []
-  );
+  const { showAlert } = useAlert();
 
   const handleResetFiltersAndData = useCallback(() => {
     setFilter({
@@ -143,7 +133,6 @@ export function Dashboard() {
           onReset={handlePopupSuccess}
         />
       )}
-      {alert && <CustomAlert message={alert.message} variant={alert.variant} />}
     </div>
   );
 }

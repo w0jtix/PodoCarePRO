@@ -7,14 +7,14 @@ import ActionButton from "../ActionButton.jsx";
 import DropdownSelect from "../DropdownSelect.js";
 import DateInput from "../DateInput.js";
 import SupplierService from "../../services/SupplierService.jsx";
-import CustomAlert from "../CustomAlert.js";
 import { Order, OrderFilterDTO } from "../../models/order.js";
 import { Supplier } from "../../models/supplier.js";
 import { Alert, AlertType } from "../../models/alert.js";
 import { ORDER_HISTORY_ATTRIBUTES } from "../../constants/list-headers.js";
+import { useAlert } from "../Alert/AlertProvider.js";
 
 export function OrderHistory() {
-  const [alert, setAlert] = useState<Alert | null>(null);
+  const { showAlert } = useAlert();
   const [orders, setOrders] = useState<Order[]>([]);
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [selectedSuppliers, setSelectedSuppliers] = useState<Supplier[]>([]);
@@ -26,13 +26,6 @@ export function OrderHistory() {
   const [loading, setLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 14;
-
-  const showAlert = useCallback((message: string, variant: AlertType) => {
-    setAlert({ message, variant });
-    setTimeout(() => {
-      setAlert(null);
-    }, 3000);
-  }, []);
 
   const handleSuccess = useCallback(
     (message: string) => {
@@ -251,7 +244,6 @@ export function OrderHistory() {
           )}
         </>
       )}
-      {alert && <CustomAlert message={alert.message} variant={alert.variant} />}
     </>
   );
 }

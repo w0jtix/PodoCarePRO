@@ -1,28 +1,24 @@
 import axios from "axios";
 import { AxiosResponse } from "axios";
 import { Supplier, NewSupplier } from "../models/supplier";
+import { sendApiRequest } from "../components/send-api-request/SendApiRequest";
 
 class SupplierService {
-  private static readonly API_URL = "http://localhost:8080/api/suppliers";
 
   static async getSuppliers(): Promise<Supplier[]> {
-    try {
-      const response: AxiosResponse<Supplier[]> = await axios.post(`${this.API_URL}/search`, {});
-      return response.status === 204 ? [] : response.data;
-    } catch (error) {
-      console.error("Error fetching suppliers. ", error);
-      throw error;
-    }
+    return await sendApiRequest<Supplier[]>(`suppliers/search`, {
+      method: "post",
+      body: {},
+      errorMessage: "Error fetching suppliers."
+    });
   }
 
   static async createSupplier(supplier: NewSupplier): Promise<Supplier> {
-    try {
-      const response: AxiosResponse<Supplier> =  await axios.post(`${this.API_URL}`, supplier);
-      return response.data;
-    } catch (error) {
-      console.error("Error creating new Supplier.", error);
-      throw error;
-    }
+    return await sendApiRequest<Supplier>("suppliers", {
+      method: "post",
+      body: supplier,
+      errorMessage: "Error creating new Supplier.",
+    });
   }
 }
 

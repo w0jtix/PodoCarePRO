@@ -6,7 +6,20 @@ import { NewSupplier, Supplier } from "../models/supplier";
 import { Order, NewOrder } from "../models/order";
 import { NewOrderProduct, OrderProduct } from "../models/order-product";
 
-export  function validateProductForm(
+  export function validateLoginForm(
+    username: string,
+    password: string
+  ): string | null {
+    if(!username) {
+      return "Brak nazwy użytkownika!";
+    }
+    if(!password) {
+      return "Brak hasła!";
+    }
+    return null;
+  };
+
+  export  function validateProductForm(
     productForm: Product | NewProduct,
     selectedProduct: Product | null | undefined,
     action: Action,
@@ -128,59 +141,59 @@ export  function validateProductForm(
     }   
   }
   return null;
-}
-
-export function validateOrderForm(
-  orderForm: Order | NewOrder,
-  selectedOrder: Order | null | undefined,
-  action: Action,
-): string | null {
-
-  if (!orderForm.supplier) {
-    return "Nie wybrano sklepu...";
   }
 
-  if(!orderForm.orderProducts || orderForm.orderProducts.length === 0) {
-    return "Puste zamówienie... Dodaj produkty!";
+  export function validateOrderForm(
+    orderForm: Order | NewOrder,
+    selectedOrder: Order | null | undefined,
+    action: Action,
+  ): string | null {
+
+    if (!orderForm.supplier) {
+      return "Nie wybrano sklepu...";
+    }
+
+    if(!orderForm.orderProducts || orderForm.orderProducts.length === 0) {
+      return "Puste zamówienie... Dodaj produkty!";
+    }
+
+    if(orderForm.orderProducts.some(
+      (op) => op.product?.name?.trim() === ""
+    )) {
+      return "Niepoprawna nazwa produktu!";
+    } else if  (
+      orderForm.orderProducts.some(
+      (op) => op.product?.name?.trim().length <= 2
+    )) {
+      return "Nazwa produktu za krótka! (2+)";
+    }
+
+    if(orderForm.orderProducts.some (
+      (op) => op.quantity == 0
+    )){
+      return Action.EDIT ? "Ilość = 0, usuń produkt!" : "Ilość produktów nie może wynosić 0!";
+    }
+
+    if(Action.EDIT && selectedOrder) {
+      const noChangesDetected = orderForm.supplier === selectedOrder.supplier &&
+        orderForm.orderDate === selectedOrder.orderDate &&
+        orderForm.shippingCost === selectedOrder.shippingCost &&
+        orderForm.totalNet === selectedOrder.totalNet &&
+        orderForm.totalVat === selectedOrder.totalVat &&
+        orderForm.totalValue === selectedOrder.totalValue;
+
+        const noOrderProductChangesDetected = areOrderProductsEqual(
+          selectedOrder.orderProducts,
+          orderForm.orderProducts
+        )
+
+        if(noChangesDetected && noOrderProductChangesDetected) {
+          return "Brak zmian!";
+        }
+    }
+
+    return null;
   }
-
-  if(orderForm.orderProducts.some(
-    (op) => op.product?.name?.trim() === ""
-  )) {
-    return "Niepoprawna nazwa produktu!";
-  } else if  (
-    orderForm.orderProducts.some(
-    (op) => op.product?.name?.trim().length <= 2
-  )) {
-    return "Nazwa produktu za krótka! (2+)";
-  }
-
-  if(orderForm.orderProducts.some (
-    (op) => op.quantity == 0
-  )){
-    return Action.EDIT ? "Ilość = 0, usuń produkt!" : "Ilość produktów nie może wynosić 0!";
-  }
-
-  if(Action.EDIT && selectedOrder) {
-    const noChangesDetected = orderForm.supplier === selectedOrder.supplier &&
-      orderForm.orderDate === selectedOrder.orderDate &&
-      orderForm.shippingCost === selectedOrder.shippingCost &&
-      orderForm.totalNet === selectedOrder.totalNet &&
-      orderForm.totalVat === selectedOrder.totalVat &&
-      orderForm.totalValue === selectedOrder.totalValue;
-
-      const noOrderProductChangesDetected = areOrderProductsEqual(
-        selectedOrder.orderProducts,
-        orderForm.orderProducts
-      )
-
-      if(noChangesDetected && noOrderProductChangesDetected) {
-        return "Brak zmian!";
-      }
-  }
-
-  return null;
-}
 
 const areOrderProductsEqual = (opList1: OrderProduct[], opList2: NewOrderProduct[]) => {
     if (opList1.length != opList2.length) return false;

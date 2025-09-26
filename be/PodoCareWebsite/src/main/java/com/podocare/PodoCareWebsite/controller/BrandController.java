@@ -7,6 +7,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,36 +21,42 @@ public class BrandController {
     private final BrandService brandService;
 
     @PostMapping("/search")
+    @PreAuthorize(("hasRole('USER')"))
     public ResponseEntity<List<BrandDTO>> getBrands(@RequestBody KeywordFilterDTO filter) {
         List<BrandDTO> brandDTOList = brandService.getBrands(filter);
         return new ResponseEntity<>(brandDTOList, brandDTOList.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize(("hasRole('USER')"))
     public ResponseEntity<BrandDTO> getBrandById(@PathVariable(value = "id") Long id){
         BrandDTO brand = brandService.getBrandById(id);
         return new ResponseEntity<>(brand, HttpStatus.OK);
     }
 
     @PostMapping
+    @PreAuthorize(("hasRole('USER')"))
     public ResponseEntity<BrandDTO> createBrand(@RequestBody BrandDTO brand) {
         BrandDTO newBrand = brandService.createBrand(brand);
         return new ResponseEntity<>(newBrand, HttpStatus.CREATED);
     }
 
     @PostMapping("/batch")
+    @PreAuthorize(("hasRole('USER')"))
     public ResponseEntity<List<BrandDTO>> createBrands(@RequestBody List<BrandDTO> brands) {
         List<BrandDTO> createdBrands = brandService.createBrands(brands);
         return new ResponseEntity<>(createdBrands, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize(("hasRole('USER')"))
     public ResponseEntity<BrandDTO> updateBrand(@PathVariable(value = "id") Long id, @NonNull @RequestBody BrandDTO brand){
         BrandDTO saved = brandService.updateBrand(id, brand);
         return new ResponseEntity<>(saved, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize(("hasRole('USER')"))
     public ResponseEntity<Void> deleteBrand(@PathVariable(value = "id") Long id) {
         brandService.deleteBrandById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
