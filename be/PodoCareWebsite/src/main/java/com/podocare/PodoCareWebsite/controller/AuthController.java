@@ -66,6 +66,7 @@ public class AuthController {
                     .type(JwtUtils.JWT_TYPE)
                     .id(userDetails.getId())
                     .username(userDetails.getUsername())
+                    .avatar(userDetails.getAvatar())
                     .roles(roles)
                     .build(), HttpStatus.OK);
         } catch (Exception e) {

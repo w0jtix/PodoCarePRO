@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import NavbarLogoContainer from "../components/NavbarLogoContainer";
 import { useState } from "react";
 import ActionButton from "../components/ActionButton";
-import { Alert, AlertType } from "../models/alert";
+import { AlertType } from "../models/alert";
 import { validateLoginForm } from "../utils/validators";
 import AuthService from "../services/AuthService";
 import { useAlert } from "../components/Alert/AlertProvider";

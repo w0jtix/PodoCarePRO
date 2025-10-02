@@ -1,7 +1,17 @@
 import { JwtUser, LoginRequest } from "../models/login";
 import { sendApiRequest } from "../components/send-api-request/SendApiRequest";
-import { RoleType } from "../models/login";
+import { RoleType, User, Role } from "../models/login";
 import { ChangePasswordRequest, ForceChangePasswordRequest, MessageResponse, RegisterRequest } from "../models/register";
+
+function isUser(obj: any): obj is User {
+  return (
+    obj &&
+    Array.isArray(obj.roles) &&
+    obj.roles.length > 0 &&
+    typeof obj.roles[0] === "object" &&
+    "name" in obj.roles[0]
+  );
+}
 
 class AuthService {
 
@@ -96,6 +106,25 @@ class AuthService {
         } else {
             return { key: 'Authorization', value: ''};
         }
+    }
+
+    setCurrentUser(user: JwtUser | User) {
+    let jwtUser: JwtUser;
+
+    if (isUser(user)) {
+      
+      jwtUser = {
+        token: this.getCurrentUser()?.token || "",
+        type: this.getCurrentUser()?.type || "Bearer",
+        id: user.id,
+        username: user.username,
+        avatar: user.avatar,
+        roles: user.roles.map((r:Role) => r.name),
+      };
+    } else {
+      jwtUser = user as JwtUser;
+    }
+    localStorage.setItem("user", JSON.stringify(jwtUser));
     }
 }
 

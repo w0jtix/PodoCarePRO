@@ -8,6 +8,7 @@ export interface JwtUser {
     type: string;
     id: number;
     username: string;
+    avatar: string;
     roles: RoleType[];
 }
 
@@ -15,7 +16,8 @@ export interface JwtUser {
 export interface User {
     id: number;
     username: string;
-    roles: RoleType[];
+    avatar: string;
+    roles: Role[];
 }
 
 export enum RoleType {

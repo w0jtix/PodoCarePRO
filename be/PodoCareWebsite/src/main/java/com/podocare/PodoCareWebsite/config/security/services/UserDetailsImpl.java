@@ -23,6 +23,8 @@ public class UserDetailsImpl implements UserDetails {
     @JsonIgnore
     private String password;
 
+    private String avatar;
+
     private Collection<? extends GrantedAuthority> authorities;
 
     public static UserDetailsImpl build (User user) {
@@ -34,8 +36,11 @@ public class UserDetailsImpl implements UserDetails {
                 user.getId(),
                 user.getUsername(),
                 user.getPassword(),
+                user.getAvatar(),
                 authorities);
     }
+
+    public String getAvatar() { return avatar; }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() { return authorities; };

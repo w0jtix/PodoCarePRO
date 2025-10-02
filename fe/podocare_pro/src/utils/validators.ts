@@ -5,6 +5,7 @@ import { NewProductCategory, ProductCategory } from "../models/product-category"
 import { NewSupplier, Supplier } from "../models/supplier";
 import { Order, NewOrder } from "../models/order";
 import { NewOrderProduct, OrderProduct } from "../models/order-product";
+import { JwtUser, User, Role, RoleType } from "../models/login";
 
   export function validateLoginForm(
     username: string,
@@ -115,6 +116,99 @@ import { NewOrderProduct, OrderProduct } from "../models/order-product";
           if (noChangesDetected) {
             return "Brak zmian!";
           }
+    }
+    return null;
+  }
+
+  //helper fnc
+  function normalizeRoles(user: JwtUser | User | null | undefined): RoleType[] {
+  if (!user) return [];
+  
+  if ('token' in user) {
+    return user.roles;
+  }
+  
+  return user.roles.map((role: Role) => role.name);
+}
+  //helper fnc
+  function areRolesEqual(roles1: RoleType[], roles2: RoleType[]): boolean {
+    if (roles1.length !== roles2.length) return false;
+    
+    const sorted1 = [...roles1].sort();
+    const sorted2 = [...roles2].sort();
+    
+    return sorted1.every((role, index) => role === sorted2[index]);
+  }
+
+  export function validateUpdateUser(updatedUser: User, user: JwtUser | User | null | undefined) {
+
+    if(!updatedUser.id || !updatedUser.username || !updatedUser.avatar) {
+      return "Brak pełnych danych użytkownika!"
+    }
+    if(updatedUser.roles.length === 0) {
+      return "Użytkownik musi posiadać conajmniej 1 role!"
+    }
+    const updatedUserRoles = updatedUser.roles.map(r => r.name);
+    const currentUserRoles = normalizeRoles(user);
+
+    const isTryingToAddAdmin =
+    updatedUserRoles.includes(RoleType.ROLE_ADMIN) &&
+    !currentUserRoles.includes(RoleType.ROLE_ADMIN);
+
+  if (isTryingToAddAdmin) {
+    return "Nie masz uprawnień do nadania roli ADMIN!";
+  }
+
+    const noChangesDetected = 
+      updatedUser.avatar === user?.avatar &&
+      areRolesEqual(updatedUserRoles, currentUserRoles);
+      
+    if (noChangesDetected) {
+      return "Brak zmian!";
+    }
+
+    return null;
+  }
+
+  export function validateChangePasswordForm(
+    oldPassword: string,
+    newPassword: string,
+    confirmPassword: string
+  ): string | null {
+    if(!oldPassword || !newPassword || !confirmPassword) {
+      return "Brak pełnych informacji!";
+    }
+    if(newPassword.length < 6) {
+      return "Nowe hasło za krótkie! (6+)";
+    }
+    if(newPassword.length > 40) {
+      return "Nowe hasło za długie! (max 40)";
+    }
+    if(newPassword !== confirmPassword) {
+      return "Nowe hasła nie są identyczne!";
+    }
+
+    if(oldPassword === newPassword) {
+      return "Nowe hasło musi różnić się od starego!";
+    }
+    return null;
+  }
+
+  export function validateForceChangePasswordForm(
+    newPassword: string,
+    confirmPassword: string
+  ): string | null {
+    if(!newPassword || !confirmPassword) {
+      return "Brak pełnych informacji!";
+    }
+    if(newPassword.length < 6) {
+      return "Nowe hasło za krótkie! (6+)";
+    }
+    if(newPassword.length > 40) {
+      return "Nowe hasło za długie! (max 40)";
+    }
+    if(newPassword !== confirmPassword) {
+      return "Nowe hasła nie są identyczne!";
     }
     return null;
   }

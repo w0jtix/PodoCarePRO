@@ -1,3 +1,5 @@
+import AuthService from "../services/AuthService";
+
 export interface MenuItem {
   name: string;
   href: string;
@@ -46,12 +48,9 @@ export const SUBMENU_ITEMS: SubMenuItem[] = [
   },
 ];
 
-export type UserMenuAction = 'profile' | 'settings' | 'logout';
-
 export interface UserMenuItem {
   label: string;
   icon: string;
-  action: UserMenuAction;
   className?: string;
 }
 
@@ -59,19 +58,16 @@ export const USER_MENU_ITEMS: UserMenuItem[] = [
   {
     label: "Profil",
     icon: "klienci",
-    action: "profile",
     className: "profile-icon"
   },
   {
     label: "Ustawienia",
     icon: "ustawienia",
-    action: "settings",
     className: "settings-icon"
   },
   {
     label: "Wyloguj",
     icon: "logout",
-    action: "logout",
     className: "logout-icon"
   }
 ];

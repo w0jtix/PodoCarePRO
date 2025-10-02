@@ -5,19 +5,24 @@ import Orders from "./pages/Orders";
 import Login from "./pages/Login";
 import { AlertProvider } from "./components/Alert/AlertProvider";
 import { Main } from "./layouts/Main";
+import Profile from "./pages/Profile";
+import { UserProvider } from "./components/User/UserProvider";
 
 function App() {
   return (
     <AlertProvider>
+      <UserProvider>
       <Router>
         <Routes>
           <Route element={<Main />}>
             <Route path="/" element={<Warehouse />} />
             <Route path="/zamowienia" element={<Orders />} />
+            <Route path="/profile" element={<Profile />}/>
           </Route>
           <Route path="/login" element={<Login />} />
         </Routes>
       </Router>
+      </UserProvider>
     </AlertProvider>
   );
 }

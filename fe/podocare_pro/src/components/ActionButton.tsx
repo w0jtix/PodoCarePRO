@@ -5,6 +5,7 @@ export interface ActionButtonProps {
   alt?: string;
   text?: string;
   onClick: (e: React.MouseEvent) => void;
+  disableImg?: boolean;
   disableText?: boolean;
   disabled?: boolean;
   className?: string;
@@ -17,11 +18,11 @@ export function ActionButton(props: ActionButtonProps) {
         onClick={props.onClick} 
         disabled={props.disabled || false}
       >
-        <img
+        { !props.disableImg && <img
           src={props.src}
           alt={props.alt}
-          className={`product-action-button-icon ${props.text?.toLowerCase()}`}
-        ></img>
+          className={`product-action-button-icon ${props.text?.toLowerCase()} ${props.className? props.className : ""}`}
+        ></img> }
         {!(props.disableText || false) && props.text && (
           <span className={`product-action-button-text ${props.className? props.className : ""}`}>{props.text}</span>
         )}

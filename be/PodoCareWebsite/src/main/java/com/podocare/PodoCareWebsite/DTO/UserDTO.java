@@ -20,13 +20,13 @@ import static java.util.Objects.nonNull;
 public class UserDTO {
     private Long id;
     private String username;
-    private String password;
+    private String avatar;
     private List<RoleDTO> roles = new ArrayList<>();
 
     public UserDTO(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
-        this.password = user.getPassword();
+        this.avatar = user.getAvatar();
         if(nonNull(user.getRoles()))
             this.roles = user.getRoles().stream()
                     .map(RoleDTO::new)
@@ -37,7 +37,7 @@ public class UserDTO {
         return User.builder()
                 .id(this.id)
                 .username(this.username)
-                .password(this.password)
+                .avatar(this.avatar)
                 .roles(this.roles.stream().map(RoleDTO::toEntity).collect(Collectors.toSet()))
                 .build();
     }

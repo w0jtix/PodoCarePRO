@@ -23,6 +23,8 @@ public class User {
     private String username;
     @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
+    private String avatar = "avatar5.png";
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_roles",
