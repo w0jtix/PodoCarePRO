@@ -1,0 +1,93 @@
+import React from "react";
+import { useState, useEffect, useCallback } from "react";
+import HandyOrderList from "./HandyOrderList";
+import OrderService from "../../services/OrderService";
+import ListHeader, { ListModule } from "../ListHeader";
+import { ORDERS_BY_SUPPLIER_ATTRIBUTES } from "../../constants/list-headers";
+import { Supplier } from "../../models/supplier";
+import { OrderProduct } from "../../models/order-product";
+import { Order, OrderFilterDTO } from "../../models/order";
+
+export interface OrdersListBySupplierProps {
+  selectedSupplier: Supplier | null;
+  setSelectedOrderProduct: (orderProduct: OrderProduct | null) => void;
+  expandedOrderIds: number[];
+  setExpandedOrderIds: React.Dispatch<React.SetStateAction<number[]>>;
+  className?: string;
+}
+
+export function OrdersListBySupplier({
+  selectedSupplier,
+  setSelectedOrderProduct,
+  expandedOrderIds,
+  setExpandedOrderIds,
+  className = "",
+}) {
+  const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
+
+  const fetchOrders = useCallback(async (filter: OrderFilterDTO) => {
+    OrderService.getOrders(filter)
+      .then((data) => {
+        setFilteredOrders(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching orders:", error);
+        setFilteredOrders([]);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (selectedSupplier) {
+      const filter: OrderFilterDTO = {
+        supplierIds: [selectedSupplier.id],
+      };
+      fetchOrders(filter);
+    } else {
+      setFilteredOrders([]);
+    }
+  }, [selectedSupplier, fetchOrders]);
+
+  const getTitle = (): string => {
+    if (selectedSupplier) {
+      return `${selectedSupplier.name} - zamówienia`;
+    }
+    return "Wybierz sklep by wyświetlić zamówienia";
+  };
+
+  const getOrderCountText = (): string => {
+    const count = filteredOrders.length;
+    return `${count}`;
+  };
+
+  return (
+    <div className={`order-display-container ${className}`}>
+      <div className="order-display-interior">
+        <h1 className="orders-list-by-supplier-container-title">
+          {getTitle()}
+        </h1>
+        <ListHeader
+          attributes={ORDERS_BY_SUPPLIER_ATTRIBUTES}
+          module={ListModule.ORDER}
+        />
+        <HandyOrderList
+          attributes={ORDERS_BY_SUPPLIER_ATTRIBUTES}
+          orders={filteredOrders}
+          setSelectedOrderProduct={setSelectedOrderProduct}
+          expandedOrderIds={expandedOrderIds}
+          setExpandedOrderIds={setExpandedOrderIds}
+        />
+        <section className="orders-list-by-supplier-orders-count">
+          {selectedSupplier ? (
+            <span className="orders-list-by-supplier-orders-count-span">
+              Razem: {getOrderCountText()}
+            </span>
+          ) : (
+            " "
+          )}
+        </section>
+      </div>
+    </div>
+  );
+}
+
+export default OrdersListBySupplier;
