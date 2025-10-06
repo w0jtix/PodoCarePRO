@@ -32,4 +32,8 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="employee_id", nullable = true)
+    private Employee employee;
+
 }

@@ -120,6 +120,7 @@ class AuthService {
         username: user.username,
         avatar: user.avatar,
         roles: user.roles.map((r:Role) => r.name),
+        employee: user.employee,
       };
     } else {
       jwtUser = user as JwtUser;

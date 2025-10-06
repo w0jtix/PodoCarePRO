@@ -9,10 +9,11 @@ import lombok.*;
 @Table(name = "employee")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
@@ -20,6 +21,4 @@ public class Employee {
     @Column(nullable = false)
     private String secondName;
 
-    @Column(nullable = false, unique = true)
-    private String username;
 }

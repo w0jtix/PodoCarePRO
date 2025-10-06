@@ -6,6 +6,7 @@ import { NewSupplier, Supplier } from "../models/supplier";
 import { Order, NewOrder } from "../models/order";
 import { NewOrderProduct, OrderProduct } from "../models/order-product";
 import { JwtUser, User, Role, RoleType } from "../models/login";
+import { Employee, NewEmployee } from "../models/employee";
 
   export function validateLoginForm(
     username: string,
@@ -161,6 +162,7 @@ import { JwtUser, User, Role, RoleType } from "../models/login";
 
     const noChangesDetected = 
       updatedUser.avatar === user?.avatar &&
+      (updatedUser.employee?.id ?? null) === (user?.employee?.id ?? null) &&
       areRolesEqual(updatedUserRoles, currentUserRoles);
       
     if (noChangesDetected) {
@@ -230,6 +232,29 @@ import { JwtUser, User, Role, RoleType } from "../models/login";
     const noChangesDetected = supplierForm.name === selectedSupplier.name &&
     supplierForm.websiteUrl === selectedSupplier.websiteUrl;
 
+    if (noChangesDetected) {
+      return "Brak zmian!";
+    }   
+  }
+  return null;
+  }
+
+  export function validateEmployeeForm(
+    employeeForm: Employee | NewEmployee,
+    selectedEmployee: Employee | null | undefined,
+    action: Action,
+  ): string | null {
+    if(!employeeForm.name || !employeeForm.secondName) {
+      return "Brak pełnych informacji!";
+    }
+    if(employeeForm.name && employeeForm.name.trim().length <= 2) {
+      return "Imię za krótkie! (2+)"
+    }
+    if(employeeForm.secondName && employeeForm.secondName.trim().length <= 2) {
+      return "Nazwisko za krótkie! (2+)"
+    }
+    if(action === Action.EDIT && selectedEmployee) {
+      const noChangesDetected = employeeForm.name === selectedEmployee.name && employeeForm.secondName === selectedEmployee.secondName;
     if (noChangesDetected) {
       return "Brak zmian!";
     }   

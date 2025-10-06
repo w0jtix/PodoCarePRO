@@ -1,5 +1,6 @@
 package com.podocare.PodoCareWebsite.controller;
 
+import com.podocare.PodoCareWebsite.DTO.EmployeeDTO;
 import com.podocare.PodoCareWebsite.DTO.request.auth.ChangePasswordRequest;
 import com.podocare.PodoCareWebsite.DTO.request.auth.ForceChangePasswordRequest;
 import com.podocare.PodoCareWebsite.DTO.request.auth.LoginRequest;
@@ -10,11 +11,13 @@ import com.podocare.PodoCareWebsite.config.security.jwt.JwtUtils;
 import com.podocare.PodoCareWebsite.config.security.services.UserDetailsImpl;
 import com.podocare.PodoCareWebsite.exceptions.CreationException;
 import com.podocare.PodoCareWebsite.exceptions.ResourceNotFoundException;
+import com.podocare.PodoCareWebsite.model.Employee;
 import com.podocare.PodoCareWebsite.model.Role;
 import com.podocare.PodoCareWebsite.model.User;
 import com.podocare.PodoCareWebsite.model.constants.RoleType;
 import com.podocare.PodoCareWebsite.repo.RoleRepo;
 import com.podocare.PodoCareWebsite.repo.UserRepo;
+import com.podocare.PodoCareWebsite.service.EmployeeService;
 import com.podocare.PodoCareWebsite.utils.SessionUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +50,7 @@ public class AuthController {
     private final PasswordEncoder encoder;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
+    private final EmployeeService employeeService;
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -68,6 +72,7 @@ public class AuthController {
                     .username(userDetails.getUsername())
                     .avatar(userDetails.getAvatar())
                     .roles(roles)
+                    .employee(userDetails.getEmployee())
                     .build(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

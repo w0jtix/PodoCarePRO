@@ -12,6 +12,13 @@ import { AlertType } from "../../models/alert";
 import { useAlert } from "../Alert/AlertProvider";
 import { validateUpdateUser } from "../../utils/validators";
 import { useUser } from "../User/UserProvider";
+import DropdownSelect from "../DropdownSelect";
+import EmployeeService from "../../services/EmployeeService";
+import { Employee, NewEmployee } from "../../models/employee";
+import { validateEmployeeForm } from "../../utils/validators";
+import { Action } from "../../models/action";
+import { extractEmployeesErrorMessage } from "../../utils/errorHandler";
+import AddNewEmployeePopup from "../Popups/AddNewEmployeePopup";
 
 export function ProfileDashboard() {
   const { user, setUser, refreshUser } = useUser();
@@ -20,6 +27,7 @@ export function ProfileDashboard() {
   const [isAvatarPickerOpen, setIsAvatarPickerOpen] = useState<boolean>(false);
   const [users, setUsers] = useState<User[]>([]);
   const [availableRoles, setAvailableRoles] = useState<Role[]>([]);
+  const [employees, setEmployees] = useState<Employee[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [updatedUser, setUpdatedUser] = useState<User | null>(null);
   const [isForceChangePasswordPopupOpen, setIsForceChangePasswordPopupOpen] =
@@ -32,6 +40,30 @@ export function ProfileDashboard() {
     } catch (err) {
       console.error("Błąd podczas pobierania użytkowników!", err);
     }
+  };
+
+  const fetchEmployees = async () => {
+    EmployeeService.getAllEmployees()
+      .then((data) => {
+        setEmployees(data);
+      })
+      .catch((error) => {
+        setEmployees([]);
+        console.error("Error fetching categories:", error);
+      });
+  };
+
+  const handleEmployeeSelect = (value: Employee | Employee[] | null) => {
+    setUpdatedUser((prev) => {
+      if (!prev) return prev;
+
+      const selectedEmployee = Array.isArray(value) ? value[0] : value;
+
+      return {
+        ...prev,
+        employee: selectedEmployee,
+      };
+    });
   };
 
   const toggleAvatarPicker = () => {
@@ -47,17 +79,17 @@ export function ProfileDashboard() {
   };
 
   const toggleRole = (role: Role) => {
-    if(user?.roles.includes(RoleType.ROLE_ADMIN)) {
+    if (user?.roles.includes(RoleType.ROLE_ADMIN)) {
       setUpdatedUser((prev) => {
-      if (!prev) return prev;
-      const hasRole = prev.roles.some((r) => r.id === role.id);
-      return {
-        ...prev,
-        roles: hasRole
-          ? prev.roles.filter((r) => r.id !== role.id)
-          : [...prev.roles, role],
-      };
-    });
+        if (!prev) return prev;
+        const hasRole = prev.roles.some((r) => r.id === role.id);
+        return {
+          ...prev,
+          roles: hasRole
+            ? prev.roles.filter((r) => r.id !== role.id)
+            : [...prev.roles, role],
+        };
+      });
     }
   };
 
@@ -68,6 +100,38 @@ export function ProfileDashboard() {
   const handleLogout = () => {
     AuthService.logout();
   };
+
+  const handleAddNewEmployee = useCallback(
+    async (newEmployee: NewEmployee) => {
+      const error = validateEmployeeForm(newEmployee, undefined, Action.CREATE);
+      if (error) {
+        showAlert(error, AlertType.ERROR);
+        return null;
+      }
+
+      EmployeeService.createEmployee(newEmployee)
+        .then((data) => {
+          setUpdatedUser((prev) => {
+            if (!prev) return prev;
+            return {
+              ...prev,
+              employee: data,
+            } as User;
+          });
+          showAlert("Pomyślnie utworzono pracownika.", AlertType.SUCCESS);
+          fetchEmployees();
+        })
+        .catch((error) => {
+          console.error("Error creating new Employee.", error);
+          const errorMessage = extractEmployeesErrorMessage(
+            error,
+            Action.CREATE
+          );
+          showAlert(errorMessage, AlertType.ERROR);
+        });
+    },
+    [showAlert]
+  );
 
   const avatarSrc = updatedUser?.avatar
     ? AVAILABLE_AVATARS[updatedUser.avatar]
@@ -129,6 +193,7 @@ export function ProfileDashboard() {
           username: jwtUser.username,
           avatar: jwtUser.avatar,
           roles: mappedRoles,
+          employee: jwtUser.employee,
         });
       } catch (err) {
         console.error("Błąd podczas pobierania roli!", err);
@@ -137,6 +202,7 @@ export function ProfileDashboard() {
 
     fetchUsers();
     fetchRoles();
+    fetchEmployees();
     refreshUser();
   }, []);
 
@@ -178,12 +244,40 @@ export function ProfileDashboard() {
               ))}
             </div>
           </div>
-          <ActionButton
-            text={"Zapisz Zmiany"}
-            src={"src/assets/tick.svg"}
-            onClick={handleValidateUpdatedUser}
-            className="user-update-button"
-          />
+          {user?.roles.includes(RoleType.ROLE_ADMIN) ? (
+            <div className="user-details-bottom-section">
+              <div className="employee-dropdown-container">
+              <h2 className="pw-header role popup">Pracownik:</h2>
+              <DropdownSelect
+                items={employees}
+                onChange={handleEmployeeSelect}
+                value={updatedUser?.employee}
+                placeholder="Nie wybrano"
+                multiple={false}
+                showNewPopup={true}
+                newItemComponent={
+                  AddNewEmployeePopup as React.ComponentType<any>
+                }
+                newItemProps={{
+                  onAddNew: handleAddNewEmployee,
+                }}
+              />
+              </div>
+              <ActionButton
+                text={"Zapisz Zmiany"}
+                src={"src/assets/tick.svg"}
+                onClick={handleValidateUpdatedUser}
+                className="user-update-button"
+              />
+            </div>
+          ) : (
+            <ActionButton
+              text={"Zapisz Zmiany"}
+              src={"src/assets/tick.svg"}
+              onClick={handleValidateUpdatedUser}
+              className="user-update-button"
+            />
+          )}
         </div>
 
         <ChangePasswordForm />
@@ -198,27 +292,30 @@ export function ProfileDashboard() {
               </div>
               <div className="single-user-info">
                 <span className="single-user-username">{u.username}</span>
-                <div className="single-user-roles">
-                  {u.roles.map((role) => (
-                    <span className="single-user-role" key={role.id}>
-                      {role.name.replace("ROLE_", "")}
-                    </span>
-                  ))}
-                </div>
+                {user?.roles.includes(RoleType.ROLE_ADMIN) && (
+                  <div className="single-user-roles">
+                    {u.roles.map((role) => (
+                      <span className="single-user-role" key={role.id}>
+                        {role.name.replace("ROLE_", "")}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
-              {u.id != user?.id && user?.roles.includes(RoleType.ROLE_ADMIN) && (
-                <ActionButton
-                  src="src/assets/edit.svg"
-                  alt="Edytuj Użytkownika"
-                  text="Edytuj"
-                  onClick={() => {
-                    handleForceChangePassword();
-                    setSelectedUser(u);
-                  }}
-                  disableText={true}
-                  className="edit-user"
-                />
-              )}
+              {u.id != user?.id &&
+                user?.roles.includes(RoleType.ROLE_ADMIN) && (
+                  <ActionButton
+                    src="src/assets/edit.svg"
+                    alt="Edytuj Użytkownika"
+                    text="Edytuj"
+                    onClick={() => {
+                      handleForceChangePassword();
+                      setSelectedUser(u);
+                    }}
+                    disableText={true}
+                    className="edit-user"
+                  />
+                )}
             </div>
           ))}
         </div>
@@ -241,11 +338,14 @@ export function ProfileDashboard() {
       )}
       {isForceChangePasswordPopupOpen && (
         <EditUserPopup
+          AddNewEmployeePopup={AddNewEmployeePopup}
+          handleAddNewEmployee={() => handleAddNewEmployee}
           onClose={() => setIsForceChangePasswordPopupOpen(false)}
           className={"force-change-pw"}
           selectedUser={selectedUser}
           availableRoles={availableRoles}
           refreshUserList={fetchUsers}
+          employees={employees}
         />
       )}
     </div>

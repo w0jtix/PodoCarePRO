@@ -10,20 +10,28 @@ import ActionButton from "../ActionButton";
 import { Role } from "../../models/login";
 import { validateUpdateUser } from "../../utils/validators";
 import UserService from "../../services/UserService";
+import DropdownSelect from "../DropdownSelect";
+import { Employee } from "../../models/employee";
 
 export interface EditUserPopupProps {
+  AddNewEmployeePopup: React.ComponentType<any>;
+  handleAddNewEmployee: () => void;
   onClose: () => void;
   className?: string;
   selectedUser: User | null;
   availableRoles: Role[];
+  employees: Employee[];
   refreshUserList: () => void;
 }
 
 export function EditUserPopup({
+  AddNewEmployeePopup,
+  handleAddNewEmployee,
   onClose,
   className = "",
   selectedUser,
   availableRoles,
+  employees,
   refreshUserList,
 }: EditUserPopupProps) {
   const { showAlert } = useAlert();
@@ -33,8 +41,8 @@ export function EditUserPopup({
   const [updatedUser, setUpdatedUser] = useState<User | null>(selectedUser);
 
   const handleShowForceChangePw = () => {
-    setShowForceChangePw(prev => !prev);
-  }
+    setShowForceChangePw((prev) => !prev);
+  };
 
   const toggleRole = (role: Role) => {
     setUpdatedUser((prev) => {
@@ -45,6 +53,19 @@ export function EditUserPopup({
         roles: hasRole
           ? prev.roles.filter((r) => r.id !== role.id)
           : [...prev.roles, role],
+      };
+    });
+  };
+
+  const handleEmployeeSelect = (value: Employee | Employee[] | null) => {
+    setUpdatedUser((prev) => {
+      if (!prev) return prev;
+
+      const selectedEmployee = Array.isArray(value) ? value[0] : value;
+
+      return {
+        ...prev,
+        employee: selectedEmployee,
       };
     });
   };
@@ -65,25 +86,25 @@ export function EditUserPopup({
   };
 
   const handleEditUser = async () => {
-  if (!updatedUser) return;
+    if (!updatedUser) return;
 
-  try {
-    const data = await UserService.updateUser(updatedUser.id, updatedUser);
-    
-    if (!data) {
-      showAlert("Błąd aktualizacji - brak danych!", AlertType.ERROR);
-      return;
+    try {
+      const data = await UserService.updateUser(updatedUser.id, updatedUser);
+
+      if (!data) {
+        showAlert("Błąd aktualizacji - brak danych!", AlertType.ERROR);
+        return;
+      }
+
+      refreshUserList();
+      onClose();
+      showAlert(
+        `Użytkownik ${updatedUser.username} zaktualizowany!`,
+        AlertType.SUCCESS
+      );
+    } catch (error) {
+      showAlert("Błąd aktualizacji!", AlertType.ERROR);
     }
-    
-    refreshUserList();
-    onClose();
-    showAlert(
-      `Użytkownik ${updatedUser.username} zaktualizowany!`,
-      AlertType.SUCCESS
-    );
-  } catch (error) {
-    showAlert("Błąd aktualizacji!", AlertType.ERROR);
-  }
   };
 
   const handleForceChangePassword = async () => {
@@ -108,6 +129,8 @@ export function EditUserPopup({
         setConfirmPassword("");
       });
   };
+
+  
 
   const portalRoot = document.getElementById("portal-root");
   if (!portalRoot) {
@@ -137,36 +160,53 @@ export function EditUserPopup({
           </button>
         </div>
         <div className="user-roles-container popup">
-                      <h2 className="pw-header role popup">Role Użytkownika:</h2>
-                      <div className="user-roles-popup">
-                      {availableRoles.map((role) => (
-                        <ActionButton
-                          text={role.name.replace("ROLE_", "")}
-                          disableImg={true}
-                          onClick={() => toggleRole(role)}
-                          className={`role-button ${
-                            updatedUser?.roles.some((r) => r.id === role.id)
-                              ? "selected"
-                              : ""
-                          }`}
-                          key={role.id}
-                        />
-                      ))}
-                      </div>
-                    </div>
+          <h2 className="pw-header role popup">Role Użytkownika:</h2>
+          <div className="user-roles-popup">
+            {availableRoles.map((role) => (
+              <ActionButton
+                text={role.name.replace("ROLE_", "")}
+                disableImg={true}
+                onClick={() => toggleRole(role)}
+                className={`role-button ${
+                  updatedUser?.roles.some((r) => r.id === role.id)
+                    ? "selected"
+                    : ""
+                }`}
+                key={role.id}
+              />
+            ))}
+          </div>
+        </div>
+        <div className="asign-employee-container">
+          <h2 className="pw-header role popup">Pracownik:</h2>
+          <DropdownSelect
+            items={employees}
+            onChange={handleEmployeeSelect}
+            value={updatedUser?.employee}
+            placeholder="NIE WYBRANO"
+            multiple={false}
+            showNewPopup={true}
+            newItemComponent={AddNewEmployeePopup as React.ComponentType<any>}
+            newItemProps={{
+              onAddNew: handleAddNewEmployee,
+            }}
+          />
+        </div>
         <ActionButton
-                    text={"Zapisz Zmiany"}
-                    src={"src/assets/tick.svg"}
-                    onClick={handleValidateUpdatedUser}
-                    className="user-update-button popup"
-                  />            
+          text={"Zapisz Zmiany"}
+          src={"src/assets/tick.svg"}
+          onClick={handleValidateUpdatedUser}
+          className="user-update-button popup"
+        />
         <ActionButton
-              text="Dodatkowe Opcje"
-              src={"src/assets/arrow_down.svg"}
-              alt={"Wymuś zmianę hasła"}
-              onClick={handleShowForceChangePw}
-              className={`pw-change-button fc-pw ${showForceChangePw ? "visible" : ""}`}
-            />
+          text="Dodatkowe Opcje"
+          src={"src/assets/arrow_down.svg"}
+          alt={"Wymuś zmianę hasła"}
+          onClick={handleShowForceChangePw}
+          className={`pw-change-button fc-pw ${
+            showForceChangePw ? "visible" : ""
+          }`}
+        />
         {showForceChangePw && (
           <>
             <div className="popup-pw-inputs">

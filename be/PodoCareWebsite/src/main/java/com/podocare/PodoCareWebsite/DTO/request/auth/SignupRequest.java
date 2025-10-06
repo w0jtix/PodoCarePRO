@@ -1,5 +1,6 @@
 package com.podocare.PodoCareWebsite.DTO.request.auth;
 
+import com.podocare.PodoCareWebsite.DTO.EmployeeDTO;
 import com.podocare.PodoCareWebsite.model.constants.RoleType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

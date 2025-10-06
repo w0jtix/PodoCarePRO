@@ -1,6 +1,6 @@
 import { Action } from "../models/action";
 
-export type EntityType = 'product' | 'category' | 'brand' | 'supplier';
+export type EntityType = 'product' | 'category' | 'brand' | 'supplier' | 'employee';
 
 export const extractErrorMessage = (
     error:any,
@@ -65,6 +65,12 @@ const getEntityConfig = (entityType: EntityType) => {
       updateAction: 'aktualizacji',
       entityName: 'sklepu',
       alreadyExistsMessage: 'Sklep o takiej nazwie już istnieje!'
+    },
+    employee: {
+      createAction: 'tworzenia',
+      updateAction: 'aktualizacji',
+      entityName: 'pracownika',
+      alreadyExistsMessage: 'Pracownik o takiej nazwie już istnieje!'
     }
   };
 
@@ -85,4 +91,8 @@ export const extractBrandErrorMessage = (error: any, action: Action.CREATE | Act
 
 export const extractSupplierErrorMessage = (error: any, action: Action.CREATE | Action.EDIT): string => {
   return extractErrorMessage(error, action, 'supplier');
+};
+
+export const extractEmployeesErrorMessage = (error: any, action: Action.CREATE | Action.EDIT): string => {
+  return extractErrorMessage(error, action, 'employee');
 };

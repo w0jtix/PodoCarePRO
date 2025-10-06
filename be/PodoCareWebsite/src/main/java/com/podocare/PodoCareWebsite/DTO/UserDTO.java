@@ -22,6 +22,7 @@ public class UserDTO {
     private String username;
     private String avatar;
     private List<RoleDTO> roles = new ArrayList<>();
+    private EmployeeDTO employee;
 
     public UserDTO(User user) {
         this.id = user.getId();
@@ -31,6 +32,8 @@ public class UserDTO {
             this.roles = user.getRoles().stream()
                     .map(RoleDTO::new)
                     .collect(Collectors.toList());
+        if(nonNull(user.getEmployee()))
+            this.employee = new EmployeeDTO(user.getEmployee());
     }
 
     public User toEntity() {
@@ -39,6 +42,7 @@ public class UserDTO {
                 .username(this.username)
                 .avatar(this.avatar)
                 .roles(this.roles.stream().map(RoleDTO::toEntity).collect(Collectors.toSet()))
+                .employee(this.employee != null ? this.employee.toEntity() : null)
                 .build();
     }
 }

@@ -1,29 +1,29 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 import { useState, useCallback } from "react";
 import ActionButton from "../ActionButton";
-import SupplierForm from "../Supplier/SupplierForm";
-import { NewSupplier } from "../../models/supplier";
+import EmployeeForm from "../Employee/EmployeeForm";
+import { NewEmployee } from "../../models/employee";
 
-export interface AddSupplierPopupProps {
+export interface AddEmployeePopupProps {
   onClose: () => void;
-  onAddNew: (supplier: NewSupplier) => void | Promise<void>;
+  onAddNew: (employee: NewEmployee) => void | Promise<void>;
   className?: string;
 }
 
-export function AddSupplierPopup ({ 
+export function AddEmployeePopup ({ 
   onClose, 
   onAddNew,
   className= "" 
-}: AddSupplierPopupProps) {
-  const [supplier, setSupplier] = useState<NewSupplier | null>(null);
+}: AddEmployeePopupProps) {
+  const [employee, setEmployee] = useState<NewEmployee | null>(null);
   
-  const handleCreateSupplier = useCallback(async () => {
-    if(supplier?.name?.trim()) {
-      await onAddNew(supplier);
+  const handleCreateEmployee = useCallback(async () => {
+    if(employee?.name?.trim() && employee?.secondName?.trim()) {
+      await onAddNew(employee);
       onClose();
     }
-  }, [supplier, onClose, onAddNew]);
+  }, [employee, onClose, onAddNew]);
 
   const portalRoot = document.getElementById("portal-root");
   if (!portalRoot) {
@@ -34,11 +34,11 @@ export function AddSupplierPopup ({
   return ReactDOM.createPortal(
     <div className={`add-popup-overlay ${className}`} onClick={onClose}>
       <div
-        className="add-supplier-popup-content"
+        className="add-employee-popup-content"
         onClick={(e) => e.stopPropagation()}
       >
         <section className="add-new-supplier-header">
-          <h2 className="popup-title">Dodaj nowy sklep</h2>
+          <h2 className="popup-title">Nowy Pracownik 👩‍⚕️</h2>
           <button className="popup-close-button" onClick={onClose}>
             <img
               src="src/assets/close.svg"
@@ -47,16 +47,17 @@ export function AddSupplierPopup ({
             />
           </button>
         </section>
-        <SupplierForm
-          onForwardSupplierForm={setSupplier}
+        <EmployeeForm
+          onForwardEmployeeForm={setEmployee}
+          className="emp"
         />
         <div className="popup-footer-container">
         <ActionButton
           src={"src/assets/tick.svg"}
           alt={"Zapisz"}
           text={"Zapisz"}
-          onClick={handleCreateSupplier}
-          disabled={!supplier?.name?.trim()}
+          onClick={handleCreateEmployee}
+          disabled={!employee?.name?.trim() && !employee?.secondName?.trim()}
         />
         </div>
       </div>
@@ -65,4 +66,4 @@ export function AddSupplierPopup ({
   );
 };
 
-export default AddSupplierPopup;
+export default AddEmployeePopup;

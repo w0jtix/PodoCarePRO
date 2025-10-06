@@ -27,7 +27,7 @@ public class UserController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<UserDTO> userDTOList = userService.getAllUsers();
-        return new ResponseEntity<>(userDTOList, HttpStatus.OK);
+        return new ResponseEntity<>(userDTOList, userDTOList.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

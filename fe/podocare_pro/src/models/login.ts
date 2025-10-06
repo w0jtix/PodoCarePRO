@@ -1,3 +1,5 @@
+import { Employee } from "../models/employee";
+
 export interface LoginRequest {
     username: string;
     password: string;
@@ -10,6 +12,7 @@ export interface JwtUser {
     username: string;
     avatar: string;
     roles: RoleType[];
+    employee: Employee | null;
 }
 
 
@@ -18,6 +21,7 @@ export interface User {
     username: string;
     avatar: string;
     roles: Role[];
+    employee: Employee | null;
 }
 
 export enum RoleType {
