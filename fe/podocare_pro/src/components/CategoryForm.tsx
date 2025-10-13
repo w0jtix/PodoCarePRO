@@ -3,21 +3,22 @@ import TextInput from "./TextInput";
 import { useState, useEffect } from "react";
 import ColorPicker from "./ColorPicker";
 import CategoryButtons from "./CategoryButtons";
-import { NewProductCategory, ProductCategory } from "../models/product-category";
-import { CategoryButtonMode } from "../models/product-category";
+import { NewProductCategory, ProductCategory } from "../models/categories";
+import { CategoryButtonMode } from "../models/categories";
 
 export interface CategoryFormProps {
   selectedCategory?: ProductCategory;
-  onForwardCategoryForm: (categoryData: ProductCategory | NewProductCategory) => void;
+  onForwardCategoryForm: (
+    categoryData: ProductCategory | NewProductCategory
+  ) => void;
 }
 
-export function CategoryForm ({
+export function CategoryForm({
   selectedCategory,
   onForwardCategoryForm,
 }: CategoryFormProps) {
-
   const getInitialData = (): ProductCategory | NewProductCategory => {
-    if(selectedCategory) {
+    if (selectedCategory) {
       return {
         id: selectedCategory.id,
         name: selectedCategory.name,
@@ -27,9 +28,11 @@ export function CategoryForm ({
     return {
       name: "",
       color: "255, 255, 255",
-    }
-  }
-  const [categoryData, setCategoryData] = useState<ProductCategory | NewProductCategory>(getInitialData);
+    };
+  };
+  const [categoryData, setCategoryData] = useState<
+    ProductCategory | NewProductCategory
+  >(getInitialData);
 
   useEffect(() => {
     onForwardCategoryForm(categoryData);
@@ -40,14 +43,14 @@ export function CategoryForm ({
       ...prev,
       name: name,
     }));
-  },[]);
+  }, []);
 
   const handleColor = useCallback((color: string): void => {
     setCategoryData((prev) => ({
       ...prev,
       color: color,
     }));
-  },[]);
+  }, []);
 
   return (
     <div className="form-container">
@@ -70,16 +73,18 @@ export function CategoryForm ({
           selectedColor={categoryData.color}
         />
       </div>
-      <div className="popup-common-section-row">
+      <div className="popup-common-section-row cat">
         <CategoryButtons
+          categories={[]}
           mode={CategoryButtonMode.PREVIEW}
           exampleCategoryData={categoryData}
           onSelect={() => {}}
           resetTriggered={false}
+          className="preview"
         />
       </div>
     </div>
   );
-};
+}
 
 export default CategoryForm;

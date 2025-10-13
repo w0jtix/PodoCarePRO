@@ -4,6 +4,8 @@ export enum Action {
     REMOVE,
     DISPLAY,
     HISTORY,
+    SELECT,
+    MANAGE,
 }
 
 export enum Mode {

@@ -90,4 +90,123 @@
         <dropColumn tableName="employee" columnName="username"/>
     </changeSet>
 
+    <changeSet id="2.7-create-service-category" author="Wojtek">
+        <createTable tableName="service_category">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="color" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2.8-create-service-addon" author="Wojtek">
+        <createTable tableName="service_addon">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="duration" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2.9-create-service" author="Wojtek">
+        <createTable tableName="service">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="duration" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="service_category_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_service_category"
+                             referencedTableName="service_category"
+                             referencedColumnNames="id"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2.10-create-service-addons-join" author="Wojtek">
+        <createTable tableName="service_addons">
+            <column name="service_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="service_addon_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey
+                columnNames="service_id, service_addon_id"
+                tableName="service_addons"
+                constraintName="pk_service_addons"/>
+
+        <addForeignKeyConstraint
+                baseTableName="service_addons"
+                baseColumnNames="service_id"
+                constraintName="fk_service_addons_service"
+                referencedTableName="service"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="service_addons"
+                baseColumnNames="service_addon_id"
+                constraintName="fk_service_addons_addon"
+                referencedTableName="service_addon"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="2.11-update-service-category-nullable" author="Wojtek">
+        <modifyDataType tableName="service" columnName="service_category_id" newDataType="BIGINT"/>
+        <dropNotNullConstraint tableName="service" columnName="service_category_id" columnDataType="BIGINT"/>
+    </changeSet>
+
+    <changeSet id="2.12-create-service-variant" author="Wojtek">
+        <createTable tableName="service_variant">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="duration" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="base_service_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="service_variant"
+                baseColumnNames="base_service_id"
+                referencedTableName="service"
+                referencedColumnNames="id"
+                onDelete="CASCADE"
+                constraintName="fk_service_variant_service"/>
+    </changeSet>
+
+
 </databaseChangeLog>

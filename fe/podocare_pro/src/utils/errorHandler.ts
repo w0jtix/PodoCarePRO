@@ -1,6 +1,6 @@
 import { Action } from "../models/action";
 
-export type EntityType = 'product' | 'category' | 'brand' | 'supplier' | 'employee';
+export type EntityType = 'product' | 'category' | 'brand' | 'supplier' | 'employee' | "addOn" | "service";
 
 export const extractErrorMessage = (
     error:any,
@@ -71,7 +71,20 @@ const getEntityConfig = (entityType: EntityType) => {
       updateAction: 'aktualizacji',
       entityName: 'pracownika',
       alreadyExistsMessage: 'Pracownik o takiej nazwie już istnieje!'
+    },
+     addOn: {
+      createAction: 'tworzenia',
+      updateAction: 'aktualizacji',
+      entityName: 'dodatku',
+      alreadyExistsMessage: 'Dodatek o takiej nazwie już istnieje!'
+    },
+    service: {
+      createAction: 'tworzenia',
+      updateAction: 'aktualizacji',
+      entityName: 'usługi',
+      alreadyExistsMessage: 'Usługa o takiej nazwie już istnieje!'
     }
+    
   };
 
   return configs[entityType];
@@ -95,4 +108,12 @@ export const extractSupplierErrorMessage = (error: any, action: Action.CREATE | 
 
 export const extractEmployeesErrorMessage = (error: any, action: Action.CREATE | Action.EDIT): string => {
   return extractErrorMessage(error, action, 'employee');
+};
+
+export const extractAddOnErrorMessage = (error: any, action: Action.CREATE | Action.EDIT): string => {
+  return extractErrorMessage(error, action, 'addOn');
+};
+
+export const extractServiceErrorMessage = (error: any, action: Action.CREATE | Action.EDIT): string => {
+  return extractErrorMessage(error, action, 'service');
 };

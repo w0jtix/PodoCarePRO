@@ -19,7 +19,7 @@ import static java.util.Objects.nonNull;
 public class ProductCategoryController {
     private final ProductCategoryService productCategoryService;
 
-    @PostMapping("/search")
+    @GetMapping("/all")
     @PreAuthorize(("hasRole('USER')"))
     public ResponseEntity<List<ProductCategoryDTO>> getCategories() {
         List<ProductCategoryDTO> categoryDTOList = productCategoryService.getCategories();

@@ -5,6 +5,15 @@ export interface ListAttribute {
   size?: string | number;
 }
 
+export const SERVICES_LIST_ATTRIBUTES: ListAttribute[] = [
+  { name: "", width: "2%", justify: "start" },
+  { name: "Kategoria", width: "13%", justify: "start" },
+  { name: "Nazwa", width: "57%", justify: "start" },
+  { name: "Czas", width: "10%", justify: "center" },
+  { name: "Cena", width: "10%", justify: "center" },
+  { name: "Opcje", width: "8%", justify: "center" },
+]
+
 export const PRODUCT_LIST_ATTRIBUTES: ListAttribute[] = [
     { name: "", width: "2%", justify: "end" },
     { name: "#", width: "3%", justify: "center" },

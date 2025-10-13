@@ -69,7 +69,7 @@ export function DigitInput ({
         pattern="\d*"
         className={`new-products-popup-digit-input ${
           disabled ? "disabled" : ""
-        }`}
+        } ${className}`}
         placeholder={placeholder}
         value={internalValue}
         onChange={handleChange}

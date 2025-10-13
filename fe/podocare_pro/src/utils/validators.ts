@@ -1,12 +1,13 @@
 import { Product, NewProduct } from "../models/product";
 import { Action } from "../models/action";
 import { Brand, NewBrand } from "../models/brand";
-import { NewProductCategory, ProductCategory } from "../models/product-category";
+import { BaseServiceCategory, NewBaseServiceCategory, NewProductCategory, ProductCategory } from "../models/categories";
 import { NewSupplier, Supplier } from "../models/supplier";
 import { Order, NewOrder } from "../models/order";
 import { NewOrderProduct, OrderProduct } from "../models/order-product";
 import { JwtUser, User, Role, RoleType } from "../models/login";
 import { Employee, NewEmployee } from "../models/employee";
+import { BaseServiceAddOn, NewBaseServiceAddOn, BaseService, NewBaseService } from "../models/service";
 
   export function validateLoginForm(
     username: string,
@@ -21,6 +22,32 @@ import { Employee, NewEmployee } from "../models/employee";
     return null;
   };
 
+  export function validaAddOnForm(
+    addOnForm: BaseServiceAddOn | NewBaseServiceAddOn,
+    selectedAddOn: BaseServiceAddOn | undefined | null,
+    action: Action,
+  ): string | null {
+    if (Object.values(addOnForm).some(
+      (value) => value === null || value === undefined
+    )) {
+      return "Brak pełnych informacji o produkcie!";
+    }
+    if (addOnForm.name && addOnForm.name.trim().length <= 2) {
+      return "Nazwa dodatku za krótka! (2+)!";
+    }
+
+    if(action === Action.EDIT && selectedAddOn) {
+      const noChangesDetected =
+      addOnForm.name === selectedAddOn.name &&
+      addOnForm.price === selectedAddOn.price &&
+      addOnForm.duration === selectedAddOn.duration
+    if (noChangesDetected) {
+      return "Brak zmian!";
+      }
+    }
+    return null;
+  }
+
   export  function validateProductForm(
     productForm: Product | NewProduct,
     selectedProduct: Product | null | undefined,
@@ -31,7 +58,7 @@ import { Employee, NewEmployee } from "../models/employee";
         (value) => value === null || value === undefined
       )
     ) {
-      return "Brak pełnych informacji o produkcie!"
+      return "Brak pełnych informacji o produkcie!";
     }
 
     if (productForm.name && productForm.name.trim().length <= 2) {
@@ -81,11 +108,75 @@ import { Employee, NewEmployee } from "../models/employee";
     return null;
   };
 
-  export function validateProductCategoryForm(
-    categoryForm: ProductCategory | NewProductCategory,
-    selectedCategory: ProductCategory | null | undefined,
+  export function validateServiceForm(
+    serviceForm: BaseService | NewBaseService,
     action: Action,
-    fetchedCategories: ProductCategory[],
+    selectedService: BaseService | null | undefined,
+  ): string | null {
+    if(Object.values(serviceForm).some(
+      (value) => value === null || value === undefined
+    )) {
+      return "Brak pełnych informacji!";
+    }
+    if (serviceForm.variants && serviceForm.variants.length > 0) {
+    for (const variant of serviceForm.variants) {
+      if (!variant.name || variant.name.trim().length <= 2) {
+        return "Nazwa wariantu za krótka! (2+)";
+      }
+    }
+  }
+    if (serviceForm.name && serviceForm.name.trim().length <= 2) {
+        return "Nazwa usługi za krótka! (2+)";
+      }
+
+    if (action === Action.EDIT && selectedService) {
+
+      const variantsEqual =
+      (serviceForm.variants?.length ?? 0) ===
+        (selectedService.variants?.length ?? 0) &&
+      serviceForm.variants.every((v, i) => {
+        const sv = selectedService.variants[i];
+        return (
+          v.name === sv.name &&
+          v.price === sv.price &&
+          v.duration === sv.duration
+        );
+      });
+
+    const addOnsEqual =
+      (serviceForm.addOns?.length ?? 0) ===
+        (selectedService.addOns?.length ?? 0) &&
+      serviceForm.addOns.every((a, i) => {
+        const sa = selectedService.addOns[i];
+        return (
+          a.id === sa.id &&
+          a.name === sa.name &&
+          a.price === sa.price &&
+          a.duration === sa.duration
+        );
+      });
+
+    const noChangesDetected =
+      serviceForm.name === selectedService.name &&
+      serviceForm.category?.id === selectedService.category?.id &&
+      serviceForm.duration === selectedService.duration &&
+      serviceForm.price === selectedService.price &&
+      variantsEqual &&
+      addOnsEqual;
+
+    if (noChangesDetected) {
+      return "Brak zmian!";
+    }
+  }
+
+    return null;
+  }
+
+  export function validateCategoryForm(
+    categoryForm: ProductCategory | NewProductCategory | BaseServiceCategory | NewBaseServiceCategory,
+    selectedCategory: ProductCategory | BaseServiceCategory | null | undefined,
+    action: Action,
+    fetchedCategories: ProductCategory[] | BaseServiceCategory[],
   ): string | null {
     if (
       Object.values(categoryForm).some(
@@ -105,7 +196,7 @@ import { Employee, NewEmployee } from "../models/employee";
         (!selectedCategory || cat.id !== selectedCategory.id)
     );
 
-    if(nameExists) {
+    if(action === Action.CREATE && nameExists) {
       return "Kategoria o takiej nazwie już istnieje!";
     }
 

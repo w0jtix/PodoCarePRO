@@ -12,10 +12,7 @@ import CategoryService from "../../services/CategoryService";
 import { Alert, AlertType } from "../../models/alert";
 import { useCallback } from "react";
 import { ORDER_NEW_PRODUCTS_POPUP_ATTRIBUTES } from "../../constants/list-headers";
-import {
-  CategoryButtonMode,
-  ProductCategory,
-} from "../../models/product-category";
+import { CategoryButtonMode, ProductCategory } from "../../models/categories";
 import { NewProduct } from "../../models/product";
 import { NewBrand, Brand, KeywordDTO } from "../../models/brand";
 import { validateBrandForm, validateProductForm } from "../../utils/validators";
@@ -35,9 +32,10 @@ export interface OrderNewProductsPopupProps {
   onFinalizeOrder: (orderWorkingData: OrderWorkingData) => void;
 }
 
-interface ProductWorkingDataWithOrderItems extends Omit<ProductWorkingData, 'originalOrderProduct'> {
+interface ProductWorkingDataWithOrderItems
+  extends Omit<ProductWorkingData, "originalOrderProduct"> {
   relatedOrderProducts: OrderProductWorkingData[];
-  originalOrderProduct?: OrderProductWorkingData['originalOrderProduct'];
+  originalOrderProduct?: OrderProductWorkingData["originalOrderProduct"];
 }
 
 export function OrderNewProductsPopup({
@@ -48,7 +46,9 @@ export function OrderNewProductsPopup({
 }: OrderNewProductsPopupProps) {
   const { showAlert } = useAlert();
   const [categories, setCategories] = useState<ProductCategory[]>([]);
-  const [productItems, setProductItems] = useState<ProductWorkingDataWithOrderItems[]>([]);
+  const [productItems, setProductItems] = useState<
+    ProductWorkingDataWithOrderItems[]
+  >([]);
   const [globalCategory, setGlobalCategory] = useState<ProductCategory | null>(
     null
   );
@@ -69,7 +69,7 @@ export function OrderNewProductsPopup({
     fetchCategories();
     if (productItems.length === 0 && nonExistingProducts.length > 0) {
       const productNameMap = new Map<string, OrderProductWorkingData[]>();
-      
+
       nonExistingProducts.forEach((orderProduct) => {
         const productName =
           orderProduct.productName ||
@@ -77,7 +77,7 @@ export function OrderNewProductsPopup({
             ? orderProduct.product.name
             : "") ||
           "";
-        
+
         if (!productNameMap.has(productName)) {
           productNameMap.set(productName, []);
         }
@@ -93,7 +93,7 @@ export function OrderNewProductsPopup({
           originalOrderProduct: relatedOrderProducts[0].originalOrderProduct,
         };
       });
-      
+
       setProductItems(initItems);
     }
   }, [nonExistingProducts, productItems.length]);
@@ -251,10 +251,11 @@ export function OrderNewProductsPopup({
           const matchingItem = productItems.find((item) => {
             return item.relatedOrderProducts.some(
               (relatedOrderProduct) =>
-                relatedOrderProduct.originalOrderProduct === orderProduct.originalOrderProduct
+                relatedOrderProduct.originalOrderProduct ===
+                orderProduct.originalOrderProduct
             );
           });
-          
+
           if (matchingItem) {
             const createdProduct = createdProducts.find(
               (product) =>
@@ -262,7 +263,7 @@ export function OrderNewProductsPopup({
                 product.category.id === matchingItem.category?.id &&
                 product.brand.name === (matchingItem.brand as Brand)?.name //name not id because matchingItem.brand is not yet updated if freshly created
             );
-            
+
             if (createdProduct) {
               return {
                 ...orderProduct,
@@ -316,6 +317,7 @@ export function OrderNewProductsPopup({
           </a>
           <div className="order-new-products-popup-category-buttons">
             <CategoryButtons
+              categories={categories}
               onSelect={handleGlobalCategoryChange}
               mode={CategoryButtonMode.SELECT}
               resetTriggered={resetTriggered}

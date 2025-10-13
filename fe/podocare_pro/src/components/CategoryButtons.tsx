@@ -4,54 +4,37 @@ import {
   ProductCategory,
   CategoryButtonMode,
   NewProductCategory,
-} from "../models/product-category";
-import CategoryService from "../services/CategoryService";
+  BaseServiceCategory,
+  NewBaseServiceCategory,
+} from "../models/categories";
 
 export interface CategoryButtonsProps {
-  onSelect: (selected: ProductCategory[] | null) => void;
+  categories: ProductCategory[] | NewProductCategory[] | BaseServiceCategory[] | NewBaseServiceCategory[];
+  onSelect: (selected: ProductCategory[] | BaseServiceCategory[] | null) => void;
   resetTriggered?: boolean;
   mode?: CategoryButtonMode;
-  selectedCategories?: ProductCategory[];
-  exampleCategoryData?: ProductCategory | NewProductCategory;
+  selectedCategories?: ProductCategory[] | BaseServiceCategory[];
+  exampleCategoryData?: ProductCategory | NewProductCategory | BaseServiceCategory | NewBaseServiceCategory;
+  className?:string;
 }
 
 export function CategoryButtons({
+  categories,
   onSelect,
   resetTriggered,
   mode = CategoryButtonMode.MULTISELECT,
   selectedCategories = [],
   exampleCategoryData,
+  className=""
 }: CategoryButtonsProps) {
   const [selectedCategoryList, setSelectedCategoryList] =
-    useState<ProductCategory[]>(selectedCategories);
-  const [categories, setCategories] = useState<
-    ProductCategory[] | NewProductCategory[]
-  >([]);
+    useState<ProductCategory[] | BaseServiceCategory[]>(selectedCategories);
+
   const isPreviewMode = mode === CategoryButtonMode.PREVIEW;
   const isMultiSelect = mode === CategoryButtonMode.MULTISELECT;
 
-  const fetchCategories = async (): Promise<void> => {
-    CategoryService.getCategories()
-      .then((data) => {
-        setCategories(data);
-      })
-      .catch((error) => {
-        setCategories([]);
-        console.error("Error fetching categories:", error);
-      });
-  };
-
-  useEffect(() => {
-    if (isPreviewMode && exampleCategoryData) {
-      setCategories([exampleCategoryData]);
-    } else if (!isPreviewMode) {
-      fetchCategories();
-    }
-  }, [mode, exampleCategoryData, isPreviewMode]);
-
   useEffect(() => {
     if (resetTriggered) {
-      fetchCategories();
       setSelectedCategoryList([]);
     }
   }, [resetTriggered]);
@@ -63,25 +46,40 @@ export function CategoryButtons({
   const isSingleRow = categories.length < 4;
 
   const getButtonStyle = (
-    color: string,
-    isActive: boolean
-  ): React.CSSProperties => {
-    return {
-      width: isPreviewMode ? "105px" : isSingleRow ? "75px" : "75px",
-      height: isPreviewMode ? "35px" : isSingleRow ? "28px" : "25px",
-      backgroundColor: "transparent",
-      border: `1px solid rgba(${color}, 0.5)`,
-      boxShadow: `inset 0 0 65px rgba(${color}, ${isActive ? 0.9 : 0.2})`,
-      color: "#000",
-      borderRadius: "8px",
-      justifyContent: "center",
-      alignItems: "center",
-      cursor: isPreviewMode ? "default" : "pointer",
-      transition: "all 0.1s ease",
-    };
+  color: string,
+  isActive: boolean
+): React.CSSProperties => {
+  const baseStyle: React.CSSProperties = {
+    backgroundColor: "transparent",
+    border: `1px solid rgba(${color}, 0.5)`,
+    boxShadow: `inset 0 0 65px rgba(${color}, ${isActive ? 0.9 : 0.2})`,
+    color: "#000",
+    borderRadius: "8px",
+    justifyContent: "center",
+    alignItems: "center",
+    cursor: isPreviewMode ? "default" : "pointer",
+    transition: "all 0.1s ease",
   };
 
-  const toggleCategory = (category: ProductCategory) => {
+  if (isPreviewMode) {
+    return {
+      ...baseStyle,
+      minWidth: "105px",
+      width: "fit-content",
+      maxWidth: "100%",
+      height: "35px",
+      padding: "0 12px",
+    };
+  }
+
+  return {
+    ...baseStyle,
+    width: isSingleRow ? "75px" : "75px",
+    height: isSingleRow ? "28px" : "25px",
+  };
+};
+
+  const toggleCategory = (category: ProductCategory | BaseServiceCategory) => {
     if (isPreviewMode) return;
     if (isMultiSelect) {
       setSelectedCategoryList((prev) => {
@@ -100,22 +98,30 @@ export function CategoryButtons({
     }
   };
 
-  const isCategorySelected = (category: ProductCategory): boolean => {
+  const isCategorySelected = (category: ProductCategory | BaseServiceCategory): boolean => {
     if (isPreviewMode) return false;
     return selectedCategoryList.some((cat) => cat.id === category.id);
   };
 
+    const cat = isPreviewMode && exampleCategoryData ? [exampleCategoryData] : categories;
+
   return (
-    <div className="category-buttons">
-      {categories.map((category, index) => {
-        const isActive = isCategorySelected(category);
+    <div className={`category-buttons ${className} `}>
+      {cat.map((category, index) => {
+        const isNewCategory = isPreviewMode;
+        const isActive = !isNewCategory && isCategorySelected(category as ProductCategory | BaseServiceCategory);
+
         return (
           <button
-            key={category.id || index}
-            style={getButtonStyle(category.color, isActive)}
-            className={`category-button ${isActive ? "active" : ""}`}
-            onClick={() => toggleCategory(category)}
-          >
+          key={("id" in category && category.id ? category.id : index) as string | number}
+          style={getButtonStyle(category.color ?? "0,0,0", isActive)}
+          className={`category-button ${isActive ? "active" : ""} ${className}`}
+          onClick={() => {
+            if (!isPreviewMode) {
+              toggleCategory(category as ProductCategory | BaseServiceCategory);
+            }
+          }}
+        >
             <h2
               className="category-button-h2"
               style={{

@@ -1,5 +1,5 @@
 import { Brand, NewBrand } from "./brand";
-import { ProductCategory } from "./product-category";
+import { ProductCategory } from "./categories";
 
 
 export interface Product {

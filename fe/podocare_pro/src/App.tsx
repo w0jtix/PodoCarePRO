@@ -7,6 +7,7 @@ import { AlertProvider } from "./components/Alert/AlertProvider";
 import { Main } from "./layouts/Main";
 import Profile from "./pages/Profile";
 import { UserProvider } from "./components/User/UserProvider";
+import Services from "./pages/Services";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route path="/" element={<Warehouse />} />
             <Route path="/zamowienia" element={<Orders />} />
             <Route path="/profile" element={<Profile />}/>
+            <Route path="/uslugi" element={<Services />}/>
           </Route>
           <Route path="/login" element={<Login />} />
         </Routes>

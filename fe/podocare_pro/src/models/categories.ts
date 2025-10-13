@@ -9,6 +9,17 @@ export interface NewProductCategory {
     color?: string;
 }
 
+export interface BaseServiceCategory {
+    id: number;
+    name: string;
+    color: string;
+}
+
+export interface NewBaseServiceCategory {
+    name?: string;
+    color?: string;
+}
+
 export enum CategoryButtonMode {
     PREVIEW = "PREVIEW",
     SELECT = "SELECT",

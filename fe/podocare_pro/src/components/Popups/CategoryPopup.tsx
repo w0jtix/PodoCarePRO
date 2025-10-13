@@ -1,92 +1,27 @@
 import ReactDOM from "react-dom";
 import ActionButton from "../ActionButton";
-import { useState, useEffect, useCallback } from "react";
-import CategoryService from "../../services/CategoryService";
+import { useState } from "react";
 import CategoryForm from "../CategoryForm";
-import {AlertType } from "../../models/alert";
-import {
-  NewProductCategory,
-  ProductCategory,
-} from "../../models/product-category";
-import { Action } from "../../models/action";
-import { validateProductCategoryForm } from "../../utils/validators";
-import { extractCategoryErrorMessage } from "../../utils/errorHandler";
-import { useAlert } from "../Alert/AlertProvider";
+import { BaseServiceCategory, NewBaseServiceCategory, NewProductCategory, ProductCategory } from "../../models/categories";
 
 export interface CategoryPopupProps {
+  categories: ProductCategory[] | BaseServiceCategory[];
   onClose: () => void;
-  onReset: (message: string) => void;
-  selectedCategory?: ProductCategory;
+  onConfirm: (category: ProductCategory | NewProductCategory | BaseServiceCategory | NewBaseServiceCategory) => void;
+  selectedCategory?: ProductCategory | BaseServiceCategory;
   className?: string;
 }
 
 export function CategoryPopup({
+  categories,
   onClose,
-  onReset,
+  onConfirm,
   selectedCategory,
   className = "",
 }: CategoryPopupProps) {
   const [categoryDTO, setCategoryDTO] = useState<
-    ProductCategory | NewProductCategory | null
+    ProductCategory | NewProductCategory | BaseServiceCategory | NewBaseServiceCategory | null
   >(null);
-  const [fetchedCategories, setFetchedCategories] = useState<ProductCategory[]>(
-    []
-  );
-  const { showAlert } = useAlert();
-
-  const action = selectedCategory ? Action.EDIT : Action.CREATE;
-
-  const fetchCategories = useCallback(async () => {
-    CategoryService.getCategories()
-      .then((data) => {
-        setFetchedCategories(data);
-      })
-      .catch((error) => {
-        setFetchedCategories([]);
-        console.error("Error fetching categories:", error);
-      });
-  }, []);
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  const handleCategoryAction = useCallback(async () => {
-    if (!categoryDTO) return;
-
-    const error = validateProductCategoryForm(
-      categoryDTO,
-      selectedCategory,
-      action,
-      fetchedCategories
-    );
-    if (error) {
-      showAlert(error, AlertType.ERROR);
-      return;
-    }
-    try {
-      if (action === Action.CREATE) {
-        await CategoryService.createCategory(categoryDTO as NewProductCategory);
-        onReset(`Kategoria ${categoryDTO.name} utworzona!`);
-      } else if (action === Action.EDIT && "id" in categoryDTO) {
-        await CategoryService.updateCategory(
-          categoryDTO.id,
-          categoryDTO as ProductCategory
-        );
-        onReset(`Kategoria ${categoryDTO.name} zaktualizowana!`);
-      }
-      setTimeout(() => {
-        onClose();
-      }, 1200);
-    } catch (error) {
-      console.error(
-        `Error ${action === Action.CREATE ? "creating" : "updating"} category:`,
-        error
-      );
-      const errorMessage = extractCategoryErrorMessage(error, action);
-      showAlert(errorMessage, AlertType.ERROR);
-    }
-  }, [categoryDTO, action, selectedCategory]);
 
   const portalRoot = document.getElementById("portal-root");
   if (!portalRoot) {
@@ -103,7 +38,7 @@ export function CategoryPopup({
         className="category-popup-content"
         onClick={(e) => e.stopPropagation()}
       >
-        <section className="product-popup-header">
+        <section className="product-popup-header category">
           <h2 className="popup-title">
             {selectedCategory ? "Edytuj Kategorię" : "Nowa Kategoria"}
           </h2>
@@ -115,7 +50,7 @@ export function CategoryPopup({
             />
           </button>
         </section>
-        <section className="remove-product-popup-interior">
+        <section className="create-category-popup">
           <CategoryForm
             onForwardCategoryForm={setCategoryDTO}
             selectedCategory={selectedCategory}
@@ -135,7 +70,7 @@ export function CategoryPopup({
               src={"src/assets/tick.svg"}
               alt={"Zatwierdź"}
               text={"Zatwierdź"}
-              onClick={handleCategoryAction}
+              onClick={() => categoryDTO && onConfirm(categoryDTO)}
             />
           </div>
         </section>

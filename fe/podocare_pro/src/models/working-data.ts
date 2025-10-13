@@ -1,5 +1,5 @@
 import { Brand, NewBrand } from "./brand";
-import { ProductCategory } from "./product-category";
+import { ProductCategory } from "./categories";
 import { Product, NewProduct } from "./product";
 import { VatRate } from "./vatrate";
 import { Order, NewOrder } from "./order";

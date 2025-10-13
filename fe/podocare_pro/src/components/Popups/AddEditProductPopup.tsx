@@ -79,10 +79,7 @@ export function AddEditProductPopup ({
         );
         onReset(`Produkt ${productToSubmit.name} został zaktualizowany!`);
       }
-
-      setTimeout(() => {
-        onClose();
-      }, 1200);
+      onClose();
     } catch (error) {
       console.error(`Error ${action === Action.CREATE ? 'creating' : 'updating'} product:`, error);
       const errorMessage = extractProductErrorMessage(error, action);

@@ -7,13 +7,14 @@ import TextInput from "../TextInput";
 import { Product, NewProduct } from "../../models/product";
 import { Action } from "../../models/action";
 import { Brand, KeywordDTO, NewBrand } from "../../models/brand";
-import { CategoryButtonMode, ProductCategory } from "../../models/product-category";
+import { CategoryButtonMode, ProductCategory } from "../../models/categories";
 import {
   convertToBackendData,
   convertToWorkingData,
   createNewProductWorkingData,
   ProductWorkingData,
 } from "../../models/working-data";
+import CategoryService from "../../services/CategoryService";
 
 export interface ProductFormProps {
   onForwardProductForm: (product: Product | NewProduct) => void;
@@ -30,6 +31,9 @@ export function ProductForm({
   className = "",
   onForwardBrand,
 }: ProductFormProps) {
+  const [categories, setCategories] = useState<
+        ProductCategory[]
+      >([]);
   const [productWorkingData, setProductWorkingData] =
     useState<ProductWorkingData>(() => {
       if (selectedProduct) {
@@ -43,6 +47,21 @@ export function ProductForm({
   const isExistingBrand = (brand: Brand | NewBrand | null): brand is Brand => {
     return brand !== null && "id" in brand && typeof brand.id === "number";
   };
+
+  const fetchCategories = async (): Promise<void> => {
+      CategoryService.getCategories()
+        .then((data) => {
+          setCategories(data);
+        })
+        .catch((error) => {
+          setCategories([]);
+          console.error("Error fetching categories:", error);
+        });
+    };
+
+  useEffect(() => {
+    fetchCategories();
+  },[])
 
   useEffect(() => {
     if (productWorkingData.brandName.trim().length > 0) {
@@ -168,6 +187,7 @@ export function ProductForm({
         <a className="product-form-input-title">Kategoria:</a>
         <div className="product-form-category-buttons">
           <CategoryButtons
+          categories={categories}
             onSelect={handleCategory}
             mode={CategoryButtonMode.SELECT}
             selectedCategories={

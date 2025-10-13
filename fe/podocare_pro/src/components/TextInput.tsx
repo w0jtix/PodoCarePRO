@@ -181,7 +181,7 @@ export function TextInput<T extends SuggestionItem = SuggestionItem> ({
         <div className={`input-container ${className}`} ref={dropdownRef}>
           <input
             type="text"
-            className="text-input category"
+            className={`text-input category ${className}`}
             placeholder={placeholder}
             value={getInputValue()}
             onChange={handleInputChange}

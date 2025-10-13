@@ -11,8 +11,11 @@ export const MENU_ITEMS: MenuItem[] = [
   { name: "Magazyn", href: '/', icon: 'magazyn' },
   { name: "Zamówienia", href: '/zamowienia', icon: 'zamówienia' },
   { name: "Utarg", href: '/utarg', icon: 'utarg' },
+  { name: "Cennik", href: '/cennik', icon: 'cennik'},
+  { name: "Usługi", href: '/uslugi', icon: 'uslugi'},
   { name: "Klienci", href: '/klienci', icon: 'klienci' },
   { name: "Grafik", href: '/grafik', icon: 'grafik' },
+  { name: "Statystyki", href: '/statystyki', icon: 'statystyki'},
   { name: "Ustawienia", href: '/ustawienia', icon: 'ustawienia' },
 ];
 
