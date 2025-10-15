@@ -63,9 +63,9 @@ export function SelectVATButton({
   }, []);
 
   return (
-    <div className="vat-select-container" ref={dropdownRef}>
-      <button className="vat-select-button" onClick={toggleDropdown}>
-        <a className="vat-button-selection">
+    <div className="vat-select-container relative inline-block" ref={dropdownRef}>
+      <button className="vat-select-button flex align-items-center justify-center g-5px pointer transparent" onClick={toggleDropdown}>
+        <a className="vat-button-selection flex justify-center align-items-center">
           {selectedItem ? getVatRateDisplay(selectedItem) : placeholder}
         </a>
         <img
@@ -75,11 +75,11 @@ export function SelectVATButton({
         />
       </button>
       {isExpanded && !disabled && (
-        <ul className="vat-select">
+        <ul className="vat-select flex absolute m-0 p-0 justify-center align-items-center">
           {vatValues.map((item) => (
             <li
               key={item}
-              className={`vat-select-item ${
+              className={`vat-select-item flex justify-center align-items-center pointer p-7px ${
                 selectedItem === item ? "selected" : ""
               }`}
               onClick={() => handleSelect(item)}

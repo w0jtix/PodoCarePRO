@@ -18,8 +18,8 @@ const NavigationBar = ({
   children,
 }: NavigationBarProps) => {
   return (
-    <div className={`navigation-bar ${className}`}>
-      <section className="navigation-bar-interior">
+    <div className={`navigation-bar ${className} height-fit-content block justify-center relative width-93`}>
+      <section className="navigation-bar-interior flex align-items-center space-between width-93 height-fit-content m-0-auto">
         <SearchBar
           onKeywordChange={onKeywordChange}
           resetTriggered={resetTriggered}

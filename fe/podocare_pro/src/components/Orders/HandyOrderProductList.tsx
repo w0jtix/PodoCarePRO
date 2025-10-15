@@ -105,7 +105,7 @@ export function HandyOrderProductList({
         if (action === Action.HISTORY) {
           return (
             <div
-              className={`category-container ${mode.toString().toLowerCase()}`}
+              className={`category-container width-40 p-0 ${mode.toString().toLowerCase()}`}
               style={{ backgroundColor: getCategoryColor(orderProduct) }}
             />
           );
@@ -113,7 +113,7 @@ export function HandyOrderProductList({
           const color = getCategoryColor(orderProduct);
           return (
             <button
-              className="order-product-move-button"
+              className="order-product-move-button border-none pointer transparent p-0"
               onClick={() => handleProductSelect(orderProduct)}
               style={{
                 ...(color && {
@@ -123,7 +123,7 @@ export function HandyOrderProductList({
               }}
             >
               <div
-                className="order-product-move-icon"
+                className="order-product-move-icon p-0 width-half justify-self-center height-40"
                 style={{ backgroundColor: color }}
               />
             </button>
@@ -133,7 +133,7 @@ export function HandyOrderProductList({
 
       case "Nazwa":
         return (
-          <div className="handy-order-product-list-product-name-display">
+          <div className="width-max flex space-between">
             <span className={`order-product-list-span ${warningClass}`}>
               {orderProduct.product?.name}
             </span>
@@ -215,7 +215,7 @@ export function HandyOrderProductList({
 
   return (
     <div
-      className={`handy-order-product-list-container ${
+      className={`handy-order-product-list-container flex-column ${
         mode === "Popup" ? "popup" : ""
       } ${className}`}
     >
@@ -223,12 +223,12 @@ export function HandyOrderProductList({
         return (
           <div
             key={`${orderProduct.id}-${index}`}
-            className="handy-order-product-item"
+            className="handy-order-product-item flex"
           >
             {attributes.map((attr) => (
               <div
                 key={`${order.id}-${attr.name}`}
-                className={`attribute-item order ${
+                className={`attribute-item flex order ${
                   attr.name === "" ? "order-category-column" : ""
                 }`}
                 style={{
@@ -243,11 +243,11 @@ export function HandyOrderProductList({
         );
       })}
       {shouldShowShipping() && (
-        <div className="handy-order-product-item shipping-cost-row">
+        <div className="handy-order-product-item flex shipping-cost-row">
           {attributes.map((attr) => (
             <div
               key={`shipping-${attr.name}`}
-              className={`attribute-item order${
+              className={`attribute-item flex order${
                 attr.name === "" ? "order-category-column" : ""
               }`}
               style={{

@@ -67,8 +67,8 @@ export function UserMenu({
   }, []);
 
   return (
-    <div className={`user-menu ${className}`} ref={menuRef}>
-      <button className="dropdown-button" onClick={toggleMenu}>
+    <div className={`user-menu flex-column justify-center height-auto transparent border-none relative ${className}`} ref={menuRef}>
+      <button className="dropdown-button flex justify-center align-items-center transparent pointer g-10px border-none" onClick={toggleMenu}>
         <img
           src={displayAvatar}
           alt={`${username} profile picture`}
@@ -82,12 +82,12 @@ export function UserMenu({
         />
       </button>
       {isMenuVisible && (
-        <div className="dropdown-menu" onClick={(e) => e.stopPropagation()}>
-          <ul className="user-menu-dropdown-list">
+        <div className="dropdown-menu absolute mt-05" onClick={(e) => e.stopPropagation()}>
+          <ul className="user-menu-dropdown-list m-0 p-0">
             {USER_MENU_ITEMS.map((item) => (
               <li
                 key={item.label}
-                className="dropdown-item-user-menu"
+                className="dropdown-item-user-menu pointer flex align-items-center justify-start"
                 onClick={() => handleAction(item.label)}
               >
                 <img

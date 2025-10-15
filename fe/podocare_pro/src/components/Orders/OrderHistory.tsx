@@ -161,7 +161,7 @@ export function OrderHistory() {
 
   return (
     <>
-      <section className="order-history-action-buttons">
+      <section className="order-history-action-buttons width-80 flex align-self-center mt-1 mb-1 justify-center g-35">
         <DropdownSelect<Supplier>
           items={suppliers}
           value={selectedSuppliers}
@@ -170,18 +170,19 @@ export function OrderHistory() {
           allowNew={false}
           multiple={true}
           allowColors={true}
+          className="supplier-dropdown"
         />
 
-        <section className="order-history-action-button-title">
-          <a className="order-history-action-buttons-a">Data od:</a>
+        <section className="order-history-action-button-title flex g-15px">
+          <a className="order-history-action-buttons-a align-center">Data od:</a>
           <DateInput
             onChange={handleDateFromChange}
             selectedDate={filter.dateFrom || null}
             showPlaceholder={true}
           />
         </section>
-        <section className="order-history-action-button-title">
-          <a className="order-history-action-buttons-a">Data do:</a>
+        <section className="order-history-action-button-title flex g-15px">
+          <a className="order-history-action-buttons-a align-center">Data do:</a>
           <DateInput
             onChange={handleDateToChange}
             selectedDate={filter.dateTo || null}
@@ -198,11 +199,11 @@ export function OrderHistory() {
       </section>
       <ListHeader attributes={ORDER_HISTORY_ATTRIBUTES} />
       {loading ? (
-        <div className="list-loading-container">
-          <div className="loading-dot"></div>
-          <div className="loading-dot"></div>
-          <div className="loading-dot"></div>
-          <div className="loading-dot"></div>
+        <div className="list-loading-container relative flex align-items-center justify-center">
+          <div className="loading-dot relative flex align-items-center height-max width-25"></div>
+          <div className="loading-dot relative flex align-items-center height-max width-25"></div>
+          <div className="loading-dot relative flex align-items-center height-max width-25"></div>
+          <div className="loading-dot relative flex align-items-center height-max width-25"></div>
         </div>
       ) : (
         <>
@@ -214,14 +215,14 @@ export function OrderHistory() {
             onSuccess={handleSuccess}
           />
           {orders.length > itemsPerPage && (
-            <div className="list-pagination">
+            <div className="list-pagination flex g-10px align-items-center">
               <button
-                className="list-prev-page-button"
+                className="list-prev-page-button transparent border-none pointer"
                 onClick={handlePreviousPage}
                 disabled={currentPage === 1}
               >
                 <img
-                  className="pagination-img"
+                  className="pagination-img flex align-items-center"
                   src="src/assets/previousPage.svg"
                   alt="previous page"
                 />
@@ -230,7 +231,7 @@ export function OrderHistory() {
                 {currentPage} / {totalPages}
               </span>
               <button
-                className="list-next-page-button"
+                className="list-next-page-button transparent border-none pointer"
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
               >

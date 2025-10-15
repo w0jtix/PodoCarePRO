@@ -50,8 +50,8 @@ export function AddOnForm({
     }, []);
 
     return (
-            <div className={`custom-form-container ${action.toString().toLowerCase()} ${className}`}>
-                <section className="form-row">
+            <div className={`custom-form-container flex-column width-max g-05 ${action.toString().toLowerCase()} ${className}`}>
+                <section className="form-row flex width-max align-items-center space-between">
                     <span className="input-label">Nazwa:</span>
                     <TextInput
                     dropdown={false}
@@ -64,7 +64,7 @@ export function AddOnForm({
                     className="name"
                     />
                 </section>
-                <section className="form-row">
+                <section className="form-row flex width-max align-items-center space-between">
                     <span className="input-label">Czas trwania:</span>
                     <DigitInput
                         onChange={handleDurationChange}
@@ -73,7 +73,7 @@ export function AddOnForm({
                         className={"service"}
                     />
                 </section>
-                <section className="form-row">
+                <section className="form-row flex width-max align-items-center space-between">
                     <span className="input-label">Cena:</span>
                     <DigitInput
                         onChange={handlePriceChange}

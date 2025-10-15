@@ -173,7 +173,7 @@ export function ServicesDashboard() {
   }, [resetTriggered, keyword, selectedCategories]);
 
   return (
-    <div className="dashboard-panel">
+    <div className="dashboard-panel width-85 height-max flex-column align-items-center">
       <NavigationBar
         onKeywordChange={handleKeywordChange}
         resetTriggered={resetTriggered}
@@ -196,8 +196,8 @@ export function ServicesDashboard() {
           disableText={true}
         />
       </NavigationBar>
-      <section className="action-buttons-section">
-        <section className="products-action-buttons">
+      <section className="action-buttons-section width-93 flex space-around align-items-center">
+        <section className="products-action-buttons width-80 flex align-self-center justify-end g-25 mt-1 mb-1">
           <ActionButton
             src={"src/assets/addNew.svg"}
             alt={"Nowa Usługa"}
@@ -218,7 +218,7 @@ export function ServicesDashboard() {
           />
         </section>
       </section>
-      <div className="services-list-section">
+      <div className="services-list-section width-90 flex align-items-center justify-center">
         <ServiceList
           attributes={SERVICES_LIST_ATTRIBUTES}
           items={services}

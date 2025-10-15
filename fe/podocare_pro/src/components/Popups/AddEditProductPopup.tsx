@@ -94,16 +94,16 @@ const portalRoot = document.getElementById("portal-root");
   }
 
   return ReactDOM.createPortal(
-    <div className={`add-popup-overlay ${className}`} onClick={onClose}>
+    <div className={`add-popup-overlay flex justify-center align-items-start ${className}`} onClick={onClose}>
       <div
-        className="product-popup-content"
+        className="product-popup-content flex-column align-items-center relative"
         onClick={(e) => e.stopPropagation()}
       >
-        <section className="product-popup-header">
+        <section className="product-popup-header flex mb-2">
           <h2 className="popup-title">
             {action === Action.CREATE ? "Dodaj Nowy Produkt" : "Edytuj Produkt"}
           </h2>
-          <button className="popup-close-button" onClick={onClose}>
+          <button className="popup-close-button transparent border-none flex align-items-center justify-center absolute pointer" onClick={onClose}>
             <img
               src="src/assets/close.svg"
               alt="close"
@@ -111,7 +111,7 @@ const portalRoot = document.getElementById("portal-root");
             />
           </button>
         </section>
-        <section className="product-popup-interior">
+        <section className="product-popup-interior width-90 mb-2">
           <ProductForm
             onForwardProductForm={setProductDTO}
             onForwardBrand={setBrandToCreate}
@@ -119,14 +119,14 @@ const portalRoot = document.getElementById("portal-root");
             selectedProduct={selectedProduct}
           />
         </section>
-        <div className="popup-footer-container"></div>
+        <div className="popup-footer-container flex-column justify-end"></div>
         <ActionButton
           src={"src/assets/tick.svg"}
           alt={"Zapisz"}
           text={"Zapisz"}
           onClick={handleProductAction}
         />
-        <a className="popup-category-description">
+        <a className="popup-category-description flex justify-center width-max">
           Jeśli chcesz przypisać produkt do zamówienia skorzystaj z zakładki -{" "}
           <i>Zamówienia</i>
         </a>

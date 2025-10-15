@@ -57,16 +57,16 @@ export function RemoveOrderPopup({
 
   return ReactDOM.createPortal(
     <div
-      className={`add-popup-overlay remove-order ${className}`}
+      className={`add-popup-overlay flex justify-center align-items-start remove-order ${className}`}
       onClick={onClose}
     >
       <div
-        className="remove-order-popup-content"
+        className="remove-order-popup-content flex-column align-items-center relative"
         onClick={(e) => e.stopPropagation()}
       >
         <section className="edit-product-popup-header">
           <h2 className="popup-title">Na pewno? ⚠️</h2>
-          <button className="popup-close-button" onClick={onClose}>
+          <button className="popup-close-button  transparent border-none flex align-items-center justify-center absolute pointer" onClick={onClose}>
             <img
               src="src/assets/close.svg"
               alt="close"
@@ -74,21 +74,21 @@ export function RemoveOrderPopup({
             />
           </button>
         </section>
-        <section className="remove-product-popup-interior">
+        <section className="remove-product-popup-interior width-90 mb-1">
           {!hasProducts ? (
             <section>
-              <a className="remove-popup-warning-a">
+              <a className="remove-popup-warning-a flex justify-center">
                 ❗❗❗ Zatwierdzenie spowoduje usunięcie Zamówienia.
               </a>
             </section>
           ) : (
             <>
               <section>
-                <a className="remove-popup-warning-a">
+                <a className="remove-popup-warning-a flex justify-center">
                   ❗❗❗ Zatwierdzenie spowoduje usunięcie informacji o
                   Zamówieniu oraz Produktów z Magazynu:
                 </a>
-                <a className="remove-popup-warning-a-list-length">{`Ilość Produktów: ${selectedOrder.orderProducts.length}`}</a>
+                <a className="remove-popup-warning-a-list-length flex justify-center">{`Ilość Produktów: ${selectedOrder.orderProducts.length}`}</a>
               </section>
                 <OrderContent
                   order={selectedOrder}
@@ -97,13 +97,13 @@ export function RemoveOrderPopup({
                   setHasWarning={setHasWarning}
                 />
               {hasWarning && (
-                <div className="popup-warning-explanation-display">
+                <div className="popup-warning-explanation-display flex justify-center">
                   <img
                     src="src/assets/warning.svg"
                     alt="Warning"
                     className="order-item-warning-icon"
                   />
-                  <a className="warning-explanation">
+                  <a className="warning-explanation text-align-center">
                     Konflikt: Chcesz usunąć więcej Produktów niż masz w
                     Magazynie!
                     <br />
@@ -114,7 +114,7 @@ export function RemoveOrderPopup({
             </>
           )}
         </section>
-        <section className="footer-popup-action-buttons">
+        <section className="footer-popup-action-buttons  width-60 flex space-between mb-05">
           <div className="footer-cancel-button">
             <ActionButton
               src={"src/assets/cancel.svg"}
@@ -133,7 +133,7 @@ export function RemoveOrderPopup({
           </div>
         </section>
         {hasProducts && (
-          <a className="popup-category-description">
+          <a className="popup-category-description flex justify-center width-max">
             Jeśli chcesz usunąć pojedynczy Produkt z Zamówienia skorzystaj z
             zakładki - <i>Edytuj Zamówienie</i>
           </a>

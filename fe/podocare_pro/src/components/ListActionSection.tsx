@@ -119,7 +119,7 @@ export function ListActionSection({
   }, [filter.brandIds, brands]);
 
   return (
-    <div className={`list-action-section ${className}`}>
+    <div className={`list-action-section ${className} flex f-1 justify-start align-items-center`}>
       <CategoryButtons
         categories={categories}
         selectedCategories={selectedCategories}
@@ -134,6 +134,7 @@ export function ListActionSection({
         placeholder="Wybierz markę"
         multiple={true}
         allowNew={false}
+        className="brand-dropdown"
       />
       <ActionButton
         src={"src/assets/reset.svg"}

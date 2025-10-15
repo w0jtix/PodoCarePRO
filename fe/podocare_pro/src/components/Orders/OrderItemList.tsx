@@ -355,7 +355,7 @@ export function OrderItemList({
 
       case "Nazwa":
         return (
-          <div className="order-item-list-product-name-with-warning">
+          <div className="order-item-list-product-name-with-warning flex align-items-center g-2px">
             <TextInput
               dropdown={true}
               value={item.productName}
@@ -443,7 +443,7 @@ export function OrderItemList({
   return (
     <div className={`order-item-list ${className}`}>
       {orderProducts.map((item, index) => (
-        <div key={`order-item-${item.tempId}`} className="order-item">
+        <div key={`order-item-${item.tempId}`} className="order-item flex">
           {attributes.map((attr) => (
             <div
               key={`${item.tempId}-${attr.name}`}

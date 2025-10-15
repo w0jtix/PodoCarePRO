@@ -106,7 +106,7 @@ export function CategoryButtons({
     const cat = isPreviewMode && exampleCategoryData ? [exampleCategoryData] : categories;
 
   return (
-    <div className={`category-buttons ${className} `}>
+    <div className={`category-buttons ${className} grid g-10px`}>
       {cat.map((category, index) => {
         const isNewCategory = isPreviewMode;
         const isActive = !isNewCategory && isCategorySelected(category as ProductCategory | BaseServiceCategory);

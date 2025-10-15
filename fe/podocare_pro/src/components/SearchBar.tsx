@@ -34,10 +34,10 @@ export function SearchBar ({
   }, [resetTriggered]);
 
   return (
-    <div className="searchbar-container">
-        <img src={iconSrc} alt={iconAlt} className="dashboard-icon"></img>
+    <div className="searchbar-container flex width-25 align-self-center g-1">
+        <img src={iconSrc} alt={iconAlt} className="dashboard-icon align-self-center ml-05"></img>
         <input 
-          className="search-bar-stock" 
+          className="search-bar-stock align-self-center border-none" 
           placeholder={placeholder}
           value={keyword}
           onChange={handleInputChange}

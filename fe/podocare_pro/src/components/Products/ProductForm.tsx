@@ -179,13 +179,13 @@ export function ProductForm({
 
   return (
     <div
-      className={`product-form-container ${action
+      className={`product-form-container flex-column ${action
         .toString()
         .toLowerCase()} ${className}`}
     >
-      <section className="product-form-categories">
+      <section className="product-form-categories flex align-items-center mb-3 g-4">
         <a className="product-form-input-title">Kategoria:</a>
-        <div className="product-form-category-buttons">
+        <div className="product-form-category-buttons flex g-15px justify-center align-items-center">
           <CategoryButtons
           categories={categories}
             onSelect={handleCategory}
@@ -196,9 +196,9 @@ export function ProductForm({
           />
         </div>
       </section>
-      <section className="product-form-core-section">
-        <ul className="product-form-inputs-section">
-          <li className="popup-common-section-row name">
+      <section className="product-form-core-section flex">
+        <ul className="product-form-inputs-section width-95 flex-column p-0 mt-0 mb-0">
+          <li className="popup-common-section-row flex align-items-center space-between g-10px mt-15  name">
             <a className="product-form-input-title">Nazwa:</a>
             <TextInput
               dropdown={false}
@@ -210,7 +210,7 @@ export function ProductForm({
               }}
             />
           </li>
-          <li className="popup-common-section-row">
+          <li className="popup-common-section-row flex align-items-center space-between g-10px mt-15 ">
             <a className="product-form-input-title">Marka Produktu:</a>
             <TextInput
               dropdown={true}
@@ -219,15 +219,15 @@ export function ProductForm({
               onSelect={handleBrandSelection}
             />
           </li>
-          <li className="popup-common-section-row">
+          <li className="popup-common-section-row flex align-items-center space-between g-10px mt-15 ">
             <a className="product-form-input-title">Produkty na stanie:</a>
             <DigitInput onChange={handleSupply} value={getSupply()} />
           </li>
-          <li className="popup-common-section-row description">
+          <li className="popup-common-section-row space-between g-10px description flex-column align-items-start mt-15">
             <a className="product-form-input-title">Dodatkowe informacje:</a>
             <TextInput
               value={getDescription()}
-              rows={4}
+              rows={8}
               multiline={true}
               onSelect={(newDesc) => {
                 if (typeof newDesc === "string") {

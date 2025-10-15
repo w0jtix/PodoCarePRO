@@ -4,8 +4,8 @@ import { Alert } from '../../models/alert'
 
 export function CustomAlert (props: Alert) {
   return (
-    <div className={`custom-alert custom-alert-${props.variant}`}>
-        <a className="alert-message">{props.message}</a>
+    <div className={`custom-alert flex justify-center align-items-center custom-alert-${props.variant}`}>
+        <a className="alert-message flex justify-center">{props.message}</a>
     </div>
   )
 }

@@ -69,7 +69,7 @@ const CostInput = ({
     <div className={`digit-input-container ${disabled ? "disabled" : ""} ${className}`}>
       <input
         type="number"
-        className={`cost-input ${disabled ? "disabled" : ""}`}
+        className={`cost-input flex align-items-center space-between g-10px pointer transparent text-align-center ${disabled ? "disabled" : ""}`}
         value={cost}
         onChange={handleInputChange}
         onBlur={handleBlur}

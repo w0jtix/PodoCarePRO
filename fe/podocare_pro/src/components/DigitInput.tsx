@@ -67,7 +67,7 @@ export function DigitInput ({
         type="text"
         inputMode="numeric"
         pattern="\d*"
-        className={`new-products-popup-digit-input ${
+        className={`new-products-popup-digit-input flex align-items-center space-between g-10px pointer transparent justify-items-center ${
           disabled ? "disabled" : ""
         } ${className}`}
         placeholder={placeholder}

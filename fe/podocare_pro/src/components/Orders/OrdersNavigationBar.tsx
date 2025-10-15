@@ -9,8 +9,8 @@ export interface OrdersNavigationBarProps {
 
 export function OrdersNavigationBar ({ setModuleVisible }: OrdersNavigationBarProps) {
   return (
-    <div className="orders-navigation-bar">
-      <section className="navigation-bar-interior">
+    <div className="orders-navigation-bar height-fit-content flex justify-center relative width-93">
+      <section className="navigation-bar-interior flex align-items-center space-between width-93 height-fit-content m-0-auto">
         <SubMenuNavbar setModuleVisible={setModuleVisible} />
         <UserMenu />
       </section>

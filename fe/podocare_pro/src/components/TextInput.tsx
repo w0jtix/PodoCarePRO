@@ -168,7 +168,7 @@ export function TextInput<T extends SuggestionItem = SuggestionItem> ({
     return (
       <textarea
         rows={rows}
-        className={`textarea-input ${className}`}
+        className={`textarea-input flex width-max p-10px align-items-center space-between g-10px pointer transparent ${className}`}
         placeholder={placeholder}
         value={keyword}
         onChange={handleInputChange}
@@ -178,10 +178,10 @@ export function TextInput<T extends SuggestionItem = SuggestionItem> ({
   }
 
   return (
-        <div className={`input-container ${className}`} ref={dropdownRef}>
+        <div className={`input-container relative inline-block transparent ${className}`} ref={dropdownRef}>
           <input
             type="text"
-            className={`text-input category ${className}`}
+            className={`text-input flex align-items-center space-between g-10px pointer transparent category ${className}`}
             placeholder={placeholder}
             value={getInputValue()}
             onChange={handleInputChange}
@@ -194,7 +194,7 @@ export function TextInput<T extends SuggestionItem = SuggestionItem> ({
             keyword != "" &&
             filteredSuggestions.length > 0 && (
               <ul
-                className={`text-input-dropdown ${
+                className={`text-input-dropdown transparent absolute height-fit-content p-0 text-align-left ${
                   suggestions.length === 1
                     ? "one-slot"
                     : suggestions.length === 2
@@ -205,7 +205,7 @@ export function TextInput<T extends SuggestionItem = SuggestionItem> ({
                 {suggestions.slice(0, 3).map((suggestion) => (
                   <li
                     key={suggestion.id}
-                    className="text-input-dropdown-item"
+                    className="text-input-dropdown-item flex justify-start align-items-center pointer"
                     onMouseDown={(e) => {
                       e.preventDefault();
                       handleSelect(suggestion);

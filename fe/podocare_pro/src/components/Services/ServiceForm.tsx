@@ -138,11 +138,11 @@ export function ServiceForm({
 
   return (
     <div
-      className={`custom-form-container ${action
+      className={`custom-form-container flex-column width-max g-05 ${action
         .toString()
         .toLowerCase()} ${className}`}
     >
-      <section className="form-row">
+      <section className="form-row flex width-max align-items-center space-between">
         <span className="input-label">Nazwa:</span>
         <TextInput
           dropdown={false}
@@ -155,7 +155,7 @@ export function ServiceForm({
           className="name"
         />
       </section>
-      <section className="form-row">
+      <section className="form-row flex width-max align-items-center space-between">
         <span className="input-label">Kategoria:</span>
         <DropdownSelect
           items={categories}
@@ -167,7 +167,7 @@ export function ServiceForm({
           className="categories"
         />
       </section>
-      <section className="form-row">
+      <section className="form-row flex width-max align-items-center space-between">
         <span className="input-label">Czas trwania (min):</span>
         <DigitInput
           onChange={handleDurationChange}
@@ -176,7 +176,7 @@ export function ServiceForm({
           className={"service"}
         />
       </section>
-      <section className="form-row">
+      <section className="form-row flex width-max align-items-center space-between">
         <span className="input-label">Cena:</span>
         <DigitInput
           onChange={handlePriceChange}
@@ -193,17 +193,17 @@ export function ServiceForm({
           onClick={() => handleAddVariant()}
           className=""
         />
-        <div className="variants-list">
+        <div className="variants-list flex-column mt-1 g-05">
           {serviceDTO.variants.length > 0 &&
             serviceDTO.variants.map((variant, index) => (
               <div key={index} className="variant-wrapper">
                 <div
-                  className={`variant-header ${
+                  className={`variant-header pointer flex width-max space-between align-items-center ${
                     expandedVariantIndex === index ? "expanded" : ""
                   }`}
                   onClick={() => toggleVariantExpand(index)}
                 >
-                  <div className="variant-name-div">
+                  <div className="variant-name-div ml-05 g-1 flex align-items-center">
                     <img
                       src={"src/assets/arrow_down.svg"}
                       alt="Toggle dropdown"
@@ -217,7 +217,7 @@ export function ServiceForm({
                         : variant.name}
                     </span>
                   </div>
-                  <div className="variant-dp">
+                  <div className="variant-dp flex align-items-center g-2">
                     <span className="variant-value">{variant.duration}min</span>
                     <span className="variant-value">{variant.price}zł</span>
                     <ActionButton

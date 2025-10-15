@@ -13,8 +13,8 @@ export interface ActionButtonProps {
 
 export function ActionButton(props: ActionButtonProps) {
   return (
-    <div className={`product-action-button-container ${props.className? props.className : ""}`}>
-      <button className={`product-action-button ${props.className? props.className : ""}`} 
+    <div className={`product-action-button-container ${props.className? props.className : ""} flex align-items-center height-auto transparent`}>
+      <button className={`product-action-button ${props.className? props.className : ""} transparent flex width-fit-content align-items-center justify-center g-5px pointer`} 
         onClick={props.onClick} 
         disabled={props.disabled || false}
       >

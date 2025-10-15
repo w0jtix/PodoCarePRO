@@ -148,7 +148,7 @@ export function Dashboard() {
   }, []);
 
   return (
-    <div className="dashboard-panel">
+    <div className="dashboard-panel width-85 height-max flex-column align-items-center">
       <NavigationBar
         onKeywordChange={handleKeywordChange}
         resetTriggered={resetTriggered}
@@ -160,7 +160,7 @@ export function Dashboard() {
           resetTriggered={resetTriggered}
         />
       </NavigationBar>
-      <section className="action-buttons-section">
+      <section className="action-buttons-section width-93 flex space-around align-items-center">
         <div className={`button-layer ${filter.includeZero ? "selected" : ""}`}>
           <ActionButton
             src={
@@ -173,7 +173,7 @@ export function Dashboard() {
             onClick={toggleIncludeZero}
           />
         </div>
-        <section className="products-action-buttons">
+        <section className="products-action-buttons width-80 flex align-self-center justify-end g-25 mt-1 mb-1">
           <ActionButton
             src={"src/assets/addNew.svg"}
             alt={"Nowy Produkt"}

@@ -39,11 +39,11 @@ export function HandyOrderList({
   ): React.ReactNode => {
     if (attr.name === "") {
       return (
-        <button className="order-product-move-button">
+        <button className="order-product-move-button border-none pointer transparent p-0">
           <img
             src="src/assets/arrow_down.svg"
             alt="Expand order"
-            className={`expand-order-icon ${
+            className={`expand-order-icon grid pointer ${
               expandedOrderIds.includes(order.id) ? "rotated" : ""
             }`}
           />
@@ -70,19 +70,19 @@ export function HandyOrderList({
   };
 
   return (
-    <div className={`handy-order-list-container ${className}`}>
+    <div className={`handy-order-list-container flex-column ${className}`}>
       {[...orders]
         .sort((a, b) => b.orderNumber - a.orderNumber)
         .map((order, index) => (
           <div key={`${order.id}-${index}`} className="order-wrapper">
             <div
-              className="handy-order-item"
+              className="handy-order-item flex pointer"
               onClick={() => toggleOrder(order.id)}
             >
               {attributes.map((attr) => (
                 <div
                   key={`${order.id}-${attr.name}`}
-                  className={`attribute-item order ${
+                  className={`attribute-item flex order ${
                     attr.name === "" ? "order-category-column" : ""
                   }`}
                   style={{

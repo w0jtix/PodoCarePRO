@@ -139,19 +139,19 @@ export function EditUserPopup({
   }
 
   return ReactDOM.createPortal(
-    <div className={`add-popup-overlay ${className}`} onClick={onClose}>
+    <div className={`add-popup-overlay flex justify-center align-items-start ${className}`} onClick={onClose}>
       <div
-        className="force-change-pw-content"
+        className="force-change-pw-content flex-column align-items-center relative g-15"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="f-c-pw-user-detials">
+        <div className="f-c-pw-user-detials flex g-1 align-items-center align-self-start">
           <img
             className="popup-pfp"
             src={AVAILABLE_AVATARS[selectedUser!.avatar]}
             alt={selectedUser!.username}
           />
-          <h2 className="h2-username">{selectedUser!.username}</h2>
-          <button className="popup-close-button" onClick={onClose}>
+          <h2 className="h2-username text-align-center">{selectedUser!.username}</h2>
+          <button className="popup-close-button  transparent border-none flex align-items-center justify-center absolute pointer" onClick={onClose}>
             <img
               src="src/assets/close.svg"
               alt="close"
@@ -159,9 +159,9 @@ export function EditUserPopup({
             />
           </button>
         </div>
-        <div className="user-roles-container popup">
-          <h2 className="pw-header role popup">Role Użytkownika:</h2>
-          <div className="user-roles-popup">
+        <div className="user-roles-container flex-column g-05 align-items-center popup">
+          <h2 className="pw-header text-align-center m-0">Role Użytkownika:</h2>
+          <div className="user-roles-popup flex g-1">
             {availableRoles.map((role) => (
               <ActionButton
                 text={role.name.replace("ROLE_", "")}
@@ -177,8 +177,8 @@ export function EditUserPopup({
             ))}
           </div>
         </div>
-        <div className="asign-employee-container">
-          <h2 className="pw-header role popup">Pracownik:</h2>
+        <div className="asign-employee-container flex align-self-start align-items-center width-60 mt-1 space-between">
+          <h2 className="pw-header text-align-center m-0">Pracownik:</h2>
           <DropdownSelect
             items={employees}
             onChange={handleEmployeeSelect}
@@ -209,26 +209,26 @@ export function EditUserPopup({
         />
         {showForceChangePw && (
           <>
-            <div className="popup-pw-inputs">
-              <div className="pw-input-group">
+            <div className="popup-pw-inputs width-60 mt-1 mb-1 ml-0 mr-0 flex-column g-1">
+              <div className="pw-input-group flex space-between align-items-center">
                 <p className="pw-label">Nowe Hasło:</p>
                 <input
                   type="password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   required
-                  className="pw-input"
+                  className="pw-input text-align-left"
                 />
               </div>
 
-              <div className="pw-input-group">
+              <div className="pw-input-group flex space-between align-items-center">
                 <p className="pw-label">Potwierdź Hasło:</p>
                 <input
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
-                  className="pw-input"
+                  className="pw-input text-align-left"
                   onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                     if (e.key === "Enter") {
                       handleForceChangePassword();

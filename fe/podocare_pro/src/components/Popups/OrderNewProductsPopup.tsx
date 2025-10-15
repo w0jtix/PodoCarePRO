@@ -294,16 +294,16 @@ export function OrderNewProductsPopup({
   }
 
   return ReactDOM.createPortal(
-    <div className="add-popup-overlay" onClick={onClose}>
+    <div className="add-popup-overlay flex justify-center align-items-start" onClick={onClose}>
       <div
-        className="order-new-products-popup-content"
+        className="order-new-products-popup-content flex-column align-items-center relative"
         onClick={(e) => e.stopPropagation()}
       >
-        <section className="order-new-products-popup-header">
-          <div className="order-new-products-popup-title-section">
+        <section className="order-new-products-popup-header flex">
+          <div className="order-new-products-popup-title-section flex-column align-items-center g-10px">
             <h2 className="popup-title">Nowe Produkty 👀</h2>
           </div>
-          <button className="popup-close-button" onClick={onClose}>
+          <button className="popup-close-button  transparent border-none flex align-items-center justify-center absolute pointer" onClick={onClose}>
             <img
               src="src/assets/close.svg"
               alt="close"
@@ -311,11 +311,11 @@ export function OrderNewProductsPopup({
             />
           </button>
         </section>
-        <section className="order-new-products-popup-action-keys-section">
-          <a className="order-new-products-popup-action-keys-title">
+        <section className="order-new-products-popup-action-keys-section flex justify-center align-items-center g-2 mt-2 mb-15">
+          <a className="order-new-products-popup-action-keys-title text-align-center">
             Przypisz dla wszystkich:
           </a>
-          <div className="order-new-products-popup-category-buttons">
+          <div className="order-new-products-popup-category-buttons flex g-15px justify-center align-items-center">
             <CategoryButtons
               categories={categories}
               onSelect={handleGlobalCategoryChange}
@@ -335,14 +335,14 @@ export function OrderNewProductsPopup({
           attributes={ORDER_NEW_PRODUCTS_POPUP_ATTRIBUTES}
           module={ListModule.POPUP}
         />
-        <ul className="order-new-products-popup-list">
+        <ul className="order-new-products-popup-list m-0 mb-2 p-0 width-max">
           {productItems.map((item) => (
             <li
               key={item.tempId}
-              className="order-new-products-popup-list-item"
+              className="order-new-products-popup-list-item flex space-between align-items-center"
             >
               {item.name}
-              <section className="order-new-products-popup-input-section">
+              <section className="order-new-products-popup-input-section flex g-5px">
                 <TextInput
                   dropdown={true}
                   value={item.brand?.name || ""}
@@ -371,7 +371,7 @@ export function OrderNewProductsPopup({
             </li>
           ))}
         </ul>
-        <div className="popup-footer-container">
+        <div className="popup-footer-container flex-column justify-end">
           <ActionButton
             src={"src/assets/tick.svg"}
             alt={"Zapisz"}

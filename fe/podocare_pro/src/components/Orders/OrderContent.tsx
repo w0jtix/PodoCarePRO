@@ -34,7 +34,7 @@ export function OrderContent ({
   
 
   return (
-    <div className={`order-content ${Action[action].toLowerCase()}`}>
+    <div className={`order-content mb-1 ${Action[action].toLowerCase()}`}>
       <ListHeader
         attributes={attributes}
         module={ListModule.HANDY}

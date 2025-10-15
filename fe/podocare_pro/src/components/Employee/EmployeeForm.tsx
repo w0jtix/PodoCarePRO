@@ -61,10 +61,10 @@ export function EmployeeForm ({
   };
 
   return (
-    <div className={`supplier-form-container ${className}`}>
-      <section className="employee-form-core-section">
-        <ul className="supplier-form-inputs-section">
-          <li className="popup-common-section-row name">
+    <div className={`supplier-form-container flex-column ${className}`}>
+      <section className="employee-form-core-section mt-25">
+        <ul className="supplier-form-inputs-section width-95 flex-column p-0 mt-0 mb-0 align-self-center g-2">
+          <li className="popup-common-section-row flex align-items-center space-between g-10px mt-15  name">
             <a className="supplier-form-input-title">Imię:</a>
             <TextInput
               dropdown={false}
@@ -76,7 +76,7 @@ export function EmployeeForm ({
               }}
             />
           </li>
-          <li className="popup-common-section-row name">
+          <li className="popup-common-section-row flex align-items-center space-between g-10px mt-15  name">
             <a className="supplier-form-input-title">Nazwisko:</a>
             <TextInput
               dropdown={false}

@@ -97,14 +97,14 @@ export function SupplyList ({
     <>
       <ListHeader attributes={PRODUCT_LIST_ATTRIBUTES} />
       {loading ? (
-        <div className="list-loading-container">
-          <div className="loading-dot"></div>
-          <div className="loading-dot"></div>
-          <div className="loading-dot"></div>
-          <div className="loading-dot"></div>
+        <div className="list-loading-container relative flex align-items-center justify-center">
+          <div className="loading-dot relative flex align-items-center height-max width-25"></div>
+          <div className="loading-dot relative flex align-items-center height-max width-25"></div>
+          <div className="loading-dot relative flex align-items-center height-max width-25"></div>
+          <div className="loading-dot relative flex align-items-center height-max width-25"></div>
         </div>
       ) : error ? (
-        <div className="list-error">
+        <div className="list-error absolute flex-column justify-items-center align-items-center">
           <h2>Coś poszło nie tak 😵</h2>
         </div>
       ) : (
@@ -120,14 +120,14 @@ export function SupplyList ({
             setSelectedProduct={setSelectedProduct}
           />
           {items.length > itemsPerPage && (
-            <div className="list-pagination">
+            <div className="list-pagination flex g-10px align-items-center">
               <button
-                className="list-prev-page-button"
+                className="list-prev-page-button transparent border-none pointer"
                 onClick={handlePreviousPage}
                 disabled={currentPage === 1}
               >
                 <img
-                  className="pagination-img"
+                  className="pagination-img flex align-items-center"
                   src="src/assets/previousPage.svg"
                   alt="previous page"
                 />
@@ -136,7 +136,7 @@ export function SupplyList ({
                 {currentPage} / {totalPages}
               </span>
               <button
-                className="list-next-page-button"
+                className="list-next-page-button transparent border-none pointer"
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
               >

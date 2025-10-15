@@ -111,7 +111,7 @@ export function OrderList({
 
       case "Opcje":
         return (
-          <div className="item-list-single-item-action-buttons">
+          <div className="item-list-single-item-action-buttons flex">
             <ActionButton
               src={"src/assets/edit.svg"}
               alt={"Edytuj Produkt"}
@@ -135,11 +135,11 @@ export function OrderList({
   };
 
   return (
-    <div className={`item-list ${orders.length === 0 ? "is-empty" : ""}`}>
+    <div className={`item-list width-93 grid p-0 mt-1 ${orders.length === 0 ? "border-none" : ""}`}>
       {orders.map((order) => (
         <div key={order.id} className="product-wrapper">
           <div
-            className={`item ${
+            className={`item align-items-center flex ${
               order.orderProducts.length > 0 ? "pointer" : ""
             }`}
             onClick={() => toggleOrders(order.id)}
@@ -152,7 +152,7 @@ export function OrderList({
             {attributes.map((attr) => (
               <div
                 key={`${order.id}-${attr.name}`}
-                className={`attribute-item ${
+                className={`attribute-item flex ${
                   attr.name === "" ? "category-column" : ""
                 }`}
                 style={{

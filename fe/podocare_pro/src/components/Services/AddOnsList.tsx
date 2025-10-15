@@ -35,9 +35,9 @@ export function AddOnsList({ className = "", addOns, onAddOnsChange }: AddOnsLis
   }, [tempAddOns, onAddOnsChange]);
 
   return (
-    <div className="addons-container">
-      <div className="addons-list-header">
-        <div className="addons-title-count">
+    <div className="addons-container flex-column width-max">
+      <div className="addons-list-header flex space-between g-2 align-items-center">
+        <div className="addons-title-count flex align-items-center g-1">
           <img src="src/assets/star.svg" alt="Dodatki" className="dodatki-icon"></img>
           <span className="addons-title">Dodatki:</span>
           <span className="addons-title">{addOns.length}</span>
@@ -50,12 +50,12 @@ export function AddOnsList({ className = "", addOns, onAddOnsChange }: AddOnsLis
           className="manage-addons"
         />
       </div>
-      <section className="addons-list service">
+      <section className="addons-list flex-column g-05 width-max  service">
         {addOns.map((addOn, index) => (
-          <div key={index} className="addon-item">
-            <span className="addon-item-name">{addOn.name}</span>
-            <span className="addon-item-duration">{addOn.duration}min</span>
-            <span className="addon-item-price">{addOn.price}zł</span>
+          <div key={index} className="addon-item width-max flex align-items-center">
+            <span className="addon-item-name width-75 ml-1">{addOn.name}</span>
+            <span className="addon-item-duration text-align-center">{addOn.duration}min</span>
+            <span className="addon-item-price text-align-center">{addOn.price}zł</span>
           </div>
         ))}
       </section>

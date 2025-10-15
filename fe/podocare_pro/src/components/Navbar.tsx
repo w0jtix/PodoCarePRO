@@ -6,7 +6,7 @@ import Socials from './Socials'
 
 export function Navbar () {
   return (
-    <div className="navbar">
+    <div className="navbar height-max flex-column align-items-center">
         <NavbarLogoContainer/>
         <NavbarMenu/>
         <Socials/>

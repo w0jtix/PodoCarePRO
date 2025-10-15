@@ -62,7 +62,7 @@ export function ItemList ({
       case "":
         return (
           <div
-          className="category-container"
+          className="category-container width-40 p-0"
           style={{
             backgroundColor: item.category?.color
                       ? `rgb(${item.category.color})`
@@ -82,7 +82,7 @@ export function ItemList ({
         
       case "Opcje":
         return (
-          <div className="item-list-single-item-action-buttons">
+          <div className="item-list-single-item-action-buttons flex">
             <ActionButton
               src="src/assets/edit.svg"
               alt="Edytuj Produkt"
@@ -107,11 +107,11 @@ export function ItemList ({
   };
 
   return (
-    <div className={`item-list ${items.length === 0 ? "is-empty" : ""} ${className}`}>
+    <div className={`item-list width-93 grid p-0 mt-1${items.length === 0 ? "border-none" : ""} ${className}`}>
       {items.map((item, index) => (
         <div key={item.id} className="product-wrapper">
           <div
-            className={`item ${!item.isDeleted ? "pointer" : ""}`}
+            className={`item flex ${!item.isDeleted ? "pointer" : ""}`}
             onClick={() => !item.isDeleted && toggleProducts(item.id)}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !item.isDeleted) {
@@ -122,8 +122,8 @@ export function ItemList ({
             {attributes.map((attr) => (
               <div
                 key={`${item.id}-${attr.name}`}
-                className={`attribute-item ${
-                  attr.name === "" ? "category-column" : ""
+                className={`attribute-item flex ${
+                  attr.name === "" ? "category-column" : "align-self-center"
                 }`}
                 style={{
                   width: attr.width,

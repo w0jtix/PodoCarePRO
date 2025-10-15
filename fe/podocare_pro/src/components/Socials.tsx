@@ -4,7 +4,7 @@ import { SOCIAL_ITEMS, getIconPath, getIconAlt } from '../constants/socials'
 export function Socials () {
 
   return (
-    <div className="socials">
+    <div className="mt-auto flex justify-center g-10px">
       {SOCIAL_ITEMS.map((site) => (
         <a 
         key={site.name} 

@@ -31,12 +31,12 @@ export function VariantForm({
 
   return (
     <div
-      className={`custom-form-container ${action
+      className={`custom-form-container flex-column width-max g-05 ${action
         .toString()
         .toLowerCase()} ${className}`}
     >
-        <div className="variant-form-label-input-wrapper">
-      <section className="form-row">
+        <div className="variant-form-label-input-wrapper width-90 flex-column g-05 align-self-center mt-05 mb-05 mr-0 ml-0">
+      <section className="form-row flex width-max align-items-center space-between">
         <span className={`input-label ${className}`}>Nazwa:</span>
         <TextInput
           dropdown={false}
@@ -49,7 +49,7 @@ export function VariantForm({
           className="name"
         />
       </section>
-      <section className="form-row">
+      <section className="form-row flex width-max align-items-center space-between">
         <span className={`input-label ${className}`}>Czas trwania (min):</span>
         <DigitInput
           onChange={(val) => handleChange("duration", val ?? 0)}
@@ -58,7 +58,7 @@ export function VariantForm({
           className={"service"}
         />
       </section>
-      <section className="form-row">
+      <section className="form-row flex width-max align-items-center space-between">
         <span className={`input-label ${className}`}>Cena:</span>
         <DigitInput
           onChange={(val) => handleChange("price", val ?? 0)}

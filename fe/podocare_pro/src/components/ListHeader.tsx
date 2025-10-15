@@ -19,11 +19,11 @@ export function ListHeader ({
   className = ""
 }: ListHeaderProps) {
   return (
-    <div className={`list-header ${module?.toString()} ${className}`}>
+    <div className={`list-header flex width-93 ${module?.toString()} ${className}`}>
       {attributes.map((attr, index) => (
         <h2
         key={index}
-        className={`attribute-item  ${module?.toString()}`}
+        className={`attribute-item flex ${module?.toString()}`}
         style={{
           width: attr.width,
           justifyContent: attr.justify,

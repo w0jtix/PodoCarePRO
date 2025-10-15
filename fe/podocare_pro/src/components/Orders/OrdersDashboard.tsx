@@ -9,7 +9,7 @@ export function OrdersDashboard () {
   const [moduleVisible, setModuleVisible] = useState<SubModuleType>("Create");
 
   return (
-    <div className="dashboard-panel">
+    <div className="dashboard-panel width-85 height-max flex-column align-items-center">
       <OrdersNavigationBar setModuleVisible={setModuleVisible} />
       {moduleVisible === "Create" && <OrderCreate />}
       {moduleVisible === "History" && <OrderHistory />}

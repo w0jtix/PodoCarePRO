@@ -58,7 +58,7 @@ export function ServiceList({
       case "":
         return (
           <div
-          className="badge"
+          className="badge p-0 height-max"
           style={{
             backgroundColor: item.category?.color
                       ? `rgb(${item.category.color})`
@@ -81,7 +81,7 @@ export function ServiceList({
 
       case "Opcje":
         return (
-          <div className="item-list-single-item-action-buttons">
+          <div className="item-list-single-item-action-buttons flex">
             <ActionButton
               src="src/assets/edit.svg"
               alt="Edytuj Usługę"
@@ -105,15 +105,15 @@ export function ServiceList({
 
   return (
     <div
-      className={`item-list ${
-        items.length === 0 ? "is-empty" : ""
+      className={`item-list width-93 grid p-0 mt-1 ${
+        items.length === 0 ? "border-none" : ""
       } ${className}`}
       
     >
       {items.map((item) => (
         <div key={item.id} className={`product-wrapper ${className}`}>
           <div
-            className={`item pointer ${className}`}
+            className={`item align-items-center pointer flex ${className}`}
             onClick={() => toggleServices(item.id)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
@@ -124,7 +124,7 @@ export function ServiceList({
             {attributes.map((attr) => (
               <div
                 key={`${item.id}-${attr.name}`}
-                className={`attribute-item  ${className}`}
+                className={`attribute-item flex  ${className}`}
                 style={{
                   width: attr.width,
                   justifyContent: attr.justify,

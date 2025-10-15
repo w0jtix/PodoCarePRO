@@ -16,12 +16,12 @@ export function AvatarPicker ({ currentAvatar = "avatar5.png", onSelect, classNa
     const avatarKeys = Object.keys(AVAILABLE_AVATARS);
 
     return (
-        <div className={`avatar-picker-container ${className ? className : ""}`}>
+        <div className={`avatar-picker-container grid justify-center align-self-start p-1 ${className ? className : ""}`}>
             {avatarKeys.map((key) => (
                 <div 
                 key={key}
                 onClick={() => handleSelect(key)}
-                className={`avatar-option ${currentAvatar === key ? "selected" : ""}`}
+                className={`avatar-option pointer flex align-items-center justify-center ${currentAvatar === key ? "selected" : ""}`}
             
             >
                 <img 

@@ -343,19 +343,20 @@ export function OrderCreator({
 
   return (
     <div
-      className={`order-display-container ${
+      className={`order-display-container align-self-center relative ${
         action === Action.EDIT ? "popup" : ""
       } ${className}`}
     >
       <div
-        className={`order-display-interior ${
+        className={`order-display-interior grid g-10px relative ${
           action === Action.EDIT ? "popup" : ""
         }`}
       >
         {action === Action.CREATE && <h1>Nowe zamówienie</h1>}
-        <section className="order-supplier-date-addProduct-section">
+        <section className="order-supplier-date-addProduct-section flex space-evenly relative align-center">
           <DropdownSelect<Supplier>
             items={suppliers}
+            className="supplier-dropdown"
             placeholder="Wybierz Sklep"
             onChange={handleOnSelectSupplier}
             value={orderWorkingData.supplier || null}
@@ -384,8 +385,8 @@ export function OrderCreator({
           action={action}
           setHasWarning={setHasWarning}
         />
-        <div className="shipping-summary-section">
-          <div className="order-shipping">
+        <div className="shipping-summary-section flex-column relative">
+          <div className="order-shipping relative flex space-between align-items-center">
             <a>Koszt przesyłki:</a>
             <CostInput
               selectedCost={orderWorkingData.shippingCost ?? 0}
@@ -393,7 +394,7 @@ export function OrderCreator({
               placeholder={"0.00"}
             />
           </div>
-          <div className="order-cost-summary">
+          <div className="order-cost-summary relative flex space-between align-items-center justify-end">
             <a>Netto:</a>
             <a className="order-total-value">{orderWorkingData.totalNet} zł</a>
             <a>VAT:</a>
@@ -406,7 +407,7 @@ export function OrderCreator({
         </div>
 
         <div
-          className={`order-confirm-button ${action.toString().toLowerCase()}`}
+          className={`order-confirm-button flex align-self-center justify-self-end ${action.toString().toLowerCase()}`}
         >
           <ActionButton
             src={"src/assets/tick.svg"}

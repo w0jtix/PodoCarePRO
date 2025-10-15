@@ -48,26 +48,26 @@ const DateInput = ({
   }, [selectedDate, orderDate]);
 
   return (
-    <div className="input-date-component">
+    <div className="input-date-component transparent border-none align-items-center">
       <DatePicker
         id="order-date"
         selected={orderDate}
         onChange={handleDateChange}
         customInput={
           <button
-            className={`custom-calendar-button ${orderDate ? "selected" : ""}`}
+            className={`custom-calendar-button flex pointer transparent border-none align-items-center ${orderDate ? "selected" : ""}`}
           >
             <img
               src="src/assets/calendar.svg"
               alt="Calendar"
-              className={`calendar-icon ${orderDate ? "selected" : ""}`}
+              className={`calendar-icon pointer ${orderDate ? "selected" : ""}`}
             />
             {orderDate ? orderDate.toLocaleDateString("pl-PL") : "DD-MM-YYYY"}
           </button>
         }
         dateFormat="dd-MM-yyyy"
-        className="date-custom-input"
-        calendarClassName="date-custom-calendar"
+        className="date-custom-input text-align-center"
+        calendarClassName="date-custom-calendar transparent"
         showYearDropdown
         scrollableYearDropdown
         yearDropdownItemNumber={50}

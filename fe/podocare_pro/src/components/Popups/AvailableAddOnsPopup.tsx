@@ -1,11 +1,13 @@
 import { BaseServiceAddOn } from "../../models/service";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import BaseServiceAddOnService from "../../services/BaseServiceAddOnService";
 import ActionButton from "../ActionButton";
-
+import RemovePopup from "./RemovePopup";
 import ReactDOM from "react-dom";
 import { Action } from "../../models/action";
 import AddOnPopup from "./AddOnPopup";
+import { useAlert } from "../Alert/AlertProvider";
+import { AlertType } from "../../models/alert";
 
 export interface SelectAddOnsPopupProps {
   onClose: () => void;
@@ -24,11 +26,16 @@ export function SelectAddOnsPopup({
   attachedAddOns,
   action,
 }: SelectAddOnsPopupProps) {
-    const [addOnToAdjust, setAddOnToAdjust] = useState<BaseServiceAddOn | null> (null);
-    const [isAddOnPopupOpen, setIsAddOnPopupOpen] = useState<boolean> (false);
+  const [addOnToAdjust, setAddOnToAdjust] = useState<BaseServiceAddOn | null>(
+    null
+  );
+  const [isAddOnPopupOpen, setIsAddOnPopupOpen] = useState<boolean>(false);
+  const [isRemoveAddOnPopupOpen, setIsRemoveAddOnPopupOpen] =
+    useState<boolean>(false);
   const [availableAddOns, setAvailableAddOns] = useState<BaseServiceAddOn[]>(
     []
   );
+  const { showAlert } = useAlert();
 
   const fetchAddOns = async (): Promise<void> => {
     BaseServiceAddOnService.getAddOns()
@@ -41,6 +48,22 @@ export function SelectAddOnsPopup({
       });
   };
 
+  const handleAddOnRemove = useCallback(async () => {
+    if (addOnToAdjust) {
+      BaseServiceAddOnService.deleteAddOn(addOnToAdjust.id)
+        .then(() => {
+          showAlert("Dodatek pomyślnie usunięty!", AlertType.SUCCESS);
+          setIsRemoveAddOnPopupOpen(false);    
+          fetchAddOns();     
+        })
+        .catch((error) => {
+          console.error("Error removing AddOn", error);
+          showAlert("Błąd usuwania dodatku.", AlertType.ERROR);
+        }); 
+        setAddOnToAdjust(null);       
+    }
+  }, [addOnToAdjust, showAlert]);
+
   useEffect(() => {
     fetchAddOns();
   }, []);
@@ -52,16 +75,22 @@ export function SelectAddOnsPopup({
   }
 
   return ReactDOM.createPortal(
-    <div className={`add-popup-overlay ${className}`} onClick={onClose}>
+    <div
+      className={`add-popup-overlay flex justify-center align-items-start ${className}`}
+      onClick={onClose}
+    >
       <div
-        className="select-addons-popup-content"
+        className="select-addons-popup-content flex-column align-items-center relative"
         onClick={(e) => e.stopPropagation()}
       >
-        <section className="addons-popup-header">
+        <section className="addons-popup-header mb-1">
           <h2 className="popup-title">{`${
             action === Action.SELECT ? "Wybierz Dodatki" : "Zarządzaj Dodatkami"
           }`}</h2>
-          <button className="popup-close-button" onClick={onClose}>
+          <button
+            className="popup-close-button  transparent border-none flex align-items-center justify-center absolute pointer"
+            onClick={onClose}
+          >
             <img
               src="src/assets/close.svg"
               alt="close"
@@ -79,76 +108,97 @@ export function SelectAddOnsPopup({
           />
         )}
 
-        <section className={`addons-list ${action === Action.SELECT ? "select-mode" : ""}`}>
+        <section
+          className={`addons-list flex-column g-05 width-max ${
+            action === Action.SELECT ? "select-mode" : ""
+          }`}
+        >
           {availableAddOns.map((addOn) => (
             <div
               key={addOn.id}
-              className={`addon-item ${className} ${
+              className={`addon-item width-max flex align-items-center ${className} ${
                 attachedAddOns?.some((a) => a.id === addOn.id) ? "selected" : ""
               }`}
               onClick={() => {
                 if (action === Action.SELECT && handleSelectAddOns) {
                   handleSelectAddOns(addOn);
                 }
-              
               }}
             >
-              <span className="addon-item-name">{addOn.name}</span>
-              <span className="addon-item-duration">{addOn.duration}min</span>
-              <span className="addon-item-price">{addOn.price}zł</span>
+              <span className="addon-item-name width-75 ml-1">
+                {addOn.name}
+              </span>
+              <span className="addon-item-duration text-align-center">
+                {addOn.duration}min
+              </span>
+              <span className="addon-item-price text-align-center">
+                {addOn.price}zł
+              </span>
               {action === Action.MANAGE && (
                 <>
-                <ActionButton
-                  src="src/assets/edit.svg"
-                  alt="Edytuj Usługę"
-                  text="Edytuj"
-                  onClick={() => {
-                    setAddOnToAdjust(addOn)
-                    setIsAddOnPopupOpen(true)
-                  }}
-                  disableText={true}
-                  className="addon-edit"
-                />
-                <ActionButton
-                              src="src/assets/cancel.svg"
-                              alt="Usuń Usługę"
-                              text="Usuń"
-                              onClick={() => {
-                    setAddOnToAdjust(addOn)
-                    setIsAddOnPopupOpen(true)
-                  }}
-                              disableText={true}
-                              className="addon-edit"
-                            />
-                            </>
+                  <ActionButton
+                    src="src/assets/edit.svg"
+                    alt="Edytuj Usługę"
+                    text="Edytuj"
+                    onClick={() => {
+                      setAddOnToAdjust(addOn);
+                      setIsAddOnPopupOpen(true);
+                    }}
+                    disableText={true}
+                    className="addon-edit"
+                  />
+                  <ActionButton
+                    src="src/assets/cancel.svg"
+                    alt="Usuń Usługę"
+                    text="Usuń"
+                    onClick={() => {
+                      setAddOnToAdjust(addOn);
+                      setIsRemoveAddOnPopupOpen(true);
+                    }}
+                    disableText={true}
+                    className="addon-edit"
+                  />
+                </>
               )}
             </div>
           ))}
         </section>
-        { action === Action.SELECT && (
+        {action === Action.SELECT && (
           <ActionButton
-          src={"src/assets/tick.svg"}
-          alt={"Zapisz"}
-          text={"Zapisz"}
-          onClick={() => {
+            src={"src/assets/tick.svg"}
+            alt={"Zapisz"}
+            text={"Zapisz"}
+            onClick={() => {
               if (onSave) onSave();
               onClose();
             }}
-          className="addon-select"
-        />
+            className="addon-select"
+          />
         )}
       </div>
-          {isAddOnPopupOpen && (
-            <AddOnPopup
-                className="ce-addon"
-                onClose={() => {
-                  fetchAddOns();
-                  setIsAddOnPopupOpen(false)
-                  setAddOnToAdjust(null)
-                }}
-                selectedAddOn={addOnToAdjust}
-            />
-          )}
+      {isAddOnPopupOpen && (
+        <AddOnPopup
+          className="ce-addon"
+          onClose={() => {
+            fetchAddOns();
+            setIsAddOnPopupOpen(false);
+            setAddOnToAdjust(null);
+          }}
+          selectedAddOn={addOnToAdjust}
+        />
+      )}
+      {isRemoveAddOnPopupOpen && (
+        <RemovePopup
+          onClose={() => {
+            fetchAddOns();
+            setIsRemoveAddOnPopupOpen(false);
+            setAddOnToAdjust(null);
+          }}
+          handleRemove={handleAddOnRemove}
+          selectedItem={addOnToAdjust}
+          warningText={"❗❗❗ Zatwierdzenie spowoduje usunięcie dodatku."}
+        />
+      )}
     </div>,
     portalRoot
   );

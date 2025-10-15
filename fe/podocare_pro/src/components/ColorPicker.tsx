@@ -61,7 +61,7 @@ export function ColorPicker({
     <div>
       <input
         type="color"
-        className="color-input"
+        className="color-input transparent border-none pointer"
         value={color}
         onChange={handleColorChange}
       />

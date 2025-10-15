@@ -207,17 +207,17 @@ export function ProfileDashboard() {
   }, []);
 
   return (
-    <div className="dashboard-panel">
-      <div className="user-container">
-        <div className="user-basic-info">
-          <div className="profile-container">
-            <div className="pfp">
-              <h2 className="h2-username">{user?.username}</h2>
-              <div className="profile-avatar">
+    <div className="dashboard-panel width-85 height-max flex-column align-items-center">
+      <div className="user-container flex align-items-center space-between width-85 mt-1">
+        <div className="user-basic-info relative flex-column g-1">
+          <div className="profile-container flex align-items-center g-10">
+            <div className="flex-column align-items-center g-1">
+              <h2 className="h2-username text-align-center">{user?.username}</h2>
+              <div className="profile-avatar flex align-items-center justify-center mb-1">
                 <img
                   src={avatarSrc}
                   alt="Avatar"
-                  className="profile-avatar-image"
+                  className="profile-avatar-image width-max height-max"
                 />
               </div>
               <ActionButton
@@ -227,8 +227,8 @@ export function ProfileDashboard() {
                 className="avatar-button"
               />
             </div>
-            <div className="user-roles-container">
-              <h2 className="pw-header role">Role Użytkownika</h2>
+            <div className="user-roles-container flex-column g-05 align-items-center">
+              <h2 className="pw-header text-align-center mb-1">Role Użytkownika</h2>
               {availableRoles.map((role) => (
                 <ActionButton
                   text={role.name.replace("ROLE_", "")}
@@ -245,9 +245,9 @@ export function ProfileDashboard() {
             </div>
           </div>
           {user?.roles.includes(RoleType.ROLE_ADMIN) ? (
-            <div className="user-details-bottom-section">
-              <div className="employee-dropdown-container">
-              <h2 className="pw-header role popup">Pracownik:</h2>
+            <div className="user-details-bottom-section flex g-1 align-items-center">
+              <div className="employee-dropdown-container flex align-items-center g-1">
+              <h2 className="pw-header text-align-center m-0">Pracownik:</h2>
               <DropdownSelect
                 items={employees}
                 onChange={handleEmployeeSelect}
@@ -282,18 +282,18 @@ export function ProfileDashboard() {
 
         <ChangePasswordForm />
       </div>
-      <div className="all-user-container">
-        <h2 className="pw-header all-users">Wszyscy Użytkownicy</h2>
-        <div className="all-user-list">
+      <div className="all-user-container mt-5 width-85 g-1 height-fit-content">
+        <h2 className="pw-header text-align-center all-users">Wszyscy Użytkownicy</h2>
+        <div className="all-user-list width-max flex-column g-05 mb-1">
           {users.map((u) => (
-            <div className="single-user-container" key={u.id}>
-              <div className="single-user-avatar">
+            <div className="single-user-container flex width-90 align-self-center g-2" key={u.id}>
+              <div className="single-user-avatar flex align-items-center ml-1">
                 <img src={AVAILABLE_AVATARS[u.avatar]} alt={u.username} />
               </div>
-              <div className="single-user-info">
+              <div className="single-user-info flex g-2 align-items-center">
                 <span className="single-user-username">{u.username}</span>
                 {user?.roles.includes(RoleType.ROLE_ADMIN) && (
-                  <div className="single-user-roles">
+                  <div className="single-user-roles flex g-2">
                     {u.roles.map((role) => (
                       <span className="single-user-role" key={role.id}>
                         {role.name.replace("ROLE_", "")}
@@ -320,7 +320,7 @@ export function ProfileDashboard() {
           ))}
         </div>
       </div>
-      <div className="quick-action-buttons">
+      <div className="quick-action-buttons flex width-85 mt-2 justify-end">
         <ActionButton
           src="src/assets/logout.svg"
           alt="Wyloguj"

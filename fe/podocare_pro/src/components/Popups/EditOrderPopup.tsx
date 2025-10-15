@@ -27,16 +27,16 @@ export function EditOrderPopup({
 
   return ReactDOM.createPortal(
     <div
-      className={`add-popup-overlay edit-order ${className}`}
+      className={`add-popup-overlay flex justify-center align-items-start edit-order ${className}`}
       onClick={onClose}
     >
       <div
-        className="edit-order-popup-content"
+        className="edit-order-popup-content flex-column align-items-center relative"
         onClick={(e) => e.stopPropagation()}
       >
         <section className="edit-product-popup-header">
           <h2 className="popup-title">{`Edytuj Zamówienie #${selectedOrder.orderNumber}`}</h2>
-          <button className="popup-close-button" onClick={onClose}>
+          <button className="popup-close-button  transparent border-none flex align-items-center justify-center absolute pointer" onClick={onClose}>
             <img
               src="src/assets/close.svg"
               alt="close"
@@ -44,7 +44,7 @@ export function EditOrderPopup({
             />
           </button>
         </section>
-        <section className="order-popup-interior">
+        <section className="order-popup-interior width-90 mb-1">
           <OrderCreator
             selectedOrder={selectedOrder}
             hasWarning={hasWarning}
@@ -54,13 +54,13 @@ export function EditOrderPopup({
           />
         </section>
         {hasWarning && (
-          <div className="popup-warning-explanation-display">
+          <div className="popup-warning-explanation-display flex justify-center">
             <img
               src="src/assets/warning.svg"
               alt="Warning"
               className="order-item-warning-icon"
             />
-            <a className="warning-explanation">
+            <a className="warning-explanation text-align-center">
               Konflikt: Chcesz usunąć więcej Produktów niż masz w Magazynie!
               <br />
               Po zatwierdzeniu usuniesz dostępne Produkty.

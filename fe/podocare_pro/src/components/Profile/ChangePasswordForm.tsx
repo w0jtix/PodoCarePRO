@@ -44,39 +44,39 @@ export function ChangePasswordForm() {
   };
 
   return (
-    <div className="password-container">
-      <h2 className="pw-header">Zmiana Hasła</h2>
-      <div className="pw-inputs-container">
-      <div className="pw-input-group">
+    <div className="password-container flex-column g-2">
+      <h2 className="pw-header text-align-center">Zmiana Hasła</h2>
+      <div className="pw-inputs-container flex-column g-1">
+      <div className="pw-input-group flex space-between align-items-center">
         <p className="pw-label">Stare Hasło:</p>
         <input
           type="password"
           value={oldPassword}
           onChange={(e) => setOldPassword(e.target.value)}
           required
-          className="pw-input"
+          className="pw-input text-align-left"
         />
       </div>
 
-      <div className="pw-input-group">
+      <div className="pw-input-group flex space-between align-items-center">
         <p className="pw-label">Nowe Hasło:</p>
         <input
           type="password"
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
           required
-          className="pw-input"
+          className="pw-input text-align-left"
         />
       </div>
 
-      <div className="pw-input-group">
+      <div className="pw-input-group flex space-between align-items-center">
         <p className="pw-label">Potwierdź Hasło:</p>
         <input
           type="password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
-          className="pw-input"
+          className="pw-input text-align-left"
           onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
             if (e.key === "Enter") {
               handleSubmit();

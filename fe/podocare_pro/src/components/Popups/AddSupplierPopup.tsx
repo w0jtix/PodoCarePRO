@@ -32,14 +32,14 @@ export function AddSupplierPopup ({
   }
 
   return ReactDOM.createPortal(
-    <div className={`add-popup-overlay ${className}`} onClick={onClose}>
+    <div className={`add-popup-overlay flex justify-center align-items-start ${className}`} onClick={onClose}>
       <div
-        className="add-supplier-popup-content"
+        className="add-supplier-popup-content flex-column align-items-center relative"
         onClick={(e) => e.stopPropagation()}
       >
-        <section className="add-new-supplier-header">
+        <section className="add-new-supplier-header flex">
           <h2 className="popup-title">Dodaj nowy sklep</h2>
-          <button className="popup-close-button" onClick={onClose}>
+          <button className="popup-close-button  transparent border-none flex align-items-center justify-center absolute pointer" onClick={onClose}>
             <img
               src="src/assets/close.svg"
               alt="close"
@@ -50,7 +50,7 @@ export function AddSupplierPopup ({
         <SupplierForm
           onForwardSupplierForm={setSupplier}
         />
-        <div className="popup-footer-container">
+        <div className="popup-footer-container flex-column justify-end">
         <ActionButton
           src={"src/assets/tick.svg"}
           alt={"Zapisz"}

@@ -22,24 +22,24 @@ export function SubMenuNavbar ( {
 
 
   return (
-    <div className={`submenu-navbar ${className}`}>
+    <div className={`submenu-navbar ${className} height-max flex align-self-center`}>
       {SUBMENU_ITEMS.map((menuItem) => (
         <div 
           key={menuItem.name} 
-          className={`submenu-navbar-button-div ${
+          className={`submenu-navbar-button-div relative width-fit-content ${
             selectedItem === menuItem.name ? "selected" : ""
         }`}>
           <button 
-          className="submenu-navbar-menuItem-button"
+          className="submenu-navbar-menuItem-button relative height-max pointer border-none flex align-items-center justify-center"
           onClick={() => handleItemClick(menuItem)}
           >
-            <div className="submenu-navbar-menuItem-button-interior">
+            <div className="submenu-navbar-menuItem-button-interior flex align-items-center justify-center pr-15px">
               <img
-                className="submenu-order-icon"
+                className="submenu-order-icon align-self-center justify-self-center mr-5px"
                 src={getIconPath(menuItem.icon)}
                 alt={menuItem.alt || getIconAlt(menuItem.icon)}
               ></img>
-              <a className="submenu-navbar-menuItem-button-a">
+              <a className="submenu-navbar-menuItem-button-a align-self-center">
                 {menuItem.name}
               </a>
             </div>

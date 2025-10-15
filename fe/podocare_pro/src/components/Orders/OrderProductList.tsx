@@ -25,7 +25,7 @@ export function OrderProductList ({
 }: OrderProductListProps) {
 
   return (
-    <div className={`order-productList ${className}`}>
+    <div className={`order-product-list flex-column g-5px ${className}`}>
       <ListHeader attributes={ORDER_ITEM_LIST_ATTRIBUTES} module={ListModule.ORDER} />
       <OrderItemList
         attributes={ORDER_ITEM_LIST_ATTRIBUTES}

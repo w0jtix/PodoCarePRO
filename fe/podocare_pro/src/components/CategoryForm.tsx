@@ -53,8 +53,8 @@ export function CategoryForm({
   }, []);
 
   return (
-    <div className="form-container">
-      <div className="popup-common-section-row name">
+    <div className="form-container align-self-center width-65">
+      <div className="popup-common-section-row flex align-items-center space-between g-10px mt-15 name">
         <a className="product-form-input-title">Nazwa:</a>
         <TextInput
           dropdown={false}
@@ -66,14 +66,14 @@ export function CategoryForm({
           }}
         />
       </div>
-      <div className="popup-common-section-row">
+      <div className="popup-common-section-row flex align-items-center space-between g-10px mt-15 ">
         <a className="product-form-input-title">Kolor:</a>
         <ColorPicker
           onColorSelect={handleColor}
           selectedColor={categoryData.color}
         />
       </div>
-      <div className="popup-common-section-row cat">
+      <div className="popup-common-section-row flex align-items-center space-between g-10px mt-15  cat">
         <CategoryButtons
           categories={[]}
           mode={CategoryButtonMode.PREVIEW}

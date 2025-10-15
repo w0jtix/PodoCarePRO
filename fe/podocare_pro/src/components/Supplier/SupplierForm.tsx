@@ -61,10 +61,10 @@ export function SupplierForm ({
   };
 
   return (
-    <div className={`supplier-form-container ${className}`}>
-      <section className="supplier-form-core-section">
-        <ul className="supplier-form-inputs-section">
-          <li className="popup-common-section-row name supplier">
+    <div className={`supplier-form-container flex-column ${className}`}>
+      <section className="supplier-form-core-section flex">
+        <ul className="supplier-form-inputs-section width-95 flex-column p-0 mt-0 mb-0 align-self-center g-2">
+          <li className="popup-common-section-row align-items-center space-between mt-15  name flex-column g-15px">
             <a className="supplier-form-input-title">Nazwa:</a>
             <TextInput
               dropdown={false}
@@ -76,7 +76,7 @@ export function SupplierForm ({
               }}
             />
           </li>
-          <li className="popup-common-section-row name supplier">
+          <li className="popup-common-section-row align-items-center space-between mt-15  name flex-column g-15px">
             <a className="supplier-form-input-title">Strona internetowa:</a>
             <TextInput
               dropdown={false}

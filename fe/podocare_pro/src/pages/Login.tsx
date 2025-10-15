@@ -39,24 +39,24 @@ const Login = () => {
   return (
     <div className="container">
       <div className="display">
-        <div className="login-container">
+        <div className="login-container width-fit-content height-fit-content m-auto flex-column align-items-center">
           <NavbarLogoContainer />
-          <div className="login-form-container">
-            <div className="login-input-container">
+          <div className="login-form-container align-self-center pb-2">
+            <div className="flex align-items-center space-between width-max align-self-center">
               <p className="login-label">Nazwa użytkownika:</p>
               <input
                 type="text"
-                className="login-input"
+                className="login-input text-align-left"
                 onChange={(value: React.ChangeEvent<HTMLInputElement>) => setUsername(value.target.value)}
                 required={true}
                 autoComplete="off"
               />
             </div>
-            <div className="login-input-container">
+            <div className="flex align-items-center space-between width-max align-self-center">
               <p className="login-label">Hasło:</p>
               <input
                 type="password"
-                className="login-input"
+                className="login-input text-align-left"
                 onChange={(value: React.ChangeEvent<HTMLInputElement>) => setPassword(value.target.value)}
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                   if(e.key === 'Enter') {

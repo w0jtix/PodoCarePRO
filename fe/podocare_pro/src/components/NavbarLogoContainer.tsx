@@ -19,7 +19,7 @@ export function NavbarLogoContainer ({
   const content = (
     <>
       <img src={logoSrc} alt={logoAlt} />
-      <section className="text-field">
+      <section className="text-field flex align-items-center g-5px">
         <h1>{title}</h1>
         {subtitle && <h2>{subtitle}</h2>}
       </section>
@@ -28,7 +28,7 @@ export function NavbarLogoContainer ({
 
 
   return (
-    <div className={`navbar-logo-container ${className}`}>
+    <div className={`navbar-logo-container ${className} flex align-items-center justify-center g-15px width-max`}>
         {content}
     </div>
   )

@@ -88,16 +88,16 @@ export function ServicePopup({
   }
 
   return ReactDOM.createPortal(
-    <div className={`add-popup-overlay ${className}`} onClick={onClose}>
+    <div className={`add-popup-overlay flex justify-center align-items-start ${className}`} onClick={onClose}>
       <div
-        className="service-popup-content"
+        className="service-popup-content flex-column align-items-center relative"
         onClick={(e) => e.stopPropagation()}
       >
-        <section className="product-popup-header">
+        <section className="product-popup-header flex mb-2">
           <h2 className="popup-title">
             {action === Action.CREATE ? "Dodaj Nową Usługę" : "Edytuj Usługę"}
           </h2>
-          <button className="popup-close-button" onClick={onClose}>
+          <button className="popup-close-button transparent border-none flex align-items-center justify-center absolute pointer" onClick={onClose}>
             <img
               src="src/assets/close.svg"
               alt="close"
@@ -105,7 +105,7 @@ export function ServicePopup({
             />
           </button>
         </section>
-        <section className="custom-form-section">
+        <section className="custom-form-section width-90">
           <ServiceForm
             setServiceDTO={setServiceDTO}
             serviceDTO={serviceDTO}

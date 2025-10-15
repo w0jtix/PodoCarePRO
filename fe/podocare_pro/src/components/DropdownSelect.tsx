@@ -145,9 +145,9 @@ export function DropdownSelect<T extends DropdownItem>({
   };
 
   return (
-    <div className={`searchable-dropdown ${className}`} ref={dropdownRef}>
+    <div className={`searchable-dropdown relative height-auto transparent border-none ${className}`} ref={dropdownRef}>
       <button
-        className={`dropdown-header ${className} ${disabled ? "disabled" : ""} ${
+        className={`dropdown-header flex space-between align-items-center transparent pointer ${className} ${disabled ? "disabled" : ""} ${
           allowColors && selectedItems.length > 0 ? "selected" : ""
         } `}
         onClick={() => !disabled && setIsDropdownVisible((prev) => !prev)}
@@ -161,9 +161,9 @@ export function DropdownSelect<T extends DropdownItem>({
       : {}
   }
       >
-        <div className="dropdown-placeholder-wrapper">
+        <div className="dropdown-placeholder-wrapper width-max">
           <a
-            className={`dropdown-header-a ${((className === "categories" && multiple) ||
+            className={`dropdown-header-a flex align-items-center justify-center ${((className === "categories" && multiple) ||
   (className !== "categories")) && (
               selectedItems.length > 0 ? "center" : "")
             }`}
@@ -178,12 +178,12 @@ export function DropdownSelect<T extends DropdownItem>({
         />
       </button>
       {isDropdownVisible && !isAddNewPopupOpen && (
-        <div className="dropdown-menu">
+        <div className="dropdown-menu absolute mt-05">
           {(searchable || allowNew) && (
-            <section className="dropdown-search-and-add-new">
+            <section className="dropdown-search-and-add-new flex">
               <input
                 type="text"
-                className={`dropdown-search ${!allowNew ? "wide" : ""}`}
+                className={`dropdown-search width-75 transparent border-none ${!allowNew ? "width-90" : ""}`}
                 placeholder={searchPlaceholder}
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
@@ -191,7 +191,7 @@ export function DropdownSelect<T extends DropdownItem>({
               />
               {allowNew && NewItemComponent && (
                 <button
-                  className="add-new-dropdown-button"
+                  className="add-new-dropdown-button transparent border-none align-self-center flex justify-center pointer"
                   onClick={handleOpenAddNewPopup}
                 >
                   <img
@@ -203,17 +203,17 @@ export function DropdownSelect<T extends DropdownItem>({
               )}
             </section>
           )}
-          <ul className={`dropdown-list ${className}`}>
+          <ul className={`dropdown-list m-0 p-0 ${className}`}>
             {filteredItems.length > 0 ? (
               filteredItems.map((item) => (
                 <li
                   key={item.id}
-                  className={`dropdown-item ${
+                  className={`dropdown-item pointer flex align-items-center space-between ${
                     isItemSelected(item) ? "selected" : ""
                   }`}
                   onClick={() => handleSelect(item)}
                 >
-                  <div className="dropdown-left">
+                  <div className="dropdown-left flex align-items-center g-05 ml-05">
                   {item.color && (
                     <span
                       className="color-symbol"
