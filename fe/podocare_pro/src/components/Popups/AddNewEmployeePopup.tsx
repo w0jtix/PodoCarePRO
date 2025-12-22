@@ -4,6 +4,8 @@ import { useState, useCallback } from "react";
 import ActionButton from "../ActionButton";
 import EmployeeForm from "../Employee/EmployeeForm";
 import { NewEmployee } from "../../models/employee";
+import { useAlert } from "../Alert/AlertProvider";
+import { AlertType } from "../../models/alert";
 
 export interface AddEmployeePopupProps {
   onClose: () => void;
@@ -17,6 +19,7 @@ export function AddEmployeePopup ({
   className= "" 
 }: AddEmployeePopupProps) {
   const [employee, setEmployee] = useState<NewEmployee | null>(null);
+  const { showAlert } = useAlert();
   
   const handleCreateEmployee = useCallback(async () => {
     if(employee?.name?.trim() && employee?.secondName?.trim()) {
@@ -27,6 +30,7 @@ export function AddEmployeePopup ({
 
   const portalRoot = document.getElementById("portal-root");
   if (!portalRoot) {
+    showAlert("Błąd", AlertType.ERROR);
     console.error("Portal root element not found");
     return null;
   }

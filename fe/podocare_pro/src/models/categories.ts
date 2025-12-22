@@ -13,6 +13,7 @@ export interface BaseServiceCategory {
     id: number;
     name: string;
     color: string;
+    isDeleted?: boolean;
 }
 
 export interface NewBaseServiceCategory {

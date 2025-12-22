@@ -9,9 +9,10 @@ import TextInput from "../TextInput";
 import BrandService from "../../services/BrandService";
 import DropdownSelect from "../DropdownSelect";
 import CategoryService from "../../services/CategoryService";
+import CostInput from "../CostInput";
 import { Alert, AlertType } from "../../models/alert";
 import { useCallback } from "react";
-import { ORDER_NEW_PRODUCTS_POPUP_ATTRIBUTES } from "../../constants/list-headers";
+import { ORDER_NEW_PRODUCTS_POPUP_ATTRIBUTES, ORDER_NEW_PRODUCTS_POPUP_ATTRIBUTES_WITH_SELLING_PRICE } from "../../constants/list-headers";
 import { CategoryButtonMode, ProductCategory } from "../../models/categories";
 import { NewProduct } from "../../models/product";
 import { NewBrand, Brand, KeywordDTO } from "../../models/brand";
@@ -24,6 +25,8 @@ import {
   createNewProductWorkingData,
 } from "../../models/working-data";
 import { useAlert } from "../Alert/AlertProvider";
+import SelectVATButton from "../SelectVATButton";
+import { VatRate } from "../../models/vatrate";
 
 export interface OrderNewProductsPopupProps {
   nonExistingProducts: OrderProductWorkingData[];
@@ -61,6 +64,7 @@ export function OrderNewProductsPopup({
       })
       .catch((error) => {
         setCategories([]);
+        showAlert("Błąd", AlertType.ERROR);
         console.error("Error fetching categories:", error);
       });
   }, []);
@@ -108,6 +112,18 @@ export function OrderNewProductsPopup({
     },
     []
   );
+
+  const handleSellingPrice = useCallback((tempId: string, cost: number) => {
+    setProductItems((prevItems) => 
+    prevItems.map((item) => 
+    item.tempId === tempId ? { ...item, sellingPrice: cost} : item))
+  },[])
+
+  const handleVatRate = useCallback((tempId: string, selectedVat: VatRate) => {
+    setProductItems((prevItems) => 
+    prevItems.map((item) => 
+    item.tempId === tempId ? { ...item, vatRate: selectedVat} : item))   
+  },[])
 
   const handleGlobalCategoryChange = useCallback(
     (selected: ProductCategory[] | null) => {
@@ -159,6 +175,7 @@ export function OrderNewProductsPopup({
             );
           })
           .catch((error) => {
+            showAlert("Błąd", AlertType.ERROR);
             console.error("Error fetching filtered brands:", error.message);
           });
       } else {
@@ -229,11 +246,12 @@ export function OrderNewProductsPopup({
           category: item.category,
           brand: brand,
           supply: item.supply || 0,
+          sellingPrice: item.sellingPrice,
+          vatRate: item.vatRate,
           description: item.description || "",
           isDeleted: false,
         };
       });
-
       for (const product of productsToCreate) {
         const error = validateProductForm(product, undefined, Action.CREATE);
         if (error) {
@@ -241,7 +259,6 @@ export function OrderNewProductsPopup({
           return;
         }
       }
-
       const createdProducts = await AllProductService.createNewProducts(
         productsToCreate
       );
@@ -287,8 +304,12 @@ export function OrderNewProductsPopup({
     }
   }, [productItems, orderWorkingData, onFinalizeOrder, showAlert]);
 
+  const hasProductCategory = productItems.some((item) => item.category?.name === "Produkty")
+  
+
   const portalRoot = document.getElementById("portal-root");
   if (!portalRoot) {
+    showAlert("Błąd", AlertType.ERROR);
     console.error("Portal root element not found");
     return null;
   }
@@ -325,6 +346,7 @@ export function OrderNewProductsPopup({
             <ActionButton
               src={"src/assets/reset.svg"}
               alt={"Reset"}
+              iconTitle={"Resetuj"}
               text={"Reset"}
               onClick={handleGlobalCategoryReset}
               disableText={true}
@@ -332,7 +354,7 @@ export function OrderNewProductsPopup({
           </div>
         </section>
         <ListHeader
-          attributes={ORDER_NEW_PRODUCTS_POPUP_ATTRIBUTES}
+          attributes={hasProductCategory ? ORDER_NEW_PRODUCTS_POPUP_ATTRIBUTES_WITH_SELLING_PRICE : ORDER_NEW_PRODUCTS_POPUP_ATTRIBUTES}
           module={ListModule.POPUP}
         />
         <ul className="order-new-products-popup-list m-0 mb-2 p-0 width-max">
@@ -343,6 +365,16 @@ export function OrderNewProductsPopup({
             >
               {item.name}
               <section className="order-new-products-popup-input-section flex g-5px">
+                {item.category && item.category.name === "Produkty" && (
+                  <>
+                  <CostInput onChange={(cost) => handleSellingPrice(item.tempId, cost)} selectedCost={item.sellingPrice ?? 0} />
+                    <SelectVATButton
+                      selectedVat={item.vatRate ?? VatRate.VAT_23}
+                      onSelect={(vatRate) => handleVatRate(item.tempId, vatRate)}
+                      className="product-form"
+                    />
+                  </>
+                )}
                 <TextInput
                   dropdown={true}
                   value={item.brand?.name || ""}

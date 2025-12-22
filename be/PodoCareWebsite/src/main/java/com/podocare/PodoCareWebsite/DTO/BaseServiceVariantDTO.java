@@ -15,13 +15,15 @@ public class BaseServiceVariantDTO {
     private Long id;
     private String name;
     private Double price;
-    private Integer duration;
+    private int duration;
+    private Boolean isDeleted;
 
     public BaseServiceVariantDTO(BaseServiceVariant service) {
         this.id = service.getId();
         this.name = service.getName();
         this.price = service.getPrice();
         this.duration = service.getDuration();
+        this.isDeleted = service.getIsDeleted();
     }
 
     public BaseServiceVariant toEntity(BaseService baseService) {
@@ -31,6 +33,7 @@ public class BaseServiceVariantDTO {
                 .price(this.price)
                 .duration(this.duration)
                 .baseService(baseService)
+                .isDeleted(this.isDeleted != null ? this.isDeleted : false)
                 .build();
     }
 }

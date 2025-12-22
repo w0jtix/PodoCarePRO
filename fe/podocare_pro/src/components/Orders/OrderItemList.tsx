@@ -15,6 +15,8 @@ import {
   OrderProductWorkingData,
   createNewProductWorkingData,
 } from "../../models/working-data";
+import { useAlert } from "../Alert/AlertProvider";
+import { AlertType } from "../../models/alert";
 
 export interface OrderItemListProps {
   attributes: ListAttribute[];
@@ -42,6 +44,7 @@ export function OrderItemList({
   className = "",
 }: OrderItemListProps) {
   const [supplyInfo, setSupplyInfo] = useState<SupplyInfo>({});
+  const { showAlert } = useAlert();
 
   const initialOrderProductsRef = useRef<OrderProductWorkingData[]>([]);
   const orderProductsRef = useRef(orderProducts);
@@ -130,6 +133,7 @@ export function OrderItemList({
       });
       setSupplyInfo(newSupplyInfo);
     } catch (error) {
+      showAlert("Błąd", AlertType.ERROR);
       console.error("Error fetching product supply:", error);
     }
   };
@@ -242,6 +246,7 @@ export function OrderItemList({
           });
         })
         .catch((error) => {
+          showAlert("Błąd", AlertType.ERROR);
           console.error("Error fetching filtered products:", error.message);
         });
     },
@@ -347,6 +352,7 @@ export function OrderItemList({
           <ActionButton
             src="src/assets/cancel.svg"
             alt="Usuń Produkt"
+            iconTitle={"Usuń Produkt"}
             text="Usuń"
             onClick={() => handleItemRemove(item.tempId)}
             disableText={true}

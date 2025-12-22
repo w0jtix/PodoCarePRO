@@ -20,4 +20,16 @@ public class BaseServiceCategory {
 
     @Column(nullable = false, unique = true)
     private String color;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean isDeleted = false;
+
+    public void softDelete() {
+        this.isDeleted = true;
+    }
+
+    public void restore() {
+        this.isDeleted = false;
+    }
 }

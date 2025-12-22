@@ -8,6 +8,8 @@ import AllProductService from "../../services/AllProductService";
 import { ProductFilterDTO } from "../../models/product";
 import { getVatRateDisplay } from "../../models/vatrate";
 import { calculateNetPrice } from "../../utils/priceUtils";
+import { useAlert } from "../Alert/AlertProvider";
+import { AlertType } from "../../models/alert";
 
 export interface HandyOrderProductListProps {
   attributes: ListAttribute[];
@@ -31,6 +33,7 @@ export function HandyOrderProductList({
   const [warningVisible, setWarningVisible] = useState<Record<number, boolean>>(
     {}
   );
+  const { showAlert } = useAlert();
 
   const handleProductSelect = useCallback(
     (orderProduct: OrderProduct | null) => {
@@ -61,6 +64,7 @@ export function HandyOrderProductList({
           });
         })
         .catch((error) => {
+          showAlert("Błąd", AlertType.ERROR);
           console.error("Error fetching product supply:", error);
         });
     },

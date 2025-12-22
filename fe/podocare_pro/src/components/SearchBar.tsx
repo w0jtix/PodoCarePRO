@@ -3,10 +3,11 @@ import { useState, useCallback } from 'react'
 
 export interface SearchBarProps {
   onKeywordChange: (keyword: string) => void;
-  resetTriggered: boolean;
+  resetTriggered?: boolean;
   iconSrc?: string;
   iconAlt?: string;
   placeholder?: string;
+  className?: string;
 }
 
 export function SearchBar ({ 
@@ -14,7 +15,8 @@ export function SearchBar ({
   resetTriggered,
   iconSrc = "src/assets/searchbar_icon.svg",
   iconAlt = "Searchbar icon",
-  placeholder = "Szukaj..."
+  placeholder = "Szukaj...",
+  className="",
 }: SearchBarProps) {
 
   const [keyword, setKeyword] = useState<string>("");
@@ -34,7 +36,7 @@ export function SearchBar ({
   }, [resetTriggered]);
 
   return (
-    <div className="searchbar-container flex width-25 align-self-center g-1">
+    <div className={`searchbar-container flex align-self-center g-1 ${className}`}>
         <img src={iconSrc} alt={iconAlt} className="dashboard-icon align-self-center ml-05"></img>
         <input 
           className="search-bar-stock align-self-center border-none" 

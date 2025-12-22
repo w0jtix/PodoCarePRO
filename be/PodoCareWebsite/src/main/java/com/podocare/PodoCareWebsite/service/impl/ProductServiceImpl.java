@@ -9,6 +9,7 @@ import com.podocare.PodoCareWebsite.exceptions.UpdateException;
 import com.podocare.PodoCareWebsite.model.Product;
 import com.podocare.PodoCareWebsite.repo.OrderProductRepo;
 import com.podocare.PodoCareWebsite.repo.ProductRepo;
+import com.podocare.PodoCareWebsite.repo.SaleItemRepo;
 import com.podocare.PodoCareWebsite.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ import static java.util.Objects.isNull;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepo productRepo;
     private final OrderProductRepo orderProductRepo;
+    private final SaleItemRepo saleItemRepo;
 
     @Override
     public ProductDTO getProductById(Long id) {
@@ -105,7 +107,7 @@ public class ProductServiceImpl implements ProductService {
             if (product.getIsDeleted()) {
                 throw new DeletionException("Product is already softDeleted.");
             }
-            if (hasOrderProductReferences(id)) {
+            if (hasOrderProductReferences(id) || hasSaleItemReferences(id)) {
                 product.softDelete();
                 productRepo.save(product);
             } else {
@@ -140,6 +142,10 @@ public class ProductServiceImpl implements ProductService {
 
     private boolean hasOrderProductReferences(Long productId) {
         return orderProductRepo.existsByProductId(productId);
+    }
+
+    private boolean hasSaleItemReferences(Long productId) {
+        return saleItemRepo.existsByProductId(productId);
     }
 
 }

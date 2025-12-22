@@ -1,5 +1,4 @@
-import axios from "axios";
-import { AxiosResponse } from "axios";
+
 import { NewProductCategory, ProductCategory } from "../models/categories";
 import { sendApiRequest } from "../components/send-api-request/SendApiRequest";
 

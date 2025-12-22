@@ -14,7 +14,7 @@ export const MENU_ITEMS: MenuItem[] = [
   { name: "Cennik", href: '/cennik', icon: 'cennik'},
   { name: "Usługi", href: '/uslugi', icon: 'uslugi'},
   { name: "Klienci", href: '/klienci', icon: 'klienci' },
-  { name: "Grafik", href: '/grafik', icon: 'grafik' },
+  { name: "Wizyty", href: '/wizyty', icon: 'wizyty' },
   { name: "Statystyki", href: '/statystyki', icon: 'statystyki'},
   { name: "Ustawienia", href: '/ustawienia', icon: 'ustawienia' },
 ];

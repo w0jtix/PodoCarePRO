@@ -2,6 +2,7 @@ package com.podocare.PodoCareWebsite.service.impl;
 
 
 import com.podocare.PodoCareWebsite.DTO.BaseServiceDTO;
+import com.podocare.PodoCareWebsite.DTO.BaseServiceVariantDTO;
 import com.podocare.PodoCareWebsite.DTO.request.KeywordFilterDTO;
 import com.podocare.PodoCareWebsite.DTO.request.ServiceFilterDTO;
 import com.podocare.PodoCareWebsite.exceptions.CreationException;
@@ -9,14 +10,15 @@ import com.podocare.PodoCareWebsite.exceptions.DeletionException;
 import com.podocare.PodoCareWebsite.exceptions.ResourceNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.UpdateException;
 import com.podocare.PodoCareWebsite.model.BaseService;
+import com.podocare.PodoCareWebsite.model.BaseServiceVariant;
 import com.podocare.PodoCareWebsite.repo.BaseServiceRepo;
+import com.podocare.PodoCareWebsite.repo.VisitItemRepo;
 import com.podocare.PodoCareWebsite.service.BaseServiceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -26,6 +28,7 @@ import static java.util.Objects.isNull;
 public class BaseServiceServiceImpl implements BaseServiceService {
 
     private final BaseServiceRepo baseServiceRepo;
+    private final VisitItemRepo visitItemRepo;
 
 
     public BaseServiceDTO getBaseServiceById(Long id) {
@@ -38,7 +41,6 @@ public class BaseServiceServiceImpl implements BaseServiceService {
         if(isNull(filter)) {
             filter = new ServiceFilterDTO();
         }
-
         return baseServiceRepo.findAllWithFilters(filter.getKeyword(), filter.getCategoryIds()).stream()
                 .map(BaseServiceDTO::new)
                 .collect(Collectors.toList());
@@ -66,28 +68,68 @@ public class BaseServiceServiceImpl implements BaseServiceService {
 
     @Override
     @Transactional
-    public BaseServiceDTO updateBaseService(Long id, BaseServiceDTO service) {
-        try{
-            getBaseServiceById(id);
+    public BaseServiceDTO updateBaseService(Long id, BaseServiceDTO serviceDTO) {
+        try {
+            BaseService existingService = baseServiceRepo.findOneById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Service not found with id: " + id));
 
-            checkForDuplicatesExcludingCurrent(service, id);
-            service.setId(id);
-            return new BaseServiceDTO(baseServiceRepo.save(service.toEntity()));
+            checkForDuplicatesExcludingCurrent(serviceDTO, id);
+
+            Set<Long> newVariantIds = serviceDTO.getVariants().stream()
+                    .map(BaseServiceVariantDTO::getId)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet());
+
+            Set<BaseServiceVariantDTO> variantsToKeep = new HashSet<>();
+
+            for (BaseServiceVariant existingVariant : existingService.getVariants()) {
+                if (!newVariantIds.contains(existingVariant.getId())) {
+
+                    if (visitItemRepo.existsByServiceVariantId(existingVariant.getId())) {
+                        existingVariant.softDelete();
+                        variantsToKeep.add(new BaseServiceVariantDTO(existingVariant));
+                    }
+                }
+            }
+
+            serviceDTO.getVariants().addAll(variantsToKeep);
+
+            serviceDTO.setId(id);
+            return new BaseServiceDTO(baseServiceRepo.save(serviceDTO.toEntity()));
+
+        } catch (ResourceNotFoundException e) {
+            throw e;
         } catch (Exception e) {
-            throw new UpdateException("Failed to updated Service, Reason: " + e.getMessage(), e);
+            throw new UpdateException("Failed to update Service, Reason: " + e.getMessage(), e);
         }
     }
 
     @Override
     @Transactional
     public void deleteBaseServiceById(Long id) {
-        try{
+        try {
             BaseService service = baseServiceRepo.findOneById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Service not found with id: " + id));
-            baseServiceRepo.deleteById(id);
+
+            if (service.getIsDeleted()) {
+                throw new DeletionException("Service is already soft-deleted.");
+            }
+
+            if (hasVisitItemReferences(id)) {
+                service.softDelete();
+                baseServiceRepo.save(service);
+            } else {
+                baseServiceRepo.deleteById(id);
+            }
+        } catch (ResourceNotFoundException | DeletionException e) {
+            throw e;
         } catch (Exception e) {
             throw new DeletionException("Failed to delete Service, Reason: " + e.getMessage(), e);
         }
+    }
+
+    private boolean hasVisitItemReferences(Long serviceId) {
+        return visitItemRepo.existsByServiceId(serviceId);
     }
 
     private void checkForDuplicatesExcludingCurrent(BaseServiceDTO serviceDTO, Long currentId) {

@@ -37,6 +37,13 @@ public class UserController {
         return  new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    @GetMapping("/employee/{employeeId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<UserDTO> getUserByEmployeeId(@PathVariable(value = "employeeId") Long employeeId) {
+        UserDTO user = userService.getUserByEmployeeId(employeeId);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<UserDTO> updateUser(@PathVariable(value = "id") Long id, @NonNull @RequestBody UserDTO user) {

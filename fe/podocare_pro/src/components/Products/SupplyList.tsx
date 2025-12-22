@@ -6,14 +6,14 @@ import AllProductService from "../../services/AllProductService.tsx";
 import { ProductFilterDTO } from "../../models/product.tsx";
 import { Product } from "../../models/product";
 import { PRODUCT_LIST_ATTRIBUTES } from "../../constants/list-headers.ts";
-
-
+import { useAlert } from "../Alert/AlertProvider.tsx";
+import { AlertType } from "../../models/alert.ts";
 
 export interface SupplyListProps {
   filter: ProductFilterDTO;
   setIsAddNewProductsPopupOpen: (isOpen: boolean) => void;
   setIsEditProductsPopupOpen: (isOpen: boolean) => void;
-  setIsRemoveProductsPopupOpen: (isOpen: boolean) => void;
+  setRemoveProductId: (productId: string | number | null) => void;
   setSelectedProduct: (product: Product | null) => void;
   className?: string;
 }
@@ -22,15 +22,14 @@ export function SupplyList ({
   filter,
   setIsAddNewProductsPopupOpen,
   setIsEditProductsPopupOpen,
-  setIsRemoveProductsPopupOpen,
+  setRemoveProductId,
   setSelectedProduct,
-  className = ""
+  className = "",
 }: SupplyListProps) {
   const [items, setItems] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const itemsPerPage = 14;
+  const { showAlert } = useAlert();
 
   const buildFilterDTO = (filter: ProductFilterDTO) => {
     const filterDTO: ProductFilterDTO = {};
@@ -66,6 +65,7 @@ export function SupplyList ({
       })
       .catch((error) => {
         setItems([]);
+        showAlert("Błąd", AlertType.ERROR);
         setError("Błąd podczas pobierania produktów");
         console.error("Error fetching products:", error);
       })
@@ -77,21 +77,7 @@ export function SupplyList ({
   useEffect(() => {
     setLoading(true);
     fetchItems(filter);
-    setCurrentPage(1);
   }, [filter]);
-
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentItems = items.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(items.length / itemsPerPage);
-
-  const handlePreviousPage = useCallback(() => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-  },[]);
-
-  const handleNextPage = useCallback(() => {
-    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
-  },[]);
 
   return (
     <>
@@ -108,47 +94,17 @@ export function SupplyList ({
           <h2>Coś poszło nie tak 😵</h2>
         </div>
       ) : (
-        <>
+        <section className="products-list-section width-95 flex align-items-center justify-center mt-05">
           <ItemList
             attributes={PRODUCT_LIST_ATTRIBUTES}
-            items={currentItems}
-            currentPage={currentPage}
-            itemsPerPage={itemsPerPage}
+            items={items}
             setIsAddNewProductsPopupOpen={setIsAddNewProductsPopupOpen}
             setIsEditProductsPopupOpen={setIsEditProductsPopupOpen}
-            setIsRemoveProductsPopupOpen={setIsRemoveProductsPopupOpen}
+            setRemoveProductId={setRemoveProductId}
             setSelectedProduct={setSelectedProduct}
+            className="products"
           />
-          {items.length > itemsPerPage && (
-            <div className="list-pagination flex g-10px align-items-center">
-              <button
-                className="list-prev-page-button transparent border-none pointer"
-                onClick={handlePreviousPage}
-                disabled={currentPage === 1}
-              >
-                <img
-                  className="pagination-img flex align-items-center"
-                  src="src/assets/previousPage.svg"
-                  alt="previous page"
-                />
-              </button>
-              <span className="page-info">
-                {currentPage} / {totalPages}
-              </span>
-              <button
-                className="list-next-page-button transparent border-none pointer"
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages}
-              >
-                <img
-                  className="pagination-img"
-                  src="src/assets/nextPage.svg"
-                  alt="next page"
-                />
-              </button>
-            </div>
-          )}
-        </>
+        </section>
       )}
     </>
   );

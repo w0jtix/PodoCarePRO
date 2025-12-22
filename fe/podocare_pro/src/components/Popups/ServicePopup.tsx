@@ -1,8 +1,6 @@
 import {
   BaseService,
-  BaseServiceAddOn,
   NewBaseService,
-  NewBaseServiceAddOn,
 } from "../../models/service";
 import { useCallback, useState, useEffect } from "react";
 import { useAlert } from "../Alert/AlertProvider";
@@ -34,7 +32,6 @@ export function ServicePopup({
     duration: 0,
     variants: [],
     category: null,
-    addOns: [],
   });
   const { showAlert } = useAlert();
 
@@ -83,6 +80,7 @@ export function ServicePopup({
 
   const portalRoot = document.getElementById("portal-root");
   if (!portalRoot) {
+    showAlert("Błąd", AlertType.ERROR);
     console.error("Portal root element not found");
     return null;
   }

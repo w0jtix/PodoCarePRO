@@ -20,7 +20,8 @@ public interface BaseServiceRepo extends JpaRepository<BaseService, Long> {
 
     @Query("SELECT s FROM BaseService s " +
             "LEFT JOIN FETCH s.category c " +
-            "WHERE (COALESCE(:keyword, '') = '' OR LOWER(s.name) LIKE LOWER(CONCAT(:keyword, '%')))" +
+            "WHERE s.isDeleted = false " +
+            "AND (COALESCE(:keyword, '') = '' OR LOWER(s.name) LIKE LOWER(CONCAT('%', :keyword, '%')))" +
             "AND (COALESCE(:categoryIds, NULL) IS NULL OR s.category.id IN :categoryIds)"
     )
     List<BaseService> findAllWithFilters(
@@ -29,4 +30,16 @@ public interface BaseServiceRepo extends JpaRepository<BaseService, Long> {
             );
 
     Boolean existsByName(String name);
+
+    @Query("""
+        SELECT COUNT(v) > 0
+        FROM BaseService s
+        JOIN s.variants v
+        WHERE s.id = :serviceId AND v.id = :variantId
+    """)
+    Boolean serviceHasVariant(Long serviceId, Long variantId);
+
+    long countByCategoryIdAndIsDeletedFalse(Long categoryId);
+
+    long countByCategoryId(Long categoryId);
 }

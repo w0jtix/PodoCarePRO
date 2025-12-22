@@ -24,7 +24,7 @@ export function HandyOrderList({
   expandedOrderIds,
   setExpandedOrderIds,
   className = "",
-}) {
+}: HandyOrderListProps) {
   const toggleOrder = (orderId: number) => {
     setExpandedOrderIds((prevIds) =>
       prevIds.includes(orderId)

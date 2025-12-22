@@ -7,6 +7,7 @@ export interface SelectVatButtonProps {
   onSelect: (vatRate: VatRate) => void;
   placeholder?: string;
   disabled?: boolean;
+  className?: string;
 }
 
 export function SelectVATButton({
@@ -14,6 +15,7 @@ export function SelectVATButton({
   onSelect,
   placeholder = "0%",
   disabled = false,
+  className="",
 }: SelectVatButtonProps) {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<VatRate | null>(
@@ -64,7 +66,10 @@ export function SelectVATButton({
 
   return (
     <div className="vat-select-container relative inline-block" ref={dropdownRef}>
-      <button className="vat-select-button flex align-items-center justify-center g-5px pointer transparent" onClick={toggleDropdown}>
+      <button 
+        className={`vat-select-button flex align-items-center justify-center g-5px pointer transparent ${className}`} 
+        onClick={toggleDropdown}
+        >
         <a className="vat-button-selection flex justify-center align-items-center">
           {selectedItem ? getVatRateDisplay(selectedItem) : placeholder}
         </a>

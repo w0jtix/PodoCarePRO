@@ -5,27 +5,14 @@ export interface ServiceFilterDTO {
     categoryIds?: number[] | null;
 }
 
-export interface BaseServiceAddOn {
-    id: number;
-    name: string;
-    price: number;
-    duration: number;
-}
-
-export interface NewBaseServiceAddOn {
-    name: string;
-    price: number;
-    duration: number;
-}
-
 export interface BaseService {
     id: number;
     name: string;
     price: number;
-    duration: number;
+    duration: number;   
+    isDeleted?: boolean;
     variants: ServiceVariant[];
     category: BaseServiceCategory;
-    addOns: BaseServiceAddOn[];
 }
 
 export interface NewBaseService {
@@ -34,14 +21,14 @@ export interface NewBaseService {
     duration: number;
     variants: NewServiceVariant[] | ServiceVariant[];
     category: BaseServiceCategory | null;
-    addOns: BaseServiceAddOn[];
 }
 
 export interface ServiceVariant {
     id: number;
     name: string;
     price: number;
-    duration: number;
+    duration: number;   
+    isDeleted?: boolean;
 }
 
 export interface NewServiceVariant {

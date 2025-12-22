@@ -38,6 +38,7 @@ export function ProfileDashboard() {
       const response = await UserService.getAllUsers();
       setUsers(response);
     } catch (err) {
+      showAlert("Błąd", AlertType.ERROR);
       console.error("Błąd podczas pobierania użytkowników!", err);
     }
   };
@@ -49,7 +50,8 @@ export function ProfileDashboard() {
       })
       .catch((error) => {
         setEmployees([]);
-        console.error("Error fetching categories:", error);
+        showAlert("Błąd", AlertType.ERROR);
+        console.error("Error fetching employees:", error);
       });
   };
 
@@ -196,6 +198,7 @@ export function ProfileDashboard() {
           employee: jwtUser.employee,
         });
       } catch (err) {
+        showAlert("Błąd", AlertType.ERROR);
         console.error("Błąd podczas pobierania roli!", err);
       }
     };
@@ -307,6 +310,7 @@ export function ProfileDashboard() {
                   <ActionButton
                     src="src/assets/edit.svg"
                     alt="Edytuj Użytkownika"
+                    iconTitle={"Edytuj Użytkownika"}
                     text="Edytuj"
                     onClick={() => {
                       handleForceChangePassword();
@@ -351,3 +355,4 @@ export function ProfileDashboard() {
     </div>
   );
 }
+export default ProfileDashboard;

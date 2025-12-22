@@ -2,9 +2,7 @@ import { useAlert } from "../Alert/AlertProvider";
 import { useState, useCallback, useEffect } from "react";
 import NavigationBar from "../NavigationBar";
 import ActionButton from "../ActionButton";
-import CategoryButtons from "../CategoryButtons";
 import {
-  CategoryButtonMode,
   BaseServiceCategory,
   NewBaseServiceCategory,
 } from "../../models/categories";
@@ -19,10 +17,8 @@ import { SERVICES_LIST_ATTRIBUTES } from "../../constants/list-headers";
 import { BaseService } from "../../models/service";
 import BaseServiceService from "../../services/BaseServiceService";
 import ServicePopup from "../Popups/ServicePopup";
-import AvailableAddOnsPopup from "../Popups/AvailableAddOnsPopup";
 import RemovePopup from "../Popups/RemovePopup";
 import DropdownSelect from "../DropdownSelect";
-import { ca } from "date-fns/locale";
 
 export function ServicesDashboard() {
   const [keyword, setKeyword] = useState<string | undefined>(undefined);
@@ -32,8 +28,6 @@ export function ServicesDashboard() {
     BaseServiceCategory[]
   >([]);
   const [isRemovePopupOpen, setIsRemovePopupOpen] = useState<boolean>(false);
-  const [isManageAddOnsPopupOpen, setIsManageAddOnsPopupOpen] =
-    useState<boolean>(false);
   const [services, setServices] = useState<BaseService[]>([]);
   const [selectedService, setSelectedService] = useState<BaseService | null>(
     null
@@ -51,6 +45,7 @@ export function ServicesDashboard() {
       })
       .catch((error) => {
         setCategories([]);
+        showAlert("Błąd", AlertType.ERROR);
         console.error("Error fetching categories:", error);
       });
   };
@@ -59,7 +54,6 @@ export function ServicesDashboard() {
     const selectedCategoryIds = selectedCategories.length > 0 ? selectedCategories.map(cat => cat.id) : null;
     BaseServiceService.getServices({ keyword: keyword, categoryIds: selectedCategoryIds })
       .then((data) => {
-        console.log(data);
         const sorted = data.sort(
           (a, b) => (a.category?.id || 0) - (b.category?.id || 0)
         );
@@ -67,6 +61,7 @@ export function ServicesDashboard() {
       })
       .catch((error) => {
         setServices([]);
+        showAlert("Błąd", AlertType.ERROR);
         console.error("Error fetching Services: ", error);
       });
   };
@@ -191,6 +186,7 @@ export function ServicesDashboard() {
         <ActionButton
           src={"src/assets/reset.svg"}
           alt={"Reset filters"}
+          iconTitle={"Resetuj filtry"}
           text={"Reset"}
           onClick={handleReset}
           disableText={true}
@@ -209,12 +205,6 @@ export function ServicesDashboard() {
             alt={"Nowa Kategoria"}
             text={"Nowa Kategoria"}
             onClick={() => setIsCategoryPopupOpen(true)}
-          />
-          <ActionButton
-            src={"src/assets/star.svg"}
-            alt={"Zarządzaj Dodatkami"}
-            text={"Zarządzaj Dodatkami"}
-            onClick={() => setIsManageAddOnsPopupOpen(true)}
           />
         </section>
       </section>
@@ -246,17 +236,9 @@ export function ServicesDashboard() {
           onConfirm={handleCategoryAction}
         />
       )}
-      {isManageAddOnsPopupOpen && (
-        <AvailableAddOnsPopup
-          onClose={() => setIsManageAddOnsPopupOpen(false)}
-          action={Action.MANAGE}
-          className="manage-addons"
-        />
-      )}
       {isRemovePopupOpen && (
         <RemovePopup
           onClose={() => setIsRemovePopupOpen(false)}
-          selectedItem={selectedService}
           warningText={
             "Zatwierdzenie spowoduje usunięcie Usługi z bazy danych!"
           }

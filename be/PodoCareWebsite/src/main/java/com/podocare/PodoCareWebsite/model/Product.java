@@ -1,6 +1,7 @@
 package com.podocare.PodoCareWebsite.model;
 
 import com.podocare.PodoCareWebsite.exceptions.InsufficientSupplyException;
+import com.podocare.PodoCareWebsite.model.constants.VatRate;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,6 +32,14 @@ public class Product {
     @Builder.Default
     private Integer supply = 0;
 
+    @Column(nullable = true)
+    private Double sellingPrice;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "vat_rate", nullable = false)
+    @Builder.Default
+    private VatRate vatRate = VatRate.VAT_23;
+
     @Column
     private String description;
 
@@ -46,7 +55,7 @@ public class Product {
         if (this.supply < quantity) {
             throw new InsufficientSupplyException("Not enough supply!");
         }
-        this.supply =- quantity;
+        this.supply -= quantity;
     }
 
     public void softDelete() {
@@ -57,5 +66,13 @@ public class Product {
     public void restore(Integer newSupply) {
         this.isDeleted = false;
         this.supply = newSupply != null ? newSupply : 0;
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void setDefaultVatRate() {
+        if (vatRate == null) {
+            vatRate = VatRate.VAT_23;
+        }
     }
 }

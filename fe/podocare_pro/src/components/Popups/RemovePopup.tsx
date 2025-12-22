@@ -1,11 +1,11 @@
 import ReactDOM from "react-dom";
 import ActionButton from "../ActionButton";
-import { Product } from "../../models/product";
-import { BaseService, BaseServiceAddOn } from "../../models/service";
+import { useAlert } from "../Alert/AlertProvider";
+import { AlertType } from "../../models/alert";
 
 export interface RemovePopupProps {
   onClose: () => void;
-  selectedItem?: Product | BaseService | BaseServiceAddOn | null;
+  /* selectedItem?: Product | BaseService | Client | null; */
   warningText?: string;
   footerText?: React.ReactNode;
   handleRemove:() => void;
@@ -14,17 +14,18 @@ export interface RemovePopupProps {
 
 export function RemovePopup ({
   onClose,
-  selectedItem,
+  /* selectedItem, */
   warningText="",
   footerText,
   handleRemove,
   className = ""
 }: RemovePopupProps) {
-
+    const { showAlert } = useAlert();
   
 
   const portalRoot = document.getElementById("portal-root");
   if (!portalRoot) {
+    showAlert("Błąd", AlertType.ERROR);
     console.error("Portal root element not found");
     return null;
   }
@@ -47,14 +48,12 @@ export function RemovePopup ({
         </section>
         <section className="remove-product-popup-interior width-90 mb-1">
           <section>
-            <a className="remove-popup-warning-a flex justify-center">
+            <a className="remove-popup-warning-a flex justify-center text-align-center">
               {warningText}
             </a>
             <br />
           </section>
         </section>
-        {selectedItem && (
-          <>
             <section className="footer-popup-action-buttons width-60 flex space-between mb-05">
               <div className="footer-cancel-button">
                 <ActionButton
@@ -78,8 +77,7 @@ export function RemovePopup ({
               {footerText}
             </a>
             )}
-          </>
-        )}
+         
       </div>
     </div>,
     portalRoot

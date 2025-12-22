@@ -1,7 +1,6 @@
 package com.podocare.PodoCareWebsite.DTO;
 
 import com.podocare.PodoCareWebsite.model.BaseService;
-import com.podocare.PodoCareWebsite.model.BaseServiceAddOn;
 import com.podocare.PodoCareWebsite.model.BaseServiceVariant;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,8 +25,8 @@ public class BaseServiceDTO {
     private Double price;
     private Integer duration;
     private BaseServiceCategoryDTO category;
+    private Boolean isDeleted;
     private List<BaseServiceVariantDTO> variants = new ArrayList<>();
-    private List<BaseServiceAddOnDTO> addOns = new ArrayList<>();
 
     public BaseServiceDTO(BaseService service) {
         this.id = service.getId();
@@ -35,13 +34,11 @@ public class BaseServiceDTO {
         this.price = service.getPrice();
         this.duration = service.getDuration();
         this.category = new BaseServiceCategoryDTO(service.getCategory());
+        this.isDeleted = service.getIsDeleted();
         if(nonNull(service.getVariants()))
             this.variants = service.getVariants().stream()
+                    .filter(variant -> !variant.getIsDeleted()) // Tylko aktywne warianty
                     .map(BaseServiceVariantDTO::new)
-                    .collect(Collectors.toList());
-        if(nonNull(service.getAddOns()))
-            this.addOns = service.getAddOns().stream()
-                    .map(BaseServiceAddOnDTO::new)
                     .collect(Collectors.toList());
     }
 
@@ -52,8 +49,8 @@ public class BaseServiceDTO {
                 .price(this.price)
                 .duration(this.duration)
                 .category(this.category.toEntity())
+                .isDeleted(this.isDeleted != null ? this.isDeleted : false)
                 .variants(new HashSet<>())
-                .addOns(new HashSet<>())
                 .build();
 
         if (nonNull(this.variants)) {
@@ -61,13 +58,6 @@ public class BaseServiceDTO {
                     .map(dto -> dto.toEntity(service))
                     .collect(Collectors.toSet());
             service.setVariants(variantEntities);
-        }
-
-        if (nonNull(this.addOns)) {
-            Set<BaseServiceAddOn> addOnEntities = this.addOns.stream()
-                    .map(BaseServiceAddOnDTO::toEntity)
-                    .collect(Collectors.toSet());
-            service.setAddOns(addOnEntities);
         }
 
         return service;

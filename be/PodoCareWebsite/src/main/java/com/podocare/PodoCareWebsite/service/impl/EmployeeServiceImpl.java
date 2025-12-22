@@ -2,6 +2,7 @@ package com.podocare.PodoCareWebsite.service.impl;
 
 import com.podocare.PodoCareWebsite.DTO.EmployeeDTO;
 import com.podocare.PodoCareWebsite.exceptions.CreationException;
+import com.podocare.PodoCareWebsite.exceptions.DeletionException;
 import com.podocare.PodoCareWebsite.exceptions.ResourceNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.UpdateException;
 import com.podocare.PodoCareWebsite.model.Employee;
@@ -27,7 +28,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public List<EmployeeDTO> getAllEmployees() {
-        return employeeRepo.findAll().stream()
+        return employeeRepo.findAllActive().stream()
                 .map(EmployeeDTO::new)
                 .collect(Collectors.toList());
     }
@@ -61,6 +62,25 @@ public class EmployeeServiceImpl implements EmployeeService {
             return new EmployeeDTO(employeeRepo.save(employee.toEntity()));
         } catch(Exception e) {
             throw new UpdateException("Failed to update Employee, Reason: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void deleteEmployeeById(Long id) {
+        try {
+            Employee employee = employeeRepo.findOneById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: " + id));
+
+            if (employee.getIsDeleted()) {
+                throw new DeletionException("Employee is already soft-deleted.");
+            }
+
+            employee.softDelete();
+            employeeRepo.save(employee);
+        } catch (ResourceNotFoundException | DeletionException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new DeletionException("Failed to delete Employee, Reason: " + e.getMessage(), e);
         }
     }
 }

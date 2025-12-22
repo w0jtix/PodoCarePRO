@@ -134,6 +134,7 @@ export function EditUserPopup({
 
   const portalRoot = document.getElementById("portal-root");
   if (!portalRoot) {
+    showAlert("Błąd", AlertType.ERROR);
     console.error("Portal root element not found");
     return null;
   }

@@ -1,4 +1,3 @@
-import React from "react";
 import Dashboard from "../components/Products/Dashboard";
 import Navbar from "../components/Navbar";
 

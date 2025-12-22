@@ -3,6 +3,8 @@ import { useState } from "react";
 import ReactDOM from "react-dom";
 import OrderCreator from "../Orders/OrderCreator";
 import { Order } from "../../models/order";
+import { useAlert } from "../Alert/AlertProvider";
+import { AlertType } from "../../models/alert";
 
 export interface EditOrderPopupProps {
   onClose: () => void;
@@ -18,9 +20,11 @@ export function EditOrderPopup({
   className = "",
 }: EditOrderPopupProps) {
   const [hasWarning, setHasWarning] = useState<boolean>(false);
+  const { showAlert } = useAlert();
 
   const portalRoot = document.getElementById("portal-root");
   if (!portalRoot) {
+    showAlert("Błąd", AlertType.ERROR);
     console.error("Portal root element not found");
     return null;
   }

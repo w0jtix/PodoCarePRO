@@ -17,6 +17,8 @@ export interface TextInputProps<T extends SuggestionItem = SuggestionItem> {
   rows?: number;
   className?: string;
   disabled?: boolean;
+  maxLength?: number;
+  numbersOnly?: boolean;
 }
 
 export function TextInput<T extends SuggestionItem = SuggestionItem> ({
@@ -30,6 +32,8 @@ export function TextInput<T extends SuggestionItem = SuggestionItem> ({
   rows,
   className = "",
   disabled = false,
+  maxLength,
+  numbersOnly = false,
 }: TextInputProps<T>) {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
@@ -40,6 +44,10 @@ export function TextInput<T extends SuggestionItem = SuggestionItem> ({
   const capitalizeFirstLetter = (string: string): string => {
     if (!string) return "";
     return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
+  const formatNumberWithSpaces = (value: string): string => {
+    return value.replace(/(\d{3})(?=\d)/g, '$1 ');
   };
 
   const getDisplayText = (item: T): string => {
@@ -70,9 +78,14 @@ export function TextInput<T extends SuggestionItem = SuggestionItem> ({
   }, [keyword, isUserInteracting, dropdown, suggestions.length]);
 
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
-    const inputValue = e.target.value;
+    let inputValue = e.target.value;
+
+    if (numbersOnly) {
+      inputValue = inputValue.replace(/\D/g, '');
+    }
+
     const capitalizedValue = capitalizeFirstLetter(inputValue);
-    setKeyword(capitalizedValue);
+    setKeyword(numbersOnly ? inputValue : capitalizedValue);
     if (multiline) {
       onSelect?.(inputValue);
     } else {
@@ -92,7 +105,7 @@ export function TextInput<T extends SuggestionItem = SuggestionItem> ({
         dropdown && inputValue.length > 0 && suggestions.length > 0
       );
     }
-  }, [dropdown, suggestions.length]);
+  }, [dropdown, suggestions.length, numbersOnly]);
 
   const handleSelect = useCallback((item: T): void => {
     setSelectedItem(item);
@@ -151,13 +164,17 @@ export function TextInput<T extends SuggestionItem = SuggestionItem> ({
   }, []);
 
   const getInputValue= (): string => {
+    let displayValue: string;
+
     if (isUserInteracting) {
-      return keyword;
+      displayValue = keyword;
+    } else if (selectedItem) {
+      displayValue = getDisplayText(selectedItem);
+    } else {
+      displayValue = keyword;
     }
-    if (selectedItem) {
-      return getDisplayText(selectedItem);
-    }
-    return keyword;
+
+    return numbersOnly ? formatNumberWithSpaces(displayValue) : displayValue;
   }
 
   const filteredSuggestions = suggestions.filter(suggestion =>
@@ -188,6 +205,7 @@ export function TextInput<T extends SuggestionItem = SuggestionItem> ({
             onKeyDown={handleKeyPress}
             onBlur={handleInputBlur}
             disabled={disabled}
+            maxLength={maxLength}
           />
           {dropdown &&
             isDropdownOpen &&

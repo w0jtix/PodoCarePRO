@@ -1,16 +1,17 @@
 import React, { useCallback, useEffect } from "react";
 import ActionButton from "../ActionButton";
 import { useState } from "react";
-import { ListAttribute } from "../../constants/list-headers";
+import { ListAttribute} from "../../constants/list-headers";
 import { BaseService } from "../../models/service";
 
 export interface ServiceListProps {
   attributes: ListAttribute[];
   items: BaseService[];
-  setIsEditServicePopupOpen: (isOpen: boolean) => void;
-  setIsRemoveServicePopupOpen: (isOpen: boolean) => void;
-  setSelectedService: (service: BaseService | null) => void;
+  setIsEditServicePopupOpen?: (isOpen: boolean) => void;
+  setIsRemoveServicePopupOpen?: (isOpen: boolean) => void;
+  setSelectedService?: (service: BaseService | null) => void;
   className?: string;
+  onClick?: (service: BaseService) => void;
 }
 
 export function ServiceList({
@@ -20,14 +21,15 @@ export function ServiceList({
   setIsRemoveServicePopupOpen,
   setSelectedService,
   className = "",
+  onClick
 }: ServiceListProps) {
   const [expandedServicesIds, setExpandedServicesIds] = useState<number[]>([]);
 
   const handleOnClickEdit = useCallback(
     (e: React.MouseEvent, item: BaseService) => {
       e.stopPropagation();
-      setSelectedService(item);
-      setIsEditServicePopupOpen(true);
+      setSelectedService?.(item);
+      setIsEditServicePopupOpen?.(true);
     },
     [setSelectedService, setIsEditServicePopupOpen]
   );
@@ -35,23 +37,26 @@ export function ServiceList({
   const handleOnClickRemove = useCallback(
     (e: React.MouseEvent, item: BaseService) => {
       e.stopPropagation();
-      setSelectedService(item);
-      setIsRemoveServicePopupOpen(true);
+      setSelectedService?.(item);
+      setIsRemoveServicePopupOpen?.(true);
     },
     [setSelectedService, setIsRemoveServicePopupOpen]
   );
 
-  const toggleServices = (serviceId: number) => {
+  const toggleServices = (serviceId: number, service: BaseService) => {
     setExpandedServicesIds((prevIds) =>
       prevIds.includes(serviceId)
         ? prevIds.filter((id) => id !== serviceId)
         : [...prevIds, serviceId]
     );
+    onClick?.(service);
   };
+
 
   const renderAttributeContent = (
     attr: ListAttribute,
-    item: BaseService
+    item: BaseService,
+    index?: number,
   ): React.ReactNode => {
     switch (attr.name) {
 
@@ -79,12 +84,16 @@ export function ServiceList({
       case "Cena":
         return `${item.price} zł`;
 
+      case "Koszt" :
+        return `${item.price} zł`;
+
       case "Opcje":
         return (
           <div className="item-list-single-item-action-buttons flex">
             <ActionButton
               src="src/assets/edit.svg"
               alt="Edytuj Usługę"
+              iconTitle={"Edytuj Usługę"}
               text="Edytuj"
               onClick={(e) => handleOnClickEdit(e, item)}
               disableText={true}
@@ -92,6 +101,7 @@ export function ServiceList({
             <ActionButton
               src="src/assets/cancel.svg"
               alt="Usuń Usługę"
+              iconTitle={"Usuń Usługę"}
               text="Usuń"
               onClick={(e) => handleOnClickRemove(e, item)}
               disableText={true}
@@ -105,19 +115,19 @@ export function ServiceList({
 
   return (
     <div
-      className={`item-list width-93 grid p-0 mt-1 ${
+      className={`item-list width-max grid p-0 ${
         items.length === 0 ? "border-none" : ""
       } ${className}`}
       
     >
-      {items.map((item) => (
-        <div key={item.id} className={`product-wrapper ${className}`}>
+      {items.map((item, index) => (
+        <div key={`${item.id}-${index}`} className={`product-wrapper ${className}`}>
           <div
             className={`item align-items-center pointer flex ${className}`}
-            onClick={() => toggleServices(item.id)}
+            onClick={() => toggleServices(item.id, item)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                toggleServices(item.id);
+                toggleServices(item.id, item);
               }
             }}
           >
@@ -130,7 +140,7 @@ export function ServiceList({
                   justifyContent: attr.justify,
                 }}
               >
-                {renderAttributeContent(attr, item)}
+                {renderAttributeContent(attr, item, index)}
               </div>
             ))}
           </div>

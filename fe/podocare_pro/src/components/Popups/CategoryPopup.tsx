@@ -3,6 +3,8 @@ import ActionButton from "../ActionButton";
 import { useState } from "react";
 import CategoryForm from "../CategoryForm";
 import { BaseServiceCategory, NewBaseServiceCategory, NewProductCategory, ProductCategory } from "../../models/categories";
+import { useAlert } from "../Alert/AlertProvider";
+import { AlertType } from "../../models/alert";
 
 export interface CategoryPopupProps {
   categories: ProductCategory[] | BaseServiceCategory[];
@@ -22,9 +24,11 @@ export function CategoryPopup({
   const [categoryDTO, setCategoryDTO] = useState<
     ProductCategory | NewProductCategory | BaseServiceCategory | NewBaseServiceCategory | null
   >(null);
+  const { showAlert } = useAlert();
 
   const portalRoot = document.getElementById("portal-root");
   if (!portalRoot) {
+    showAlert("Błąd", AlertType.ERROR);
     console.error("Portal root element not found");
     return null;
   }

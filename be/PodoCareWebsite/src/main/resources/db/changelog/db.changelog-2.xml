@@ -208,5 +208,13 @@
                 constraintName="fk_service_variant_service"/>
     </changeSet>
 
+    <changeSet id="2.13-add-selling-price-to-product" author="Wojtek">
+        <addColumn tableName="product">
+            <column name="selling_price" type="DOUBLE PRECISION">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 
 </databaseChangeLog>

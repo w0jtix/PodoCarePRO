@@ -24,8 +24,6 @@ export function OrderHistory() {
     dateTo: null,
   });
   const [loading, setLoading] = useState<boolean>(true);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const itemsPerPage = 14;
 
   const handleSuccess = useCallback(
     (message: string) => {
@@ -41,7 +39,6 @@ export function OrderHistory() {
       dateFrom: null,
       dateTo: null,
     });
-    setCurrentPage(1);
     setSelectedSuppliers([]);
   }, []);
 
@@ -57,6 +54,7 @@ export function OrderHistory() {
       })
       .catch((error) => {
         setOrders([]);
+        showAlert("Błąd", AlertType.ERROR);
         console.error("Error fetching Orders:", error);
       })
       .finally(() => {
@@ -74,13 +72,13 @@ export function OrderHistory() {
       })
       .catch((error) => {
         setSuppliers([]);
+        showAlert("Błąd", AlertType.ERROR);
         console.error("Error fetching suppliers:", error);
       });
   }, []);
 
   useEffect(() => {
     fetchOrders();
-    setCurrentPage(1);
   }, [filter, fetchOrders]);
 
   useEffect(() => {
@@ -145,20 +143,6 @@ export function OrderHistory() {
     },
     [showAlert]
   );
-
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentItems = orders.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(orders.length / itemsPerPage);
-
-  const handlePreviousPage = useCallback(() => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-  }, []);
-
-  const handleNextPage = useCallback(() => {
-    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
-  }, [totalPages]);
-
   return (
     <>
       <section className="order-history-action-buttons width-80 flex align-self-center mt-1 mb-1 justify-center g-35">
@@ -192,6 +176,7 @@ export function OrderHistory() {
         <ActionButton
           src={"src/assets/reset.svg"}
           alt={"Reset"}
+          iconTitle={"Resetuj filtry"}
           text={"Reset"}
           onClick={handleResetFiltersAndData}
           disableText={true}
@@ -206,44 +191,13 @@ export function OrderHistory() {
           <div className="loading-dot relative flex align-items-center height-max width-25"></div>
         </div>
       ) : (
-        <>
+        
           <OrderList
             attributes={ORDER_HISTORY_ATTRIBUTES}
-            orders={currentItems}
-            currentPage={currentPage}
-            itemsPerPage={itemsPerPage}
+            orders={orders}
             onSuccess={handleSuccess}
+            className="products"
           />
-          {orders.length > itemsPerPage && (
-            <div className="list-pagination flex g-10px align-items-center">
-              <button
-                className="list-prev-page-button transparent border-none pointer"
-                onClick={handlePreviousPage}
-                disabled={currentPage === 1}
-              >
-                <img
-                  className="pagination-img flex align-items-center"
-                  src="src/assets/previousPage.svg"
-                  alt="previous page"
-                />
-              </button>
-              <span className="page-info">
-                {currentPage} / {totalPages}
-              </span>
-              <button
-                className="list-next-page-button transparent border-none pointer"
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages}
-              >
-                <img
-                  className="pagination-img"
-                  src="src/assets/nextPage.svg"
-                  alt="next page"
-                />
-              </button>
-            </div>
-          )}
-        </>
       )}
     </>
   );

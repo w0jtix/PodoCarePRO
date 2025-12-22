@@ -1,5 +1,6 @@
 import React from "react";
 import DigitInput from "../DigitInput";
+import CostInput from "../CostInput";
 import { useState, useEffect, useCallback } from "react";
 import CategoryButtons from "../CategoryButtons";
 import BrandService from "../../services/BrandService";
@@ -15,6 +16,10 @@ import {
   ProductWorkingData,
 } from "../../models/working-data";
 import CategoryService from "../../services/CategoryService";
+import SelectVATButton from "../SelectVATButton";
+import { VatRate } from "../../models/vatrate";
+import { useAlert } from "../Alert/AlertProvider";
+import { AlertType } from "../../models/alert";
 
 export interface ProductFormProps {
   onForwardProductForm: (product: Product | NewProduct) => void;
@@ -31,9 +36,7 @@ export function ProductForm({
   className = "",
   onForwardBrand,
 }: ProductFormProps) {
-  const [categories, setCategories] = useState<
-        ProductCategory[]
-      >([]);
+  const [categories, setCategories] = useState<ProductCategory[]>([]);
   const [productWorkingData, setProductWorkingData] =
     useState<ProductWorkingData>(() => {
       if (selectedProduct) {
@@ -41,27 +44,26 @@ export function ProductForm({
       }
       return createNewProductWorkingData();
     });
-  /* const [brandSuggestions, setBrandSuggestions] = useState<Brand[]>([]);
-  const [brandToCreate, setBrandToCreate] = useState<NewBrand | null>(null); */
-
+  const { showAlert } = useAlert();
   const isExistingBrand = (brand: Brand | NewBrand | null): brand is Brand => {
     return brand !== null && "id" in brand && typeof brand.id === "number";
   };
 
   const fetchCategories = async (): Promise<void> => {
-      CategoryService.getCategories()
-        .then((data) => {
-          setCategories(data);
-        })
-        .catch((error) => {
-          setCategories([]);
-          console.error("Error fetching categories:", error);
-        });
-    };
+    CategoryService.getCategories()
+      .then((data) => {
+        setCategories(data);
+      })
+      .catch((error) => {
+        setCategories([]);
+        showAlert("Błąd", AlertType.ERROR);
+        console.error("Error fetching categories:", error);
+      });
+  };
 
   useEffect(() => {
     fetchCategories();
-  },[])
+  }, []);
 
   useEffect(() => {
     if (productWorkingData.brandName.trim().length > 0) {
@@ -76,6 +78,7 @@ export function ProductForm({
           }));
         })
         .catch((error) => {
+          showAlert("Błąd", AlertType.ERROR);
           console.error("Error fetching filtered brands:", error.message);
           setProductWorkingData((prev) => ({
             ...prev,
@@ -119,19 +122,26 @@ export function ProductForm({
     }));
   }, []);
 
-  /*   const handleBrand = useCallback((brand: Brand | null) => {
-    setProductWorkingData((prev) => ({
-      ...prev,
-      brand: brand ?? null,
-    }));
-  }, []); */
-
   const handleSupply = useCallback((newSupply: number | null) => {
     setProductWorkingData((prev) => ({
       ...prev,
       supply: newSupply ?? 0,
     }));
   }, []);
+
+  const handleSellingPrice = useCallback((newSellingPrice: number | null) => {
+    setProductWorkingData((prev) => ({
+      ...prev,
+      sellingPrice: newSellingPrice ?? 0,
+    }));
+  }, []);
+
+  const handleVatSelect = useCallback((selectedVat: VatRate) => {
+    setProductWorkingData((prev) => ({
+      ...prev,
+      vatRate: selectedVat ?? VatRate.VAT_23,
+    }))
+  },[])
 
   const handleDescription = useCallback((newDesc: string) => {
     setProductWorkingData((prev) => ({
@@ -177,6 +187,14 @@ export function ProductForm({
     return productWorkingData.supply || 0;
   };
 
+  const getSellingPrice = (): number => {
+    return productWorkingData.sellingPrice || 0;
+  };
+
+  const getVatRate = (): VatRate => {
+    return productWorkingData.vatRate || VatRate.VAT_23;
+  }
+
   return (
     <div
       className={`product-form-container flex-column ${action
@@ -187,7 +205,7 @@ export function ProductForm({
         <a className="product-form-input-title">Kategoria:</a>
         <div className="product-form-category-buttons flex g-15px justify-center align-items-center">
           <CategoryButtons
-          categories={categories}
+            categories={categories}
             onSelect={handleCategory}
             mode={CategoryButtonMode.SELECT}
             selectedCategories={
@@ -223,6 +241,26 @@ export function ProductForm({
             <a className="product-form-input-title">Produkty na stanie:</a>
             <DigitInput onChange={handleSupply} value={getSupply()} />
           </li>
+          {productWorkingData &&
+            productWorkingData.category?.name === "Produkty" && (
+              <>
+              <li className="popup-common-section-row flex align-items-center space-between g-10px mt-15 ">
+                <a className="product-form-input-title">Cena sprzedaży:</a>
+                <CostInput
+                  onChange={handleSellingPrice}
+                  selectedCost={getSellingPrice()}
+                />
+              </li>
+              <li className="popup-common-section-row flex align-items-center space-between g-10px mt-15 ">
+                <a className="product-form-input-title">VAT sprzedaży:</a>
+                <SelectVATButton
+                  selectedVat={getVatRate()}
+                  onSelect={handleVatSelect}
+                  className="product-form"
+                />
+              </li>
+              </>
+            )}
           <li className="popup-common-section-row space-between g-10px description flex-column align-items-start mt-15">
             <a className="product-form-input-title">Dodatkowe informacje:</a>
             <TextInput

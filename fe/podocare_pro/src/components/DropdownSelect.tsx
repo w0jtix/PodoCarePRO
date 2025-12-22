@@ -5,7 +5,7 @@ import { useState, useRef, useEffect } from "react";
 multi select -> array of items */
 export interface DropdownItem {
   id: string | number;
-  name: string;
+  name?: string;
   [key: string]: any;
 }
 
@@ -20,10 +20,12 @@ export interface DropdownSelectProps<T extends DropdownItem> {
   placeholder?: string;
   value?: T | T[] | null;
   onChange: (value: T | T[] | null) => void;
+  getItemLabel?: (item: T) => string;
   searchable?: boolean;
   allowNew?: boolean;
   showTick?: boolean;
   multiple?: boolean;
+  reversed?: boolean;
   showNewPopup?: boolean;
   allowColors?: boolean;
   newItemComponent?: React.ComponentType<any> /* React.ComponentType<NewItemComponentProps>; */;
@@ -44,10 +46,12 @@ export function DropdownSelect<T extends DropdownItem>({
   placeholder = "",
   value,
   onChange,
+  getItemLabel,
   searchable = true,
   allowNew = true,
   showTick = true,
   multiple = false,
+  reversed = false,
   showNewPopup = false,
   allowColors = false,
   newItemComponent: NewItemComponent,
@@ -73,9 +77,14 @@ export function DropdownSelect<T extends DropdownItem>({
 
   const selectedItems = getSelectedValue();
 
-  const filteredItems = items.filter((item) =>
+  /* const filteredItems = items.filter((item) =>
     item.name.toLowerCase().startsWith(searchValue.toLowerCase())
-  );
+  ); */
+  const filteredItems = items.filter((item) =>
+  (getItemLabel ? getItemLabel(item) : item.name!)
+    .toLowerCase()
+    .startsWith(searchValue.toLowerCase())
+);
 
   const handleSelect = useCallback(
     (item: T) => {
@@ -133,11 +142,15 @@ export function DropdownSelect<T extends DropdownItem>({
     if (selectedItems.length === 0) return placeholder;
 
     if (multiple) {
-      if (selectedItems.length === 1) return selectedItems[0].name;
+      if (selectedItems.length === 1){
+        const item = selectedItems[0];
+    return item.name || `${item.firstName ?? ""} ${item.lastName ?? ""}`.trim();
+      } 
       return `[${selectedItems.length}]`;
     }
 
-    return selectedItems[0].name;
+    const item = selectedItems[0];
+    return item.name || `${item.firstName ?? ""} ${item.lastName ?? ""}`.trim();
   };
 
   const isItemSelected = (item: T): boolean => {
@@ -163,7 +176,7 @@ export function DropdownSelect<T extends DropdownItem>({
       >
         <div className="dropdown-placeholder-wrapper width-max">
           <a
-            className={`dropdown-header-a flex align-items-center justify-center ${((className === "categories" && multiple) ||
+            className={`dropdown-header-a flex align-items-center justify-center ${className} ${((className === "categories" && multiple) ||
   (className !== "categories")) && (
               selectedItems.length > 0 ? "center" : "")
             }`}
@@ -174,13 +187,13 @@ export function DropdownSelect<T extends DropdownItem>({
         <img
           src={arrowIcon}
           alt="Toggle dropdown"
-          className={`arrow-down ${isDropdownVisible ? "rotated" : ""}`}
+          className={`arrow-down ${isDropdownVisible ? "rotated" : ""} ${className}`}
         />
       </button>
       {isDropdownVisible && !isAddNewPopupOpen && (
-        <div className="dropdown-menu absolute mt-05">
+        <div className={`dropdown-menu ${reversed ? "reversed" : ""} absolute mt-05 ${className}`}>
           {(searchable || allowNew) && (
-            <section className="dropdown-search-and-add-new flex">
+            <section className="dropdown-search-and-add-new flex space-between">
               <input
                 type="text"
                 className={`dropdown-search width-75 transparent border-none ${!allowNew ? "width-90" : ""}`}
@@ -210,10 +223,10 @@ export function DropdownSelect<T extends DropdownItem>({
                   key={item.id}
                   className={`dropdown-item pointer flex align-items-center space-between ${
                     isItemSelected(item) ? "selected" : ""
-                  }`}
+                  } ${className}`}
                   onClick={() => handleSelect(item)}
                 >
-                  <div className="dropdown-left flex align-items-center g-05 ml-05">
+                  <div className={`dropdown-left flex align-items-center g-05 ml-05 ${className}`}>
                   {item.color && (
                     <span
                       className="color-symbol"
@@ -222,13 +235,13 @@ export function DropdownSelect<T extends DropdownItem>({
                       }}
                     />
                   )}
-                  {item.name}
+                  {getItemLabel ? getItemLabel(item) : item.name}
                   </div>
                   {showTick && isItemSelected(item) && (
                     <img
                       src={tickIcon}
                       alt="Selected"
-                      className="dropdown-tick-icon"
+                      className={`dropdown-tick-icon ${className} `}
                     />
                   )}
                 </li>

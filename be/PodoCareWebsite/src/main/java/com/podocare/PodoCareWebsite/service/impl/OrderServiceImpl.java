@@ -105,8 +105,7 @@ public class OrderServiceImpl implements OrderService {
                 Long productId = existingOrderProduct.getProduct().getId();
                 inventoryAdjustments.merge(productId, -existingOrderProduct.getQuantity(), Integer::sum);
             }
-            existingOrder.getOrderProducts().clear(); // check if orphan removal works mozna tez .remove
-            /*orderProductRepo.deleteByOrderId(existingOrder.getId());*/
+            existingOrder.getOrderProducts().clear();
 
             Supplier supplier = existingOrder.getSupplier();
             if (orderDTO.getSupplier().getId() != null) {

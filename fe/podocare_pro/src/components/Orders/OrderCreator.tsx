@@ -127,6 +127,7 @@ export function OrderCreator({
       })
       .catch((error) => {
         setSuppliers([]);
+        showAlert("Błąd", AlertType.ERROR);
         console.error("Error fetching suppliers:", error);
       });
   };

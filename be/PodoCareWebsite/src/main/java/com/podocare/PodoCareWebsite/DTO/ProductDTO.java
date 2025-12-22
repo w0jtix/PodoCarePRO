@@ -1,6 +1,7 @@
 package com.podocare.PodoCareWebsite.DTO;
 
 import com.podocare.PodoCareWebsite.model.Product;
+import com.podocare.PodoCareWebsite.model.constants.VatRate;
 import lombok.*;
 
 import static java.util.Objects.isNull;
@@ -16,6 +17,8 @@ public class ProductDTO {
     private ProductCategoryDTO category;
     private BrandDTO brand;
     private Integer supply;
+    private Double sellingPrice;
+    private VatRate vatRate;
     private String description;
     private Boolean isDeleted;
 
@@ -27,6 +30,8 @@ public class ProductDTO {
         this.category = new ProductCategoryDTO(product.getCategory());
         this.brand = new BrandDTO(product.getBrand());
         this.supply = product.getSupply();
+        this.sellingPrice = product.getSellingPrice();
+        this.vatRate = product.getVatRate();
         this.description = product.getDescription();
         this.isDeleted = product.getIsDeleted();
     }
@@ -38,6 +43,8 @@ public class ProductDTO {
                 .category(this.category.toEntity())
                 .brand(this.brand.toEntity())
                 .supply(this.supply)
+                .sellingPrice(this.sellingPrice)
+                .vatRate(this.vatRate != null ? this.vatRate : VatRate.VAT_23)
                 .description(this.description)
                 .isDeleted(this.isDeleted)
                 .build();

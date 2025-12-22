@@ -40,6 +40,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDTO getUserByEmployeeId(Long employeeId){
+        return new UserDTO(userRepo.findByEmployeeId(employeeId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with given employee id: " + employeeId)));
+    }
+
+    @Override
     public UserDTO updateUser(Long id, UserDTO user) {
         try {
             User existingUser = userRepo.findOneById(id)

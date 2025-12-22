@@ -1,9 +1,7 @@
 import { Action } from "../../models/action";
 import {
   BaseService,
-  BaseServiceAddOn,
   NewBaseService,
-  NewBaseServiceAddOn,
   NewServiceVariant,
   ServiceVariant,
 } from "../../models/service";
@@ -13,9 +11,10 @@ import BaseServiceCategoryService from "../../services/BaseServiceCategoryServic
 import ActionButton from "../ActionButton";
 import TextInput from "../TextInput";
 import DigitInput from "../DigitInput";
-import AddOnsList from "./AddOnsList";
 import DropdownSelect from "../DropdownSelect";
 import VariantForm from "./VariantForm";
+import { useAlert } from "../Alert/AlertProvider";
+import { AlertType } from "../../models/alert";
 
 export interface ServiceFormProps {
   serviceDTO: NewBaseService | BaseService;
@@ -36,6 +35,7 @@ export function ServiceForm({
   const [expandedVariantIndex, setExpandedVariantIndex] = useState<
     number | null
   >(null);
+  const { showAlert } = useAlert();
 
   const fetchCategories = async (): Promise<void> => {
     BaseServiceCategoryService.getCategories()
@@ -44,6 +44,7 @@ export function ServiceForm({
       })
       .catch((error) => {
         setCategories([]);
+        showAlert("Błąd", AlertType.ERROR);
         console.error("Error fetching categories: ", error);
       });
   };
@@ -129,13 +130,6 @@ export function ServiceForm({
     []
   );
 
-  const handleAddOns = useCallback((addOns: BaseServiceAddOn[]) => {
-    setServiceDTO((prev) => ({
-      ...prev,
-      addOns: addOns,
-    }));
-  }, []);
-
   return (
     <div
       className={`custom-form-container flex-column width-max g-05 ${action
@@ -193,7 +187,7 @@ export function ServiceForm({
           onClick={() => handleAddVariant()}
           className=""
         />
-        <div className="variants-list flex-column mt-1 g-05">
+        <div className="variants-list flex-column mt-1 mb-1 g-05">
           {serviceDTO.variants.length > 0 &&
             serviceDTO.variants.map((variant, index) => (
               <div key={index} className="variant-wrapper">
@@ -223,6 +217,7 @@ export function ServiceForm({
                     <ActionButton
                       src="src/assets/cancel.svg"
                       alt="Usuń Wariant"
+                      iconTitle={"Usuń Wariant"}
                       text="Usuń"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -247,13 +242,7 @@ export function ServiceForm({
             ))}
         </div>
       </section>
-      <AddOnsList 
-        addOns={serviceDTO.addOns} 
-        className={className} 
-        onAddOnsChange={(newAddOns) =>
-            setServiceDTO((prev) => ({ ...prev, addOns: newAddOns }))
-        }
-      />
+      
     </div>
   );
 }

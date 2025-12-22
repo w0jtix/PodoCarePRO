@@ -7,6 +7,8 @@ import CategoryService from "../services/CategoryService";
 import { useState, useEffect, useCallback } from "react";
 import { ProductFilterDTO } from "../models/product";
 import { ProductCategory, CategoryButtonMode, NewProductCategory } from "../models/categories";
+import { useAlert } from "./Alert/AlertProvider";
+import { AlertType } from "../models/alert";
 
 export interface Brand extends DropdownItem {
   id: number;
@@ -36,7 +38,8 @@ export function ListActionSection({
   const [selectedCategories, setSelectedCategories] = useState<
     ProductCategory[]
   >([]);
-  /* const [resetTrigger, setResetTrigger] = useState(false); */
+  const { showAlert } = useAlert();
+  
 
   const fetchBrands = async (): Promise<void> => {
     BrandService.getBrands()
@@ -46,7 +49,6 @@ export function ListActionSection({
       })
       .catch((error) => {
         setBrands([]);
-        console.error("Error fetching brands:", error);
       });
   };
 
@@ -57,7 +59,6 @@ export function ListActionSection({
         })
         .catch((error) => {
           setCategories([]);
-          console.error("Error fetching categories:", error);
         });
     };
 
@@ -139,6 +140,7 @@ export function ListActionSection({
       <ActionButton
         src={"src/assets/reset.svg"}
         alt={"Reset filters"}
+        iconTitle={"Resetuj filtry"}
         text={"Reset"}
         onClick={handleReset}
         disableText={true}

@@ -5,3 +5,14 @@
     const year = date.getFullYear();
     return `${day}.${month}.${year}`;
   };
+
+  function capitalize(text: string): string {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+  export function getWeekday(dateString: string): string {
+  const weekday = new Date(dateString).toLocaleDateString("pl-PL", {
+    weekday: "long",
+  });
+  return capitalize(weekday);
+}

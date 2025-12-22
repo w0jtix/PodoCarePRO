@@ -3,52 +3,48 @@ import ActionButton from "../ActionButton";
 import { useState } from "react";
 import { ListAttribute} from "../../constants/list-headers";
 import { Product } from "../../models/product";
+import { Action } from "../../models/action";
+import CostInput from "../CostInput";
 
 export interface ItemListProps {
   attributes: ListAttribute[];
   items: Product[];
-  currentPage: number;
-  itemsPerPage: number;
-  setIsEditProductsPopupOpen: (isOpen: boolean) => void;
-  setIsRemoveProductsPopupOpen: (isOpen: boolean) => void;
-  setSelectedProduct: (product: Product | null) => void;
+  setIsEditProductsPopupOpen?: (isOpen: boolean) => void;
+  setRemoveProductId?: (productId: string | number | null) => void;
+  setSelectedProduct?: (product: Product | null) => void;
   setIsAddNewProductsPopupOpen?: (isOpen: boolean) => void;
   className?: string;
+  action?: Action;
+  onClick?: (product: Product) => void;
+  onRemoveByIndex?: (index: number) => void;
 }
 
 export function ItemList ({
   attributes,
   items,
-  currentPage,
-  itemsPerPage,
   setIsEditProductsPopupOpen,
-  setIsRemoveProductsPopupOpen,
+  setRemoveProductId,
   setSelectedProduct,
-  className = ""
+  className = "",
+  onClick,
+  onRemoveByIndex,
 }: ItemListProps) {
-  const [expandedProductIds, setExpandedProductIds] = useState<number[]>([]);
 
   const handleOnClickEdit = useCallback((e: React.MouseEvent, item: Product) => {
     e.stopPropagation();
-    setSelectedProduct(item);
-    setIsEditProductsPopupOpen(true);
+    setSelectedProduct?.(item);
+    setIsEditProductsPopupOpen?.(true);
   }, [setSelectedProduct, setIsEditProductsPopupOpen]);
 
   const handleOnClickRemove = useCallback((e: React.MouseEvent, item: Product) => {
     e.stopPropagation();
-    setSelectedProduct(item);
-    setIsRemoveProductsPopupOpen(true);
-  }, [setSelectedProduct, setIsRemoveProductsPopupOpen]);
+    setSelectedProduct?.(item);
+    setRemoveProductId?.(item.id);
+  }, [setSelectedProduct, setRemoveProductId]);
 
-  const toggleProducts = (productId: number) => {
-    setExpandedProductIds((prevIds) =>
-      prevIds.includes(productId)
-        ? prevIds.filter((id) => id !== productId)
-        : [...prevIds, productId]
-    );
+  const toggleProducts = (item : Product) => {
+    onClick?.(item);
   };
-
-  const startIndex = (currentPage - 1) * itemsPerPage;
 
   const renderAttributeContent = (
     attr: ListAttribute,
@@ -57,7 +53,7 @@ export function ItemList ({
   ): React.ReactNode => {
     switch (attr.name) {
       case "#":
-        return startIndex + index + 1;
+        return index + 1;
 
       case "":
         return (
@@ -79,13 +75,20 @@ export function ItemList ({
 
       case "Stan Magazynowy":
         return `${item.supply}`;
-        
+
+      case "Cena":
+        return `${item.sellingPrice ?? 0} zł`;
+
+      case "empty": 
+        return "";
+
       case "Opcje":
         return (
           <div className="item-list-single-item-action-buttons flex">
             <ActionButton
               src="src/assets/edit.svg"
               alt="Edytuj Produkt"
+              iconTitle={"Edytuj Produkt"}
               text="Edytuj"
               onClick={(e) => handleOnClickEdit(e, item)}
               disableText={true}
@@ -94,6 +97,7 @@ export function ItemList ({
               <ActionButton
               src="src/assets/cancel.svg"
               alt="Usuń Produkt"
+              iconTitle={"Usuń Produkt"}
               text="Usuń"
               onClick={(e) => handleOnClickRemove(e, item)}
               disableText={true}
@@ -107,15 +111,15 @@ export function ItemList ({
   };
 
   return (
-    <div className={`item-list width-93 grid p-0 mt-1${items.length === 0 ? "border-none" : ""} ${className}`}>
+    <div className={`item-list width-max grid p-0 ${items.length === 0 ? "border-none" : ""} ${className}`}>
       {items.map((item, index) => (
-        <div key={item.id} className="product-wrapper">
+        <div key={item.id} className={`product-wrapper ${className}`}>
           <div
-            className={`item flex ${!item.isDeleted ? "pointer" : ""}`}
-            onClick={() => !item.isDeleted && toggleProducts(item.id)}
+            className={`item flex ${!item.isDeleted ? "pointer" : ""} ${className}`}
+            onClick={() => !item.isDeleted && toggleProducts(item)}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !item.isDeleted) {
-                toggleProducts(item.id);
+                toggleProducts(item);
               }
             }}
           >
@@ -124,7 +128,7 @@ export function ItemList ({
                 key={`${item.id}-${attr.name}`}
                 className={`attribute-item flex ${
                   attr.name === "" ? "category-column" : "align-self-center"
-                }`}
+                } ${className}`}
                 style={{
                   width: attr.width,
                   justifyContent: attr.justify,

@@ -52,10 +52,8 @@ export function AddEditProductPopup ({
 
   const handleProductAction = useCallback(async () => {
     if (!productDTO) return;
-    
     try {
       let productToSubmit = { ...productDTO };
-
       if (brandToCreate) {
         const newBrand = await handleBrandToCreate(brandToCreate);
         if (!newBrand) {
@@ -87,8 +85,13 @@ export function AddEditProductPopup ({
     }
   }, [productDTO, brandToCreate, action, selectedProduct, onReset, onClose, showAlert, handleBrandToCreate]);
 
+  useEffect(() => {
+    console.log(selectedProduct);
+  }, [])
+
 const portalRoot = document.getElementById("portal-root");
   if (!portalRoot) {
+    showAlert("Błąd", AlertType.ERROR);
     console.error("Portal root element not found");
     return null;
   }

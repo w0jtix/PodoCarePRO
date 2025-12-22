@@ -1,4 +1,3 @@
-import React from "react";
 import SubMenuNavbar from "../SubMenuNavbar";
 import UserMenu from "../UserMenu";
 import { SubModuleType } from "../../constants/modules";

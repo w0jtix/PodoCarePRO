@@ -7,6 +7,8 @@ import { ORDERS_BY_SUPPLIER_ATTRIBUTES } from "../../constants/list-headers";
 import { Supplier } from "../../models/supplier";
 import { OrderProduct } from "../../models/order-product";
 import { Order, OrderFilterDTO } from "../../models/order";
+import { useAlert } from "../Alert/AlertProvider";
+import { AlertType } from "../../models/alert";
 
 export interface OrdersListBySupplierProps {
   selectedSupplier: Supplier | null;
@@ -22,8 +24,9 @@ export function OrdersListBySupplier({
   expandedOrderIds,
   setExpandedOrderIds,
   className = "",
-}) {
+}: OrdersListBySupplierProps) {
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
+  const { showAlert } = useAlert();
 
   const fetchOrders = useCallback(async (filter: OrderFilterDTO) => {
     OrderService.getOrders(filter)
@@ -31,6 +34,7 @@ export function OrdersListBySupplier({
         setFilteredOrders(data);
       })
       .catch((error) => {
+        showAlert("Błąd", AlertType.ERROR);
         console.error("Error fetching orders:", error);
         setFilteredOrders([]);
       });

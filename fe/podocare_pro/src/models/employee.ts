@@ -1,7 +1,8 @@
 export interface Employee {
     id: number;
     name: string;
-    secondName: string;
+    secondName: string;   
+    isDeleted?: boolean;
 }
 
 

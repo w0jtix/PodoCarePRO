@@ -40,11 +40,16 @@ public class BaseService {
     )
     private Set<BaseServiceVariant> variants = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "service_addons",
-            joinColumns = @JoinColumn(name="service_id"),
-            inverseJoinColumns = @JoinColumn(name="service_addon_id")
-    )
-    private Set<BaseServiceAddOn> addOns = new HashSet<>();
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean isDeleted = false;
+
+    public void softDelete() {
+        this.isDeleted = true;
+    }
+
+    public void restore() {
+        this.isDeleted = false;
+    }
+
 }

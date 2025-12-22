@@ -16,19 +16,22 @@ public class EmployeeDTO {
     private Long id;
     private String name;
     private String secondName;
-    private UserDTO user;
+    private Boolean isDeleted;
 
     public EmployeeDTO(Employee employee) {
         this.id = employee.getId();
         this.name = employee.getName();
         this.secondName = employee.getSecondName();
+        this.isDeleted = employee.getIsDeleted();
     }
+
 
     public Employee toEntity() {
         return Employee.builder()
                 .id(this.id)
                 .name(this.name)
                 .secondName(this.secondName)
+                .isDeleted(this.isDeleted != null ? this.isDeleted : false)
                 .build();
     }
 }

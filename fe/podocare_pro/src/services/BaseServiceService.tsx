@@ -1,11 +1,9 @@
 import { sendApiRequest } from "../components/send-api-request/SendApiRequest";
-import { KeywordDTO } from "../models/brand";
 import { BaseService, NewBaseService, ServiceFilterDTO } from "../models/service";
 
 class BaseServiceService {
 
     static async getServices(filter?: ServiceFilterDTO): Promise<BaseService[]> {
-        console.log(filter)
         return await sendApiRequest<BaseService[]>(`services/search`, {
             method: "post",
             body: filter ?? {},
@@ -32,7 +30,7 @@ class BaseServiceService {
         return await sendApiRequest<BaseService> (`services/${id}`, {
             method: "put",
             body: service,
-            errorMessage: "Error updating Serivce."
+            errorMessage: "Error updating Service."
         })
     }
 

@@ -7,7 +7,14 @@ import { Order, NewOrder } from "../models/order";
 import { NewOrderProduct, OrderProduct } from "../models/order-product";
 import { JwtUser, User, Role, RoleType } from "../models/login";
 import { Employee, NewEmployee } from "../models/employee";
-import { BaseServiceAddOn, NewBaseServiceAddOn, BaseService, NewBaseService } from "../models/service";
+import { BaseService, NewBaseService } from "../models/service";
+import { Client, NewClient, NewClientNote } from "../models/client";
+import { ClientDebt, NewClientDebt } from "../models/debt";
+import { NewVoucher, Voucher } from "../models/voucher";
+import { NewReview, Review } from "../models/review";
+import { AppSettings, NewAppSettings } from "../models/app_settings";
+import { Discount, NewDiscount, NewVisit, Visit, VisitDiscountType } from "../models/visit";
+import { PaymentMethod } from "../models/payment";
 
   export function validateLoginForm(
     username: string,
@@ -21,32 +28,6 @@ import { BaseServiceAddOn, NewBaseServiceAddOn, BaseService, NewBaseService } fr
     }
     return null;
   };
-
-  export function validaAddOnForm(
-    addOnForm: BaseServiceAddOn | NewBaseServiceAddOn,
-    selectedAddOn: BaseServiceAddOn | undefined | null,
-    action: Action,
-  ): string | null {
-    if (Object.values(addOnForm).some(
-      (value) => value === null || value === undefined
-    )) {
-      return "Brak pełnych informacji o produkcie!";
-    }
-    if (addOnForm.name && addOnForm.name.trim().length <= 2) {
-      return "Nazwa dodatku za krótka! (2+)!";
-    }
-
-    if(action === Action.EDIT && selectedAddOn) {
-      const noChangesDetected =
-      addOnForm.name === selectedAddOn.name &&
-      addOnForm.price === selectedAddOn.price &&
-      addOnForm.duration === selectedAddOn.duration
-    if (noChangesDetected) {
-      return "Brak zmian!";
-      }
-    }
-    return null;
-  }
 
   export  function validateProductForm(
     productForm: Product | NewProduct,
@@ -71,7 +52,10 @@ import { BaseServiceAddOn, NewBaseServiceAddOn, BaseService, NewBaseService } fr
       productForm.category === selectedProduct?.category &&
       productForm.brand === selectedProduct?.brand &&
       (productForm.description ?? "") === (selectedProduct?.description ?? "") &&
-      productForm.supply === selectedProduct?.supply;
+      productForm.supply === selectedProduct?.supply &&
+      productForm.sellingPrice === selectedProduct?.sellingPrice &&
+      productForm.vatRate === selectedProduct?.vatRate;
+
 
       if (noChangesDetected) {
       return "Brak zmian!";
@@ -108,6 +92,272 @@ import { BaseServiceAddOn, NewBaseServiceAddOn, BaseService, NewBaseService } fr
     return null;
   };
 
+  export function validateReviewForm(
+    reviewForm: NewReview | Review,
+    action: Action,
+    selectedReview: Review | null | undefined,
+  ): string | null {
+    if(Object.entries(reviewForm).some(([key, value]) => {
+      if(action === Action.CREATE && key === "isUsed") return false;
+      return value === null || value === undefined
+    })) {
+      return "Brak pełnych informacji!";
+    }
+    if(action === Action.EDIT && selectedReview) {
+      const noChangesDetected =
+      reviewForm.client === selectedReview.client &&
+      reviewForm.issueDate === selectedReview.issueDate &&
+      reviewForm.source === selectedReview.source;
+      if (noChangesDetected) {
+      return "Brak zmian!";
+    }
+    }
+    return null;
+  }
+
+  export function validateClientNoteForm(
+    notes: NewClientNote[],
+  ): string | null {
+    for(const noteForm of notes) {
+      if(noteForm.content?.trim().length < 1) {
+        return "Pusta notatka!"
+      }
+    }
+    
+    return null;
+  }
+
+  export function validateDiscountForm(
+    discountForm: NewDiscount | Discount,
+    action: Action,
+    selectedDiscount: Discount | undefined | null
+  ): string | null {
+    if(Object.entries(discountForm).some(([key, value]) => {
+      if(key === "clients") return false;
+      return value === null || value === undefined || value === ""
+    })
+  ) {
+    return "Brak pełnych informacji!";
+  }
+  if(discountForm.name?.trim().length < 2) {
+    return "Nazwa za krótka (2+)!"
+  }
+  if(discountForm.name?.trim().length > 6) {
+    return "Nazwa za długa max 6 znaków!"
+  }
+
+  if(discountForm.percentageValue === 0) {
+    return "Rabat nie może być 0!"
+  }
+
+  if(action === Action.EDIT && selectedDiscount) {
+    const formClientIds = (discountForm.clients || []).map((c) => c.id).sort();
+    const selectedClientIds = (selectedDiscount.clients || []).map((c) => c.id).sort();
+
+    const sameClients =
+      formClientIds.length === selectedClientIds.length &&
+      formClientIds.every((id, index) => id === selectedClientIds[index]);
+
+    const noChangesDetected =
+    discountForm.name === selectedDiscount.name &&
+    discountForm.percentageValue === selectedDiscount.percentageValue &&
+    sameClients;
+    
+  if (noChangesDetected) {
+        return "Brak zmian!";
+      }
+    }
+    return null;
+  }
+
+  export function validateSettingsForm(
+  settingsForm: NewAppSettings | AppSettings,
+  existingSettings: AppSettings
+  ): string | null {
+    if(Object.values(settingsForm).some(
+      (value) => value === null || value === undefined
+    )) {
+      return "Brak pełnych informacji!";
+    }
+    if(Object.values(settingsForm).some(
+      (value) => value === 0
+    )) {
+      return "Wartość nie może być 0!";
+    }
+    if(!existingSettings) {
+      return "Błąd walidacji formularza."
+    }
+    if(existingSettings) {
+      const noChangesDetected =
+      settingsForm.voucherExpiryTime === existingSettings.voucherExpiryTime &&
+      settingsForm.visitAbsenceRate === existingSettings.visitAbsenceRate &&
+      settingsForm.visitVipRate === existingSettings.visitVipRate &&
+      settingsForm.boostNetRate === existingSettings.boostNetRate &&
+      settingsForm.googleReviewDiscount === existingSettings.googleReviewDiscount;
+      if (noChangesDetected) {
+        return "Brak zmian!";
+      }
+    }
+    return null;
+  }
+
+  export function validateVisitForm(
+    visitForm: NewVisit | Visit,
+    products?: Product[],
+  ): string | null {
+    if(visitForm.employee == null || visitForm.client == null || visitForm.date === null ){
+      return "Brak pełnych informacji!";
+    }
+    if(visitForm.items.length === 0 && (visitForm.sale == null || visitForm.sale.items.length === 0) && visitForm.debtRedemptions.length === 0) {
+      return "Nie można utworzyć pustej Wizyty!";
+    }
+    if(visitForm.isVip && visitForm.serviceDiscounts) {
+      for(const discount of visitForm.serviceDiscounts) {
+        if(discount.type === VisitDiscountType.HAPPY_HOURS ||
+          discount.type === VisitDiscountType.CLIENT_DISCOUNT ||
+          discount.type === VisitDiscountType.CUSTOM) {
+            return "W przypadku Wizyty VIP można zastosować tylko rabat OPINIA GOOGLE!"
+          }
+        
+      }
+    }
+    if(visitForm.items.length === 0 && visitForm.serviceDiscounts?.some((sd) => sd.type === VisitDiscountType.GOOGLE_REVIEW)){
+      return "Rabat OPINIA GOOGLE łączy się tylko z usługami!"
+    }
+    if(visitForm.sale != null) {
+      const productItems = visitForm.sale.items.filter(item => 'product' in item && item.product != null);
+      const productCounts = productItems.reduce((acc, item) => {
+        const id = item.product!.id;
+
+        acc[id] = (acc[id] || 0) + 1;
+
+        return acc;
+      }, {} as Record<number, number>);
+      for(const [productId, count] of Object.entries(productCounts)) {
+        const availableSupply = products?.find(p => p.id === Number(productId))?.supply;
+        if( availableSupply && availableSupply < count) {
+          const productName = products?.find(p => p.id === Number(productId))?.name;
+          return `Niewystarczająca ilość produktu ${productName} w magazynie! Dostępne: ${availableSupply}`
+        }
+      }
+      
+    }
+    if(visitForm.absence && visitForm.serviceDiscounts) {
+      for(const discount of visitForm.serviceDiscounts) {
+        if(discount.type === VisitDiscountType.HAPPY_HOURS ||
+          discount.type === VisitDiscountType.GOOGLE_REVIEW ||
+          discount.type === VisitDiscountType.CUSTOM) {
+            return "W przypadku nieobecności można zastosować tylko stały rabat (klienta)!"
+          }
+        
+      }
+    }
+    const usedVoucherIds = new Set<number>();
+
+    for(const payment of visitForm.payments) {
+      if(!payment.method) {
+        return "Brak informacji o metodzie płatności!";
+      }
+      if(payment.method === PaymentMethod.VOUCHER && !payment.voucher) {
+        return "Nie przypisano Vouchera jako metody płatności!";
+      }
+      if(payment.method === PaymentMethod.VOUCHER && payment.voucher) {
+        if(usedVoucherIds.has(payment.voucher.id)) {
+          return "Nie można użyć tego samego Vouchera dwukrotnie!";
+        }
+        usedVoucherIds.add(payment.voucher.id);
+      }
+    }
+    return null;
+  }
+
+  export function validateVoucherForm(
+    voucherForm: NewVoucher | Voucher,
+    action: Action,
+    selectedVoucher: Voucher | null | undefined,
+  ): string | null {
+    if(Object.entries(voucherForm).some(([key, value]) => {
+      if(action === Action.CREATE && key === "expiryDate") return false;
+      return value === null || value === undefined || value === ""
+    })
+  ) {
+    return "Brak pełnych informacji!";
+  }
+    if(voucherForm.value === 0) {
+      return "Wartość vouchera nie może być = 0!"
+    }
+    if(action === Action.EDIT && selectedVoucher) {
+      const noChangesDetected =
+      voucherForm.value === selectedVoucher.value &&
+      voucherForm.client === selectedVoucher.client &&
+      voucherForm.issueDate === selectedVoucher.issueDate &&
+      voucherForm.expiryDate === selectedVoucher.expiryDate;
+      if (noChangesDetected) {
+        return "Brak zmian!";
+      }
+    }
+    return null;
+  }
+
+  export function validateNoSourceClientDebtForm(
+    debtForm: NewClientDebt | ClientDebt,
+    action: Action,
+    selectedDebt: ClientDebt | null | undefined,
+  ): string | null {
+    if(Object.values(debtForm).some(
+      (value) => value === null || value === undefined
+    )) {
+      return "Brak pełnych informacji!";
+    }
+    if(debtForm.value === 0) {
+      return "Wartość długu nie może być = 0!"
+    }
+    if(action === Action.EDIT && selectedDebt) {
+      const noChangesDetected =
+      debtForm.value === selectedDebt.value &&
+      debtForm.client === selectedDebt.client &&
+      debtForm.type === selectedDebt.type;
+      if (noChangesDetected) {
+      return "Brak zmian!";
+    }
+    }
+    return null;
+  }
+
+  export function validateClientForm(
+    clientForm: Client | NewClient,
+    action: Action,
+    selectedClient: Client | null | undefined,
+  ): string | null {
+    if(Object.entries(clientForm).some(([key, value]) => {
+      if(key === "phoneNumber") return false;
+      return value === null || value === undefined;
+    })) {
+      return "Brak pełnych informacji!";
+    }
+    if(clientForm.firstName.trim().length <= 2) {
+      return "Imię klienta za krótkie! (2+)"
+    }
+    if(clientForm.lastName.trim().length <= 2) {
+      return "Nawisko klienta za krótkie! (2+)"
+    }
+
+    if(action ===Action.EDIT && selectedClient) {
+      const noChangesDetected =
+      clientForm.firstName === selectedClient.firstName &&
+      clientForm.lastName === selectedClient.lastName &&
+      clientForm.boostClient === selectedClient.boostClient &&
+      clientForm.signedRegulations === selectedClient.signedRegulations &&
+      clientForm.redFlag === selectedClient.redFlag &&
+      clientForm.phoneNumber === selectedClient.phoneNumber;
+
+      if (noChangesDetected) {
+      return "Brak zmian!";
+    }
+    }
+    return null;
+  }
+
   export function validateServiceForm(
     serviceForm: BaseService | NewBaseService,
     action: Action,
@@ -143,26 +393,12 @@ import { BaseServiceAddOn, NewBaseServiceAddOn, BaseService, NewBaseService } fr
         );
       });
 
-    const addOnsEqual =
-      (serviceForm.addOns?.length ?? 0) ===
-        (selectedService.addOns?.length ?? 0) &&
-      serviceForm.addOns.every((a, i) => {
-        const sa = selectedService.addOns[i];
-        return (
-          a.id === sa.id &&
-          a.name === sa.name &&
-          a.price === sa.price &&
-          a.duration === sa.duration
-        );
-      });
-
     const noChangesDetected =
       serviceForm.name === selectedService.name &&
       serviceForm.category?.id === selectedService.category?.id &&
       serviceForm.duration === selectedService.duration &&
       serviceForm.price === selectedService.price &&
-      variantsEqual &&
-      addOnsEqual;
+      variantsEqual;
 
     if (noChangesDetected) {
       return "Brak zmian!";

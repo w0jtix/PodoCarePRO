@@ -4,6 +4,8 @@ import { useState, useCallback } from "react";
 import ActionButton from "../ActionButton";
 import SupplierForm from "../Supplier/SupplierForm";
 import { NewSupplier } from "../../models/supplier";
+import { useAlert } from "../Alert/AlertProvider";
+import { AlertType } from "../../models/alert";
 
 export interface AddSupplierPopupProps {
   onClose: () => void;
@@ -17,6 +19,7 @@ export function AddSupplierPopup ({
   className= "" 
 }: AddSupplierPopupProps) {
   const [supplier, setSupplier] = useState<NewSupplier | null>(null);
+  const { showAlert } = useAlert();
   
   const handleCreateSupplier = useCallback(async () => {
     if(supplier?.name?.trim()) {
@@ -27,6 +30,7 @@ export function AddSupplierPopup ({
 
   const portalRoot = document.getElementById("portal-root");
   if (!portalRoot) {
+    showAlert("Błąd", AlertType.ERROR);
     console.error("Portal root element not found");
     return null;
   }

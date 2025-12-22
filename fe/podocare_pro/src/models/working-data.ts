@@ -42,6 +42,8 @@ export interface ProductWorkingData {
   brandName: string,
   brandSuggestions: Brand[];
   supply: number;
+  sellingPrice?: number | null;
+  vatRate?: VatRate | null;
   description: string;
   isDeleted?: boolean;
 }
@@ -95,6 +97,8 @@ export const convertToWorkingData = {
     brandName: product.brand.name || "",
     brandSuggestions: [],
     supply: product.supply,
+    sellingPrice: product.sellingPrice,
+    vatRate: product.vatRate,
     description: product.description,
     isDeleted: product.isDeleted,
   }),
@@ -131,7 +135,9 @@ export const convertToBackendData = {
         name: workingData.name,
         category: workingData.category!,
         brand: workingData.brand as Brand,
-        supply: workingData.supply,
+        supply: workingData.supply,        
+        sellingPrice: workingData.sellingPrice,
+        vatRate: workingData.vatRate,
         description: workingData.description,
         isDeleted: workingData.isDeleted,
       } as Product;
@@ -141,6 +147,8 @@ export const convertToBackendData = {
         category: workingData.category!,
         brand: workingData.brand as Brand,
         supply: workingData.supply,
+        sellingPrice: workingData.sellingPrice,        
+        vatRate: workingData.vatRate,
         description: workingData.description,
         isDeleted: false,
       } as NewProduct;
@@ -184,6 +192,7 @@ export const createNewProductWorkingData = (name: string = ''): ProductWorkingDa
   brandName: "",
   brandSuggestions: [],
   supply: 0,
+  sellingPrice: 0,
   description: '',
 });
 

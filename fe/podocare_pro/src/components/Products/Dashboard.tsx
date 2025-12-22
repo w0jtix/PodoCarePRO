@@ -22,8 +22,8 @@ export function Dashboard() {
     useState<boolean>(false);
   const [isEditProductsPopupOpen, setIsEditProductsPopupOpen] =
     useState<boolean>(false);
-  const [isRemoveProductsPopupOpen, setIsRemoveProductsPopupOpen] =
-    useState<boolean>(false);
+  const [removeProductId, setRemoveProductId] =
+    useState<string | number | null>(null);
   const [isCategoryPopupOpen, setIsCategoryPopupOpen] =
     useState<boolean>(false);
   const [filter, setFilter] = useState<ProductFilterDTO>({
@@ -45,6 +45,7 @@ export function Dashboard() {
       })
       .catch((error) => {
         setCategories([]);
+        showAlert("Błąd", AlertType.ERROR);
         console.error("Error fetching categories:", error);
       });
   }, []);
@@ -131,17 +132,17 @@ export function Dashboard() {
   );
 
   const handleProductRemove = useCallback(async () => {
-    if (!selectedProduct) return;
-    AllProductService.deleteProduct(selectedProduct.id)
+    if (removeProductId === null) return;
+    AllProductService.deleteProduct(removeProductId)
       .then(() => {
-        handlePopupSuccess(`Produkt ${selectedProduct.name} usunięty!`);
-        setIsRemoveProductsPopupOpen(false);
+        handlePopupSuccess(`Produkt ${selectedProduct?.name ?? ""} usunięty!`);
+        setRemoveProductId(null);
       })
       .catch((error) => {
         console.error("Error removing Product", error);
         showAlert("Błąd usuwania produktu.", AlertType.ERROR);
       });
-  }, [showAlert]);
+  }, [showAlert, removeProductId]);
 
   useEffect(() => {
     fetchCategories();
@@ -169,6 +170,7 @@ export function Dashboard() {
                 : "src/assets/toggle.svg"
             }
             alt={"Include Zero"}
+            iconTitle={"Pokaż produkty o stanie magazynowym = 0"}
             text={"St. Mag = 0"}
             onClick={toggleIncludeZero}
           />
@@ -192,7 +194,7 @@ export function Dashboard() {
         filter={filter}
         setIsAddNewProductsPopupOpen={setIsAddNewProductsPopupOpen}
         setIsEditProductsPopupOpen={setIsEditProductsPopupOpen}
-        setIsRemoveProductsPopupOpen={setIsRemoveProductsPopupOpen}
+        setRemoveProductId={setRemoveProductId}
         setSelectedProduct={setSelectedProduct}
       />
       {isAddNewProductsPopupOpen && (
@@ -212,11 +214,10 @@ export function Dashboard() {
           selectedProduct={selectedProduct}
         />
       )}
-      {isRemoveProductsPopupOpen && (
+      {removeProductId != null && (
         <RemovePopup
-          onClose={() => setIsRemoveProductsPopupOpen(false)}
+          onClose={() => setRemoveProductId(null)}
           handleRemove={handleProductRemove}
-          selectedItem={selectedProduct}
           warningText={
             "❗❗❗ Zatwierdzenie spowoduje usunięcie informacji o produkcie."
           }

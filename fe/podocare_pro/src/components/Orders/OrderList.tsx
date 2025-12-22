@@ -13,8 +13,6 @@ import { formatDate } from "../../utils/dateUtils";
 export interface OrderListProps {
   attributes: ListAttribute[];
   orders: Order[];
-  currentPage: number;
-  itemsPerPage: number;
   onSuccess: (message: string) => void;
   className?: string;
 }
@@ -22,8 +20,6 @@ export interface OrderListProps {
 export function OrderList({
   attributes,
   orders,
-  currentPage,
-  itemsPerPage,
   onSuccess,
   className = "",
 }: OrderListProps) {
@@ -115,6 +111,7 @@ export function OrderList({
             <ActionButton
               src={"src/assets/edit.svg"}
               alt={"Edytuj Produkt"}
+              iconTitle={"Edytuj Produkt"}
               text={"Edytuj"}
               onClick={(e) => handleOnClickEdit(e, order)}
               disableText={true}
@@ -122,6 +119,7 @@ export function OrderList({
             <ActionButton
               src={"src/assets/cancel.svg"}
               alt={"Usuń Produkt"}
+              iconTitle={"Usuń Produkt"}
               text={"Usuń"}
               onClick={(e) => handleOnClickRemove(e, order)}
               disableText={true}
@@ -135,13 +133,13 @@ export function OrderList({
   };
 
   return (
-    <div className={`item-list width-93 grid p-0 mt-1 ${orders.length === 0 ? "border-none" : ""}`}>
+    <div className={`item-list order width-93 grid p-0 mt-05 ${orders.length === 0 ? "border-none" : ""} ${className}`}>
       {orders.map((order) => (
-        <div key={order.id} className="product-wrapper">
+        <div key={order.id} className={`product-wrapper order ${className}`}>
           <div
-            className={`item align-items-center flex ${
+            className={`item order align-items-center flex-column ${
               order.orderProducts.length > 0 ? "pointer" : ""
-            }`}
+            } ${className}`}
             onClick={() => toggleOrders(order.id)}
             onKeyDown={(e) => {
               if (e.key === "Enter" && order.orderProducts.length > 0) {
@@ -149,12 +147,13 @@ export function OrderList({
               }
             }}
           >
+            <div className="height-max width-max justify-center align-items-center flex">
             {attributes.map((attr) => (
               <div
                 key={`${order.id}-${attr.name}`}
                 className={`attribute-item flex ${
                   attr.name === "" ? "category-column" : ""
-                }`}
+                } ${className}`}
                 style={{
                   width: attr.width,
                   justifyContent: attr.justify,
@@ -163,10 +162,12 @@ export function OrderList({
                 {renderAttributeContent(attr, order)}
               </div>
             ))}
-          </div>
-          {expandedOrderIds.includes(order.id) && (
+            </div>
+            {expandedOrderIds.includes(order.id) && (
             <OrderContent order={order} action={Action.HISTORY} />
           )}
+          </div>
+          
         </div>
       ))}
       {isEditOrderPopupOpen && (

@@ -22,11 +22,23 @@ public class BaseServiceVariant {
     private Double price;
 
     @Column(nullable = false)
-    private Integer duration;
+    private int duration;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "base_service_id", nullable = false)
     private BaseService baseService;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean isDeleted = false;
+
+    public void softDelete() {
+        this.isDeleted = true;
+    }
+
+    public void restore() {
+        this.isDeleted = false;
+    }
 
     @Override
     public boolean equals(Object o) {
