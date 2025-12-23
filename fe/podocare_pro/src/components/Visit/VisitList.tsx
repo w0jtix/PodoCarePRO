@@ -29,39 +29,35 @@ export function VisitList({
   handleResetFiltersAndData,
 }: VisitListProps) {
   const [expandedVisitIds, setExpandedVisitIds] = useState<number[]>([]);
-  const [selectedVisit, setSelectedVisit] = useState<Visit | null>(null);
   const [previewVisitId, setPreviewVisitId] =
     useState<string | number | null>(null);
-  const [isEditVisitPopupOpen, setIsEditVisitPopupOpen] =
-    useState<boolean>(false);
-  const [isRemoveVisitPopupOpen, setIsRemoveVisitPopupOpen] =
-    useState<boolean>(false);
+  const [editVisitId, setEditVisitId] =
+    useState<number | string | null>(null);
+  const [removeVisitId, setRemoveVisitId] =
+    useState<number | string | null>(null);
 
   const handleOnClickPreview = useCallback(
     (e: React.MouseEvent, visit: Visit) => {
       e.stopPropagation();
-      setSelectedVisit(visit);
       setPreviewVisitId(visit.id);
     },
-    [setSelectedVisit, setPreviewVisitId]
+    [setPreviewVisitId]
   );
 
   const handleOnClickEdit = useCallback(
     (e: React.MouseEvent, visit: Visit) => {
       e.stopPropagation();
-      setIsEditVisitPopupOpen(true);
-      setSelectedVisit(visit);
+      setEditVisitId(visit.id);
     },
-    [setSelectedVisit, setIsEditVisitPopupOpen]
+    [setEditVisitId]
   );
 
   const handleOnClickRemove = useCallback(
     (e: React.MouseEvent, visit: Visit) => {
       e.stopPropagation();
-      setSelectedVisit(visit);
-      setIsRemoveVisitPopupOpen(true);
+      setRemoveVisitId(visit.id);
     },
-    [setSelectedVisit, setIsRemoveVisitPopupOpen]
+    [setRemoveVisitId]
   );
 
   const toggleVisits = (visitId: number) => {
@@ -296,11 +292,11 @@ export function VisitList({
           selectedVisit={selectedVisit as Order}
         />
       )} */}
-      {isRemoveVisitPopupOpen && (
+      {removeVisitId != null && (
         <RemoveVisitPopup
-          onClose={() => setIsRemoveVisitPopupOpen(false)}
+          onClose={() => setRemoveVisitId(null)}
           handleResetFiltersAndData={handleResetFiltersAndData!}
-          selectedVisit={selectedVisit as Visit}
+          visitId={removeVisitId}
         />
       )}
       {isLoading && (

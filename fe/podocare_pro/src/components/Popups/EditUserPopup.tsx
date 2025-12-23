@@ -1,7 +1,7 @@
 import ReactDOM from "react-dom";
 import { User } from "../../models/login";
 import { AVAILABLE_AVATARS } from "../../constants/avatars";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
 import AuthService from "../../services/AuthService";
@@ -18,7 +18,7 @@ export interface EditUserPopupProps {
   handleAddNewEmployee: () => void;
   onClose: () => void;
   className?: string;
-  selectedUser: User | null;
+  userId: number | string | null;
   availableRoles: Role[];
   employees: Employee[];
   refreshUserList: () => void;
@@ -29,7 +29,7 @@ export function EditUserPopup({
   handleAddNewEmployee,
   onClose,
   className = "",
-  selectedUser,
+  userId,
   availableRoles,
   employees,
   refreshUserList,
@@ -38,11 +38,31 @@ export function EditUserPopup({
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [showForceChangePw, setShowForceChangePw] = useState<boolean>(false);
-  const [updatedUser, setUpdatedUser] = useState<User | null>(selectedUser);
+  const [updatedUser, setUpdatedUser] = useState<User | null>(null);
+   const [fetchedUser, setFetchedUser] = useState<User | null>(null);
 
   const handleShowForceChangePw = () => {
     setShowForceChangePw((prev) => !prev);
   };
+
+  const fetchUserById = async (userId: number | string) => {
+    UserService.getUserById(userId)
+      .then((data) => {
+        setUpdatedUser(data);
+        setFetchedUser(data);
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching user: ", error);
+        showAlert("Błąd!", AlertType.ERROR)
+      })
+  }
+
+  useEffect(() => {
+    if(userId !== null) {
+      fetchUserById(userId);
+    }
+  }, [])
 
   const toggleRole = (role: Role) => {
     setUpdatedUser((prev) => {
@@ -76,7 +96,7 @@ export function EditUserPopup({
       return;
     }
 
-    const error = validateUpdateUser(updatedUser, selectedUser);
+    const error = validateUpdateUser(updatedUser, fetchedUser);
     if (error) {
       showAlert(error, AlertType.ERROR);
       return;
@@ -114,7 +134,12 @@ export function EditUserPopup({
       return;
     }
 
-    AuthService.forceChangePassword(selectedUser!.id, newPassword)
+    if (!fetchedUser) {
+      showAlert("Błąd - brak danych użytkownika!", AlertType.ERROR);
+      return;
+    }
+
+    AuthService.forceChangePassword(fetchedUser.id, newPassword)
       .then((message) => {
         if (message === "Password changed successfully") {
           showAlert("Hasło zostało pomyślnie zmienione!", AlertType.SUCCESS);
@@ -139,6 +164,10 @@ export function EditUserPopup({
     return null;
   }
 
+  if (!fetchedUser) {
+    return null;
+  }
+
   return ReactDOM.createPortal(
     <div className={`add-popup-overlay flex justify-center align-items-start ${className}`} onClick={onClose}>
       <div
@@ -148,10 +177,10 @@ export function EditUserPopup({
         <div className="f-c-pw-user-detials flex g-1 align-items-center align-self-start">
           <img
             className="popup-pfp"
-            src={AVAILABLE_AVATARS[selectedUser!.avatar]}
-            alt={selectedUser!.username}
+            src={AVAILABLE_AVATARS[fetchedUser.avatar]}
+            alt={fetchedUser.username}
           />
-          <h2 className="h2-username text-align-center">{selectedUser!.username}</h2>
+          <h2 className="h2-username text-align-center">{fetchedUser.username}</h2>
           <button className="popup-close-button  transparent border-none flex align-items-center justify-center absolute pointer" onClick={onClose}>
             <img
               src="src/assets/close.svg"

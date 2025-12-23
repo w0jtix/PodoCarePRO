@@ -1,4 +1,3 @@
-import React from "react";
 import { useState, useCallback, useEffect } from "react";
 import ReactDOM from "react-dom";
 import ProductForm from "../Products/ProductForm";
@@ -8,7 +7,7 @@ import BrandService from "../../services/BrandService";
 import { Action } from "../../models/action";
 import { Product, NewProduct } from "../../models/product";
 import { NewBrand } from "../../models/brand";
-import { Alert, AlertType } from "../../models/alert";
+import { AlertType } from "../../models/alert";
 import { validateBrandForm, validateProductForm } from "../../utils/validators";
 import { extractProductErrorMessage, extractBrandErrorMessage } from "../../utils/errorHandler";
 import { useAlert } from "../Alert/AlertProvider";
@@ -16,22 +15,34 @@ import { useAlert } from "../Alert/AlertProvider";
 export interface AddEditProductPopupProps {
   onClose: () => void;
   onReset: (message: string) => void;
-  selectedProduct?: Product | null;
+  productId?: number | string | null;
   className?: string;
 }
 
 export function AddEditProductPopup ({
   onClose,
   onReset,
-  selectedProduct,
+  productId,
   className = "",
 }: AddEditProductPopupProps) {
-
+  const [fetchedProduct, setFetchedProduct] = useState<Product | null>(null);
   const [productDTO, setProductDTO] = useState<Product | NewProduct | null>(null);
   const [brandToCreate, setBrandToCreate] = useState<NewBrand | null>(null);
   const { showAlert } = useAlert();
 
-  const action = selectedProduct ? Action.EDIT : Action.CREATE;
+  const action = productId ? Action.EDIT : Action.CREATE;
+
+  const fetchProductById = async (productId: number | string) => {
+    AllProductService.getProductById(productId)
+      .then((data) => {
+        setFetchedProduct(data);
+        setProductDTO(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching product by id: ", error);
+        showAlert("Błąd!", AlertType.ERROR);
+      })
+  }
 
   const handleBrandToCreate = useCallback(async (brandToCreate: NewBrand) => {
     const error = validateBrandForm(brandToCreate, undefined, Action.CREATE);
@@ -61,7 +72,7 @@ export function AddEditProductPopup ({
         }
         productToSubmit.brand = newBrand;
       }
-      const error = validateProductForm(productToSubmit, selectedProduct, action);
+      const error = validateProductForm(productToSubmit, fetchedProduct, action);
       if (error) {
         showAlert(error, AlertType.ERROR);
         return;
@@ -83,11 +94,17 @@ export function AddEditProductPopup ({
       const errorMessage = extractProductErrorMessage(error, action);
       showAlert(errorMessage, AlertType.ERROR);
     }
-  }, [productDTO, brandToCreate, action, selectedProduct, onReset, onClose, showAlert, handleBrandToCreate]);
+  }, [productDTO, brandToCreate, action, fetchedProduct, onReset, onClose, showAlert, handleBrandToCreate]);
 
   useEffect(() => {
-    console.log(selectedProduct);
-  }, [])
+    if(productId) {
+      fetchProductById(productId);
+    }
+  }, [productId])
+
+  useEffect(() => {
+    console.log("fetched", fetchedProduct)
+  }, [fetchedProduct])
 
 const portalRoot = document.getElementById("portal-root");
   if (!portalRoot) {
@@ -119,7 +136,7 @@ const portalRoot = document.getElementById("portal-root");
             onForwardProductForm={setProductDTO}
             onForwardBrand={setBrandToCreate}
             action={action}
-            selectedProduct={selectedProduct}
+            selectedProduct={fetchedProduct}
           />
         </section>
         <div className="popup-footer-container flex-column justify-end"></div>

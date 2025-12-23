@@ -7,9 +7,8 @@ import VisitPopup from "../Popups/VisitPopup";
 export interface ReviewsListProps {
   attributes: ListAttribute[];
   items: Review[];
-  setIsEditReviewPopupOpen?: (isOpen: boolean) => void;
-  setIsRemoveReviewPopupOpen?: (isOpen: boolean) => void;
-  setSelectedReview?: (review: Review | null) => void;
+  setEditReviewId?: (reviewId: number | string) => void;
+  setRemoveReviewId?: (reviewId: number | string) => void;
   className?: string;
   onClick?: (review: Review) => void;
 }
@@ -17,9 +16,8 @@ export interface ReviewsListProps {
 export function ReviewsList({
   attributes,
   items,
-  setIsEditReviewPopupOpen,
-  setIsRemoveReviewPopupOpen,
-  setSelectedReview,
+  setEditReviewId,
+  setRemoveReviewId,
   className = "",
   onClick,
 }: ReviewsListProps) {
@@ -28,19 +26,17 @@ export function ReviewsList({
   const handleOnClickEdit = useCallback(
     (e: React.MouseEvent, item: Review) => {
       e.stopPropagation();
-      setSelectedReview?.(item);
-      setIsEditReviewPopupOpen?.(true);
+      setEditReviewId?.(item.id);
     },
-    [setSelectedReview, setIsEditReviewPopupOpen]
+    [setEditReviewId ]
   );
 
   const handleOnClickRemove = useCallback(
     (e: React.MouseEvent, item: Review) => {
       e.stopPropagation();
-      setSelectedReview?.(item);
-      setIsRemoveReviewPopupOpen?.(true);
+      setRemoveReviewId?.(item.id);
     },
-    [setSelectedReview, setIsRemoveReviewPopupOpen]
+    [setRemoveReviewId]
   );
 
   const renderAttributeContent = (

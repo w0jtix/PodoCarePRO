@@ -49,5 +49,5 @@ export interface ClientFilterDTO {
     boostClient?: boolean| null;
     signedRegulations?: boolean | null;
     hasDebts?: boolean | null;
-    discountId?: number;
+    discountId?: number | string | null;
 }

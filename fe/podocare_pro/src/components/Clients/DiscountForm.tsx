@@ -17,7 +17,7 @@ import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
 
 export interface DiscountFormProps {
-  selectedDiscountId?: number;
+  selectedDiscountId?: number | string | null;
   discountDTO: NewDiscount;
   setDiscountDTO: React.Dispatch<React.SetStateAction<NewDiscount>>;
   className?: string;
@@ -34,7 +34,7 @@ export function DiscountForm({
   const { showAlert } = useAlert();
 
   const fetchClientsByDiscountId = async (): Promise<void> => {
-    ClientService.getClients({ discountId: selectedDiscountId })
+      ClientService.getClients({ discountId: selectedDiscountId })
       .then((data) => {
         const sortedClients = [...data].sort((a, b) =>
           a.firstName.localeCompare(b.firstName, "pl", { sensitivity: "base" })
@@ -51,7 +51,7 @@ export function DiscountForm({
         }));
         showAlert("Błąd", AlertType.ERROR);
         console.error("Error fetching Clients: ", error);
-      });
+      });   
   };
 
   const handleClientsChange = useCallback((selected: Client[]) => {
@@ -74,8 +74,10 @@ export function DiscountForm({
   }, []);
 
   useEffect(() => {
-    if (selectedDiscountId) fetchClientsByDiscountId();
-  }, []);
+    if (selectedDiscountId != null) {
+      fetchClientsByDiscountId()
+    };
+  }, [selectedDiscountId]);
 
   return (
     <div

@@ -17,9 +17,9 @@ import DiscountManagePopup from "../Popups/DiscountManagePopup";
 
 export function ClientsDashboard() {
   const [resetTriggered, setResetTriggered] = useState<boolean>(false);
-  const [isRemovePopupOpen, setIsRemovePopupOpen] = useState<boolean>(false);
+  const [removeClientId, setRemoveClientId] = useState<string | number | null>(null);
   const [clients, setClients] = useState<Client[]>([]);
-  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+  const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
   const [filter, setFilter] = useState<ClientFilterDTO>({
     keyword: "",
     boostClient: null,
@@ -62,7 +62,8 @@ export function ClientsDashboard() {
 
   const handleResetFiltersAndData = useCallback(() => {
     setResetTriggered((prev) => !prev);
-    setSelectedClient(null);
+    setSelectedClientId(null);
+    setRemoveClientId(null);
     setFilter({
       keyword: "",
       boostClient: null,
@@ -78,19 +79,6 @@ export function ClientsDashboard() {
     },
     [showAlert, handleResetFiltersAndData]
   );
-
-  /*  const handleServiceRemove = useCallback(async () => {
-    if (!selectedClient) return;
-    ClientService.deleteClient(selectedClient.id)
-      .then(() => {
-        handlePopupSuccess(`Usługa ${selectedClient.name} usunięta!`);
-        setIsRemovePopupOpen(false);
-      })
-      .catch((error) => {
-        console.error("Error removing Client", error);
-        showAlert("Błąd usuwania Usługi!", AlertType.ERROR);
-      });
-  }, [selectedClient, showAlert]); */
 
   const handleBoost = useCallback(() => {
     setFilter((prev) => ({
@@ -114,24 +102,32 @@ export function ClientsDashboard() {
   }, []);
 
   const handleClientRemove = useCallback(async () => {
-    if (!selectedClient) return;
-    ClientService.deleteClient(selectedClient.id)
+    if (!removeClientId) return;
+
+    const selectedClient = clients.find((client) => client.id === removeClientId);
+    if (!selectedClient) {
+      showAlert("Nie znaleziono klienta.", AlertType.ERROR);
+      return;
+    }
+
+    ClientService.deleteClient(removeClientId)
       .then(() => {
         handlePopupSuccess(
           `Klient ${
             selectedClient.firstName + " " + selectedClient.lastName
           } usunięty!`
         );
-        setIsRemovePopupOpen(false);
+        setRemoveClientId(null);
       })
       .catch((error) => {
         console.error("Error removing Client", error);
         showAlert("Błąd usuwania klienta.", AlertType.ERROR);
       });
-  }, [showAlert, selectedClient]);
+  }, [showAlert, removeClientId, clients, handlePopupSuccess]);
 
   const handleReset = useCallback(() => {
-    setSelectedClient(null);
+    setRemoveClientId(null);
+    setSelectedClientId(null);
     fetchClients();
     handleResetFiltersAndData();
   }, []);
@@ -218,25 +214,24 @@ export function ClientsDashboard() {
       <ClientsList
         attributes={CLIENTS_LIST_ATTRIBUTES}
         items={clients}
-        setIsEditClientPopupOpen={setIsAddNewClientPopupOpen}
-        setIsRemoveClientPopupOpen={setIsRemovePopupOpen}
-        setSelectedClient={setSelectedClient}
+        setRemoveClientId={setRemoveClientId}
+        setSelectedClientId={setSelectedClientId}
         className="services client-dashboard"
       />
-      {isAddNewClientPopupOpen && (
+      {selectedClientId != null && (
         <ClientPopup
           onClose={() => {
             setIsAddNewClientPopupOpen(false);
-            setSelectedClient(null);
+            setSelectedClientId(null);
           }}
           onReset={handleReset}
-          selectedClient={selectedClient}
+          selectedClientId={selectedClientId}
           className={"client-popup"}
         />
       )}
-      {isRemovePopupOpen && (
+      {removeClientId != null && (
         <RemovePopup
-          onClose={() => setIsRemovePopupOpen(false)}
+          onClose={() => setRemoveClientId(null)}
           warningText={
             "Zatwierdzenie spowoduje usunięcie Klienta z bazy danych!"
           }

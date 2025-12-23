@@ -12,18 +12,16 @@ import { AlertType } from "../../models/alert.ts";
 export interface SupplyListProps {
   filter: ProductFilterDTO;
   setIsAddNewProductsPopupOpen: (isOpen: boolean) => void;
-  setIsEditProductsPopupOpen: (isOpen: boolean) => void;
+  setEditProductId: (productId: string | number | null) => void;
   setRemoveProductId: (productId: string | number | null) => void;
-  setSelectedProduct: (product: Product | null) => void;
   className?: string;
 }
 
 export function SupplyList ({
   filter,
   setIsAddNewProductsPopupOpen,
-  setIsEditProductsPopupOpen,
+  setEditProductId,
   setRemoveProductId,
-  setSelectedProduct,
   className = "",
 }: SupplyListProps) {
   const [items, setItems] = useState<Product[]>([]);
@@ -99,9 +97,8 @@ export function SupplyList ({
             attributes={PRODUCT_LIST_ATTRIBUTES}
             items={items}
             setIsAddNewProductsPopupOpen={setIsAddNewProductsPopupOpen}
-            setIsEditProductsPopupOpen={setIsEditProductsPopupOpen}
+            setEditProductId={setEditProductId}
             setRemoveProductId={setRemoveProductId}
-            setSelectedProduct={setSelectedProduct}
             className="products"
           />
         </section>

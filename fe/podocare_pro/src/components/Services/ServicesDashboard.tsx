@@ -27,11 +27,9 @@ export function ServicesDashboard() {
   const [selectedCategories, setSelectedCategories] = useState<
     BaseServiceCategory[]
   >([]);
-  const [isRemovePopupOpen, setIsRemovePopupOpen] = useState<boolean>(false);
+  const [removeServiceId, setRemoveServiceId] = useState<number | null>(null);
+  const [editServiceId, setEditServiceId] = useState<number | null>(null);
   const [services, setServices] = useState<BaseService[]>([]);
-  const [selectedService, setSelectedService] = useState<BaseService | null>(
-    null
-  );
   const [isAddNewServicePopupOpen, setIsAddNewServicePopupOpen] =
     useState<boolean>(false);
   const [isCategoryPopupOpen, setIsCategoryPopupOpen] =
@@ -87,7 +85,8 @@ export function ServicesDashboard() {
   const handleResetFiltersAndData = useCallback(() => {
     fetchCategories();
     setResetTriggered((prev) => !prev);
-    setSelectedService(null);
+    setRemoveServiceId(null);
+    setEditServiceId(null);
     setSelectedCategories([]);
   }, []);
 
@@ -100,17 +99,17 @@ export function ServicesDashboard() {
   );
 
   const handleServiceRemove = useCallback(async () => {
-    if (!selectedService) return;
-    BaseServiceService.deleteService(selectedService.id)
+    if (!removeServiceId) return;
+    BaseServiceService.deleteService(removeServiceId)
       .then(() => {
-        handlePopupSuccess(`Usługa ${selectedService.name} usunięta!`);
-        setIsRemovePopupOpen(false);
+        handlePopupSuccess(`Usługa ${services.find(s => s.id === removeServiceId)?.name} usunięta!`);
+        setRemoveServiceId(null);
       })
       .catch((error) => {
         console.error("Error removing Service", error);
         showAlert("Błąd usuwania Usługi!", AlertType.ERROR);
       });
-  }, [selectedService, showAlert]);
+  }, [removeServiceId, services, showAlert]);
 
   const handleCategoryAction = useCallback(
     async (categoryDTO: BaseServiceCategory | NewBaseServiceCategory) => {
@@ -156,7 +155,8 @@ export function ServicesDashboard() {
   );
 
   const handleReset = useCallback(() => { 
-    setSelectedService(null);
+    setEditServiceId(null);
+    setRemoveServiceId(null);
     setSelectedCategories([]);
     fetchCategories();
     fetchServices();
@@ -212,33 +212,37 @@ export function ServicesDashboard() {
         <ServiceList
           attributes={SERVICES_LIST_ATTRIBUTES}
           items={services}
-          setIsEditServicePopupOpen={setIsAddNewServicePopupOpen}
-          setIsRemoveServicePopupOpen={setIsRemovePopupOpen}
-          setSelectedService={setSelectedService}
+          setRemoveServiceId={setRemoveServiceId}
+          setEditServiceId={setEditServiceId}
           className="services"
         />
       </div>
       {isAddNewServicePopupOpen && (
         <ServicePopup
-          onClose={() => {
-            setIsAddNewServicePopupOpen(false);
-            setSelectedService(null);
-          }}
+          onClose={() => 
+            setIsAddNewServicePopupOpen(false)
+          }
           onReset={handleReset}
-          selectedService={selectedService}
+          className={"service-popup"}
+        />
+      )}
+      {editServiceId != null && (
+        <ServicePopup
+          onClose={() => setEditServiceId(null) }
+          onReset={handleReset}
+          editServiceId={editServiceId}
           className={"service-popup"}
         />
       )}
       {isCategoryPopupOpen && (
         <CategoryPopup
-          categories={categories}
           onClose={() => setIsCategoryPopupOpen(false)}
           onConfirm={handleCategoryAction}
         />
       )}
-      {isRemovePopupOpen && (
+      {removeServiceId != null && (
         <RemovePopup
-          onClose={() => setIsRemovePopupOpen(false)}
+          onClose={() => setRemoveServiceId(null)}
           warningText={
             "Zatwierdzenie spowoduje usunięcie Usługi z bazy danych!"
           }

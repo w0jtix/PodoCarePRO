@@ -5,27 +5,47 @@ import OrderCreator from "../Orders/OrderCreator";
 import { Order } from "../../models/order";
 import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
+import OrderService from "../../services/OrderService";
 
 export interface EditOrderPopupProps {
   onClose: () => void;
   onSuccess: (message: string) => void;
-  selectedOrder: Order;
+  orderId: number | string;
   className?: string;
 }
 
 export function EditOrderPopup({
   onClose,
   onSuccess,
-  selectedOrder,
+  orderId,
   className = "",
 }: EditOrderPopupProps) {
+  const [fetchedOrder, setFetchedOrder] = useState<Order | null>(null);
   const [hasWarning, setHasWarning] = useState<boolean>(false);
   const { showAlert } = useAlert();
+
+  const fetchOrderById = async (orderId: number | string) => {
+    OrderService.getOrderById(orderId)
+      .then((data) => {
+        setFetchedOrder(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching order: ", error);
+        showAlert("Błąd", AlertType.ERROR);
+      })
+  }
+
+  useEffect(() => {
+    fetchOrderById(orderId);
+  },[orderId])
 
   const portalRoot = document.getElementById("portal-root");
   if (!portalRoot) {
     showAlert("Błąd", AlertType.ERROR);
     console.error("Portal root element not found");
+    return null;
+  }
+  if(!fetchedOrder) {
     return null;
   }
 
@@ -39,7 +59,7 @@ export function EditOrderPopup({
         onClick={(e) => e.stopPropagation()}
       >
         <section className="edit-product-popup-header">
-          <h2 className="popup-title">{`Edytuj Zamówienie #${selectedOrder.orderNumber}`}</h2>
+          <h2 className="popup-title">{`Edytuj Zamówienie #${fetchedOrder?.orderNumber}`}</h2>
           <button className="popup-close-button  transparent border-none flex align-items-center justify-center absolute pointer" onClick={onClose}>
             <img
               src="src/assets/close.svg"
@@ -50,7 +70,7 @@ export function EditOrderPopup({
         </section>
         <section className="order-popup-interior width-90 mb-1">
           <OrderCreator
-            selectedOrder={selectedOrder}
+            selectedOrder={fetchedOrder}
             hasWarning={hasWarning}
             setHasWarning={setHasWarning}
             onSuccess={onSuccess}

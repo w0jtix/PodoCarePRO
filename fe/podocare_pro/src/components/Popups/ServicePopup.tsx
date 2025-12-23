@@ -16,16 +16,17 @@ import { extractServiceErrorMessage } from "../../utils/errorHandler";
 export interface ServicePopupProps {
   onClose: () => void;
   onReset: () => void;
-  selectedService: BaseService | null;
+  editServiceId?: number;
   className: string;
 }
 
 export function ServicePopup({
   onClose,
   onReset,
-  selectedService,
+  editServiceId,
   className = "",
 }: ServicePopupProps) {
+  const [fetchedService, setFetchedService] = useState<BaseService | null>(null);
   const [serviceDTO, setServiceDTO] = useState<NewBaseService | BaseService>({
     name: "",
     price: 0,
@@ -35,19 +36,31 @@ export function ServicePopup({
   });
   const { showAlert } = useAlert();
 
-  const action = selectedService ? Action.EDIT : Action.CREATE;
+  const action = editServiceId ? Action.EDIT : Action.CREATE;
+
+  const fetchServiceById = async(serviceId: number) => {
+    BaseServiceService.getServiceById(serviceId)
+      .then((data) => {
+        setFetchedService(data);
+        setServiceDTO(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching service: ", error);
+        showAlert("Błąd!", AlertType.ERROR);
+      })
+  }
 
   useEffect(() => {
-    if (selectedService) {
-      setServiceDTO(selectedService);
+    if (editServiceId) {
+      fetchServiceById(editServiceId);
     }
-  }, [selectedService]);
+  }, [editServiceId]);
 
   const handleServiceAction = useCallback(async () => {
     const error = validateServiceForm(
       serviceDTO,
       action,
-      selectedService
+      fetchedService
     );
     if(error) {
       showAlert(error, AlertType.ERROR);
@@ -72,7 +85,7 @@ export function ServicePopup({
   }, [
     serviceDTO,
     action,
-    selectedService,
+    fetchedService,
     onReset,
     onClose,
     showAlert,

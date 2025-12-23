@@ -25,27 +25,25 @@ export function OrderList({
 }: OrderListProps) {
   const [expandedOrderIds, setExpandedOrderIds] = useState<number[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [isEditOrderPopupOpen, setIsEditOrderPopupOpen] =
-    useState<boolean>(false);
-  const [isRemoveOrderPopupOpen, setIsRemoveOrderPopupOpen] =
-    useState<boolean>(false);
+  const [editOrderId, setEditOrderId] =
+    useState<number | string | null>(null);
+  const [removeOrderId, setRemoveOrderId] =
+    useState<number | string | null>(null);
 
   const handleOnClickEdit = useCallback(
     (e: React.MouseEvent, order: Order) => {
       e.stopPropagation();
-      setIsEditOrderPopupOpen(true);
-      setSelectedOrder(order);
+      setEditOrderId(order.id);
     },
-    [setSelectedOrder, setIsEditOrderPopupOpen]
+    [setEditOrderId]
   );
 
   const handleOnClickRemove = useCallback(
     (e: React.MouseEvent, order: Order) => {
       e.stopPropagation();
-      setSelectedOrder(order);
-      setIsRemoveOrderPopupOpen(true);
+      setRemoveOrderId(order.id);
     },
-    [setSelectedOrder, setIsRemoveOrderPopupOpen]
+    [setRemoveOrderId]
   );
 
   const toggleOrders = (orderId: number) => {
@@ -170,18 +168,18 @@ export function OrderList({
           
         </div>
       ))}
-      {isEditOrderPopupOpen && (
+      {editOrderId != null && (
         <EditOrderPopup
-          onClose={() => setIsEditOrderPopupOpen(false)}
+          onClose={() => setEditOrderId(null)}
           onSuccess={onSuccess}
-          selectedOrder={selectedOrder as Order}
+          orderId={editOrderId}
         />
       )}
-      {isRemoveOrderPopupOpen && (
+      {removeOrderId != null && (
         <RemoveOrderPopup
-          onClose={() => setIsRemoveOrderPopupOpen(false)}
+          onClose={() => setRemoveOrderId(null)}
           onSuccess={onSuccess}
-          selectedOrder={selectedOrder as Order}
+          orderId={removeOrderId}
         />
       )}
     </div>

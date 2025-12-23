@@ -19,6 +19,13 @@ import java.util.List;
 public class ClientController {
     private final ClientService clientService;
 
+    @GetMapping("/{id}")
+    @PreAuthorize(("hasRole('USER')"))
+    public ResponseEntity<ClientDTO> getClientById(@PathVariable(value = "id") Long id) {
+        ClientDTO client = clientService.getClientById(id);
+        return new ResponseEntity<>(client, HttpStatus.OK);
+    }
+
     @PostMapping("/search")
     @PreAuthorize(("hasRole('USER')"))
     public ResponseEntity<List<ClientDTO>> getClients(@RequestBody(required = false) ClientFilterDTO filter) {

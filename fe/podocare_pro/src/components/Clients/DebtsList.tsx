@@ -9,9 +9,8 @@ import { DEBTS_BY_VISIT_LIST_ATTRIBUTES } from "../../constants/list-headers";
 export interface DebtsListProps {
   attributes: ListAttribute[];
   items: ClientDebt[];
-  setIsEditDebtPopupOpen?: (isOpen: boolean) => void;
-  setIsRemoveDebtPopupOpen?: (isOpen: boolean) => void;
-  setSelectedDebt?: (debt: ClientDebt | null) => void;
+  setEditDebtId?: (debtId: number | string | null) => void;
+  setRemoveDebtId?: (debtId: number | string | null) => void;
   className?: string;
   selectedDebts?: ClientDebt[];
   selectedIds?: number[];
@@ -21,9 +20,8 @@ export interface DebtsListProps {
 export function DebtsList({
   attributes,
   items,
-  setIsEditDebtPopupOpen,
-  setIsRemoveDebtPopupOpen,
-  setSelectedDebt,
+  setEditDebtId,
+  setRemoveDebtId,
   className = "",
   selectedIds,
   onSelect,
@@ -33,19 +31,17 @@ export function DebtsList({
   const handleOnClickEdit = useCallback(
     (e: React.MouseEvent, item: ClientDebt) => {
       e.stopPropagation();
-      setSelectedDebt?.(item);
-      setIsEditDebtPopupOpen?.(true);
+      setEditDebtId?.(item.id);
     },
-    [setSelectedDebt, setIsEditDebtPopupOpen]
+    [setEditDebtId]
   );
 
   const handleOnClickRemove = useCallback(
     (e: React.MouseEvent, item: ClientDebt) => {
       e.stopPropagation();
-      setSelectedDebt?.(item);
-      setIsRemoveDebtPopupOpen?.(true);
+      setRemoveDebtId?.(item.id);
     },
-    [setSelectedDebt, setIsRemoveDebtPopupOpen]
+    [setRemoveDebtId]
   );
 
   useEffect(() => {

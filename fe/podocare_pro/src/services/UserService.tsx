@@ -3,6 +3,13 @@ import { User } from "../models/login";
 
 class UserService {
 
+    static async getUserById(userId: number | string): Promise<User> {
+            return await sendApiRequest<User>(`user/${userId}`, {
+                method: "get",
+                errorMessage: "Error fetching User."
+            })
+        }
+
     static async getAllUsers(): Promise<User[]> {
         return await sendApiRequest<User[]> ('user/all', {
             method: "get",

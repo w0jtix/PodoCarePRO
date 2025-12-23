@@ -18,11 +18,12 @@ import {
 import { extractClientErrorMessage } from "../../utils/errorHandler";
 import ClientService from "../../services/ClientService";
 import ClientNoteService from "../../services/ClientNoteService";
+import { Alert } from "react-bootstrap";
 
 export interface ClientPopupProps {
   onClose: () => void;
   onReset: () => void;
-  selectedClient: Client | null;
+  selectedClientId: number | null;
   className: string;
   onSelectClient?: (client: Client) => void;
 }
@@ -30,7 +31,7 @@ export interface ClientPopupProps {
 export function ClientPopup({
   onClose,
   onReset,
-  selectedClient,
+  selectedClientId,
   className = "",
   onSelectClient,
 }: ClientPopupProps) {
@@ -42,6 +43,7 @@ export function ClientPopup({
     redFlag: false,
     phoneNumber: null,
   });
+  const [fetchedClient, setFetchedClient] = useState<Client | null>(null);
   const [newClientNotesDTO, setNewClientNotesDTO] = useState<NewClientNote[]>(
     []
   );
@@ -51,12 +53,24 @@ export function ClientPopup({
   const [existingClientNotesIdsToRemove, setExistingClientNotesIdsToRemove] = useState<number[]>([]);
   const { showAlert } = useAlert();
 
-  const action = selectedClient ? Action.EDIT : Action.CREATE;
+  const action = selectedClientId ? Action.EDIT : Action.CREATE;
+
+  const fetchClientById = async (clientId: number) => {
+    ClientService.getClientById(clientId)
+      .then((data) => {
+        setClientDTO(data);
+        setFetchedClient(data)
+      })
+      .catch((error) => {
+        console.error("Error fetching Client!", error);
+        showAlert("Błąd", AlertType.ERROR);
+      })
+  }
 
   const handleClientAction = useCallback(async () => {
     try {
       if (action === Action.CREATE) {
-        const error = validateClientForm(clientDTO, action, selectedClient);
+        const error = validateClientForm(clientDTO, action, null);
         if (error) {
           showAlert(error, AlertType.ERROR);
           return;
@@ -71,7 +85,7 @@ export function ClientPopup({
         onReset?.();
         onClose();
       } else {
-        const clientError = validateClientForm(clientDTO, action, selectedClient);
+        const clientError = validateClientForm(clientDTO, action, fetchedClient);
         const hasClientChanges = clientError !== "Brak zmian!";
 
         const notesError = validateClientNoteForm(newClientNotesDTO);
@@ -127,7 +141,7 @@ export function ClientPopup({
       const errorMessage = extractClientErrorMessage(error, action);
       showAlert(errorMessage, AlertType.ERROR);
     }
-  }, [clientDTO, action, selectedClient, newClientNotesDTO, existingClientNotesIdsToRemove, onReset, onClose, showAlert, onSelectClient]);
+  }, [clientDTO, action, selectedClientId, newClientNotesDTO, existingClientNotesIdsToRemove, onReset, onClose, showAlert, onSelectClient]);
 
 
   const fetchClientNotes = async (clientId: number) => {
@@ -145,11 +159,11 @@ export function ClientPopup({
   }
 
   useEffect(() => {
-    if (selectedClient) {
-      setClientDTO(selectedClient);
-      fetchClientNotes(selectedClient.id);
+    if (selectedClientId) {
+      fetchClientById(selectedClientId);
+      fetchClientNotes(selectedClientId);
     }
-  }, [selectedClient]);
+  }, [selectedClientId]);
 
   const portalRoot = document.getElementById("portal-root");
   if (!portalRoot) {

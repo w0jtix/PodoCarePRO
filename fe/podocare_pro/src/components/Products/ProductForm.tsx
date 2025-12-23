@@ -66,6 +66,12 @@ export function ProductForm({
   }, []);
 
   useEffect(() => {
+    if (selectedProduct) {
+      setProductWorkingData(convertToWorkingData.product(selectedProduct));
+    }
+  }, [selectedProduct]);
+
+  useEffect(() => {
     if (productWorkingData.brandName.trim().length > 0) {
       const keywordFilter: KeywordDTO = {
         keyword: productWorkingData.brandName.trim(),

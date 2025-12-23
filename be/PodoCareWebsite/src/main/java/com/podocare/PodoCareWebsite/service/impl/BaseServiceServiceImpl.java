@@ -30,7 +30,7 @@ public class BaseServiceServiceImpl implements BaseServiceService {
     private final BaseServiceRepo baseServiceRepo;
     private final VisitItemRepo visitItemRepo;
 
-
+    @Override
     public BaseServiceDTO getBaseServiceById(Long id) {
         return new BaseServiceDTO(baseServiceRepo.findOneById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Service not found with given id: " + id)));

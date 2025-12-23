@@ -3,6 +3,13 @@ import { Client, ClientFilterDTO, NewClient } from "../models/client";
 
 class ClientService {
 
+    static async getClientById(clientId: number): Promise<Client> {
+        return await sendApiRequest<Client>(`clients/${clientId}`, {
+            method: "get",
+            errorMessage: "Error fetching Client."
+        })
+    }
+
     static async getClients(filter?: ClientFilterDTO): Promise<Client[]> {
         return await sendApiRequest<Client[]>(`clients/search`, {
             method: "post",

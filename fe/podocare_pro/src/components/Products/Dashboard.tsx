@@ -20,8 +20,8 @@ import AllProductService from "../../services/AllProductService";
 export function Dashboard() {
   const [isAddNewProductsPopupOpen, setIsAddNewProductsPopupOpen] =
     useState<boolean>(false);
-  const [isEditProductsPopupOpen, setIsEditProductsPopupOpen] =
-    useState<boolean>(false);
+  const [editProductId, setEditProductId] =
+    useState<string | number | null>(null);
   const [removeProductId, setRemoveProductId] =
     useState<string | number | null>(null);
   const [isCategoryPopupOpen, setIsCategoryPopupOpen] =
@@ -34,7 +34,6 @@ export function Dashboard() {
     isDeleted: false,
   });
   const [resetTriggered, setResetTriggered] = useState<boolean>(false);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [categories, setCategories] = useState<ProductCategory[]>([]);
   const { showAlert } = useAlert();
 
@@ -135,7 +134,7 @@ export function Dashboard() {
     if (removeProductId === null) return;
     AllProductService.deleteProduct(removeProductId)
       .then(() => {
-        handlePopupSuccess(`Produkt ${selectedProduct?.name ?? ""} usunięty!`);
+        handlePopupSuccess(`Produkt usunięty!`);
         setRemoveProductId(null);
       })
       .catch((error) => {
@@ -193,25 +192,20 @@ export function Dashboard() {
       <SupplyList
         filter={filter}
         setIsAddNewProductsPopupOpen={setIsAddNewProductsPopupOpen}
-        setIsEditProductsPopupOpen={setIsEditProductsPopupOpen}
+        setEditProductId={setEditProductId}
         setRemoveProductId={setRemoveProductId}
-        setSelectedProduct={setSelectedProduct}
       />
       {isAddNewProductsPopupOpen && (
         <AddEditProductPopup
           onClose={() => setIsAddNewProductsPopupOpen(false)}
           onReset={handlePopupSuccess}
-          selectedProduct={null}
         />
       )}
-      {isEditProductsPopupOpen && selectedProduct && (
+      {editProductId != null && (
         <AddEditProductPopup
-          onClose={() => {
-            setIsEditProductsPopupOpen(false);
-            setSelectedProduct(null);
-          }}
+          onClose={() => setEditProductId(null)}
           onReset={handlePopupSuccess}
-          selectedProduct={selectedProduct}
+          productId={editProductId}
         />
       )}
       {removeProductId != null && (
@@ -231,7 +225,6 @@ export function Dashboard() {
       )}
       {isCategoryPopupOpen && (
         <CategoryPopup
-          categories={categories}
           onClose={() => setIsCategoryPopupOpen(false)}
           onConfirm={handleCategoryAction}
         />

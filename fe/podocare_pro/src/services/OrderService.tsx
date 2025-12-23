@@ -6,6 +6,13 @@ import { sendApiRequest } from "../components/send-api-request/SendApiRequest";
 
 class OrderService {
 
+  static async getOrderById(orderId: number | string): Promise<Order> {
+    return await sendApiRequest<Order>(`orders/${orderId}`, {
+      method: "get",
+      errorMessage: "Error fetching orders."
+    })
+  }
+
   static async getOrders(filter: OrderFilterDTO): Promise<Order[]> {
     return await sendApiRequest<Order[]>('orders/search', {
       method: "post",

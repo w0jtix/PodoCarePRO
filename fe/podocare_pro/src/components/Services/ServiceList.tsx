@@ -7,9 +7,8 @@ import { BaseService } from "../../models/service";
 export interface ServiceListProps {
   attributes: ListAttribute[];
   items: BaseService[];
-  setIsEditServicePopupOpen?: (isOpen: boolean) => void;
-  setIsRemoveServicePopupOpen?: (isOpen: boolean) => void;
-  setSelectedService?: (service: BaseService | null) => void;
+  setRemoveServiceId?: (serviceId: number | null) => void;
+  setEditServiceId?: (serviceId: number | null) => void;
   className?: string;
   onClick?: (service: BaseService) => void;
 }
@@ -17,9 +16,8 @@ export interface ServiceListProps {
 export function ServiceList({
   attributes,
   items,
-  setIsEditServicePopupOpen,
-  setIsRemoveServicePopupOpen,
-  setSelectedService,
+  setRemoveServiceId,
+  setEditServiceId,
   className = "",
   onClick
 }: ServiceListProps) {
@@ -28,19 +26,17 @@ export function ServiceList({
   const handleOnClickEdit = useCallback(
     (e: React.MouseEvent, item: BaseService) => {
       e.stopPropagation();
-      setSelectedService?.(item);
-      setIsEditServicePopupOpen?.(true);
+      setEditServiceId?.(item.id);
     },
-    [setSelectedService, setIsEditServicePopupOpen]
+    [setEditServiceId]
   );
 
   const handleOnClickRemove = useCallback(
     (e: React.MouseEvent, item: BaseService) => {
       e.stopPropagation();
-      setSelectedService?.(item);
-      setIsRemoveServicePopupOpen?.(true);
+      setRemoveServiceId?.(item.id);
     },
-    [setSelectedService, setIsRemoveServicePopupOpen]
+    [setRemoveServiceId]
   );
 
   const toggleServices = (serviceId: number, service: BaseService) => {

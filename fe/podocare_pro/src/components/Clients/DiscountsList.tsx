@@ -6,9 +6,8 @@ import { Discount } from "../../models/visit";
 export interface DiscountsListProps {
   attributes: ListAttribute[];
   items: Discount[];
-  setIsEditDiscountPopupOpen?: (isOpen: boolean) => void;
-  setIsRemoveDiscountPopupOpen?: (isOpen: boolean) => void;
-  setSelectedDiscount?: (discount: Discount | null) => void;
+  setEditDiscountId?: (discountId: number | string | null) => void;
+  setRemoveDiscountId?: (discountId: number | string | null) => void;
   className?: string;
   onClick?: (discount: Discount) => void;
 }
@@ -16,9 +15,8 @@ export interface DiscountsListProps {
 export function DiscountsList({
   attributes,
   items,
-  setIsEditDiscountPopupOpen,
-  setIsRemoveDiscountPopupOpen,
-  setSelectedDiscount,
+  setEditDiscountId,
+  setRemoveDiscountId,
   className = "",
   onClick,
 }: DiscountsListProps) {
@@ -26,19 +24,17 @@ export function DiscountsList({
   const handleOnClickEdit = useCallback(
     (e: React.MouseEvent, item: Discount) => {
       e.stopPropagation();
-      setSelectedDiscount?.(item);
-      setIsEditDiscountPopupOpen?.(true);
+      setEditDiscountId?.(item.id);
     },
-    [setSelectedDiscount, setIsEditDiscountPopupOpen]
+    [setEditDiscountId]
   );
 
   const handleOnClickRemove = useCallback(
     (e: React.MouseEvent, item: Discount) => {
       e.stopPropagation();
-      setSelectedDiscount?.(item);
-      setIsRemoveDiscountPopupOpen?.(true);
+      setRemoveDiscountId?.(item.id);
     },
-    [setSelectedDiscount, setIsRemoveDiscountPopupOpen]
+    [setRemoveDiscountId]
   );
 
 

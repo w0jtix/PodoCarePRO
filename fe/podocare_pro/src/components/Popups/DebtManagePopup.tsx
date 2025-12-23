@@ -29,10 +29,8 @@ export function DebtManagePopup({
 }: DebtManagePopupProps) {
   const [isAddNewDebtPopupOpen, setIsAddNewDebtPopupOpen] =
     useState<boolean>(false);
-  const [isEditDebtPopupOpen, setIsEditDebtPopupOpen] =
-    useState<boolean>(false);
-  const [isRemovePopupOpen, setIsRemovePopupOpen] = useState<boolean>(false);
-  const [selectedDebt, setSelectedDebt] = useState<ClientDebt | null>(null);
+  const [editDebtId, setEditDebtId] = useState<number | string | null>(null);
+  const [removeDebtId, setRemoveDebtId] = useState<number | string | null>(null);
   const [debts, setDebts] = useState<ClientDebt[]>([]);
   const [filter, setFilter] = useState<DebtFilterDTO>({
       paymentStatus: null,
@@ -75,17 +73,17 @@ export function DebtManagePopup({
 
   const handleDebtRemove = useCallback(async (): Promise<void> => {
     try{
-      if(selectedDebt) {
-        await ClientDebtService.removeDebt(selectedDebt.id);
+      if(removeDebtId != null) {
+        await ClientDebtService.removeDebt(removeDebtId);
         showAlert('Pomyślnie usunięto dług!', AlertType.SUCCESS);
-        setIsRemovePopupOpen(false);
+        setRemoveDebtId(null);
         fetchDebts();
         onReset();
       }
     } catch (error) {
       showAlert("Błąd usuwania długu!", AlertType.ERROR);
     }
-  },[selectedDebt])
+  },[removeDebtId])
 
   useEffect(() => {
     fetchDebts();
@@ -146,9 +144,8 @@ export function DebtManagePopup({
           attributes={DEBTS_LIST_ATTRIBUTES}
           items={debts}
           className="products popup-list"
-          setIsEditDebtPopupOpen={setIsEditDebtPopupOpen}
-          setIsRemoveDebtPopupOpen={setIsRemovePopupOpen}
-          setSelectedDebt={setSelectedDebt}
+          setEditDebtId={setEditDebtId}
+          setRemoveDebtId={setRemoveDebtId}
         />
         <span className="popup-category-description flex justify-center width-max flex-grow align-items-end">
           Długi powstały podczas Wizyty może być usunięty tylko z Wizytą!
@@ -166,22 +163,22 @@ export function DebtManagePopup({
           className=""
         />
       )}
-      {isEditDebtPopupOpen && (
+      {editDebtId != null && (
         <DebtPopup
           onClose={() => {
-            setIsEditDebtPopupOpen(false);
+            setEditDebtId(null);
             fetchDebts();
             onReset();
           }}
           clients={clients}
           className=""
-          selectedDebt={selectedDebt}
+          debtId={editDebtId}
         />
       )}
-      {isRemovePopupOpen && (
+      {removeDebtId != null && (
         <RemovePopup
           onClose={() => {
-            setIsRemovePopupOpen(false);
+            setRemoveDebtId(null);
           }}
           className=""
           handleRemove={handleDebtRemove}

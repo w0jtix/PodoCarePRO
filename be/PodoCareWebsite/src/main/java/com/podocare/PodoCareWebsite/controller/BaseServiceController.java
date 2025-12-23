@@ -2,6 +2,7 @@ package com.podocare.PodoCareWebsite.controller;
 
 import com.podocare.PodoCareWebsite.DTO.BaseServiceCategoryDTO;
 import com.podocare.PodoCareWebsite.DTO.BaseServiceDTO;
+import com.podocare.PodoCareWebsite.DTO.ClientDTO;
 import com.podocare.PodoCareWebsite.DTO.request.KeywordFilterDTO;
 import com.podocare.PodoCareWebsite.DTO.request.ServiceFilterDTO;
 import com.podocare.PodoCareWebsite.service.BaseServiceService;
@@ -20,6 +21,13 @@ import java.util.List;
 public class BaseServiceController {
 
     private final BaseServiceService baseServiceService;
+
+    @GetMapping("/{id}")
+    @PreAuthorize(("hasRole('USER')"))
+    public ResponseEntity<BaseServiceDTO> getBaseServiceById(@PathVariable(value = "id") Long id) {
+        BaseServiceDTO service = baseServiceService.getBaseServiceById(id);
+        return new ResponseEntity<>(service, HttpStatus.OK);
+    }
 
     @PostMapping("/search")
     @PreAuthorize(("hasRole('USER')"))

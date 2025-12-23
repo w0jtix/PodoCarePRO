@@ -28,10 +28,8 @@ export function ProfileDashboard() {
   const [users, setUsers] = useState<User[]>([]);
   const [availableRoles, setAvailableRoles] = useState<Role[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [editUserId, setEditUserId] = useState<number | string | null>(null);
   const [updatedUser, setUpdatedUser] = useState<User | null>(null);
-  const [isForceChangePasswordPopupOpen, setIsForceChangePasswordPopupOpen] =
-    useState<boolean>(false);
 
   const fetchUsers = async () => {
     try {
@@ -93,10 +91,6 @@ export function ProfileDashboard() {
         };
       });
     }
-  };
-
-  const handleForceChangePassword = () => {
-    setIsForceChangePasswordPopupOpen((prev) => !prev);
   };
 
   const handleLogout = () => {
@@ -312,10 +306,9 @@ export function ProfileDashboard() {
                     alt="Edytuj Użytkownika"
                     iconTitle={"Edytuj Użytkownika"}
                     text="Edytuj"
-                    onClick={() => {
-                      handleForceChangePassword();
-                      setSelectedUser(u);
-                    }}
+                    onClick={() => 
+                      setEditUserId(u.id)
+                    }
                     disableText={true}
                     className="edit-user"
                   />
@@ -340,13 +333,13 @@ export function ProfileDashboard() {
           className="av-picker-margin"
         />
       )}
-      {isForceChangePasswordPopupOpen && (
+      {editUserId != null && (
         <EditUserPopup
           AddNewEmployeePopup={AddNewEmployeePopup}
           handleAddNewEmployee={() => handleAddNewEmployee}
-          onClose={() => setIsForceChangePasswordPopupOpen(false)}
+          onClose={() => setEditUserId(null)}
           className={"force-change-pw"}
-          selectedUser={selectedUser}
+          userId={editUserId}
           availableRoles={availableRoles}
           refreshUserList={fetchUsers}
           employees={employees}

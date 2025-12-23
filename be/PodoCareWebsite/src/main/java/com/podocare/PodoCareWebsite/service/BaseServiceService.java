@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface BaseServiceService {
 
+    BaseServiceDTO getBaseServiceById(Long id);
+
     List<BaseServiceDTO> getBaseServices(ServiceFilterDTO keyword);
 
     List<BaseServiceDTO> getBaseServicesByCategoryId(Long categoryId);

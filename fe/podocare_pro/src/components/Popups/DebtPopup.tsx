@@ -15,16 +15,17 @@ import { Action } from "../../models/action";
 export interface DebtPopupProps {
   onClose: () => void;
   clients:Client[];
-  selectedDebt?: ClientDebt | null;
+  debtId?: number | string | null;
   className: string;
 }
 
 export function DebtPopup({
   onClose,
   clients,
-  selectedDebt,
+  debtId,
   className = "",
 }: DebtPopupProps) {
+  const [fetchedDebt, setFetchedDebt] = useState<ClientDebt | null>(null)
   const [debtDTO, setDebtDTO] = useState<NewClientDebt>({
     type: DebtType.UNPAID,
     value: 0,
@@ -34,13 +35,25 @@ export function DebtPopup({
   });
   const { showAlert } = useAlert();
 
-  const action = selectedDebt ? Action.EDIT : Action.CREATE;
+  const action = debtId ? Action.EDIT : Action.CREATE;
+
+  const fetchDebtById = async (debtId: number | string) => {
+    ClientDebtService.getDebtById(debtId)
+      .then ((data) => {
+        setFetchedDebt(data);
+        setDebtDTO(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching Debt: ", error);
+        showAlert("Błąd!", AlertType.ERROR)
+      })
+    }
 
   const handleCreateDebt = useCallback(async() => {
     const error = validateNoSourceClientDebtForm(
       debtDTO,
       action,
-      selectedDebt
+      fetchedDebt
     );
     if(error) {
       showAlert(error, AlertType.ERROR);
@@ -50,8 +63,8 @@ export function DebtPopup({
       if(action === Action.CREATE) {
         await ClientDebtService.createDebt(debtDTO as NewClientDebt);
       showAlert(`Dług klienta ${debtDTO.client?.firstName + " " + debtDTO.client?.lastName} utworzony!`, AlertType.SUCCESS);
-      } else if (action === Action.EDIT && selectedDebt) {
-        await ClientDebtService.updateDebt(selectedDebt.id ,debtDTO as NewClientDebt);
+      } else if (action === Action.EDIT && fetchedDebt) {
+        await ClientDebtService.updateDebt(fetchedDebt.id ,debtDTO as NewClientDebt);
       showAlert(`Dług zaktualizowany!`, AlertType.SUCCESS);
       }
       
@@ -60,17 +73,11 @@ export function DebtPopup({
       showAlert(`Błąd ${action === Action.CREATE ? "tworzenia" : "aktualizacji"} długu!`, AlertType.ERROR);
     }
 
-  },[debtDTO, showAlert, selectedDebt, action])
+  },[debtDTO, showAlert, fetchedDebt, action])
 
   useEffect(() => {
-    if(selectedDebt) {
-      setDebtDTO({
-        type: selectedDebt.type,
-        value: selectedDebt.value,
-        client: selectedDebt.client,
-        createdAt: selectedDebt.createdAt,
-        paymentStatus: selectedDebt.paymentStatus
-      })
+    if(debtId) {
+      fetchDebtById(debtId);
     }
   }, [])
 

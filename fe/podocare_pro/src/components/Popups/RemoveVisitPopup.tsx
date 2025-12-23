@@ -24,18 +24,19 @@ import { Voucher } from "../../models/voucher";
 
 export interface RemoveVisitPopupProps {
   onClose: () => void;
-  selectedVisit: Visit;
+  visitId: number | string;
   className?: string;
   handleResetFiltersAndData:() => void;
 }
 
 export function RemoveVisitPopup({
   onClose,
-  selectedVisit,
+  visitId,
   className = "",
   handleResetFiltersAndData
 }: RemoveVisitPopupProps) {
   const { showAlert } = useAlert();
+  const [fetchedVisit, setFetchedVisit] = useState<Visit | null> (null);
   const [saleItemProducts, setSaleItemProducts] = useState<SaleItem[]>([]);
   const [saleItemVouchers, setSaleItemVouchers] = useState<SaleItem[]>([]);
   const [paidClientDebts, setPaidClientDebts] = useState<ClientDebt[]>([]);
@@ -47,8 +48,20 @@ export function RemoveVisitPopup({
     saleItemVouchers.length > 0 &&
     saleItemVouchers.some((v) => v.voucher?.status === VoucherStatus.USED);
 
+
+  const fetchVisitById = async(visitId: number | string) => {
+    VisitService.getVisitById(visitId)
+      .then((data) => {
+        setFetchedVisit(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching Visit: ", error);
+        showAlert("Błąd!", AlertType.ERROR);
+      })
+  }
+
   const handleRemove = useCallback(async () => {
-    VisitService.deleteVisit(selectedVisit.id)
+    VisitService.deleteVisit(visitId)
       .then((status) => {
         showAlert("Wizyta pomyślnie usunięta!", AlertType.SUCCESS);
         handleResetFiltersAndData();
@@ -60,7 +73,7 @@ export function RemoveVisitPopup({
         console.error("Error removing Visit", error);
         showAlert("Błąd usuwania wizyty.", AlertType.ERROR);
       });
-  }, [selectedVisit.id, showAlert]);
+  }, [visitId, showAlert]);
 
   const handleDebtRedempted = async (visitId: string | number) => {
     VisitService.findVisitByDebtSourceVisitId(visitId)
@@ -74,6 +87,46 @@ export function RemoveVisitPopup({
       });
   };
 
+  useEffect(() => {
+    if (fetchedVisit && fetchedVisit.sale) {
+      setSaleItemProducts(
+        fetchedVisit.sale.items.filter((item) => item.product !== null)
+      );
+      setSaleItemVouchers(
+        fetchedVisit.sale.items.filter((item) => item.voucher !== null)
+      );
+    }
+    if (fetchedVisit && fetchedVisit.debtRedemptions.length > 0) {
+      setPaidClientDebts(
+        fetchedVisit.debtRedemptions.map(
+          (debtRedemption) => debtRedemption.debtSource
+        )
+      );
+    }
+    if(fetchedVisit && fetchedVisit.payments.length > 0) {
+      setVouchersAsPayment(
+        fetchedVisit.payments
+        .map(p => p.voucher)
+        .filter((v) => v != null)
+      )
+    }
+    if (fetchedVisit) {
+      const statusPaid = fetchedVisit.paymentStatus === PaymentStatus.PAID;
+      let totalPaid = 0;
+      fetchedVisit.payments.map((payment) => (totalPaid += payment.amount));
+      const debtFromPayment = totalPaid < fetchedVisit.totalValue;
+      if (statusPaid && (fetchedVisit.absence || debtFromPayment)) {
+        handleDebtRedempted(fetchedVisit.id);
+      }
+    }
+  }, [fetchedVisit]);
+
+  useEffect(() => {
+    if(visitId) {
+      fetchVisitById(visitId);
+    }
+  },[visitId])
+
   const portalRoot = document.getElementById("portal-root");
   if (!portalRoot) {
     showAlert("Błąd", AlertType.ERROR);
@@ -81,40 +134,9 @@ export function RemoveVisitPopup({
     return null;
   }
 
-  useEffect(() => {
-    console.log("se", selectedVisit);
-    if (selectedVisit && selectedVisit.sale) {
-      setSaleItemProducts(
-        selectedVisit.sale.items.filter((item) => item.product !== null)
-      );
-      setSaleItemVouchers(
-        selectedVisit.sale.items.filter((item) => item.voucher !== null)
-      );
-    }
-    if (selectedVisit && selectedVisit.debtRedemptions.length > 0) {
-      setPaidClientDebts(
-        selectedVisit.debtRedemptions.map(
-          (debtRedemption) => debtRedemption.debtSource
-        )
-      );
-    }
-    if(selectedVisit && selectedVisit.payments.length > 0) {
-      setVouchersAsPayment(
-        selectedVisit.payments
-        .map(p => p.voucher)
-        .filter((v) => v != null)
-      )
-    }
-    if (selectedVisit) {
-      const statusPaid = selectedVisit.paymentStatus === PaymentStatus.PAID;
-      let totalPaid = 0;
-      selectedVisit.payments.map((payment) => (totalPaid += payment.amount));
-      const debtFromPayment = totalPaid < selectedVisit.totalValue;
-      if (statusPaid && (selectedVisit.absence || debtFromPayment)) {
-        handleDebtRedempted(selectedVisit.id);
-      }
-    }
-  }, [selectedVisit]);
+  if(!fetchedVisit) {
+    return null;
+  }
 
   return ReactDOM.createPortal(
     <div
@@ -153,7 +175,7 @@ export function RemoveVisitPopup({
                   />
               <div className="flex-column align-items-center g-5px width-max">
               <span className="qv-span f12 warning">
-                  {`Konflikt: ${selectedVisit.absence ? 
+                  {`Konflikt: ${fetchedVisit.absence ? 
                       "Nieobecność usuwanej Wizyty została spłacona podczas innej Wizyty: " 
                       : `Zadłużenie tej Wizyty z powodu niepełnej płatności zostało spłacone podczas Wizyty: ` 
                       }`}</span>
@@ -162,7 +184,7 @@ export function RemoveVisitPopup({
               </div>
           </div>
           )}
-          {selectedVisit && saleItemProducts.length > 0 && (
+          {saleItemProducts.length > 0 && (
             <div className="width-80 flex-column g-1 mb-1">
               <span className="qv-span text-align-center">
                 Poniższe produkty zostaną przywrócone do Magazynu:
@@ -174,7 +196,7 @@ export function RemoveVisitPopup({
               />
             </div>
           )}
-          {selectedVisit && saleItemVouchers.length > 0 && (
+          {saleItemVouchers.length > 0 && (
             <div className="width-80 flex-column g-1 mb-1">
               <span className="qv-span text-align-center">
                 Poniższe vouchery zostaną usunięte:
@@ -200,7 +222,7 @@ export function RemoveVisitPopup({
               )}
             </div>
           )}
-          {selectedVisit && paidClientDebts.length > 0 && (
+          {paidClientDebts.length > 0 && (
             <div className="width-80 flex-column g-1 mb-1">
               <span className="qv-span text-align-center">
                 Poniższe spłaty długów zostaną cofnięte:
@@ -212,7 +234,7 @@ export function RemoveVisitPopup({
               />
             </div>
           )}
-          {selectedVisit && vouchersAsPayment.length > 0 && (
+          {vouchersAsPayment.length > 0 && (
             <div className="width-80 flex-column g-1 mb-1">
               <span className="qv-span text-align-center">
                 Wizyta opłacona przez Voucher. <br/> Status Vouchera zostanie przywrócony zgodnie z datą ważności.

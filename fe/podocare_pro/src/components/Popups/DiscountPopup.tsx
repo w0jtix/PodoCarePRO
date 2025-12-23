@@ -8,18 +8,20 @@ import { NewDiscount, Discount } from "../../models/visit";
 import { validateDiscountForm } from "../../utils/validators";
 import DiscountService from "../../services/DiscountService";
 import DiscountForm from "../Clients/DiscountForm";
+import { Alert } from "react-bootstrap";
 
 export interface DiscountPopupProps {
   onClose: () => void;
-  selectedDiscount?: Discount | null;
+  discountId?: number | string | null;
   className: string;
 }
 
 export function DiscountPopup({
   onClose,
-  selectedDiscount,
+  discountId,
   className = "",
 }: DiscountPopupProps) {
+  const [fetchedDiscount, setFetchedDiscount] = useState<Discount | null>(null);
   const [discountDTO, setDiscountDTO] = useState<NewDiscount>({
     name: "",
     percentageValue: 0,
@@ -27,10 +29,22 @@ export function DiscountPopup({
   });
   const { showAlert } = useAlert();
 
-  const action = selectedDiscount ? Action.EDIT : Action.CREATE;
+  const action = discountId ? Action.EDIT : Action.CREATE;
+
+  const fetchDiscountById = async (discountId: number | string) => {
+    DiscountService.getDiscountById(discountId)
+    .then((data) => {
+      setFetchedDiscount(data);
+      setDiscountDTO(data);
+  })
+    .catch((error) => {
+      console.error("Error fetching Discount: ", error);
+      showAlert("Błąd!", AlertType.ERROR);
+    })
+  }
 
   const handleDiscountAction = useCallback(async () => {
-    const error = validateDiscountForm(discountDTO, action, selectedDiscount);
+    const error = validateDiscountForm(discountDTO, action, fetchedDiscount);
     if (error) {
       showAlert(error, AlertType.ERROR);
       return;
@@ -42,9 +56,9 @@ export function DiscountPopup({
           `Rabat utworzony!`,
           AlertType.SUCCESS
         );
-      } else if (action === Action.EDIT && selectedDiscount) {
+      } else if (action === Action.EDIT && fetchedDiscount) {
         await DiscountService.updateDiscount(
-          selectedDiscount.id,
+          fetchedDiscount.id,
           discountDTO as NewDiscount
         );
         showAlert(`Rabat zaktualizowany!`, AlertType.SUCCESS);
@@ -58,15 +72,11 @@ export function DiscountPopup({
         AlertType.ERROR
       );
     }
-  }, [discountDTO, showAlert, selectedDiscount, action]);
+  }, [discountDTO, showAlert, fetchedDiscount, action]);
 
   useEffect(() => {
-    if (selectedDiscount) {
-      setDiscountDTO({
-        name: selectedDiscount.name,
-        percentageValue: selectedDiscount.percentageValue,
-        clients: selectedDiscount.clients,
-      });
+    if (discountId) {
+      fetchDiscountById(discountId);
     }
   }, []);
 
@@ -102,7 +112,7 @@ export function DiscountPopup({
         </section>
         <section className="custom-form-section width-90 mb-15">
           <DiscountForm
-            selectedDiscountId={selectedDiscount?.id}
+            selectedDiscountId={discountId}
             discountDTO={discountDTO}
             setDiscountDTO={setDiscountDTO}
             action={action}

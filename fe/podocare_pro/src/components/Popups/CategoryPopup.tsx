@@ -7,7 +7,6 @@ import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
 
 export interface CategoryPopupProps {
-  categories: ProductCategory[] | BaseServiceCategory[];
   onClose: () => void;
   onConfirm: (category: ProductCategory | NewProductCategory | BaseServiceCategory | NewBaseServiceCategory) => void;
   selectedCategory?: ProductCategory | BaseServiceCategory;
@@ -15,7 +14,6 @@ export interface CategoryPopupProps {
 }
 
 export function CategoryPopup({
-  categories,
   onClose,
   onConfirm,
   selectedCategory,

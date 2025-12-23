@@ -30,10 +30,10 @@ export function DiscountManagePopup({
 }: DiscountManagePopupProps) {
   const [isAddNewDiscountPopupOpen, setIsAddNewDiscountPopupOpen] =
     useState<boolean>(false);
-  const [isEditDiscountPopupOpen, setIsEditDiscountPopupOpen] =
-    useState<boolean>(false);
-  const [isRemovePopupOpen, setIsRemovePopupOpen] = useState<boolean>(false);
-  const [selectedDiscount, setselectedDiscount] = useState<Discount | null>(null);
+  const [editDiscountId, setEditDiscountId] =
+    useState<number | string | null>(null);
+  const [removeDiscountId, setRemoveDiscountId] =
+    useState<number | string | null>(null);
   const [discounts, setDiscounts] = useState<Discount[]>([]);
   const { showAlert } = useAlert();
 
@@ -52,17 +52,17 @@ export function DiscountManagePopup({
 
   const handleDiscountRemove = useCallback(async (): Promise<void> => {
     try {
-      if (selectedDiscount) {
-        await DiscountService.deleteDiscount(selectedDiscount.id);
+      if (removeDiscountId) {
+        await DiscountService.deleteDiscount(removeDiscountId);
         showAlert("Pomyślnie usunięto rabat!", AlertType.SUCCESS);
-        setIsRemovePopupOpen(false);
+        setRemoveDiscountId(null);
         fetchDiscounts();
         onReset();
       }
     } catch (error) {
       showAlert("Błąd usuwania rabatu!", AlertType.ERROR);
     }
-  }, [selectedDiscount]);
+  }, [removeDiscountId]);
 
 
   useEffect(() => {
@@ -110,9 +110,8 @@ export function DiscountManagePopup({
           attributes={DISCOUNTS_LIST_ATTRIBUTES}
           items={discounts}
           className="products popup-list"
-          setIsEditDiscountPopupOpen={setIsEditDiscountPopupOpen}
-          setIsRemoveDiscountPopupOpen={setIsRemovePopupOpen}
-          setSelectedDiscount={setselectedDiscount}
+          setEditDiscountId={setEditDiscountId}
+          setRemoveDiscountId={setRemoveDiscountId}
         />
       </div>
 
@@ -126,21 +125,21 @@ export function DiscountManagePopup({
           className=""
         />
       )}
-      {isEditDiscountPopupOpen && (
+      {editDiscountId != null && (
         <DiscountPopup
           onClose={() => {
-            setIsEditDiscountPopupOpen(false);
+            setEditDiscountId(null);
             fetchDiscounts();
             onReset();
           }}
           className=""
-          selectedDiscount={selectedDiscount}
+          discountId={editDiscountId}
         />
       )}
-      {isRemovePopupOpen && (
+      {removeDiscountId != null && (
         <RemovePopup
           onClose={() => {
-            setIsRemovePopupOpen(false);
+            setRemoveDiscountId(null);
           }}
           className=""
           handleRemove={handleDiscountRemove}

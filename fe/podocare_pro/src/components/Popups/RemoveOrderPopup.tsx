@@ -12,24 +12,41 @@ import { useAlert } from "../Alert/AlertProvider";
 export interface RemoveOrderPopupProps {
   onClose: () => void;
   onSuccess: (message: string) => void;
-  selectedOrder: Order;
+  orderId: number | string;
   className?: string;
 }
 
 export function RemoveOrderPopup({
   onClose,
   onSuccess,
-  selectedOrder,
+  orderId,
   className = "",
 }: RemoveOrderPopupProps) {
+  const [fetchedOrder, setFetchedOrder] = useState<Order | null>(null);
   const [hasWarning, setHasWarning] = useState(false);
   const { showAlert } = useAlert();
 
+  const fetchOrderById = async (orderId: number | string) => {
+    OrderService.getOrderById(orderId)
+      .then((data) => {
+        setFetchedOrder(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching order: ", error);
+        showAlert("Błąd", AlertType.ERROR);
+      })
+  }
+
+  useEffect(() => {
+    fetchOrderById(orderId);
+  },[orderId])
+
   const handleOrderRemove = useCallback(async () => {
-      OrderService.deleteOrder(selectedOrder.id)
+    if(fetchedOrder)
+      OrderService.deleteOrder(fetchedOrder.id)
         .then((status) => {
           onSuccess(
-            `Zamówienie #${selectedOrder.orderNumber} usunięte pomyślnie`
+            `Zamówienie #${fetchedOrder.orderNumber} usunięte pomyślnie`
           );
           setTimeout(() => {
             onClose();
@@ -41,13 +58,10 @@ export function RemoveOrderPopup({
         });
   }, [
     showAlert,
-    selectedOrder.id,
-    selectedOrder.orderNumber,
+    fetchedOrder,
     onSuccess,
     onClose,
   ]);
-
-  const hasProducts = selectedOrder.orderProducts.length > 0;
 
   const portalRoot = document.getElementById("portal-root");
   if (!portalRoot) {
@@ -55,6 +69,12 @@ export function RemoveOrderPopup({
     console.error("Portal root element not found");
     return null;
   }
+
+  if (!fetchedOrder) {
+    return null;
+  }
+
+  const hasProducts = fetchedOrder.orderProducts.length > 0;
 
   return ReactDOM.createPortal(
     <div
@@ -89,10 +109,10 @@ export function RemoveOrderPopup({
                   ❗❗❗ Zatwierdzenie spowoduje usunięcie informacji o
                   Zamówieniu oraz Produktów z Magazynu:
                 </a>
-                <a className="remove-popup-warning-a-list-length flex justify-center">{`Ilość Produktów: ${selectedOrder.orderProducts.length}`}</a>
+                <a className="remove-popup-warning-a-list-length flex justify-center">{`Ilość Produktów: ${fetchedOrder.orderProducts.length}`}</a>
               </section>
                 <OrderContent
-                  order={selectedOrder}
+                  order={fetchedOrder}
                   action={Action.HISTORY}
                   mode={Mode.POPUP}
                   setHasWarning={setHasWarning}

@@ -28,10 +28,10 @@ export function ReviewManagePopup({
 }: ReviewManagePopupProps) {
   const [isAddNewReviewPopupOpen, setIsAddNewReviewPopupOpen] =
     useState<boolean>(false);
-  const [isEditReviewPopupOpen, setIsEditReviewPopupOpen] =
-    useState<boolean>(false);
-  const [isRemovePopupOpen, setIsRemovePopupOpen] = useState<boolean>(false);
-  const [selectedReview, setSelectedReview] = useState<Review | null>(null);
+  const [editReviewId, setEditReviewId] =
+    useState<number | string | null>(null);
+  const [removeReviewId, setRemoveReviewId] =
+    useState<number | string | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [filter, setFilter] = useState<ReviewFilterDTO>({
     source: null,
@@ -73,17 +73,17 @@ export function ReviewManagePopup({
 
   const handleReviewRemove = useCallback(async (): Promise<void> => {
     try {
-      if (selectedReview) {
-        await ReviewService.deleteReview(selectedReview.id);
+      if (removeReviewId) {
+        await ReviewService.deleteReview(removeReviewId);
         showAlert("Pomyślnie usunięto opinię!", AlertType.SUCCESS);
-        setIsRemovePopupOpen(false);
+        setRemoveReviewId(null);
         fetchReviews();
         onReset();
       }
     } catch (error) {
       showAlert("Błąd usuwania opinii!", AlertType.ERROR);
     }
-  }, [selectedReview]);
+  }, [removeReviewId]);
 
   const toggleStatus = () => {
     setFilter((prev) => {
@@ -179,9 +179,8 @@ export function ReviewManagePopup({
           attributes={REVIEWS_LIST_ATTRIBUTES}
           items={reviews}
           className="products popup-list"
-          setIsEditReviewPopupOpen={setIsEditReviewPopupOpen}
-          setIsRemoveReviewPopupOpen={setIsRemovePopupOpen}
-          setSelectedReview={setSelectedReview}
+          setEditReviewId={setEditReviewId}
+          setRemoveReviewId={setRemoveReviewId}
         />
       </div>
 
@@ -196,22 +195,22 @@ export function ReviewManagePopup({
           className=""
         />
       )}
-      {isEditReviewPopupOpen && (
+      {editReviewId != null && (
         <ReviewPopup
           onClose={() => {
-            setIsEditReviewPopupOpen(false);
+            setEditReviewId(null);
             fetchReviews();
             onReset();
           }}
           clients={clients}
           className=""
-          selectedReview={selectedReview}
+          reviewId={editReviewId}
         />
       )}
-      {isRemovePopupOpen && (
+      {removeReviewId != null && (
         <RemovePopup
           onClose={() => {
-            setIsRemovePopupOpen(false);
+            setRemoveReviewId(null);
           }}
           className=""
           handleRemove={handleReviewRemove}

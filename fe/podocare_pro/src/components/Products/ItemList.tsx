@@ -9,9 +9,8 @@ import CostInput from "../CostInput";
 export interface ItemListProps {
   attributes: ListAttribute[];
   items: Product[];
-  setIsEditProductsPopupOpen?: (isOpen: boolean) => void;
+  setEditProductId?: (productId: string | number | null) => void;
   setRemoveProductId?: (productId: string | number | null) => void;
-  setSelectedProduct?: (product: Product | null) => void;
   setIsAddNewProductsPopupOpen?: (isOpen: boolean) => void;
   className?: string;
   action?: Action;
@@ -22,9 +21,8 @@ export interface ItemListProps {
 export function ItemList ({
   attributes,
   items,
-  setIsEditProductsPopupOpen,
+  setEditProductId,
   setRemoveProductId,
-  setSelectedProduct,
   className = "",
   onClick,
   onRemoveByIndex,
@@ -32,15 +30,13 @@ export function ItemList ({
 
   const handleOnClickEdit = useCallback((e: React.MouseEvent, item: Product) => {
     e.stopPropagation();
-    setSelectedProduct?.(item);
-    setIsEditProductsPopupOpen?.(true);
-  }, [setSelectedProduct, setIsEditProductsPopupOpen]);
+    setEditProductId?.(item.id);
+  }, [setEditProductId]);
 
   const handleOnClickRemove = useCallback((e: React.MouseEvent, item: Product) => {
     e.stopPropagation();
-    setSelectedProduct?.(item);
     setRemoveProductId?.(item.id);
-  }, [setSelectedProduct, setRemoveProductId]);
+  }, [setRemoveProductId]);
 
   const toggleProducts = (item : Product) => {
     onClick?.(item);

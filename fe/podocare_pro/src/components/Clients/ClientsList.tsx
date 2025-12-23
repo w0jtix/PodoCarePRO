@@ -1,18 +1,14 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import ActionButton from "../ActionButton";
-import { useState } from "react";
 import { ListAttribute} from "../../constants/list-headers";
-import { BaseService } from "../../models/service";
 import { Client } from "../../models/client";
 import { Action } from "../../models/action";
-import VisitService from "../../services/VisitService";
 
 export interface ClientsListProps {
   attributes: ListAttribute[];
   items: Client[];
-  setIsEditClientPopupOpen?: (isOpen: boolean) => void;
-  setIsRemoveClientPopupOpen?: (isOpen: boolean) => void;
-  setSelectedClient?: (client: Client | null) => void;
+  setRemoveClientId?: (clientId: number | null) => void;
+  setSelectedClientId?: (clientId: number | null) => void;
   className?: string;
   onClick?: (client: Client) => void;
   action?: Action,
@@ -22,32 +18,28 @@ export interface ClientsListProps {
 export function ClientsList({
   attributes,
   items,
-  setIsEditClientPopupOpen,
-  setIsRemoveClientPopupOpen,
-  setSelectedClient,
+  setRemoveClientId,
+  setSelectedClientId,
   className = "",
   onClick,
   action,
   selectedClients,
 }: ClientsListProps) {
-  const [visitCounts, setVisitCounts] = useState<Map<string | number, number>>(new Map());
 
   const handleOnClickEdit = useCallback(
     (e: React.MouseEvent, item: Client) => {
       e.stopPropagation();
-      setSelectedClient?.(item);
-      setIsEditClientPopupOpen?.(true);
+      setSelectedClientId?.(item.id);
     },
-    [setSelectedClient, setIsEditClientPopupOpen]
+    [setSelectedClientId]
   );
 
   const handleOnClickRemove = useCallback(
     (e: React.MouseEvent, item: Client) => {
       e.stopPropagation();
-      setSelectedClient?.(item);
-      setIsRemoveClientPopupOpen?.(true);
+      setRemoveClientId?.(item.id);
     },
-    [setSelectedClient, setIsRemoveClientPopupOpen]
+    [setRemoveClientId]
   );
 
   const renderAttributeContent = (

@@ -1,9 +1,14 @@
-import axios from "axios";
-import { AxiosResponse } from "axios";
 import { NewProduct, Product, ProductFilterDTO } from "../models/product";
 import { sendApiRequest } from "../components/send-api-request/SendApiRequest";
 
 class AllProductService {
+
+  static async getProductById(productId: number | string):Promise<Product> {
+    return await sendApiRequest<Product>(`products/${productId}`, {
+      method: "get",
+      errorMessage: "Error fetching product."
+    })
+  }
 
   static async getProducts(filter?: ProductFilterDTO):Promise<Product[]> {
     return await sendApiRequest<Product[]>('products/search', {

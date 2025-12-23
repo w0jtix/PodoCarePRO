@@ -3,6 +3,13 @@ import { BaseService, NewBaseService, ServiceFilterDTO } from "../models/service
 
 class BaseServiceService {
 
+    static async getServiceById(serviceId: number): Promise<BaseService> {
+            return await sendApiRequest<BaseService>(`services/${serviceId}`, {
+                method: "get",
+                errorMessage: "Error fetching Service."
+            })
+        }
+
     static async getServices(filter?: ServiceFilterDTO): Promise<BaseService[]> {
         return await sendApiRequest<BaseService[]>(`services/search`, {
             method: "post",

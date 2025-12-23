@@ -13,16 +13,17 @@ import ReviewForm from "../Clients/ReviewForm";
 export interface ReviewPopupProps {
   onClose: () => void;
   clients: Client[];
-  selectedReview?: Review | null;
+  reviewId?: number | string | null;
   className: string;
 }
 
 export function ReviewPopup({
   onClose,
   clients,
-  selectedReview,
+  reviewId,
   className = "",
 }: ReviewPopupProps) {
+  const [fetchedReview, setFetchedReview] = useState<Review | null>(null);
   const [reviewDTO, setReviewDTO] = useState<NewReview>({
     client: null,
     issueDate: new Date().toISOString().split("T")[0],
@@ -31,10 +32,22 @@ export function ReviewPopup({
   });
   const { showAlert } = useAlert();
 
-  const action = selectedReview ? Action.EDIT : Action.CREATE;
+  const action = reviewId ? Action.EDIT : Action.CREATE;
+
+  const fetchReviewById = async(reviewId:number | string) => {
+    ReviewService.getReviewById(reviewId)
+      .then((data) => {
+        setFetchedReview(data);
+        setReviewDTO(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching review: ", error);
+        showAlert("Błąd!", AlertType.ERROR);
+      })
+  }
 
   const handleReviewAction = useCallback(async () => {
-    const error = validateReviewForm(reviewDTO, action, selectedReview);
+    const error = validateReviewForm(reviewDTO, action, fetchedReview);
     if (error) {
       showAlert(error, AlertType.ERROR);
       return;
@@ -48,9 +61,9 @@ export function ReviewPopup({
           } utworzona!`,
           AlertType.SUCCESS
         );
-      } else if (action === Action.EDIT && selectedReview) {
+      } else if (action === Action.EDIT && reviewId) {
         await ReviewService.updateReview(
-          selectedReview.id,
+          reviewId,
           reviewDTO as NewReview
         );
         showAlert(`Opinia zaktualizowana!`, AlertType.SUCCESS);
@@ -64,16 +77,11 @@ export function ReviewPopup({
         AlertType.ERROR
       );
     }
-  }, [reviewDTO, showAlert, selectedReview, action]);
+  }, [reviewDTO, showAlert, reviewId, action]);
 
   useEffect(() => {
-    if (selectedReview) {
-      setReviewDTO({
-        client: selectedReview.client,
-        issueDate: selectedReview.issueDate,
-        source: selectedReview.source,
-        isUsed: selectedReview.isUsed
-      });
+    if (reviewId) {
+      fetchReviewById(reviewId);
     }
   }, []);
 
