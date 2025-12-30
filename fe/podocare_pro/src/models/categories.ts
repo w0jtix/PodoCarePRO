@@ -5,8 +5,8 @@ export interface ProductCategory {
 }
 
 export interface NewProductCategory {
-    name?: string;
-    color?: string;
+    name: string;
+    color: string;
 }
 
 export interface BaseServiceCategory {
@@ -17,8 +17,8 @@ export interface BaseServiceCategory {
 }
 
 export interface NewBaseServiceCategory {
-    name?: string;
-    color?: string;
+    name: string;
+    color: string;
 }
 
 export enum CategoryButtonMode {

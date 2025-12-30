@@ -34,7 +34,7 @@ class AllProductService {
     })
   } 
   
-  static async updateProduct(id: string | number, product: Product): Promise<Product | undefined> {
+  static async updateProduct(id: string | number, product: NewProduct): Promise<Product> {
     return await sendApiRequest<Product>(`products/${id}`, {
       method: "put",
       body: product,

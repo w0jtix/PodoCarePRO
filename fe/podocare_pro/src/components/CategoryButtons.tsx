@@ -8,6 +8,8 @@ import {
   NewBaseServiceCategory,
 } from "../models/categories";
 
+const EMPTY_SELECTED_CATEGORIES: ProductCategory[] = [];
+
 export interface CategoryButtonsProps {
   categories: ProductCategory[] | NewProductCategory[] | BaseServiceCategory[] | NewBaseServiceCategory[];
   onSelect: (selected: ProductCategory[] | BaseServiceCategory[] | null) => void;
@@ -23,7 +25,7 @@ export function CategoryButtons({
   onSelect,
   resetTriggered,
   mode = CategoryButtonMode.MULTISELECT,
-  selectedCategories = [],
+  selectedCategories = EMPTY_SELECTED_CATEGORIES,
   exampleCategoryData,
   className=""
 }: CategoryButtonsProps) {
@@ -40,8 +42,8 @@ export function CategoryButtons({
   }, [resetTriggered]);
 
   useEffect(() => {
-    onSelect(selectedCategoryList);
-  }, [selectedCategoryList]);
+    setSelectedCategoryList(selectedCategories);
+  }, [selectedCategories]);
 
   const isSingleRow = categories.length < 4;
 
@@ -81,21 +83,16 @@ export function CategoryButtons({
 
   const toggleCategory = (category: ProductCategory | BaseServiceCategory) => {
     if (isPreviewMode) return;
-    if (isMultiSelect) {
-      setSelectedCategoryList((prev) => {
-        const isAlreadySelected = prev.some((cat) => cat.id === category.id);
-        if (isAlreadySelected) {
-          return prev.filter((cat) => cat.id !== category.id);
-        } else {
-          return [...prev, category];
-        }
-      });
-    } else {
-      setSelectedCategoryList((prev) => {
-        const isAlreadySelected = prev.some((cat) => cat.id === category.id);
-        return isAlreadySelected ? [] : [category];
-      });
-    }
+
+    const isAlreadySelected = selectedCategoryList.some((cat) => cat.id === category.id);
+    const newList = isMultiSelect
+      ? (isAlreadySelected
+          ? selectedCategoryList.filter((cat) => cat.id !== category.id)
+          : [...selectedCategoryList, category])
+      : (isAlreadySelected ? [] : [category]);
+
+    setSelectedCategoryList(newList);
+    onSelect(newList);
   };
 
   const isCategorySelected = (category: ProductCategory | BaseServiceCategory): boolean => {
@@ -114,7 +111,7 @@ export function CategoryButtons({
         return (
           <button
           key={("id" in category && category.id ? category.id : index) as string | number}
-          style={getButtonStyle(category.color ?? "0,0,0", isActive)}
+          style={getButtonStyle(category.color, isActive)}
           className={`category-button ${isActive ? "active" : ""} ${className}`}
           onClick={() => {
             if (!isPreviewMode) {

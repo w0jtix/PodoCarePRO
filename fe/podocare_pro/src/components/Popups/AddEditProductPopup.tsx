@@ -11,10 +11,11 @@ import { AlertType } from "../../models/alert";
 import { validateBrandForm, validateProductForm } from "../../utils/validators";
 import { extractProductErrorMessage, extractBrandErrorMessage } from "../../utils/errorHandler";
 import { useAlert } from "../Alert/AlertProvider";
+import { VatRate } from "../../models/vatrate";
 
 export interface AddEditProductPopupProps {
   onClose: () => void;
-  onReset: (message: string) => void;
+  onReset: () => void;
   productId?: number | string | null;
   className?: string;
 }
@@ -26,11 +27,24 @@ export function AddEditProductPopup ({
   className = "",
 }: AddEditProductPopupProps) {
   const [fetchedProduct, setFetchedProduct] = useState<Product | null>(null);
-  const [productDTO, setProductDTO] = useState<Product | NewProduct | null>(null);
+  const [productDTO, setProductDTO] = useState<NewProduct>({
+    name: "",
+    category: null,
+    brand: null,
+    supply: 0,
+    sellingPrice: null,
+    vatRate: VatRate.VAT_23,
+    description: "",
+    isDeleted: false,
+  });
   const [brandToCreate, setBrandToCreate] = useState<NewBrand | null>(null);
   const { showAlert } = useAlert();
 
   const action = productId ? Action.EDIT : Action.CREATE;
+
+  useEffect(() => {
+    console.log("Product DTO changed: ", productDTO);
+  },[productDTO])
 
   const fetchProductById = async (productId: number | string) => {
     AllProductService.getProductById(productId)
@@ -64,29 +78,30 @@ export function AddEditProductPopup ({
   const handleProductAction = useCallback(async () => {
     if (!productDTO) return;
     try {
-      let productToSubmit = { ...productDTO };
       if (brandToCreate) {
         const newBrand = await handleBrandToCreate(brandToCreate);
         if (!newBrand) {
           return;
         }
-        productToSubmit.brand = newBrand;
+        productDTO.brand = newBrand;
       }
-      const error = validateProductForm(productToSubmit, fetchedProduct, action);
+      const error = validateProductForm(productDTO, fetchedProduct, action);
       if (error) {
         showAlert(error, AlertType.ERROR);
         return;
       }
 
       if (action === Action.CREATE) {
-        await AllProductService.createProduct(productToSubmit as NewProduct);
-        onReset(`Produkt ${productToSubmit.name} został utworzony!`);
-      } else if (action === Action.EDIT && 'id' in productToSubmit && productToSubmit.id) {
+        await AllProductService.createProduct(productDTO as NewProduct);
+        showAlert(`Produkt ${productDTO.name} został utworzony!`, AlertType.SUCCESS);
+        onReset();
+      } else if (action === Action.EDIT && productId && fetchedProduct) {
         await AllProductService.updateProduct(
-          productToSubmit.id,
-          productToSubmit as Product
+          productId,
+          productDTO as NewProduct
         );
-        onReset(`Produkt ${productToSubmit.name} został zaktualizowany!`);
+        showAlert(`Produkt ${productDTO.name} został zaktualizowany!`, AlertType.SUCCESS);
+        onReset();
       }
       onClose();
     } catch (error) {
@@ -102,11 +117,7 @@ export function AddEditProductPopup ({
     }
   }, [productId])
 
-  useEffect(() => {
-    console.log("fetched", fetchedProduct)
-  }, [fetchedProduct])
-
-const portalRoot = document.getElementById("portal-root");
+  const portalRoot = document.getElementById("portal-root");
   if (!portalRoot) {
     showAlert("Błąd", AlertType.ERROR);
     console.error("Portal root element not found");
@@ -133,10 +144,11 @@ const portalRoot = document.getElementById("portal-root");
         </section>
         <section className="product-popup-interior width-90 mb-2">
           <ProductForm
-            onForwardProductForm={setProductDTO}
-            onForwardBrand={setBrandToCreate}
+            brandToCreate={brandToCreate}
+            setBrandToCreate={setBrandToCreate}
             action={action}
-            selectedProduct={fetchedProduct}
+            productDTO={productDTO}
+            setProductDTO = {setProductDTO}
           />
         </section>
         <div className="popup-footer-container flex-column justify-end"></div>

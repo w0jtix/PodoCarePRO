@@ -42,11 +42,12 @@ export const sendApiRequest = async <T>(
   } catch (error: any) {
     console.error("API error:", error);
 
-    const message =
-      errorMessage ||
-      error.response?.data?.message ||
-      "Unexpected API error occurred.";
+    // If there's a backend response, preserve the original axios error
+    if (error.response?.data) {
+      throw error;
+    }
 
-    throw new Error(message);
+    // Otherwise create a new Error with custom message
+    throw new Error(errorMessage || "Unexpected API error occurred.");
   }
 };

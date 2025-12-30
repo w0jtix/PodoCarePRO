@@ -9,19 +9,21 @@ import { AlertType } from "../../models/alert";
 export interface CategoryPopupProps {
   onClose: () => void;
   onConfirm: (category: ProductCategory | NewProductCategory | BaseServiceCategory | NewBaseServiceCategory) => void;
-  selectedCategory?: ProductCategory | BaseServiceCategory;
+  categoryId?: number;
   className?: string;
 }
 
 export function CategoryPopup({
   onClose,
   onConfirm,
-  selectedCategory,
+  categoryId,
   className = "",
 }: CategoryPopupProps) {
   const [categoryDTO, setCategoryDTO] = useState<
-    ProductCategory | NewProductCategory | BaseServiceCategory | NewBaseServiceCategory | null
-  >(null);
+    ProductCategory | NewProductCategory | BaseServiceCategory | NewBaseServiceCategory>({
+      name: "",
+      color: "255,255,255",
+    });
   const { showAlert } = useAlert();
 
   const portalRoot = document.getElementById("portal-root");
@@ -42,7 +44,7 @@ export function CategoryPopup({
       >
         <section className="product-popup-header flex mb-2 category">
           <h2 className="popup-title">
-            {selectedCategory ? "Edytuj Kategorię" : "Nowa Kategoria"}
+            {categoryId ? "Edytuj Kategorię" : "Nowa Kategoria"}
           </h2>
           <button className="popup-close-button  transparent border-none flex align-items-center justify-center absolute pointer" onClick={onClose}>
             <img
@@ -54,8 +56,8 @@ export function CategoryPopup({
         </section>
         <section className="create-category-popup width-max flex justify-center">
           <CategoryForm
-            onForwardCategoryForm={setCategoryDTO}
-            selectedCategory={selectedCategory}
+            categoryDTO={categoryDTO}
+            setCategoryDTO={setCategoryDTO}
           />
         </section>
         <section className="footer-popup-action-buttons width-60 flex space-between mb-05">

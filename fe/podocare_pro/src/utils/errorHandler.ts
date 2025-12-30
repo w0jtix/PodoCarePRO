@@ -23,11 +23,11 @@ export const extractErrorMessage = (
             return err.response.data.error;
         }
         }
-        
+
         if (err?.message) {
         return err.message;
         }
-        
+
         return String(err);
     };
 
@@ -36,7 +36,7 @@ export const extractErrorMessage = (
     if (errorString.includes('already exists')) {
     return entityConfig.alreadyExistsMessage;
     }
-    
+
     return defaultMessage;
 }
 
@@ -46,43 +46,43 @@ const getEntityConfig = (entityType: EntityType) => {
       createAction: 'tworzenia',
       updateAction: 'aktualizacji',
       entityName: 'produktu',
-      alreadyExistsMessage: 'Produkt o takiej nazwie już istnieje!'
+      alreadyExistsMessage: 'Produkt o takiej nazwie już istnieje w bazie danych!'
     },
     category: {
       createAction: 'tworzenia',
       updateAction: 'aktualizacji',
       entityName: 'kategorii',
-      alreadyExistsMessage: 'Kategoria o takiej nazwie już istnieje!'
+      alreadyExistsMessage: 'Kategoria o takiej nazwie już istnieje w bazie danych!'
     },
     brand: {
       createAction: 'tworzenia',
       updateAction: 'aktualizacji',
       entityName: 'marki',
-      alreadyExistsMessage: 'Marka o takiej nazwie już istnieje!'
+      alreadyExistsMessage: 'Marka o takiej nazwie już istnieje w bazie danych!'
     },
     supplier: {
       createAction: 'tworzenia',
       updateAction: 'aktualizacji',
       entityName: 'sklepu',
-      alreadyExistsMessage: 'Sklep o takiej nazwie już istnieje!'
+      alreadyExistsMessage: 'Sklep o takiej nazwie już istnieje w bazie danych!'
     },
     employee: {
       createAction: 'tworzenia',
       updateAction: 'aktualizacji',
       entityName: 'pracownika',
-      alreadyExistsMessage: 'Pracownik o takiej nazwie już istnieje!'
+      alreadyExistsMessage: 'Pracownik o takiej nazwie już istnieje w bazie danych!'
     },
     service: {
       createAction: 'tworzenia',
       updateAction: 'aktualizacji',
       entityName: 'usługi',
-      alreadyExistsMessage: 'Usługa o takiej nazwie już istnieje!'
+      alreadyExistsMessage: 'Usługa o takiej nazwie już istnieje w bazie danych!'
     },
     client: {
       createAction: 'tworzenia',
       updateAction: 'aktualizacji',
       entityName: 'klienta',
-      alreadyExistsMessage: 'Klient o takiej nazwie już istnieje!'
+      alreadyExistsMessage: 'Klient o takiej nazwie już istnieje w bazie danych!'
     }
     
   };

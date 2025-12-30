@@ -9,12 +9,6 @@ import { Product, NewProduct } from "../../models/product";
 import { Action } from "../../models/action";
 import { Brand, KeywordDTO, NewBrand } from "../../models/brand";
 import { CategoryButtonMode, ProductCategory } from "../../models/categories";
-import {
-  convertToBackendData,
-  convertToWorkingData,
-  createNewProductWorkingData,
-  ProductWorkingData,
-} from "../../models/working-data";
 import CategoryService from "../../services/CategoryService";
 import SelectVATButton from "../SelectVATButton";
 import { VatRate } from "../../models/vatrate";
@@ -22,32 +16,25 @@ import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
 
 export interface ProductFormProps {
-  onForwardProductForm: (product: Product | NewProduct) => void;
   action: Action;
-  selectedProduct?: Product | null;
-  onForwardBrand: (brand: NewBrand | null) => void;
+  brandToCreate: NewBrand | null;
+  setBrandToCreate: React.Dispatch<React.SetStateAction<NewBrand | null>>;
   className?: string;
+  productDTO: NewProduct;
+  setProductDTO: React.Dispatch<React.SetStateAction<NewProduct>>;
 }
 
 export function ProductForm({
-  onForwardProductForm,
   action,
-  selectedProduct,
   className = "",
-  onForwardBrand,
+  brandToCreate,
+  setBrandToCreate,
+  productDTO,
+  setProductDTO,
 }: ProductFormProps) {
   const [categories, setCategories] = useState<ProductCategory[]>([]);
-  const [productWorkingData, setProductWorkingData] =
-    useState<ProductWorkingData>(() => {
-      if (selectedProduct) {
-        return convertToWorkingData.product(selectedProduct);
-      }
-      return createNewProductWorkingData();
-    });
   const { showAlert } = useAlert();
-  const isExistingBrand = (brand: Brand | NewBrand | null): brand is Brand => {
-    return brand !== null && "id" in brand && typeof brand.id === "number";
-  };
+  const [brandSuggestions, setBrandSuggestions] = useState<Brand[]>([]);
 
   const fetchCategories = async (): Promise<void> => {
     CategoryService.getCategories()
@@ -65,141 +52,92 @@ export function ProductForm({
     fetchCategories();
   }, []);
 
-  useEffect(() => {
-    if (selectedProduct) {
-      setProductWorkingData(convertToWorkingData.product(selectedProduct));
-    }
-  }, [selectedProduct]);
-
-  useEffect(() => {
-    if (productWorkingData.brandName.trim().length > 0) {
-      const keywordFilter: KeywordDTO = {
-        keyword: productWorkingData.brandName.trim(),
-      };
-      BrandService.getBrands(keywordFilter)
-        .then((data) => {
-          setProductWorkingData((prev) => ({
-            ...prev,
-            brandSuggestions: data,
-          }));
-        })
-        .catch((error) => {
-          showAlert("Błąd", AlertType.ERROR);
-          console.error("Error fetching filtered brands:", error.message);
-          setProductWorkingData((prev) => ({
-            ...prev,
-            brandSuggestions: [],
-          }));
-        });
-    } else {
-      setProductWorkingData((prev) => ({
-        ...prev,
-        brandSuggestions: [],
-      }));
-    }
-  }, [productWorkingData.brandName]);
-
-  useEffect(() => {
-    const backendProduct = convertToBackendData.product(productWorkingData);
-    onForwardProductForm(backendProduct);
-
-    if (
-      productWorkingData.brandName.trim().length > 0 &&
-      !isExistingBrand(productWorkingData.brand)
-    ) {
-      const newBrand: NewBrand = { name: productWorkingData.brandName.trim() };
-      onForwardBrand(newBrand);
-    } else {
-      onForwardBrand(null);
-    }
-  }, [productWorkingData]);
-
   const handleCategory = useCallback((categories: ProductCategory[] | null) => {
-    setProductWorkingData((prev) => ({
-      ...prev,
-      category: categories ? categories[0] : null,
-    }));
-  }, []);
+    setProductDTO((prev) => {
+      const newCategory = categories ? categories[0] : null;
+      const isProductCategory = newCategory?.name === "Produkty";
 
+      return {
+        ...prev,
+        category: newCategory,
+        sellingPrice: isProductCategory ? prev.sellingPrice : null,
+        vatRate: isProductCategory ? prev.vatRate : VatRate.VAT_23,
+      };
+    });
+  }, []);
   const handleProductName = useCallback((name: string) => {
-    setProductWorkingData((prev) => ({
+    setProductDTO((prev) => ({
       ...prev,
       name: name,
     }));
   }, []);
-
   const handleSupply = useCallback((newSupply: number | null) => {
-    setProductWorkingData((prev) => ({
+    setProductDTO((prev) => ({
       ...prev,
       supply: newSupply ?? 0,
     }));
   }, []);
-
   const handleSellingPrice = useCallback((newSellingPrice: number | null) => {
-    setProductWorkingData((prev) => ({
+    setProductDTO((prev) => ({
       ...prev,
       sellingPrice: newSellingPrice ?? 0,
     }));
   }, []);
-
   const handleVatSelect = useCallback((selectedVat: VatRate) => {
-    setProductWorkingData((prev) => ({
+    setProductDTO((prev) => ({
       ...prev,
       vatRate: selectedVat ?? VatRate.VAT_23,
     }))
   },[])
-
   const handleDescription = useCallback((newDesc: string) => {
-    setProductWorkingData((prev) => ({
+    setProductDTO((prev) => ({
       ...prev,
       description: newDesc,
     }));
   }, []);
 
-  const handleBrandSelection = useCallback((selected: string | Brand) => {
-    setProductWorkingData((prev) => {
+  const handleBrandNameChange = useCallback(async (selected: string | Brand) => {
       if (typeof selected === "string") {
-        return {
+        const filter: KeywordDTO = { keyword: selected };
+        let suggestions: Brand[] = [];
+
+        if (selected.trim().length > 0) {
+        try {
+          suggestions = await BrandService.getBrands(filter);
+        } catch (error) {
+          showAlert("Błąd", AlertType.ERROR);
+          console.error("Error fetching filtered products:", error);
+        }
+      }
+      const exactMatch = suggestions.find(p => p.name === selected);
+
+      if(exactMatch) {
+        setProductDTO((prev) => ({
+          ...prev,
+          brand: exactMatch,
+        }))
+        setBrandToCreate(null);
+      } else {
+        setBrandToCreate( {
+          name: selected,
+        })
+        setProductDTO((prev) => ({
           ...prev,
           brand: null,
-          brandName: selected,
-        };
+        }))
+      }
+      setBrandSuggestions(exactMatch ? []: suggestions);
       } else {
-        return {
+        setProductDTO((prev) => ({
           ...prev,
           brand: selected,
-          brandName: selected.name,
-        };
+        }))
+        setBrandToCreate(null);
+        setBrandSuggestions([]);
       }
-    });
-  }, []);
 
-  const getProductName = (): string => {
-    return productWorkingData.name || "";
-  };
+  }, [showAlert]);
 
-  const getBrandName = (): string => {
-    if (productWorkingData.brand?.name) {
-      return productWorkingData.brand.name;
-    }
-    return productWorkingData.brandName;
-  };
-
-  const getDescription = (): string => {
-    return productWorkingData.description || "";
-  };
-
-  const getSupply = (): number => {
-    return productWorkingData.supply || 0;
-  };
-
-  const getSellingPrice = (): number => {
-    return productWorkingData.sellingPrice || 0;
-  };
-
-  const getVatRate = (): VatRate => {
-    return productWorkingData.vatRate || VatRate.VAT_23;
-  }
 
   return (
     <div
@@ -214,9 +152,7 @@ export function ProductForm({
             categories={categories}
             onSelect={handleCategory}
             mode={CategoryButtonMode.SELECT}
-            selectedCategories={
-              productWorkingData.category ? [productWorkingData.category] : []
-            }
+            selectedCategories={ productDTO.category ? [productDTO.category] : [] }
           />
         </div>
       </section>
@@ -226,7 +162,7 @@ export function ProductForm({
             <a className="product-form-input-title">Nazwa:</a>
             <TextInput
               dropdown={false}
-              value={getProductName()}
+              value={productDTO.name}
               onSelect={(inputName) => {
                 if (typeof inputName === "string") {
                   handleProductName(inputName);
@@ -237,30 +173,30 @@ export function ProductForm({
           <li className="popup-common-section-row flex align-items-center space-between g-10px mt-15 ">
             <a className="product-form-input-title">Marka Produktu:</a>
             <TextInput
+              key={`brand-input-${productDTO.brand?.id ?? 'new'}`}
               dropdown={true}
-              value={getBrandName()}
-              suggestions={productWorkingData.brandSuggestions}
-              onSelect={handleBrandSelection}
+              value={brandToCreate?.name ?? productDTO.brand?.name ?? ""}
+              suggestions={brandSuggestions}
+              onSelect={handleBrandNameChange}
             />
           </li>
           <li className="popup-common-section-row flex align-items-center space-between g-10px mt-15 ">
             <a className="product-form-input-title">Produkty na stanie:</a>
-            <DigitInput onChange={handleSupply} value={getSupply()} />
+            <DigitInput onChange={handleSupply} value={productDTO.supply} />
           </li>
-          {productWorkingData &&
-            productWorkingData.category?.name === "Produkty" && (
+          {productDTO.category?.name === "Produkty" && (
               <>
               <li className="popup-common-section-row flex align-items-center space-between g-10px mt-15 ">
                 <a className="product-form-input-title">Cena sprzedaży:</a>
                 <CostInput
                   onChange={handleSellingPrice}
-                  selectedCost={getSellingPrice()}
+                  selectedCost={productDTO.sellingPrice ?? 0}
                 />
               </li>
               <li className="popup-common-section-row flex align-items-center space-between g-10px mt-15 ">
                 <a className="product-form-input-title">VAT sprzedaży:</a>
                 <SelectVATButton
-                  selectedVat={getVatRate()}
+                  selectedVat={productDTO.vatRate ?? VatRate.VAT_23}
                   onSelect={handleVatSelect}
                   className="product-form"
                 />
@@ -270,7 +206,7 @@ export function ProductForm({
           <li className="popup-common-section-row space-between g-10px description flex-column align-items-start mt-15">
             <a className="product-form-input-title">Dodatkowe informacje:</a>
             <TextInput
-              value={getDescription()}
+              value={productDTO.description ?? ""}
               rows={8}
               multiline={true}
               onSelect={(newDesc) => {

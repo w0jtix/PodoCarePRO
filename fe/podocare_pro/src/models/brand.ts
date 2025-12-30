@@ -8,5 +8,5 @@ export interface NewBrand {
 }
 
 export interface KeywordDTO {
-    keyword?: string;
+   keyword?: string;
 }

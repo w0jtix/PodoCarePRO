@@ -1,4 +1,3 @@
-import React from "react";
 import { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import AllProductService from "../../services/AllProductService";
@@ -10,7 +9,7 @@ import BrandService from "../../services/BrandService";
 import DropdownSelect from "../DropdownSelect";
 import CategoryService from "../../services/CategoryService";
 import CostInput from "../CostInput";
-import { Alert, AlertType } from "../../models/alert";
+import { AlertType } from "../../models/alert";
 import { useCallback } from "react";
 import { ORDER_NEW_PRODUCTS_POPUP_ATTRIBUTES, ORDER_NEW_PRODUCTS_POPUP_ATTRIBUTES_WITH_SELLING_PRICE } from "../../constants/list-headers";
 import { CategoryButtonMode, ProductCategory } from "../../models/categories";
@@ -19,12 +18,6 @@ import { NewBrand, Brand, KeywordDTO } from "../../models/brand";
 import { validateBrandForm, validateProductForm } from "../../utils/validators";
 import { Action } from "../../models/action";
 import { NewOrder } from "../../models/order";
-import {
-  ProductWorkingData,
-  OrderProductWorkingData,
-  OrderWorkingData,
-  createNewProductWorkingData,
-} from "../../models/working-data";
 import { useAlert } from "../Alert/AlertProvider";
 import SelectVATButton from "../SelectVATButton";
 import { VatRate } from "../../models/vatrate";
@@ -37,12 +30,6 @@ export interface OrderNewProductsPopupProps {
   onFinalizeOrder: (orderDTO: NewOrder) => void;
 }
 
-interface ProductWorkingDataWithOrderItems
-  extends Omit<ProductWorkingData, "originalOrderProduct"> {
-  relatedOrderProducts: OrderProductWorkingData[];
-  originalOrderProduct?: OrderProductWorkingData["originalOrderProduct"];
-}
-
 export function OrderNewProductsPopup({
   nonExistingProducts,
   orderDTO,
@@ -52,7 +39,6 @@ export function OrderNewProductsPopup({
   const { showAlert } = useAlert();
   const [categories, setCategories] = useState<ProductCategory[]>([]);
   const [productsToCreate, setProductsToCreate] = useState<NewProduct[]>([]);
-  const [globalCategory, setGlobalCategory] = useState<ProductCategory | null>(null);
   const [brandSuggestions, setBrandSuggestions] = useState<Map<number, Brand[]>>(new Map());
   const [resetTriggered, setResetTriggered] = useState<boolean>(false);
 
@@ -126,13 +112,11 @@ export function OrderNewProductsPopup({
       const category = selected && selected.length > 0 ? selected[0] : null;
       setProductsToCreate((products) =>
         products.map((product) => ({...product, category, vatRate: category?.name === "Produkty" ? VatRate.VAT_23 : null  })));     
-      setGlobalCategory(category);
     }, []);
 
   const handleGlobalCategoryReset = useCallback(() => {
      setProductsToCreate((products) =>
         products.map((product) => ({...product, category: null }))); 
-    setGlobalCategory(null);
     setResetTriggered((prev) => !prev);
   }, []);
 

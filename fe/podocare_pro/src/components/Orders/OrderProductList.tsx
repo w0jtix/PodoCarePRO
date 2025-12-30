@@ -4,9 +4,8 @@ import OrderItemList from "./OrderItemList";
 import { useCallback } from "react";
 import { ListModule } from "../ListHeader";
 import { ORDER_ITEM_LIST_ATTRIBUTES } from "../../constants/list-headers";
-import { NewOrderProduct, OrderProduct } from "../../models/order-product";
+import { NewOrderProduct } from "../../models/order-product";
 import { Action } from "../../models/action";
-import { OrderProductWorkingData } from "../../models/working-data";
 
 export interface OrderProductListProps {
   action: Action;
@@ -22,8 +21,6 @@ export function OrderProductList ({
   action,
   onConflictDetected,
   className="",
-
-
   orderProducts,
   setOrderProducts,
 }: OrderProductListProps) {
@@ -35,9 +32,6 @@ export function OrderProductList ({
         attributes={ORDER_ITEM_LIST_ATTRIBUTES}
         action={action}
         onConflictDetected={onConflictDetected}
-
-
-
         orderProducts={orderProducts}
         setOrderProducts={setOrderProducts}
       />

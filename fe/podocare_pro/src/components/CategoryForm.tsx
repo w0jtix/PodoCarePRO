@@ -3,50 +3,31 @@ import TextInput from "./TextInput";
 import { useState, useEffect } from "react";
 import ColorPicker from "./ColorPicker";
 import CategoryButtons from "./CategoryButtons";
-import { NewProductCategory, ProductCategory } from "../models/categories";
+import { NewProductCategory, ProductCategory, BaseServiceCategory, NewBaseServiceCategory } from "../models/categories";
 import { CategoryButtonMode } from "../models/categories";
 
 export interface CategoryFormProps {
-  selectedCategory?: ProductCategory;
-  onForwardCategoryForm: (
-    categoryData: ProductCategory | NewProductCategory
-  ) => void;
+  categoryId?: number;
+  categoryDTO: ProductCategory | NewProductCategory | BaseServiceCategory | NewBaseServiceCategory;
+  setCategoryDTO: React.Dispatch<React.SetStateAction<ProductCategory | NewProductCategory | BaseServiceCategory | NewBaseServiceCategory>>;
 }
 
 export function CategoryForm({
-  selectedCategory,
-  onForwardCategoryForm,
+  categoryId,
+  categoryDTO,
+  setCategoryDTO,
 }: CategoryFormProps) {
-  const getInitialData = (): ProductCategory | NewProductCategory => {
-    if (selectedCategory) {
-      return {
-        id: selectedCategory.id,
-        name: selectedCategory.name,
-        color: selectedCategory.color,
-      };
-    }
-    return {
-      name: "",
-      color: "255, 255, 255",
-    };
-  };
-  const [categoryData, setCategoryData] = useState<
-    ProductCategory | NewProductCategory
-  >(getInitialData);
 
-  useEffect(() => {
-    onForwardCategoryForm(categoryData);
-  }, [categoryData, onForwardCategoryForm]);
 
   const handleName = useCallback((name: string): void => {
-    setCategoryData((prev) => ({
+    setCategoryDTO((prev) => ({
       ...prev,
       name: name,
     }));
   }, []);
 
   const handleColor = useCallback((color: string): void => {
-    setCategoryData((prev) => ({
+    setCategoryDTO((prev) => ({
       ...prev,
       color: color,
     }));
@@ -58,7 +39,7 @@ export function CategoryForm({
         <a className="product-form-input-title">Nazwa:</a>
         <TextInput
           dropdown={false}
-          value={categoryData.name}
+          value={categoryDTO.name}
           onSelect={(inputName) => {
             if (typeof inputName === "string") {
               handleName(inputName);
@@ -70,14 +51,14 @@ export function CategoryForm({
         <a className="product-form-input-title">Kolor:</a>
         <ColorPicker
           onColorSelect={handleColor}
-          selectedColor={categoryData.color}
+          selectedColor={categoryDTO.color}
         />
       </div>
       <div className="popup-common-section-row flex align-items-center space-between g-10px mt-15  cat">
         <CategoryButtons
           categories={[]}
           mode={CategoryButtonMode.PREVIEW}
-          exampleCategoryData={categoryData}
+          exampleCategoryData={categoryDTO}
           onSelect={() => {}}
           resetTriggered={false}
           className="preview"

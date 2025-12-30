@@ -10,10 +10,6 @@ import { ListAttribute } from "../../constants/list-headers";
 import { Action } from "../../models/action";
 import { Product, ProductFilterDTO } from "../../models/product";
 import { VatRate } from "../../models/vatrate";
-import {
-  ProductWorkingData,
-  OrderProductWorkingData,
-} from "../../models/working-data";
 import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
 import { NewOrderProduct } from "../../models/order-product";
@@ -107,17 +103,10 @@ export function OrderItemList({
   }, [action, orderProducts, supplyPreview.size, showAlert]);
 
   useEffect(() => {
-    console.log("sp", supplyPreview);
-    console.log("init", initialSupplyRef.current);
-  },[supplyPreview])
-
-  useEffect(() => {
     if (action === Action.EDIT && supplyPreview.size > 0) {
       updateWarnings();
     }
   }, [supplyPreview, action, updateWarnings]);
-
-  // NOWA LOGIKA Z ORDERDTO
 
   const handleOrderProductRemove = useCallback((index: number) => {
     setOrderProducts((prev) => prev.filter((_, i) => i !== index));
@@ -136,7 +125,6 @@ export function OrderItemList({
   },[]);
 
   const handleOrderProductNameChange = useCallback(async (index: number, selected: string | Product) => {
-    console.log("selected", selected);
 
     if (typeof selected === 'string') {
       const filter: ProductFilterDTO = { keyword: selected, includeZero: true };
@@ -209,14 +197,11 @@ export function OrderItemList({
     return isNaN(total) ? "0.00" : total.toFixed(2);
   };
 
-  // Recalculate supplyPreview whenever orderProducts change
   useEffect(() => {
     if (action !== Action.EDIT || initialSupplyRef.current.size === 0) return;
 
-    // Start with initial supply (unchangeable baseline)
     const newPreview = new Map(initialSupplyRef.current);
 
-    // Calculate original quantities from initial order
     const originalQuantities = new Map<number, number>();
     initialOrderProductsRef.current.forEach(op => {
       if (op.product?.id) {
@@ -225,7 +210,6 @@ export function OrderItemList({
       }
     });
 
-    // Calculate current quantities from edited order
     const currentQuantities = new Map<number, number>();
     orderProducts.forEach(op => {
       if (op.product?.id) {
@@ -234,11 +218,10 @@ export function OrderItemList({
       }
     });
 
-    // For each product in initialSupplyRef, calculate the difference and update preview
     newPreview.forEach((initialSupply, productId) => {
       const original = originalQuantities.get(productId) ?? 0;
       const current = currentQuantities.get(productId) ?? 0;
-      const diff = current - original; // Difference: positive if added, negative if removed
+      const diff = current - original; 
 
       newPreview.set(productId, initialSupply + diff);
     });
@@ -252,7 +235,6 @@ export function OrderItemList({
     if (action !== Action.EDIT || !onConflictDetected) return;
 
     supplyPreview.forEach((currentValue, productId) => {
-      // Search in both current and initial orderProducts to find the product
       let product = orderProducts.find(op => op.product?.id === productId)?.product;
       if (!product) {
         product = initialOrderProductsRef.current.find(op => op.product?.id === productId)?.product;
@@ -276,153 +258,6 @@ export function OrderItemList({
     prevSupplyPreviewRef.current = new Map(supplyPreview);
   }, [supplyPreview, action, onConflictDetected, orderProducts]);
 
-
-
-
-
-
-
-
-  /*
-
-  useEffect(() => {
-    if (action === Action.EDIT && Object.keys(supplyInfo).length > 0) {
-      updateAllWarnings();
-    }
-  }, [supplyInfo, action]);
-
-  
-
-  const initializeSupplyInfo = async (): Promise<void> => {
-    const productIds = Array.from(
-      new Set(
-        orderProducts
-          .map(getProductId)
-          .filter((id): id is number => typeof id === "number")
-      )
-    );
-
-    if (productIds.length === 0) return;
-
-    const filter: ProductFilterDTO = {
-      productIds: productIds.length === 0 ? null : productIds,
-      includeZero: true,
-    };
-
-    try {
-      const data = await AllProductService.getProducts(filter);
-      const newSupplyInfo: SupplyInfo = {};
-
-      data.forEach((product) => {
-        const originalSupply = product.supply || 0;
-
-        newSupplyInfo[product.id] = {
-          originalSupply,
-          currentSupply: originalSupply,
-          isDeleted: product.isDeleted || false,
-        };
-      });
-      setSupplyInfo(newSupplyInfo);
-    } catch (error) {
-      showAlert("Błąd", AlertType.ERROR);
-      console.error("Error fetching product supply:", error);
-    }
-  };
-
-  const updateSupplyForProduct = useCallback(
-    (productId: number, quantityChange: number) => {
-      setSupplyInfo((prev) => {
-        if (!prev[productId]) return prev;
-
-        const updated = {
-          ...prev,
-          [productId]: {
-            ...prev[productId],
-            currentSupply: prev[productId].currentSupply - quantityChange,
-          },
-        };
-        return updated;
-      });
-    },
-    []
-  );
-
-  const updateAllWarnings = useCallback(() => {
-    if (action !== Action.EDIT) return;
-
-    let hasAnyWarning = false;
-
-    const updatedProducts = orderProductsRef.current.map((item) => {
-      let hasWarning = false;
-
-      if (isNewProduct(item) || isNewOrderProduct(item)) {
-        return { ...item, hasWarning: false };
-      }
-
-      const productId = getProductId(item);
-      if (productId && supplyInfo[productId]) {
-        const supply = supplyInfo[productId];
-
-        if (!supply.isDeleted) {
-          if (supply.currentSupply < 0) {
-            hasWarning = true;
-            hasAnyWarning = true;
-          }
-        }
-      }
-
-      Object.values(supplyInfo).forEach((supply) => {
-        if (!supply.isDeleted && supply.currentSupply < 0) {
-          hasAnyWarning = true;
-        }
-      });
-
-      return { ...item, hasWarning };
-    });
-
-    if (
-      JSON.stringify(updatedProducts) !==
-      JSON.stringify(orderProductsRef.current)
-    ) {
-      onOrderProductsChange(updatedProducts);
-    }
-    setHasWarning?.(hasAnyWarning);
-  }, [action, supplyInfo, onOrderProductsChange, setHasWarning]);
-
-  const updateOrderProduct = useCallback(
-    (tempId: string, updates: Partial<OrderProductWorkingData>) => {
-      const currentItem = orderProductsRef.current.find(
-        (item) => item.tempId === tempId
-      );
-
-      if (
-        currentItem &&
-        "quantity" in updates &&
-        !isNewProduct(currentItem) &&
-        !isNewOrderProduct(currentItem)
-      ) {
-        const productId = getProductId(currentItem);
-        if (productId) {
-          const oldQuantity = currentItem.quantity;
-          const newQuantity = updates.quantity as number;
-          const quantityChange = oldQuantity - newQuantity;
-
-          updateSupplyForProduct(productId, quantityChange);
-        }
-      }
-
-      const updatedProducts = orderProductsRef.current.map((item) =>
-        item.tempId === tempId ? { ...item, ...updates } : item
-      );
-
-      onOrderProductsChange(updatedProducts);
-    },
-    [updateSupplyForProduct, onOrderProductsChange]
-  );
-
-
-
-   */
 
   const renderAttributeContent = (
     attr: ListAttribute,

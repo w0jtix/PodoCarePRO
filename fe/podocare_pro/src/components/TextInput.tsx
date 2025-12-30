@@ -131,7 +131,9 @@ export function TextInput<T extends SuggestionItem = SuggestionItem> ({
       }
 
       setIsDropdownOpen(false);
-      setIsUserInteracting(false);
+      setTimeout(() => {
+        setIsUserInteracting(false);
+      }, 0);
     }
   }, [multiline, keyword, selectedItem]);
 
@@ -148,7 +150,9 @@ export function TextInput<T extends SuggestionItem = SuggestionItem> ({
         onSelect?.(keyword);
       }
     }
-    setIsUserInteracting(false);
+    setTimeout(() => {
+      setIsUserInteracting(false);
+    }, 0);
   },[keyword, multiline, selectedItem]);
 
   useEffect(() => {

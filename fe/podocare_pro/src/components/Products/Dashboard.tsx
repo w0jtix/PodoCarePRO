@@ -8,7 +8,7 @@ import RemovePopup from "../Popups/RemovePopup";
 import CategoryPopup from "../Popups/CategoryPopup";
 import { useAlert } from "../Alert/AlertProvider";
 import { Product, ProductFilterDTO } from "../../models/product";
-import { Alert, AlertType } from "../../models/alert";
+import { AlertType } from "../../models/alert";
 import ListActionSection from "../ListActionSection";
 import { ProductCategory, NewProductCategory } from "../../models/categories";
 import CategoryService from "../../services/CategoryService";
@@ -61,14 +61,6 @@ export function Dashboard() {
     setResetTriggered((prev) => !prev);
   }, []);
 
-  const handlePopupSuccess = useCallback(
-    (message: string) => {
-      showAlert(message, AlertType.SUCCESS);
-      handleResetFiltersAndData();
-    },
-    [showAlert, handleResetFiltersAndData]
-  );
-
   const handleFilterChange = useCallback((newFilter: ProductFilterDTO) => {
     setFilter(newFilter);
   }, []);
@@ -107,13 +99,16 @@ export function Dashboard() {
           await CategoryService.createCategory(
             categoryDTO as NewProductCategory
           );
-          handlePopupSuccess(`Kategoria ${categoryDTO.name} utworzona!`);
+          showAlert(`Kategoria ${categoryDTO.name} utworzona!`, AlertType.SUCCESS);
+          handleResetFiltersAndData()
+          
         } else {
           await CategoryService.updateCategory(
             (categoryDTO as ProductCategory).id,
             categoryDTO as ProductCategory
           );
-          handlePopupSuccess(`Kategoria ${categoryDTO.name} zaktualizowana!`);
+          showAlert(`Kategoria ${categoryDTO.name} zaktualizowana!`, AlertType.SUCCESS);
+          handleResetFiltersAndData()
         }
         setIsCategoryPopupOpen(false);
       } catch (error) {
@@ -127,14 +122,15 @@ export function Dashboard() {
         showAlert(errorMessage, AlertType.ERROR);
       }
     },
-    [categories, showAlert, handlePopupSuccess]
+    [categories, showAlert, handleResetFiltersAndData]
   );
 
   const handleProductRemove = useCallback(async () => {
     if (removeProductId === null) return;
     AllProductService.deleteProduct(removeProductId)
       .then(() => {
-        handlePopupSuccess(`Produkt usunięty!`);
+        showAlert(`Produkt usunięty!`, AlertType.SUCCESS);
+        handleResetFiltersAndData();
         setRemoveProductId(null);
       })
       .catch((error) => {
@@ -198,13 +194,13 @@ export function Dashboard() {
       {isAddNewProductsPopupOpen && (
         <AddEditProductPopup
           onClose={() => setIsAddNewProductsPopupOpen(false)}
-          onReset={handlePopupSuccess}
+          onReset={handleResetFiltersAndData}
         />
       )}
       {editProductId != null && (
         <AddEditProductPopup
           onClose={() => setEditProductId(null)}
-          onReset={handlePopupSuccess}
+          onReset={handleResetFiltersAndData}
           productId={editProductId}
         />
       )}
