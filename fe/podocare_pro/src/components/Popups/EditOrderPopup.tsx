@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { useState } from "react";
 import ReactDOM from "react-dom";
 import OrderCreator from "../Orders/OrderCreator";
@@ -9,7 +9,7 @@ import OrderService from "../../services/OrderService";
 
 export interface EditOrderPopupProps {
   onClose: () => void;
-  onSuccess: (message: string) => void;
+  onSuccess: () => void;
   orderId: number | string;
   className?: string;
 }
@@ -21,8 +21,8 @@ export function EditOrderPopup({
   className = "",
 }: EditOrderPopupProps) {
   const [fetchedOrder, setFetchedOrder] = useState<Order | null>(null);
-  const [hasWarning, setHasWarning] = useState<boolean>(false);
   const { showAlert } = useAlert();
+  const [conflictProducts, setConflictProducts] = useState<Set<string>>(new Set());
 
   const fetchOrderById = async (orderId: number | string) => {
     OrderService.getOrderById(orderId)
@@ -34,6 +34,19 @@ export function EditOrderPopup({
         showAlert("Błąd", AlertType.ERROR);
       })
   }
+
+  const handleConflictDetected = useCallback((productName: string, add: boolean) => {
+    setConflictProducts(prev => {
+      const newSet = new Set(prev);
+      if (add) {
+        newSet.add(productName);
+      } else {
+        newSet.delete(productName);
+      }
+      return newSet;
+    });
+  }, []);
+
 
   useEffect(() => {
     fetchOrderById(orderId);
@@ -71,13 +84,12 @@ export function EditOrderPopup({
         <section className="order-popup-interior width-90 mb-1">
           <OrderCreator
             selectedOrder={fetchedOrder}
-            hasWarning={hasWarning}
-            setHasWarning={setHasWarning}
             onSuccess={onSuccess}
             onClose={onClose}
+            onConflictDetected={handleConflictDetected}
           />
         </section>
-        {hasWarning && (
+        {conflictProducts.size > 0 && (
           <div className="popup-warning-explanation-display flex justify-center">
             <img
               src="src/assets/warning.svg"
@@ -85,12 +97,15 @@ export function EditOrderPopup({
               className="order-item-warning-icon"
             />
             <a className="warning-explanation text-align-center">
-              Konflikt: Chcesz usunąć więcej Produktów niż masz w Magazynie!
+              Konflikt: Usunięto więcej produktów niż jest w magazynie dla:
               <br />
-              Po zatwierdzeniu usuniesz dostępne Produkty.
+              <strong>{Array.from(conflictProducts).join(', ')}</strong>
+              <br />
+              Po zatwierdzeniu stan magazynowy będzie wynosił 0.
             </a>
           </div>
         )}
+       
       </div>
     </div>,
     portalRoot

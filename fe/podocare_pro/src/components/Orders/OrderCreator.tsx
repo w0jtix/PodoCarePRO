@@ -11,137 +11,104 @@ import CostInput from "../CostInput";
 import DropdownSelect from "../DropdownSelect";
 import AddSupplierPopup from "../Popups/AddSupplierPopup";
 import { NewSupplier, Supplier } from "../../models/supplier";
-import { OrderProduct } from "../../models/order-product";
+import { NewOrderProduct, OrderProduct } from "../../models/order-product";
 import { Order, NewOrder } from "../../models/order";
-import { VAT_NUMERIC_VALUES } from "../../models/vatrate";
+import { VAT_NUMERIC_VALUES, VatRate } from "../../models/vatrate";
 import { Action } from "../../models/action";
 import {
   validateOrderForm,
   validateSupplierForm,
 } from "../../utils/validators";
 import { extractSupplierErrorMessage } from "../../utils/errorHandler";
-import {
-  convertToWorkingData,
-  convertToBackendData,
-  createNewOrderWorkingData,
-  createNewOrderProductWorkingData,
-  hasNonExistingProducts,
-  OrderWorkingData,
-  OrderProductWorkingData,
-} from "../../models/working-data";
 import { useAlert } from "../Alert/AlertProvider";
 
 export interface OrderCreatorProps {
   setSelectedSupplier?: (supplier: Supplier | null) => void;
   selectedOrderProduct?: OrderProduct | null;
-  setSelectedOrderProduct?: (orderProduct: OrderProduct | null) => void;
   setExpandedOrderIds?: (ids: number[]) => void;
   selectedOrder?: Order | null;
-  onSuccess?: (message: string) => void;
+  onSuccess?: () => void;
   onReset?: () => void;
-  hasWarning?: boolean;
-  setHasWarning?: (hasWarning: boolean) => void;
   onClose?: () => void;
   className?: string;
+  onConflictDetected?: (productName: string, add: boolean) => void;
 }
 
 export function OrderCreator({
   setSelectedSupplier,
   selectedOrderProduct,
-  setSelectedOrderProduct,
   setExpandedOrderIds,
   selectedOrder,
   onSuccess,
   onReset,
-  hasWarning = false,
-  setHasWarning,
   onClose,
   className = "",
+  onConflictDetected
 }: OrderCreatorProps) {
   const { showAlert } = useAlert();
   const [isOrderNewProductsPopupOpen, setIsOrderNewProductsPopupOpen] =
     useState<boolean>(false);
-  const [nonExistingProducts, setNonExistingProducts] = useState<
-    OrderProductWorkingData[]
-  >([]);
-  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
-  const [orderWorkingData, setOrderWorkingData] = useState<OrderWorkingData>(
-    () => {
-      if (selectedOrder) {
-        return convertToWorkingData.order(selectedOrder);
-      }
-      return createNewOrderWorkingData();
-    }
-  );
-
+  const [nonExistingProducts, setNonExistingProducts] = useState<NewOrderProduct[]>([]);
   const action = selectedOrder ? Action.EDIT : Action.CREATE;
 
-  //orderProduct choice from OrderListBySupplier
-  useEffect(() => {
-    if (selectedOrderProduct && setSelectedOrderProduct) {
-      const newOrderProductWorkingData: OrderProductWorkingData = {
-        ...createNewOrderProductWorkingData(),
-        originalOrderProduct: selectedOrderProduct,
-        productName: selectedOrderProduct.product.name,
-        product: selectedOrderProduct.product,
-        quantity: 1,
-        vatRate: selectedOrderProduct.vatRate,
-        price: selectedOrderProduct.price,
-      };
-
-      setOrderWorkingData((prev) => ({
-        ...prev,
-        orderProducts: [...prev.orderProducts, newOrderProductWorkingData],
-      }));
-
-      setSelectedOrderProduct(null);
-    }
-  }, [selectedOrderProduct]);
-
-  useEffect(() => {
-    const totalNet = calculateOrderNetValue(
-      orderWorkingData.shippingCost,
-      orderWorkingData.orderProducts
-    );
-    const totalValue = calculateOrderTotal(
-      orderWorkingData.shippingCost,
-      orderWorkingData.orderProducts
-    );
-    const totalVat = totalValue - totalNet;
-
-    setOrderWorkingData((prev) => ({
-      ...prev,
-      totalNet: Math.round(totalNet * 100) / 100,
-      totalVat: Math.round(totalVat * 100) / 100,
-      totalValue: Math.round(totalValue * 100) / 100,
-    }));
-  }, [orderWorkingData.shippingCost, orderWorkingData.orderProducts]);
+  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  const [orderDTO, setOrderDTO] = useState<NewOrder> ({
+    supplier: null,
+    orderDate:  new Date().toISOString().split("T")[0],
+    orderProducts:[],
+    shippingCost: 0,
+  });
+  const [orderProducts, setOrderProducts] =useState<NewOrderProduct[]>([]);
+  const [orderPreview, setOrderPreview] = useState<Order | null>(null);
 
   const fetchSuppliers = async () => {
-    SupplierService.getSuppliers()
-      .then((data) => {
-        const sortedSuppliers = data.sort((a, b) =>
-          a.name.localeCompare(b.name)
-        );
-        setSuppliers(sortedSuppliers);
-      })
-      .catch((error) => {
-        setSuppliers([]);
-        showAlert("Błąd", AlertType.ERROR);
-        console.error("Error fetching suppliers:", error);
-      });
+      SupplierService.getSuppliers()
+        .then((data) => {
+          const sortedSuppliers = data.sort((a, b) =>
+            a.name.localeCompare(b.name)
+          );
+          setSuppliers(sortedSuppliers);
+        })
+        .catch((error) => {
+          setSuppliers([]);
+          showAlert("Błąd", AlertType.ERROR);
+          console.error("Error fetching suppliers:", error);
+        });
   };
+  const fetchOrderPreview = async (orderDTO: NewOrder) => {
+      OrderService.getOrderPreview(orderDTO)
+        .then((data) => {
+          setOrderPreview(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching order preview: ", error);
+          showAlert("Błąd", AlertType.ERROR);
+        })
 
-  useEffect(() => {
-    fetchSuppliers();
-  }, []);
+  }
 
-  const hasWarningRef = useRef(hasWarning);
+  const handleOnSelectSupplier = useCallback(
+    (value: Supplier | Supplier[] | null): void => {
+      const supplier = Array.isArray(value) ? value[0] || null : value;
 
-  useEffect(() => {
-    hasWarningRef.current = hasWarning;
-  }, [hasWarning]);
+      if (supplier) {
+        setOrderDTO((prev) => ({
+          ...prev,
+          supplier: supplier,
+        }));
+      }
 
+      if (
+        action === Action.CREATE &&
+        setExpandedOrderIds &&
+        setSelectedSupplier
+      ) {
+        setExpandedOrderIds([]);
+        setSelectedSupplier(supplier);
+      }
+    },
+    [action, setExpandedOrderIds, setSelectedSupplier]
+  );
   const handleAddNewSupplier = useCallback(
     async (newSupplier: NewSupplier) => {
       const error = validateSupplierForm(newSupplier, undefined, Action.CREATE);
@@ -152,7 +119,7 @@ export function OrderCreator({
 
       SupplierService.createSupplier(newSupplier)
         .then((data) => {
-          setOrderWorkingData((prev) => ({
+          setOrderDTO((prev) => ({
             ...prev,
             supplier: data,
           }));
@@ -170,113 +137,55 @@ export function OrderCreator({
     },
     [showAlert]
   );
-
-  const handleOnSelectSupplier = useCallback(
-    (value: Supplier | Supplier[] | null): void => {
-      const supplier = Array.isArray(value) ? value[0] || null : value;
-
-      if (supplier) {
-        setOrderWorkingData((prev) => ({
-          ...prev,
-          supplier: supplier,
-        }));
-      }
-
-      if (
-        action === Action.CREATE &&
-        setExpandedOrderIds &&
-        setSelectedSupplier
-      ) {
-        setExpandedOrderIds([]);
-        setSelectedSupplier(supplier);
-      }
-    },
-    [action, setExpandedOrderIds, setSelectedSupplier]
-  );
-
   const handleOrderDateChange = useCallback((newDate: string | null) => {
-    setOrderWorkingData((prev) => ({
+    setOrderDTO((prev) => ({
       ...prev,
       orderDate: newDate || new Date().toISOString(),
     }));
   }, []);
+  const handleAddNewProduct = useCallback((selectedOrderProduct: OrderProduct | null) => {
+    const newOrderProduct: NewOrderProduct = selectedOrderProduct != null ? {
+      product: selectedOrderProduct.product,
+      name: selectedOrderProduct.name,
+      quantity: selectedOrderProduct.quantity,
+      vatRate: selectedOrderProduct.vatRate,
+      price: selectedOrderProduct.price
+    } : {
+      product: null,
+      name: "",
+      quantity: 1,
+      vatRate: VatRate.VAT_23,
+      price: 0,
+    };
 
-  const handleAddNewProduct = useCallback(() => {
-    const newOrderProduct = createNewOrderProductWorkingData();
-
-    setOrderWorkingData((prev) => ({
-      ...prev,
-      orderProducts: [...prev.orderProducts, newOrderProduct],
-    }));
+    setOrderProducts((prev) => [...prev, newOrderProduct]);
   }, []);
-
-  const handleOrderProductsChange = useCallback(
-    (updatedOrderProducts: OrderProductWorkingData[]) => {
-      setOrderWorkingData((prev) => ({
-        ...prev,
-        orderProducts: updatedOrderProducts,
-      }));
-    },
-    []
-  );
-
   const handleShippingCost = useCallback((shippingCost: number) => {
-    setOrderWorkingData((prev) => ({
+    setOrderDTO((prev) => ({
       ...prev,
       shippingCost: shippingCost,
     }));
   }, []);
 
-  const calculateOrderTotal = (
-    shippingCost: number,
-    orderProducts: OrderProductWorkingData[]
-  ) => {
-    const productTotal = orderProducts.reduce(
-      (acc, product) => acc + product.price * product.quantity,
-      0
-    );
-    return productTotal + shippingCost;
-  };
-
-  const calculateOrderNetValue = (
-    shippingCost: number,
-    orderProducts: OrderProductWorkingData[]
-  ) => {
-    const netShippingCost = shippingCost / 1.23;
-    const netTotal = orderProducts.reduce((acc, op) => {
-      const vatRate = op.vatRate ? VAT_NUMERIC_VALUES[op.vatRate] : 0;
-      return acc + (op.price * op.quantity) / (1 + vatRate / 100);
-    }, 0);
-    return netTotal + netShippingCost;
-  };
-
-  const handleCloseOrderNewProductPopup = useCallback(() => {
-    setIsOrderNewProductsPopupOpen(false);
-  }, []);
-
   const resetFormState = () => {
-    setOrderWorkingData(createNewOrderWorkingData());
+    setOrderDTO({
+    supplier: null,
+    orderDate:  new Date().toISOString().split("T")[0],
+    orderProducts:[],
+    shippingCost: 0,
+  });
     setIsOrderNewProductsPopupOpen(false);
-    /* setSelectedOrderProduct?.(null);
-    setExpandedOrderIds?.([]);
-    setSelectedSupplier?.(null); */
     onReset?.();
+    setNonExistingProducts([]);
+    setOrderProducts([]);
+    setOrderPreview(null);
   };
-
-  const handleSuccess = useCallback(
-    (message: string) => {
-      showAlert(message, AlertType.SUCCESS);
-      resetFormState();
-    },
-    [showAlert]
-  );
 
   const handleValidateOrder = useCallback(
-    async (workingData: OrderWorkingData) => {
-      const backendOrder = convertToBackendData.order(workingData);
+    async (orderDTO: NewOrder) => {
 
       const error = validateOrderForm(
-        backendOrder,
+        orderDTO,
         action === Action.EDIT ? selectedOrder : undefined,
         action
       );
@@ -285,9 +194,7 @@ export function OrderCreator({
         return null;
       }
 
-      const nonExisting: OrderProductWorkingData[] = hasNonExistingProducts(
-        workingData.orderProducts
-      );
+      const nonExisting: NewOrderProduct[] = (orderDTO.orderProducts && orderDTO.orderProducts.length > 0) ? orderDTO.orderProducts?.filter(op => !op.product) : [];
 
       if (nonExisting.length > 0) {
         setNonExistingProducts(nonExisting);
@@ -295,36 +202,34 @@ export function OrderCreator({
         return;
       }
 
-      finalizeOrder(workingData);
+      finalizeOrder(orderDTO);
     },
     [showAlert, selectedOrder, action]
   );
 
   const finalizeOrder = useCallback(
-    async (workingData: OrderWorkingData) => {
+    async (orderDTO: NewOrder) => {
       try {
-        const backendOrder = convertToBackendData.order(workingData);
         if (action === Action.CREATE) {
-          const order: Order = await OrderService.createOrder(
-            backendOrder as NewOrder
-          );
-          setIsOrderNewProductsPopupOpen(false);
-          handleSuccess(`Zamówienie #${order.orderNumber} zostało utworzone!`);
+
+          console.log("finalOrderDTO", orderDTO);
+          OrderService.createOrder(orderDTO)
+            .then((data) => {
+              showAlert(`Zamówienie #${data.orderNumber} zostało utworzone!`, AlertType.SUCCESS);
+              setIsOrderNewProductsPopupOpen(false);
+              resetFormState();
+            })
+          
         } else if (
           action === Action.EDIT &&
           selectedOrder &&
           "id" in selectedOrder
         ) {
-            await OrderService.updateOrder(
-              selectedOrder.id,
-              backendOrder as Order
-            );
-            onSuccess?.(
-              `Zamówienie #${selectedOrder.orderNumber} zostało zaktualizowane!`
-            );
-            setTimeout(() => {
-              onClose?.();
-            }, 3000);
+          OrderService.updateOrder(selectedOrder.id, orderDTO)
+          .then((data) => {
+              showAlert(`Zamówienie #${data.orderNumber} zostało zaktualizowane!`, AlertType.SUCCESS);
+              onSuccess?.();
+          })            
         }
       } catch (error) {
         console.error(
@@ -339,8 +244,41 @@ export function OrderCreator({
         );
       }
     },
-    [action, handleSuccess, onClose, showAlert]
-  );
+    [action, onClose, showAlert]);
+
+  useEffect(() => {
+    if(selectedOrder) {
+      setOrderDTO({
+        supplier: selectedOrder.supplier,
+        orderDate: selectedOrder.orderDate,
+        orderProducts: selectedOrder.orderProducts,
+        shippingCost: selectedOrder.shippingCost,
+      })
+      setOrderProducts(selectedOrder.orderProducts);
+    }
+  }, [selectedOrder])
+
+  useEffect(() => {
+    if(selectedOrderProduct != null) {
+      handleAddNewProduct(selectedOrderProduct);
+    }
+  },[selectedOrderProduct])
+
+  useEffect(() => {
+    setOrderDTO((prev) => ({
+      ...prev,
+      orderProducts: orderProducts,
+    }))
+  }, [orderProducts])
+
+  useEffect(() => {
+    fetchOrderPreview(orderDTO);
+    console.log("orderDTO changed: ", orderDTO);
+  }, [orderDTO])
+
+  useEffect(() => {
+    fetchSuppliers();
+  }, [])
 
   return (
     <div
@@ -360,7 +298,7 @@ export function OrderCreator({
             className="supplier-dropdown"
             placeholder="Wybierz Sklep"
             onChange={handleOnSelectSupplier}
-            value={orderWorkingData.supplier || null}
+            value={orderDTO.supplier}
             multiple={false}
             showNewPopup={true}
             newItemComponent={AddSupplierPopup as React.ComponentType<any>}
@@ -370,39 +308,43 @@ export function OrderCreator({
           />
           <DateInput
             onChange={handleOrderDateChange}
-            selectedDate={orderWorkingData.orderDate}
+            selectedDate={orderDTO.orderDate}
           />
 
           <ActionButton
             src={"src/assets/addNew.svg"}
             alt={"Dodaj Produkt"}
             text={"Dodaj produkt"}
-            onClick={() => handleAddNewProduct()}
+            onClick={() => handleAddNewProduct(null)}
           />
         </section>
         <OrderProductList
-          orderProducts={orderWorkingData.orderProducts}
-          onOrderProductsChange={handleOrderProductsChange}
           action={action}
-          setHasWarning={setHasWarning}
+          onConflictDetected={onConflictDetected}
+
+
+
+          orderProducts={orderProducts}
+          setOrderProducts={setOrderProducts}
         />
+        
         <div className="shipping-summary-section flex-column relative">
           <div className="order-shipping relative flex space-between align-items-center">
             <a>Koszt przesyłki:</a>
             <CostInput
-              selectedCost={orderWorkingData.shippingCost ?? 0}
+              selectedCost={orderDTO.shippingCost ?? 0}
               onChange={handleShippingCost}
               placeholder={"0.00"}
             />
           </div>
           <div className="order-cost-summary relative flex space-between align-items-center justify-end">
             <a>Netto:</a>
-            <a className="order-total-value">{orderWorkingData.totalNet} zł</a>
+            <a className="order-total-value">{orderPreview?.totalNet ?? 0} zł</a>
             <a>VAT:</a>
-            <a className="order-total-value">{orderWorkingData.totalVat} zł</a>
+            <a className="order-total-value">{orderPreview?.totalVat ?? 0} zł</a>
             <a>Total:</a>
             <a className="order-total-value">
-              {orderWorkingData.totalValue} zł
+              {orderPreview?.totalValue ?? 0} zł
             </a>
           </div>
         </div>
@@ -414,15 +356,15 @@ export function OrderCreator({
             src={"src/assets/tick.svg"}
             alt={"Zapisz"}
             text={"Zapisz"}
-            onClick={() => handleValidateOrder(orderWorkingData)}
+            onClick={() => handleValidateOrder(orderDTO)}
           />
         </div>
 
         {isOrderNewProductsPopupOpen && (
           <OrderNewProductsPopup
             nonExistingProducts={nonExistingProducts}
-            orderWorkingData={orderWorkingData}
-            onClose={handleCloseOrderNewProductPopup}
+            orderDTO={orderDTO}
+            onClose={() => setIsOrderNewProductsPopupOpen(false)}
             onFinalizeOrder={handleValidateOrder}
           />
         )}

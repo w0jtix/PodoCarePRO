@@ -13,4 +13,6 @@
 
     <include file="db/changelog/db.changelog-4.xml" />
 
+    <include file="db/changelog/db.changelog-5.xml" />
+
 </databaseChangeLog>

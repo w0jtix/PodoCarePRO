@@ -21,6 +21,14 @@ class OrderService {
     })
   }
 
+  static async getOrderPreview(order: NewOrder): Promise<Order> {
+      return await sendApiRequest<Order>(`orders/preview`, {
+        method: "post",
+        body: order,
+        errorMessage: "Error fetching Order preview.",
+      });
+    }
+
   static async createOrder(order: NewOrder): Promise<Order> {
     return await sendApiRequest<Order>('orders', {
       method: "post",
@@ -29,7 +37,7 @@ class OrderService {
     })
   }
 
-  static async updateOrder(id: number, order: Order): Promise<Order | undefined> {
+  static async updateOrder(id: number, order: NewOrder): Promise<Order> {
       return await sendApiRequest<Order>(`orders/${id}`, {
         method: "put",
         body: order,

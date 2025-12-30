@@ -26,8 +26,7 @@ export function OrderHistory() {
   const [loading, setLoading] = useState<boolean>(true);
 
   const handleSuccess = useCallback(
-    (message: string) => {
-      showAlert(message, AlertType.SUCCESS);
+    () => {
       handleResetFiltersAndData();
     },
     [showAlert]

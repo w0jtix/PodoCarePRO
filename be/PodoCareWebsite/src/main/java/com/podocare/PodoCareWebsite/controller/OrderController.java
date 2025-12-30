@@ -1,6 +1,7 @@
 package com.podocare.PodoCareWebsite.controller;
 
 import com.podocare.PodoCareWebsite.DTO.OrderDTO;
+import com.podocare.PodoCareWebsite.DTO.OrderDTO;
 import com.podocare.PodoCareWebsite.DTO.request.OrderFilterDTO;
 import com.podocare.PodoCareWebsite.service.OrderService;
 import lombok.NonNull;
@@ -30,6 +31,13 @@ public class OrderController {
     public ResponseEntity<OrderDTO> getOrderById(@PathVariable(value = "id") Long id) {
         OrderDTO order = orderService.getOrderById(id);
         return new ResponseEntity<>(order, HttpStatus.OK);
+    }
+
+    @PostMapping("/preview")
+    @PreAuthorize(("hasRole('USER')"))
+    public ResponseEntity<OrderDTO> getOrderPreview(@NonNull @RequestBody OrderDTO order) {
+        OrderDTO previewOrder = orderService.getOrderPreview(order);
+        return  new ResponseEntity<>(previewOrder, HttpStatus.CREATED);
     }
 
     @PostMapping

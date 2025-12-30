@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import com.podocare.PodoCareWebsite.model.constants.VatRate;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,7 +21,6 @@ public class OrderDTO {
     private Long orderNumber;
     private LocalDate orderDate;
     private List<OrderProductDTO> orderProducts;
-    private VatRate shippingVatRate;
     private Double shippingCost;
     private Double totalNet;
     private Double totalVat;
@@ -36,7 +34,6 @@ public class OrderDTO {
         this.orderProducts = order.getOrderProducts().stream()
                 .map(OrderProductDTO::new)
                 .collect(Collectors.toList());
-        this.shippingVatRate = order.getShippingVatRate();
         this.shippingCost = order.getShippingCost();
         this.totalNet = order.getTotalNet();
         this.totalVat = order.getTotalVat();
@@ -49,7 +46,6 @@ public class OrderDTO {
                 .supplier(this.supplier.toEntity())
                 .orderNumber(this.orderNumber)
                 .orderDate(this.orderDate)
-                .shippingVatRate(this.shippingVatRate)
                 .shippingCost(this.shippingCost)
                 .totalNet(this.totalNet)
                 .totalVat(this.totalVat)

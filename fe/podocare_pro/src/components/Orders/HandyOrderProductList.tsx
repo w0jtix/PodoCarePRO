@@ -10,6 +10,7 @@ import { getVatRateDisplay } from "../../models/vatrate";
 import { calculateNetPrice } from "../../utils/priceUtils";
 import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
+import { VatRate } from "../../models/vatrate";
 
 export interface HandyOrderProductListProps {
   attributes: ListAttribute[];
@@ -139,7 +140,7 @@ export function HandyOrderProductList({
         return (
           <div className="width-max flex space-between">
             <span className={`order-product-list-span ${warningClass}`}>
-              {orderProduct.product?.name}
+              {orderProduct.name}
             </span>
             {warning && (
               <img
@@ -199,9 +200,9 @@ export function HandyOrderProductList({
       case "Nazwa":
         return "Koszt wysyłki";
       case "Netto [szt]":
-        return calculateNetPrice(order.shippingCost, order.shippingVatRate);
+        return calculateNetPrice(order.shippingCost, VatRate.VAT_23);
       case "VAT":
-        return `${getVatRateDisplay(order.shippingVatRate)}`;
+        return `${getVatRateDisplay(VatRate.VAT_23)}`;
       case "Cena [szt]":
         return order.shippingCost.toFixed(2);
       default:

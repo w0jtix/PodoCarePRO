@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,12 +41,10 @@ public class Order {
     @Builder.Default
     private List<OrderProduct> orderProducts = new ArrayList<>();
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private VatRate shippingVatRate;
     /**
      * Gross shipping cost (VAT-inclusive).
      * Total shipping price including VAT.
+     * Always uses 23% VAT rate.
      */
     @Column(nullable = false)
     @Builder.Default
@@ -89,16 +89,16 @@ public class Order {
         double shippingVat = 0.0;
         double shippingNet = shippingGross;
 
-        if (shippingVatRate != null && shippingGross > 0) {
-            double shippingVatRatePercent = getVatRateValue(shippingVatRate);
-
+        if (shippingGross > 0) {
+            // Shipping cost always uses 23% VAT rate
+            double shippingVatRatePercent = VatRate.VAT_23.getRate();
             shippingVat = shippingGross * (shippingVatRatePercent / (100.0 + shippingVatRatePercent));
             shippingNet = shippingGross - shippingVat;
         }
 
-        this.totalNet = productsNet + shippingNet;
-        this.totalVat = productsVat + shippingVat;
-        this.totalValue = productsGrossTotal + shippingGross;
+        this.totalNet = roundPrice(productsNet + shippingNet);
+        this.totalVat = roundPrice(productsVat + shippingVat);
+        this.totalValue = roundPrice(productsGrossTotal + shippingGross);
     }
 
     private double getVatRateValue(VatRate vatRate) {
@@ -106,5 +106,12 @@ public class Order {
             return 0.0;
         }
         return vatRate.getRate();
+    }
+
+    private double roundPrice(Double price) {
+        return BigDecimal
+                .valueOf(price)
+                .setScale(2, RoundingMode.HALF_UP)
+                .doubleValue();
     }
 }

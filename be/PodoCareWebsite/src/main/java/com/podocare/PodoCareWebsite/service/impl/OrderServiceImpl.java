@@ -7,14 +7,9 @@ import com.podocare.PodoCareWebsite.exceptions.CreationException;
 import com.podocare.PodoCareWebsite.exceptions.DeletionException;
 import com.podocare.PodoCareWebsite.exceptions.ResourceNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.UpdateException;
-import com.podocare.PodoCareWebsite.model.Order;
-import com.podocare.PodoCareWebsite.model.OrderProduct;
-import com.podocare.PodoCareWebsite.model.Product;
-import com.podocare.PodoCareWebsite.model.Supplier;
-import com.podocare.PodoCareWebsite.repo.OrderProductRepo;
-import com.podocare.PodoCareWebsite.repo.OrderRepo;
-import com.podocare.PodoCareWebsite.repo.ProductRepo;
-import com.podocare.PodoCareWebsite.repo.SupplierRepo;
+import com.podocare.PodoCareWebsite.model.*;
+import com.podocare.PodoCareWebsite.model.constants.VatRate;
+import com.podocare.PodoCareWebsite.repo.*;
 import com.podocare.PodoCareWebsite.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
@@ -35,6 +30,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderProductRepo orderProductRepo;
     private final SupplierRepo supplierRepo;
     private final ProductRepo productRepo;
+    private final SaleItemRepo saleItemRepo;
 
     @Override
     public OrderDTO getOrderById(Long id) {
@@ -61,6 +57,24 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public OrderDTO getOrderPreview(OrderDTO orderDTO) {
+        if (orderDTO.getSupplier() != null) {
+            supplierRepo.findById(orderDTO.getSupplier().getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Supplier not found with ID: " + orderDTO.getSupplier().getId()));
+        }
+
+        Order tempOrder = convertDtoToEntity(orderDTO);
+
+        tempOrder.calculateTotals();
+
+        orderDTO.setTotalValue(tempOrder.getTotalValue());
+        orderDTO.setTotalNet(tempOrder.getTotalNet());
+        orderDTO.setTotalVat(tempOrder.getTotalVat());
+
+        return orderDTO;
+    }
+
+    @Override
     @Transactional
     public OrderDTO createOrder(OrderDTO orderDTO) {
         try{
@@ -73,7 +87,6 @@ public class OrderServiceImpl implements OrderService {
                     .supplier(supplier)
                     .orderNumber(orderNumber)
                     .orderDate(orderDTO.getOrderDate())
-                    .shippingVatRate(orderDTO.getShippingVatRate())
                     .shippingCost(orderDTO.getShippingCost())
                     .build();
 
@@ -118,7 +131,6 @@ public class OrderServiceImpl implements OrderService {
                     .supplier(supplier)
                     .orderNumber(existingOrder.getOrderNumber())
                     .orderDate(orderDTO.getOrderDate())
-                    .shippingVatRate(orderDTO.getShippingVatRate())
                     .shippingCost(orderDTO.getShippingCost())
                     .build();
 
@@ -128,6 +140,7 @@ public class OrderServiceImpl implements OrderService {
                 OrderProduct newOrderProduct = OrderProduct.builder()
                         .order(updatedOrder)
                         .product(product)
+                        .name(product.getName())
                         .quantity(orderProductDTO.getQuantity())
                         .vatRate(orderProductDTO.getVatRate())
                         .price(orderProductDTO.getPrice())
@@ -197,6 +210,7 @@ public class OrderServiceImpl implements OrderService {
         return OrderProduct.builder()
                 .order(order)
                 .product(product)
+                .name(product.getName())
                 .quantity(orderProductDTO.getQuantity())
                 .vatRate(orderProductDTO.getVatRate())
                 .price(orderProductDTO.getPrice())
@@ -227,7 +241,7 @@ public class OrderServiceImpl implements OrderService {
         for (Product product : products) {
             Integer quantityChange = inventoryAdjustments.get(product.getId());
             if (quantityChange != null && quantityChange != 0) {
-                product.setSupply(product.getSupply() + quantityChange);
+                product.setSupply(Math.max(product.getSupply() + quantityChange, 0)); // supply never drops below 0;
             }
         }
         productRepo.saveAll(products);
@@ -253,12 +267,32 @@ public class OrderServiceImpl implements OrderService {
         if(!product.getIsDeleted()) {
             return;
         }
-        boolean hasOtherReferences = orderProductRepo.existsByProductIdAndOrderIdNot(
+        boolean hasOrderReferences = orderProductRepo.existsByProductIdAndOrderIdNot(
                 product.getId(), orderId);
 
-        if(!hasOtherReferences) {
+        boolean hasSaleItemReferences = saleItemRepo.existsByProductId(product.getId());
+
+        if(!hasOrderReferences && !hasSaleItemReferences) {
             productRepo.delete(product);
         }
+    }
+
+    //for totals calculations only
+    private Order convertDtoToEntity(OrderDTO dto) {
+        Order order = Order.builder()
+                .shippingCost(dto.getShippingCost())
+                .build();
+
+        for (OrderProductDTO opDto : dto.getOrderProducts()) {
+            OrderProduct op = OrderProduct.builder()
+                    .price(opDto.getPrice())
+                    .quantity(opDto.getQuantity())
+                    .vatRate(opDto.getVatRate())
+                    .build();
+            order.addOrderProduct(op);
+        }
+
+        return order;
     }
 }
 

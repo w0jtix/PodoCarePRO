@@ -34,13 +34,10 @@ import { PaymentMethod } from "../models/payment";
     selectedProduct: Product | null | undefined,
     action: Action,
   ): string | null {
-    if (
-      Object.values(productForm).some(
-        (value) => value === null || value === undefined
-      )
-    ) {
+    if (Object.entries(productForm).some(([key, value]) => {
+      if(key === "description") return false;
       return "Brak pełnych informacji o produkcie!";
-    }
+    }))
 
     if (productForm.name && productForm.name.trim().length <= 2) {
       return "Nazwa produktu za krótka! (2+)";
@@ -604,12 +601,12 @@ import { PaymentMethod } from "../models/payment";
     }
 
     if(orderForm.orderProducts.some(
-      (op) => op.product?.name?.trim() === ""
+      (op) => op.name?.trim() === ""
     )) {
       return "Niepoprawna nazwa produktu!";
     } else if  (
       orderForm.orderProducts.some(
-      (op) => op.product?.name?.trim().length <= 2
+      (op) => op.name?.trim().length <= 2
     )) {
       return "Nazwa produktu za krótka! (2+)";
     }
@@ -623,10 +620,7 @@ import { PaymentMethod } from "../models/payment";
     if(Action.EDIT && selectedOrder) {
       const noChangesDetected = orderForm.supplier === selectedOrder.supplier &&
         orderForm.orderDate === selectedOrder.orderDate &&
-        orderForm.shippingCost === selectedOrder.shippingCost &&
-        orderForm.totalNet === selectedOrder.totalNet &&
-        orderForm.totalVat === selectedOrder.totalVat &&
-        orderForm.totalValue === selectedOrder.totalValue;
+        orderForm.shippingCost === selectedOrder.shippingCost;
 
         const noOrderProductChangesDetected = areOrderProductsEqual(
           selectedOrder.orderProducts,
@@ -644,14 +638,14 @@ import { PaymentMethod } from "../models/payment";
 const areOrderProductsEqual = (opList1: OrderProduct[], opList2: NewOrderProduct[]) => {
     if (opList1.length != opList2.length) return false;
 
-    const sorted1 = [...opList1].sort((a, b) => (a.product.id || 0) - (b.product.id || 0));
-    const sorted2 = [...opList2].sort((a, b) => (a.product.id || 0) - (b.product.id || 0));
+    const sorted1 = [...opList1].sort((a, b) => (a.product?.id || 0) - (b.product?.id || 0));
+    const sorted2 = [...opList2].sort((a, b) => (a.product?.id || 0) - (b.product?.id || 0));
 
     return sorted1.every((op1, index) => {
       const op2 = sorted2[index];
       return (
-        op1.product.name === op2.product.name &&
-        op1.product.brand.name === op2.product.brand.name &&
+        op1.name === op2.name &&
+        op1.product?.brand?.name === op2.product?.brand?.name &&
         op1.price === op2.price &&
         op1.quantity === op2.quantity &&
         op1.vatRate === op2.vatRate

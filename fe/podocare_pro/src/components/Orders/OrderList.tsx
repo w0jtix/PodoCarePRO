@@ -13,7 +13,7 @@ import { formatDate } from "../../utils/dateUtils";
 export interface OrderListProps {
   attributes: ListAttribute[];
   orders: Order[];
-  onSuccess: (message: string) => void;
+  onSuccess: () => void;
   className?: string;
 }
 

@@ -11,6 +11,8 @@ public interface OrderService {
 
     List<OrderDTO> getOrders(OrderFilterDTO filter);
 
+    OrderDTO getOrderPreview(OrderDTO orderDTO);
+
     OrderDTO createOrder(OrderDTO orderDTO);
 
     OrderDTO updateOrder(Long id, OrderDTO orderDTO);

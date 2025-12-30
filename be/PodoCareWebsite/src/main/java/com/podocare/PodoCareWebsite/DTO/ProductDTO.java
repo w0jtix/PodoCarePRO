@@ -46,7 +46,7 @@ public class ProductDTO {
                 .sellingPrice(this.sellingPrice)
                 .vatRate(this.vatRate != null ? this.vatRate : VatRate.VAT_23)
                 .description(this.description)
-                .isDeleted(this.isDeleted)
+                .isDeleted(this.isDeleted != null ? this.isDeleted : false)
                 .build();
     }
 }

@@ -9,19 +9,23 @@ import { Action } from "../../models/action";
 import { OrderProductWorkingData } from "../../models/working-data";
 
 export interface OrderProductListProps {
-  orderProducts: OrderProductWorkingData[];
-  onOrderProductsChange: (orderProducts: OrderProductWorkingData[]) => void;
   action: Action;
-  setHasWarning?: (hasWarning: boolean) => void;
+  onConflictDetected?: (productName: string, add: boolean) => void;
   className?: string;
+
+
+  orderProducts: NewOrderProduct[];
+  setOrderProducts: React.Dispatch<React.SetStateAction<NewOrderProduct[]>>;
 }
 
 export function OrderProductList ({
-  orderProducts,
-  onOrderProductsChange,
   action,
-  setHasWarning,
+  onConflictDetected,
   className="",
+
+
+  orderProducts,
+  setOrderProducts,
 }: OrderProductListProps) {
 
   return (
@@ -29,10 +33,13 @@ export function OrderProductList ({
       <ListHeader attributes={ORDER_ITEM_LIST_ATTRIBUTES} module={ListModule.ORDER} />
       <OrderItemList
         attributes={ORDER_ITEM_LIST_ATTRIBUTES}
-        orderProducts={orderProducts}
-        onOrderProductsChange={onOrderProductsChange}
         action={action}
-        setHasWarning={setHasWarning}
+        onConflictDetected={onConflictDetected}
+
+
+
+        orderProducts={orderProducts}
+        setOrderProducts={setOrderProducts}
       />
     </div>
   );

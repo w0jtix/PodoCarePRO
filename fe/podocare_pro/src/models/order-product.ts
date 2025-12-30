@@ -6,13 +6,15 @@ export interface OrderProduct {
     id:number;
     order: Order;
     product: Product;
+    name: string;
     quantity: number;
     vatRate: VatRate;
     price: number;
 }
 
 export interface NewOrderProduct {
-    product: Product;
+    product: Product | null;
+    name: string;
     quantity: number;
     vatRate: VatRate;
     price: number;

@@ -1,6 +1,5 @@
 import { OrderProduct, NewOrderProduct } from "./order-product";
 import { Supplier } from "./supplier";
-import { VatRate } from "./vatrate";
 
 export interface Order {
     id: number;
@@ -8,7 +7,6 @@ export interface Order {
     orderNumber: number;
     orderDate: string;
     orderProducts: OrderProduct[];
-    shippingVatRate: VatRate;
     shippingCost: number;
     totalNet: number;
     totalVat: number;
@@ -16,14 +14,10 @@ export interface Order {
 }
 
 export interface NewOrder {
-    supplier?: Supplier;
+    supplier?: Supplier | null;
     orderDate?: string;
     orderProducts?: NewOrderProduct[];
-    shippingVatRate: VatRate;
     shippingCost: number;
-    totalNet: number;
-    totalVat: number;
-    totalValue: number;
 }
 
 export interface OrderFilterDTO {

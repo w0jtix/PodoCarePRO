@@ -1,4 +1,4 @@
-import { Brand } from "./brand";
+import { Brand, NewBrand } from "./brand";
 import { ProductCategory } from "./categories";
 import { VatRate } from "./vatrate";
 
@@ -17,8 +17,8 @@ export interface Product {
 
 export interface NewProduct {
     name: string;
-    category: ProductCategory;
-    brand: Brand;
+    category: ProductCategory | null;
+    brand: Brand | NewBrand | null;
     supply: number;
     sellingPrice?: number | null;
     vatRate?: VatRate | null;

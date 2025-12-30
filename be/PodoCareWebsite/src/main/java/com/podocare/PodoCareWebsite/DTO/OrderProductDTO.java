@@ -16,6 +16,7 @@ public class OrderProductDTO {
 
     private Long id;
     private ProductDTO product;
+    private String name;
     private Integer quantity;
     private VatRate vatRate;
     private Double price;
@@ -23,6 +24,7 @@ public class OrderProductDTO {
     public OrderProductDTO(OrderProduct orderProduct) {
         this.id = orderProduct.getId();
         this.product = new ProductDTO(orderProduct.getProduct());
+        this.name = orderProduct.getName();
         this.quantity = orderProduct.getQuantity();
         this.vatRate = orderProduct.getVatRate();
         this.price = orderProduct.getPrice();
@@ -33,6 +35,7 @@ public class OrderProductDTO {
                 .id(this.id)
                 .order(order)
                 .product(this.product.toEntity())
+                .name(this.name)
                 .quantity(this.quantity)
                 .vatRate(this.vatRate)
                 .price(this.price)
