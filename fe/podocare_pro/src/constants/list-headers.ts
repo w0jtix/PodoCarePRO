@@ -247,6 +247,16 @@ export const ORDER_ITEM_LIST_ATTRIBUTES: ListAttribute[] = [
   { name: "Cena", width: "13%", justify: "center" },
 ]
 
+export const ORDER_ITEM_WITH_BRAND_LIST_ATTRIBUTES: ListAttribute[] = [
+  { name: "", width: "6%", justify: "center" },
+  { name: "Nazwa", width: "25%", justify: "flex-start" },
+  { name: "Marka", width: "17%", justify: "center" },
+  { name: "Cena jedn.", width: "13%", justify: "center" },
+  { name: "Ilość", width: "13%", justify: "center" },
+  { name: "VAT", width: "13%", justify: "center" },
+  { name: "Cena", width: "13%", justify: "center" },
+]
+
 export const ORDER_NEW_PRODUCTS_POPUP_ATTRIBUTES: ListAttribute[] =[
   { name: "", width: "2%", justify: "flex-start" },
   { name: "Nazwa", width: "50%", justify: "flex-start" },

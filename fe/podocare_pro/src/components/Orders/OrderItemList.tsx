@@ -19,8 +19,6 @@ export interface OrderItemListProps {
   action: Action;
   onConflictDetected?: (productName: string, add: boolean) => void;
   className?: string;
-
-
   orderProducts: NewOrderProduct[];
   setOrderProducts: React.Dispatch<React.SetStateAction<NewOrderProduct[]>>;
 }
@@ -31,8 +29,6 @@ export function OrderItemList({
   action,
   onConflictDetected,
   className = "",
-
-
   orderProducts,
   setOrderProducts,
 
@@ -298,6 +294,11 @@ export function OrderItemList({
             )}
           </div>
         );
+
+      case "Marka":
+        return (item.product ? (
+          <span className="order-brand-span flex text-align-center italic">{item.product.brand.name}</span>
+        ) : null)
 
       case "Cena jedn.":
         return (

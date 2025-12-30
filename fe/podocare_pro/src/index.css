@@ -3292,3 +3292,11 @@ background-color: rgba(0, 218, 0, 0.35);
 .product-action-button-text.client-terms {
   width: 140px;
 }
+
+.order-brand-span {
+  font-size: 11px;
+  font-weight: 300;
+  color: rgba(252,181,12, 0.6);
+  max-width: 80px;
+  overflow:hidden;
+}
