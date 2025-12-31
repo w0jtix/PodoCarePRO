@@ -5,8 +5,12 @@ import com.podocare.PodoCareWebsite.exceptions.CreationException;
 import com.podocare.PodoCareWebsite.exceptions.DeletionException;
 import com.podocare.PodoCareWebsite.exceptions.ResourceNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.UpdateException;
+import com.podocare.PodoCareWebsite.model.Client;
 import com.podocare.PodoCareWebsite.model.ClientNote;
+import com.podocare.PodoCareWebsite.model.Employee;
 import com.podocare.PodoCareWebsite.repo.ClientNoteRepo;
+import com.podocare.PodoCareWebsite.repo.ClientRepo;
+import com.podocare.PodoCareWebsite.repo.EmployeeRepo;
 import com.podocare.PodoCareWebsite.service.ClientNoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +23,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ClientNoteServiceImpl implements ClientNoteService {
     private final ClientNoteRepo clientNoteRepo;
+    private final ClientRepo clientRepo;
+    private final EmployeeRepo employeeRepo;
 
     @Override
     public ClientNoteDTO getClientNoteById(Long id) {
@@ -37,6 +43,7 @@ public class ClientNoteServiceImpl implements ClientNoteService {
     @Transactional
     public ClientNoteDTO createClientNote(ClientNoteDTO clientNoteDTO) {
         try {
+
             return new ClientNoteDTO(clientNoteRepo.save(clientNoteDTO.toEntity()));
         } catch (Exception e) {
             throw new CreationException("Failed to create ClientNote. Reason: " + e.getMessage(), e);
@@ -49,6 +56,7 @@ public class ClientNoteServiceImpl implements ClientNoteService {
         try {
             getClientNoteById(id);
             clientNoteDTO.setId(id);
+
             return new ClientNoteDTO(clientNoteRepo.save(clientNoteDTO.toEntity()));
         } catch (Exception e) {
             throw new UpdateException("Failed to update ClientNote. Reason: " + e.getMessage(), e);

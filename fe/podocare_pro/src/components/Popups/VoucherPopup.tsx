@@ -37,7 +37,6 @@ export function VoucherPopup({
     if (voucherId) {
       VoucherService.getVoucherById(voucherId)
         .then((data) => {
-          console.log("voucher", data);
           setFetchedVoucher(data);
           if(action === Action.EDIT) {
             setVoucherDTO({

@@ -73,7 +73,13 @@ export function ReviewsList({
         );
 
       case "Klient":
-        return `${item.client.firstName + " " + item.client.lastName}`;
+        return(
+          <div className={`flex g-5px ${item.client.isDeleted ? "pointer" : ""}`} title={`${item.client.isDeleted ? "Klient usunięty" : ""}`}>
+            
+          <span className={`text-align-center ${item.client.isDeleted ? "client-removed" : ""}`}>{item.client.firstName + " " + item.client.lastName}</span>
+          {item.client.isDeleted && <img src ="src/assets/removed.svg" alt="Client Removed" className="checkimg align-self-center"/>}
+        </div>
+      );
 
       case "Dodano":
         return new Date(item.issueDate).toLocaleDateString("pl-PL");

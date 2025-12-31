@@ -218,12 +218,19 @@ export function ClientsDashboard() {
         setSelectedClientId={setSelectedClientId}
         className="services client-dashboard"
       />
-      {selectedClientId != null && (
+      {isAddNewClientPopupOpen && (
         <ClientPopup
           onClose={() => {
             setIsAddNewClientPopupOpen(false);
             setSelectedClientId(null);
           }}
+          onReset={handleReset}
+          className={"client-popup"}
+        />
+      )}
+      {selectedClientId != null && (
+        <ClientPopup
+          onClose={() => setSelectedClientId(null)}
           onReset={handleReset}
           selectedClientId={selectedClientId}
           className={"client-popup"}

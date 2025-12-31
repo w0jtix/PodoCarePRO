@@ -67,7 +67,7 @@ export function ItemList ({
         return `${item.name}`;
       
       case "Marka":
-        return`${item.brand.name}`;
+        return(<span className="list-span ml-1">{item.brand.name}</span>);
 
       case "Stan Magazynowy":
         return `${item.supply}`;

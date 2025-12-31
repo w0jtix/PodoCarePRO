@@ -322,7 +322,7 @@ import { PaymentMethod } from "../models/payment";
   }
 
   export function validateClientForm(
-    clientForm: Client | NewClient,
+    clientForm: NewClient,
     action: Action,
     selectedClient: Client | null | undefined,
   ): string | null {

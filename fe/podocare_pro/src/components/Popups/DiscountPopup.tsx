@@ -35,7 +35,12 @@ export function DiscountPopup({
     DiscountService.getDiscountById(discountId)
     .then((data) => {
       setFetchedDiscount(data);
-      setDiscountDTO(data);
+      setDiscountDTO((prev) => ({
+        ...prev,
+        name: data.name,
+        percentageValue: data.percentageValue,
+        // does not include clients - they are loaded in DiscountForm
+      }));
   })
     .catch((error) => {
       console.error("Error fetching Discount: ", error);

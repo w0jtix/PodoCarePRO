@@ -50,7 +50,6 @@ export function EditUserPopup({
       .then((data) => {
         setUpdatedUser(data);
         setFetchedUser(data);
-        console.log(data);
       })
       .catch((error) => {
         console.error("Error fetching user: ", error);

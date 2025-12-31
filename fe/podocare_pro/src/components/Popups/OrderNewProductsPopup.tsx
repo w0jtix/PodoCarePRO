@@ -78,10 +78,6 @@ export function OrderNewProductsPopup({
     }
   }, [nonExistingProducts]);
 
-  useEffect(() => {
-    console.log(productsToCreate);
-  },[productsToCreate])
-
   const handleSelectCategory = useCallback(
     (index: number, category: ProductCategory | null) => {
       setProductsToCreate((products) =>

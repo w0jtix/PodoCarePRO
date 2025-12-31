@@ -23,7 +23,7 @@ import { Alert } from "react-bootstrap";
 export interface ClientPopupProps {
   onClose: () => void;
   onReset: () => void;
-  selectedClientId: number | null;
+  selectedClientId?: number | null;
   className: string;
   onSelectClient?: (client: Client) => void;
 }
@@ -35,7 +35,7 @@ export function ClientPopup({
   className = "",
   onSelectClient,
 }: ClientPopupProps) {
-  const [clientDTO, setClientDTO] = useState<NewClient | Client>({
+  const [clientDTO, setClientDTO] = useState<NewClient>({
     firstName: "",
     lastName: "",
     signedRegulations: false,
@@ -58,7 +58,15 @@ export function ClientPopup({
   const fetchClientById = async (clientId: number) => {
     ClientService.getClientById(clientId)
       .then((data) => {
-        setClientDTO(data);
+        setClientDTO({
+          id: data.id,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          signedRegulations: data.signedRegulations,
+          boostClient: data.boostClient,
+          redFlag: data.redFlag,
+          phoneNumber: data.phoneNumber,
+        });
         setFetchedClient(data)
       })
       .catch((error) => {
@@ -113,10 +121,10 @@ export function ClientPopup({
           );
         }
 
-        if (hasClientChanges) {
+        if (hasClientChanges && fetchedClient) {
           await ClientService.updateClient(
-            (clientDTO as Client).id,
-            clientDTO as Client
+            fetchedClient.id,
+            clientDTO as NewClient
           );
         }
 

@@ -42,10 +42,6 @@ export function AddEditProductPopup ({
 
   const action = productId ? Action.EDIT : Action.CREATE;
 
-  useEffect(() => {
-    console.log("Product DTO changed: ", productDTO);
-  },[productDTO])
-
   const fetchProductById = async (productId: number | string) => {
     AllProductService.getProductById(productId)
       .then((data) => {

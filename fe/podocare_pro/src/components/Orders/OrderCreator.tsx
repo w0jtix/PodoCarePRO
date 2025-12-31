@@ -211,8 +211,6 @@ export function OrderCreator({
     async (orderDTO: NewOrder) => {
       try {
         if (action === Action.CREATE) {
-
-          console.log("finalOrderDTO", orderDTO);
           OrderService.createOrder(orderDTO)
             .then((data) => {
               showAlert(`Zamówienie #${data.orderNumber} zostało utworzone!`, AlertType.SUCCESS);
@@ -273,7 +271,6 @@ export function OrderCreator({
 
   useEffect(() => {
     fetchOrderPreview(orderDTO);
-    console.log("orderDTO changed: ", orderDTO);
   }, [orderDTO])
 
   useEffect(() => {

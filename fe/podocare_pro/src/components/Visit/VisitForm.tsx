@@ -788,15 +788,7 @@ export function VisitForm({
       }));
     }
   }, [chosenProducts]);
-
-  useEffect(() => {
-    console.log(visitDTO);
-  }, [visitDTO]);
-
-  useEffect(() => {
-    console.log("preview", visitPreview);
-  }, [visitPreview]);
-
+  
   return (
     <>
       <div className="visit-form-container flex-column align-items-center mt-05 f-1">

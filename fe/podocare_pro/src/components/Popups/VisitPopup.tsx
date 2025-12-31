@@ -94,7 +94,11 @@ export function VisitPopup({
       : Action.CREATE;
   const checkerSectionVisible =
     visit &&
-    (visit.absence || visit.delayTime != null || visit.isBoost || visit.isVip || visit.receipt == false);
+    (visit.absence ||
+      visit.delayTime != null ||
+      visit.isBoost ||
+      visit.isVip ||
+      visit.receipt == false);
 
   const fetchSettings = async () => {
     AppSettingsService.getSettings()
@@ -112,7 +116,6 @@ export function VisitPopup({
       UserService.getUserByEmployeeId(visit.employee.id)
         .then((data) => {
           setUser(data);
-          console.log("user", user);
         })
         .catch((error) => {
           setUser(null);
@@ -154,7 +157,6 @@ export function VisitPopup({
       VisitService.findVisitByReviewId(reviewId)
         .then((data) => {
           setVisit(data);
-          console.log(data);
         })
         .catch((error) => {
           console.error(
@@ -168,7 +170,6 @@ export function VisitPopup({
       VisitService.findVisitByDebtSourceId(debtRedemptionSourceId)
         .then((data) => {
           setVisit(data);
-          console.log(data);
         })
         .catch((error) => {
           console.error(
@@ -195,7 +196,6 @@ export function VisitPopup({
       VisitService.findVisitPaidByVoucher(voucherId)
         .then((data) => {
           setVisit(data);
-          console.log(data);
         })
         .catch((error) => {
           console.error(
@@ -284,7 +284,6 @@ export function VisitPopup({
   useEffect(() => {
     fetchUser();
     fetchDebtsByVisitId();
-    console.log(visit);
   }, [visit]);
 
   const portalRoot = document.getElementById("portal-root");
@@ -321,9 +320,30 @@ export function VisitPopup({
                 </span>
 
                 <span className="qv-span visit-preview header">-</span>
-                <span className="qv-span visit-preview header">
+                {/* <span className="qv-span visit-preview header text-align-center">
                   {visit.client.firstName + " " + visit.client.lastName}
-                </span>
+                </span> */}
+                <div
+                  className={`flex g-5px ${
+                    visit.client.isDeleted ? "pointer" : ""
+                  }`}
+                  title={`${visit.client.isDeleted ? "Klient usunięty" : ""}`}
+                >
+                  <span
+                    className={`qv-span visit-preview header nowrap text-align-center ${
+                      visit.client.isDeleted ? "client-removed" : ""
+                    }`}
+                  >
+                    {visit.client.firstName + " " + visit.client.lastName}
+                  </span>
+                  {visit.client.isDeleted && (
+                    <img
+                      src="src/assets/removed.svg"
+                      alt="Client Removed"
+                      className="checkimg align-self-center"
+                    />
+                  )}
+                </div>
                 <span className="qv-span visit-preview header">-</span>
                 <span className="qv-span visit-preview header">
                   {formatDate(visit.date)}
@@ -346,7 +366,9 @@ export function VisitPopup({
           <>
             <div className="visit-preview-interior flex-column width-max align-items-center">
               {(visit.notes != null || visit.notes != "") && (
-                <span className="qv-span notes italic text-align-center">{visit.notes}</span>
+                <span className="qv-span notes italic text-align-center">
+                  {visit.notes}
+                </span>
               )}
               {checkerSectionVisible && (
                 <section className="qv-summary-checkers-section width-max mt-1 mb-05">

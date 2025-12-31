@@ -139,10 +139,6 @@ export function ClientForm({
     };
   }, [setExistingClientNotesIdsToRemove, setExistingClientNotes]);
 
-  useEffect(() => {
-    console.log(newClientNotesDTO);
-  }, [newClientNotesDTO]);
-
   return (
     <div
       className={`custom-form-container flex-column width-max g-05 ${action

@@ -47,7 +47,6 @@ export function VoucherManagePopup({
           const dateB = new Date(b.issueDate);
           return dateB.getTime() - dateA.getTime();
         });
-        console.log("sorted", sortedData)
         setVouchers(sortedData);
       })
       .catch((error) => {

@@ -1346,7 +1346,9 @@ input[type="number"]::-webkit-inner-spin-button {
   width: 30%;
 }
 .visit-popup-content {
-  width: 30%;
+  min-width:30%;
+  width: fit-content;
+  max-width: 35%;
   min-height: 30%;
   max-height: 85%;
 }
@@ -3299,4 +3301,19 @@ background-color: rgba(0, 218, 0, 0.35);
   color: rgba(252,181,12, 0.6);
   max-width: 80px;
   overflow:hidden;
+}
+.list-span {
+  font-size: 14px;
+  color: white;
+  max-width: 80px;
+  overflow: hidden;
+}
+.client-removed {
+  color: rgba(255, 0, 0, 0.5);
+  font-weight: 500;
+}
+.checkimg {
+  width:14px;
+  height:14px;
+  opacity:50%;
 }

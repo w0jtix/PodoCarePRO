@@ -42,7 +42,6 @@ export function DebtManagePopup({
     ClientDebtService.getDebts(filter)
       .then((data) => {
         const sortedData = data.sort((a, b) => b.id - a.id);
-        console.log(sortedData);
         setDebts(sortedData);
       })
       .catch((error) => {
