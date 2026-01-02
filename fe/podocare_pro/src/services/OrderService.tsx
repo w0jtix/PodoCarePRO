@@ -13,8 +13,12 @@ class OrderService {
     })
   }
 
-  static async getOrders(filter: OrderFilterDTO): Promise<Order[]> {
-    return await sendApiRequest<Order[]>('orders/search', {
+  static async getOrders(
+    filter: OrderFilterDTO,
+    page: number = 0, 
+    size: number = 30
+  ): Promise<{ content: Order[], totalPages: number, totalElements: number, last: boolean }> {
+    return await sendApiRequest<{ content: Order[], totalPages: number, totalElements: number, last: boolean }>(`orders/search?page=${page}&size=${size}`, {
       method: "post",
       body: filter,
       errorMessage: "Error fetching orders."

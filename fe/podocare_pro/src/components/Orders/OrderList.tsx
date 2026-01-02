@@ -15,6 +15,9 @@ export interface OrderListProps {
   orders: Order[];
   onSuccess: () => void;
   className?: string;
+  onScroll?: (e: React.UIEvent<HTMLDivElement>) => void;
+  isLoading?: boolean;
+  hasMore?: boolean;
 }
 
 export function OrderList({
@@ -22,6 +25,9 @@ export function OrderList({
   orders,
   onSuccess,
   className = "",
+  onScroll,
+  isLoading = false,
+  hasMore = true,
 }: OrderListProps) {
   const [expandedOrderIds, setExpandedOrderIds] = useState<number[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
@@ -131,7 +137,10 @@ export function OrderList({
   };
 
   return (
-    <div className={`item-list order width-93 grid p-0 mt-05 ${orders.length === 0 ? "border-none" : ""} ${className}`}>
+    <div 
+      className={`item-list order width-93 grid p-0 mt-05 ${orders.length === 0 ? "border-none" : ""} ${className}`}
+      onScroll={onScroll}
+      >
       {orders.map((order) => (
         <div key={order.id} className={`product-wrapper order ${className}`}>
           <div
@@ -181,6 +190,9 @@ export function OrderList({
           onSuccess={onSuccess}
           orderId={removeOrderId}
         />
+      )}
+      {isLoading && (
+        <span className="qv-span text-align-center">Ładowanie...</span>
       )}
     </div>
   );

@@ -33,6 +33,7 @@ export function Dashboard() {
     includeZero: false,
     isDeleted: false,
   });
+  const [productInfo, setProductInfo] = useState<boolean>(false);
   const [resetTriggered, setResetTriggered] = useState<boolean>(false);
   const [categories, setCategories] = useState<ProductCategory[]>([]);
   const { showAlert } = useAlert();
@@ -59,6 +60,7 @@ export function Dashboard() {
     });
     fetchCategories();
     setResetTriggered((prev) => !prev);
+    setProductInfo(false);
   }, []);
 
   const handleFilterChange = useCallback((newFilter: ProductFilterDTO) => {
@@ -157,7 +159,7 @@ export function Dashboard() {
         />
       </NavigationBar>
       <section className="action-buttons-section width-93 flex space-around align-items-center">
-        <div className={`button-layer ${filter.includeZero ? "selected" : ""}`}>
+        <div className={`button-layer flex g-1`}>
           <ActionButton
             src={
               filter.includeZero
@@ -168,6 +170,19 @@ export function Dashboard() {
             iconTitle={"Pokaż produkty o stanie magazynowym = 0"}
             text={"St. Mag = 0"}
             onClick={toggleIncludeZero}
+            className={`${filter.includeZero ? "selected-pf" : ""}`}
+          />
+          <ActionButton
+            src={
+              productInfo
+                ? "src/assets/pricetagSelected.svg"
+                : "src/assets/pricetag.svg"
+            }
+            alt={"Szczegółowe Dane"}
+            iconTitle={"Szczegółowe Dane Produktu"}
+            text={"Szczegółowe Dane"}
+            onClick={() => setProductInfo((prev) => !prev)}
+            className={`${productInfo ? "selected-pf" : ""}`}
           />
         </div>
         <section className="products-action-buttons width-80 flex align-self-center justify-end g-25 mt-1 mb-1">
@@ -190,6 +205,7 @@ export function Dashboard() {
         setIsAddNewProductsPopupOpen={setIsAddNewProductsPopupOpen}
         setEditProductId={setEditProductId}
         setRemoveProductId={setRemoveProductId}
+        productInfo={productInfo}
       />
       {isAddNewProductsPopupOpen && (
         <AddEditProductPopup

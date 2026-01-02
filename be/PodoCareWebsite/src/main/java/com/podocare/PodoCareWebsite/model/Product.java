@@ -1,6 +1,7 @@
 package com.podocare.PodoCareWebsite.model;
 
 import com.podocare.PodoCareWebsite.exceptions.InsufficientSupplyException;
+import com.podocare.PodoCareWebsite.model.constants.Unit;
 import com.podocare.PodoCareWebsite.model.constants.VatRate;
 import jakarta.persistence.*;
 import lombok.*;
@@ -42,6 +43,13 @@ public class Product {
 
     @Column
     private String description;
+
+    @Column(nullable = true)
+    private Integer volume;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "unit", nullable = true)
+    private Unit unit;
 
     @Column(nullable = false)
     @Builder.Default

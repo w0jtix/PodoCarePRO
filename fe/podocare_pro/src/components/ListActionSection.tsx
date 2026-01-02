@@ -65,6 +65,7 @@ export function ListActionSection({
   useEffect(() => {
     fetchBrands();
     fetchCategories();
+    handleCategoryChange([]);
   }, [resetTriggered]);
 
   const handleBrandChange = useCallback((selected: Brand | Brand[] | null) => {

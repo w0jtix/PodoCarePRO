@@ -42,7 +42,15 @@ import { PaymentMethod } from "../models/payment";
     if (productForm.name && productForm.name.trim().length <= 2) {
       return "Nazwa produktu za krótka! (2+)";
     }
-
+    if (productForm.category && productForm.category.name === "Produkty" && (productForm.sellingPrice == null || productForm.sellingPrice === 0)) {
+      return "Uzupełnij cenę sprzedaży Produktu!"
+    }
+    if (productForm.category && productForm.category.name === "Produkty" && (productForm.volume == null || productForm.volume === 0)) {
+      return "Uzupełnij objętość Produktu!"
+    }
+    if (productForm.category && productForm.category.name === "Produkty" && productForm.unit == null) {
+      return "Uzupełnij jednostkę Produktu!"
+    }
     if (action === Action.EDIT && selectedProduct) {
       const noChangesDetected =
       productForm.name === selectedProduct?.name &&
@@ -51,6 +59,8 @@ import { PaymentMethod } from "../models/payment";
       (productForm.description ?? "") === (selectedProduct?.description ?? "") &&
       productForm.supply === selectedProduct?.supply &&
       productForm.sellingPrice === selectedProduct?.sellingPrice &&
+      productForm.volume === selectedProduct?.volume &&
+      productForm.unit === selectedProduct?.unit &&
       productForm.vatRate === selectedProduct?.vatRate;
 
 

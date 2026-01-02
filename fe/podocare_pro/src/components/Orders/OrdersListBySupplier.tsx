@@ -29,9 +29,10 @@ export function OrdersListBySupplier({
   const { showAlert } = useAlert();
 
   const fetchOrders = useCallback(async (filter: OrderFilterDTO) => {
-    OrderService.getOrders(filter)
+    OrderService.getOrders(filter, 0, 1000)
       .then((data) => {
-        setFilteredOrders(data);
+        const content = data?.content || [];
+        setFilteredOrders(content);
       })
       .catch((error) => {
         showAlert("Błąd", AlertType.ERROR);

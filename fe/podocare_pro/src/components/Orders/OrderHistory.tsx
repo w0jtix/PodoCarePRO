@@ -23,6 +23,8 @@ export function OrderHistory() {
     dateFrom: null,
     dateTo: null,
   });
+  const [page, setPage] = useState<number>(0);
+  const [hasMore, setHasMore] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(true);
 
   const handleSuccess = useCallback(
@@ -39,26 +41,33 @@ export function OrderHistory() {
       dateTo: null,
     });
     setSelectedSuppliers([]);
+    setPage(0);
+    setHasMore(true);
   }, []);
 
-  const fetchOrders = useCallback(async () => {
+  const fetchOrders = useCallback(async (pageNum: number = 0, append: boolean = false) => {
     setLoading(true);
-    OrderService.getOrders(filter)
+    OrderService.getOrders(filter, pageNum, 30)
       .then((data) => {
-        const sortedOrders = data.sort(
-          (a, b) =>
-            new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime()
-        );
-        setOrders(sortedOrders);
+        const content = data?.content || [];
+
+        if (append) {
+          setOrders(prev => [...prev, ...content]);
+        } else {
+          setOrders(content);
+        }
+
+
+        setHasMore(!data.last);
+        setPage(pageNum);
+        setLoading(false);
       })
       .catch((error) => {
-        setOrders([]);
+        if(!append) setOrders([]);
+        setLoading(false);
         showAlert("Błąd", AlertType.ERROR);
         console.error("Error fetching Orders:", error);
       })
-      .finally(() => {
-        setLoading(false);
-      });
   }, [filter]);
 
   const fetchSuppliers = useCallback(async () => {
@@ -77,7 +86,9 @@ export function OrderHistory() {
   }, []);
 
   useEffect(() => {
-    fetchOrders();
+    fetchOrders(0, false);
+    setPage(0);
+    setHasMore(true);
   }, [filter, fetchOrders]);
 
   useEffect(() => {
@@ -124,7 +135,6 @@ export function OrderHistory() {
     },
     [showAlert]
   );
-
   const handleDateToChange = useCallback(
     (newDateString: string | null) => {
       setFilter((prevFilter) => {
@@ -142,6 +152,17 @@ export function OrderHistory() {
     },
     [showAlert]
   );
+
+  const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    const target = e.currentTarget;
+    const scrolledToBottom = 
+      target.scrollHeight - target.scrollTop <= target.clientHeight + 100; // 100px b4 end of the list
+
+    if (scrolledToBottom && hasMore && !loading) {
+      fetchOrders(page + 1, true);
+    }
+  }, [hasMore, loading, page, filter]);
+
   return (
     <>
       <section className="order-history-action-buttons width-80 flex align-self-center mt-1 mb-1 justify-center g-35">
@@ -196,6 +217,9 @@ export function OrderHistory() {
             orders={orders}
             onSuccess={handleSuccess}
             className="products"
+            onScroll={handleScroll}
+            isLoading={loading}
+            hasMore={hasMore}
           />
       )}
     </>

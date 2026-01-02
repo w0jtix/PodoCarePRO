@@ -2,6 +2,10 @@ import { Brand, NewBrand } from "./brand";
 import { ProductCategory } from "./categories";
 import { VatRate } from "./vatrate";
 
+export enum Unit {
+    ML = "ML",
+    G = "G"
+}
 
 export interface Product {
     id: number;
@@ -11,6 +15,8 @@ export interface Product {
     supply: number;
     sellingPrice?: number | null;
     vatRate: VatRate;
+    volume?: number | null;
+    unit?: Unit | null;
     description: string;
     isDeleted: boolean;
 }
@@ -22,6 +28,8 @@ export interface NewProduct {
     supply: number;
     sellingPrice?: number | null;
     vatRate?: VatRate | null;
+    volume?: number | null;
+    unit?: Unit | null;
     description?: string;
     isDeleted?: boolean;
 }

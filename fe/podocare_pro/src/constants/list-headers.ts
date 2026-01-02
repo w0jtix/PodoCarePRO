@@ -164,9 +164,19 @@ export const PRODUCT_VISIT_LIST_ATTRIBUTES: ListAttribute[] = [
 export const PRODUCT_LIST_ATTRIBUTES: ListAttribute[] = [
     { name: "", width: "2%", justify: "end" },
     { name: "#", width: "3%", justify: "center" },
-    { name: "Nazwa", width: "56%", justify: "flex-start" },
-    { name: "Marka", width: "16%", justify: "center" },
-    { name: "Stan Magazynowy", width: "16%", justify: "center" },
+    { name: "Nazwa", width: "66%", justify: "flex-start" },
+    { name: "Marka", width: "12%", justify: "center" },
+    { name: "Stan Magazynowy", width: "9%", justify: "center" },
+    { name: "Opcje", width: "8%", justify: "center" },
+];
+
+export const PRODUCT_VOLUME_LIST_ATTRIBUTES: ListAttribute[] = [
+    { name: "", width: "2%", justify: "end" },
+    { name: "#", width: "3%", justify: "center" },
+    { name: "Nazwa", width: "61%", justify: "flex-start" }, 
+    { name: "Cena", width: "5%", justify: "center" },
+    { name: "Marka", width: "12%", justify: "center" },
+    { name: "Stan Magazynowy", width: "9%", justify: "center" },
     { name: "Opcje", width: "8%", justify: "center" },
 ];
 
@@ -259,7 +269,7 @@ export const ORDER_ITEM_WITH_BRAND_LIST_ATTRIBUTES: ListAttribute[] = [
 
 export const ORDER_NEW_PRODUCTS_POPUP_ATTRIBUTES: ListAttribute[] =[
   { name: "", width: "2%", justify: "flex-start" },
-  { name: "Nazwa", width: "50%", justify: "flex-start" },
+  { name: "Nazwa", width: "70%", justify: "flex-start" },
   { name: "Marka", width: "25%", justify: "center" },
   { name: "Kategoria", width: "25%", justify: "center" },
   { name: "", width: "3%", justify: "flex-start" },
@@ -267,10 +277,11 @@ export const ORDER_NEW_PRODUCTS_POPUP_ATTRIBUTES: ListAttribute[] =[
 
 export const ORDER_NEW_PRODUCTS_POPUP_ATTRIBUTES_WITH_SELLING_PRICE: ListAttribute[] =[
   { name: "", width: "2%", justify: "flex-start" },
-  { name: "Nazwa", width: "21%", justify: "flex-start" },
-  { name: "Cena Sell", width: "12%", justify: "center" },
-  { name: "VAT Sell", width: "14%", justify: "center" },
-  { name: "Marka", width: "25%", justify: "center" },
-  { name: "Kategoria", width: "23%", justify: "center" },
-  { name: "", width: "3%", justify: "flex-start" },
+  { name: "Nazwa", width: "22%", justify: "flex-start" },
+  { name: "Obj.", width: "12%", justify: "center" },
+  { name: "Cena Sell", width: "9%", justify: "center" },
+  { name: "VAT Sell", width: "12%", justify: "center" },
+  { name: "Marka", width: "20%", justify: "center" },
+  { name: "Kategoria", width: "20%", justify: "center" },
+  { name: "", width: "2%", justify: "flex-start" },
 ] 

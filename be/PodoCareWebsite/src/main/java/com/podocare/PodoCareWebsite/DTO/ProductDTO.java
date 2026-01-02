@@ -1,6 +1,7 @@
 package com.podocare.PodoCareWebsite.DTO;
 
 import com.podocare.PodoCareWebsite.model.Product;
+import com.podocare.PodoCareWebsite.model.constants.Unit;
 import com.podocare.PodoCareWebsite.model.constants.VatRate;
 import lombok.*;
 
@@ -20,6 +21,8 @@ public class ProductDTO {
     private Double sellingPrice;
     private VatRate vatRate;
     private String description;
+    private Integer volume;
+    private Unit unit;
     private Boolean isDeleted;
 
     public ProductDTO(Product product) {
@@ -33,6 +36,8 @@ public class ProductDTO {
         this.sellingPrice = product.getSellingPrice();
         this.vatRate = product.getVatRate();
         this.description = product.getDescription();
+        this.volume = product.getVolume();
+        this.unit = product.getUnit();
         this.isDeleted = product.getIsDeleted();
     }
 
@@ -46,6 +51,8 @@ public class ProductDTO {
                 .sellingPrice(this.sellingPrice)
                 .vatRate(this.vatRate != null ? this.vatRate : VatRate.VAT_23)
                 .description(this.description)
+                .volume(this.volume)
+                .unit(this.unit)
                 .isDeleted(this.isDeleted != null ? this.isDeleted : false)
                 .build();
     }

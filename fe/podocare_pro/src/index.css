@@ -752,7 +752,7 @@ button.menu-button:hover a.menu-a {
   width: 8px;
   height: 8px;
 }
-.button-layer.selected .product-action-button {
+.product-action-button.selected-pf {
   border: 1px solid rgba(255, 255, 255, 0.6); 
   opacity: 100%;
   background-color: rgba(255, 255, 255, 0.09);
@@ -1055,7 +1055,7 @@ button.menu-button:hover a.menu-a {
   width:60px;
   background-color: transparent;
   color:white;
-  border: 1px solid rgba(255, 255, 255, 0.1); ;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   padding:3px 0px 3px 0px;
   border-radius: 8px;
   font-size: var(--font-size-text);
@@ -1342,7 +1342,8 @@ input[type="number"]::-webkit-inner-spin-button {
   animation: fadeIn 0.15s ease-in-out;
   align-self:center;
 }
-.product-popup-content {
+.product-popup-content,
+.order-new-products-popup-content {
   width: 30%;
 }
 .visit-popup-content {
@@ -1354,6 +1355,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 .visit-popup-content.create-mode {
   width: 60%;
+  max-width: 60%;
   min-height: 80%;
 }
 .force-change-pw-content,
@@ -2732,7 +2734,10 @@ input[type="number"]::-webkit-inner-spin-button {
   font-size: 12px;
   font-weight: 400;
 }
-
+.product-action-button.unit-b {
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
 .qv-summary-header-section{
   border-bottom:  1px solid rgb(218, 5, 83, 0.6);
 }
@@ -3316,4 +3321,19 @@ background-color: rgba(0, 218, 0, 0.35);
   width:14px;
   height:14px;
   opacity:50%;
+}
+.product-action-button.unit-b.small {
+  height: 16px;
+  width: 25px;
+  border-radius: 4px;
+}
+.product-action-button-text.unit-b.small {
+  font-size: 10px;
+}
+.product-span {
+  font-size:14px;
+}
+.product-span.shadow {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.4);
 }

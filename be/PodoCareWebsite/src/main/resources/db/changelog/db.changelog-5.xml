@@ -36,4 +36,24 @@
 
     </changeSet>
 
+    <changeSet id="5.5-add-volume-column-to-product" author="Wojtek">
+
+        <addColumn tableName="product">
+            <column name="volume" type="INT" defaultValueNumeric="null">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="5.6-add-unit-column-to-product" author="Wojtek">
+
+        <addColumn tableName="product">
+            <column name="unit" type="VARCHAR(10)" defaultValue="null">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+    </changeSet>
+
 </databaseChangeLog>

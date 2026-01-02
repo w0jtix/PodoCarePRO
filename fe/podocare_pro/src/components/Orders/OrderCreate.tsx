@@ -21,7 +21,6 @@ export function OrderCreate () {
       <OrderCreator
         setSelectedSupplier={setSelectedSupplier}
         selectedOrderProduct={selectedOrderProduct}
-        setSelectedOrderProduct={setSelectedOrderProduct}
         setExpandedOrderIds={setExpandedOrderIds}
         onReset={handleReset}
       />

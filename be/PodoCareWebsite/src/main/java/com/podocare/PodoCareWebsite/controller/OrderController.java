@@ -1,16 +1,15 @@
 package com.podocare.PodoCareWebsite.controller;
 
 import com.podocare.PodoCareWebsite.DTO.OrderDTO;
-import com.podocare.PodoCareWebsite.DTO.OrderDTO;
 import com.podocare.PodoCareWebsite.DTO.request.OrderFilterDTO;
 import com.podocare.PodoCareWebsite.service.OrderService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,9 +20,12 @@ public class OrderController {
 
     @PostMapping("/search")
     @PreAuthorize(("hasRole('USER')"))
-    public ResponseEntity<List<OrderDTO>> getOrders(@RequestBody OrderFilterDTO filter) {
-        List<OrderDTO> ordersDTOList = orderService.getOrders(filter);
-        return new ResponseEntity<>(ordersDTOList, ordersDTOList.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
+    public ResponseEntity<Page<OrderDTO>> getOrders(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "30") int size,
+            @RequestBody OrderFilterDTO filter) {
+        Page<OrderDTO> ordersPage = orderService.getOrders(filter, page, size);
+        return new ResponseEntity<>(ordersPage, ordersPage.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

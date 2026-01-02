@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import ActionButton from "../ActionButton";
 import { useState } from "react";
 import { ListAttribute} from "../../constants/list-headers";
-import { Product } from "../../models/product";
+import { Product, Unit } from "../../models/product";
 import { Action } from "../../models/action";
 import CostInput from "../CostInput";
 
@@ -16,6 +16,7 @@ export interface ItemListProps {
   action?: Action;
   onClick?: (product: Product) => void;
   onRemoveByIndex?: (index: number) => void;
+  productInfo?: boolean;
 }
 
 export function ItemList ({
@@ -26,6 +27,7 @@ export function ItemList ({
   className = "",
   onClick,
   onRemoveByIndex,
+  productInfo = false,
 }: ItemListProps) {
 
   const handleOnClickEdit = useCallback((e: React.MouseEvent, item: Product) => {
@@ -64,23 +66,39 @@ export function ItemList ({
         );
 
       case "Nazwa":
-        return `${item.name}`;
+        return productInfo ? (
+          <div className="flex g-5px align-items-center">
+            <span className="product-span">{item.name}</span>
+            <span className="ml-1 product-span shadow italic">
+              {item.volume ?? " "}{item.unit === Unit.ML ? 'ml' : item.unit === Unit.G ? 'g' : ''}
+              
+            </span>
+            <span className="ml-1 product-span shadow italic">
+              {item.sellingPrice && item.volume && item.volume !== 0
+                ? ` ${((item.sellingPrice * 100) / item.volume).toFixed(2)} zł/${item.unit === Unit.ML ? '100ml' : item.unit === Unit.G ? '100g' : ''}`
+                : ''}
+            </span>
+          </div>
+        ) : item.name;
       
       case "Marka":
         return(<span className="list-span ml-1">{item.brand.name}</span>);
 
       case "Stan Magazynowy":
-        return `${item.supply}`;
+        return(<span className="list-span ml-1">{item.supply}</span>);
 
       case "Cena":
-        return `${item.sellingPrice ?? 0} zł`;
+        if (item.category.name != "Produkty" || !item.sellingPrice) {
+          return "";
+        }
+        return(<span className="list-span ml-1">{item.sellingPrice} zł</span>);
 
       case "empty": 
         return "";
 
       case "Opcje":
         return (
-          <div className="item-list-single-item-action-buttons flex">
+          <div className="item-list-single-item-action-buttons flex ml-1">
             <ActionButton
               src="src/assets/edit.svg"
               alt="Edytuj Produkt"

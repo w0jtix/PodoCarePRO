@@ -13,6 +13,10 @@ import com.podocare.PodoCareWebsite.repo.*;
 import com.podocare.PodoCareWebsite.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,21 +43,23 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDTO> getOrders(OrderFilterDTO filter) {
+    public Page<OrderDTO> getOrders(OrderFilterDTO filter, int page, int size) {
         if(isNull(filter)) {
             filter = new OrderFilterDTO();
+
         }
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("orderDate"), Sort.Order.desc("id")));
 
         LocalDate dateFrom = filter.getDateFrom() != null ? filter.getDateFrom() : LocalDate.of(1900, 1, 1);
         LocalDate dateTo = filter.getDateTo() != null ? filter.getDateTo() : LocalDate.of(2100, 12, 31);
 
-        return orderRepo.findAllWithFilters(
-                        filter.getSupplierIds(),
-                        dateFrom,
-                        dateTo)
-                .stream()
-                .map(OrderDTO::new)
-                .collect(Collectors.toList());
+        Page<Order> orders = orderRepo.findAllWithFilters(
+                filter.getSupplierIds(),
+                dateFrom,
+                dateTo,
+                pageable);
+        return orders.map(OrderDTO::new);
     }
 
     @Override

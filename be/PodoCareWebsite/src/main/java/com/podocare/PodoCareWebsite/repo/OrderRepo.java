@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -26,17 +28,27 @@ public interface OrderRepo extends JpaRepository<Order, Long> {
     Optional<Order> findOneByIdWithDetails(Long id);
 
 
-    @Query("""
+    @Query(
+            value = """
     SELECT DISTINCT o FROM Order o
-    LEFT JOIN FETCH o.supplier
-    WHERE (:supplierIds IS NULL OR o.supplier.id IN :supplierIds)
+    LEFT JOIN o.supplier s
+    WHERE (:supplierIds IS NULL OR s.id IN :supplierIds)
     AND (o.orderDate >= :dateFrom)
     AND (o.orderDate <= :dateTo)
-    """)
-    List<Order> findAllWithFilters(
+    """,
+            countQuery = """
+    SELECT COUNT(DISTINCT o.id) FROM Order o
+    LEFT JOIN o.supplier s
+    WHERE (:supplierIds IS NULL OR s.id IN :supplierIds)
+    AND (o.orderDate >= :dateFrom)
+    AND (o.orderDate <= :dateTo)
+    """
+    )
+    Page<Order> findAllWithFilters(
             @Param("supplierIds") List<Long> supplierIds,
             @Param("dateFrom") LocalDate dateFrom,
-            @Param("dateTo") LocalDate dateTo
+            @Param("dateTo") LocalDate dateTo,
+            Pageable pageable
     );
 
     Optional<Order> findTopByOrderByOrderNumberDesc();

@@ -34,6 +34,8 @@ export function AddEditProductPopup ({
     supply: 0,
     sellingPrice: null,
     vatRate: VatRate.VAT_23,
+    volume: null,
+    unit: null,
     description: "",
     isDeleted: false,
   });
@@ -86,7 +88,6 @@ export function AddEditProductPopup ({
         showAlert(error, AlertType.ERROR);
         return;
       }
-
       if (action === Action.CREATE) {
         await AllProductService.createProduct(productDTO as NewProduct);
         showAlert(`Produkt ${productDTO.name} został utworzony!`, AlertType.SUCCESS);

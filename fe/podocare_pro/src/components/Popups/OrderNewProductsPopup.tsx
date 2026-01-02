@@ -13,7 +13,7 @@ import { AlertType } from "../../models/alert";
 import { useCallback } from "react";
 import { ORDER_NEW_PRODUCTS_POPUP_ATTRIBUTES, ORDER_NEW_PRODUCTS_POPUP_ATTRIBUTES_WITH_SELLING_PRICE } from "../../constants/list-headers";
 import { CategoryButtonMode, ProductCategory } from "../../models/categories";
-import { NewProduct } from "../../models/product";
+import { NewProduct, Unit } from "../../models/product";
 import { NewBrand, Brand, KeywordDTO } from "../../models/brand";
 import { validateBrandForm, validateProductForm } from "../../utils/validators";
 import { Action } from "../../models/action";
@@ -22,6 +22,7 @@ import { useAlert } from "../Alert/AlertProvider";
 import SelectVATButton from "../SelectVATButton";
 import { VatRate } from "../../models/vatrate";
 import { NewOrderProduct } from "../../models/order-product";
+import DigitInput from "../DigitInput";
 
 export interface OrderNewProductsPopupProps {
   nonExistingProducts: NewOrderProduct[];
@@ -69,6 +70,8 @@ export function OrderNewProductsPopup({
             supply: 0,
             vatRate:null,
             sellingPrice: null,
+            volume: 0,
+            unit: Unit.ML,
           });
         }
       });
@@ -80,12 +83,42 @@ export function OrderNewProductsPopup({
 
   const handleSelectCategory = useCallback(
     (index: number, category: ProductCategory | null) => {
+      const isProductCategory = category?.name === "Produkty";
       setProductsToCreate((products) =>
         products.map((product, i) =>
-          i === index ? { ...product, category, vatRate: category?.name === "Produkty" ? VatRate.VAT_23 : null } : product
+          i === index ? { 
+            ...product, 
+            category, 
+            vatRate: isProductCategory ? VatRate.VAT_23 : null,
+            sellingPrice: isProductCategory ? product.sellingPrice : null,
+            unit: isProductCategory ? product.unit : Unit.ML,
+            volume: isProductCategory ? product.volume : null, 
+          } : product
         )
       );
     },[]);
+
+  const handleVolume = useCallback((index: number, volume: number | null) => {
+    setProductsToCreate((products) =>
+        products.map((product, i) =>
+          i === index ? { ...product, volume: volume ?? 0 } : product
+        )
+      );
+  },[])
+  const handleMlUnit = useCallback((index: number) => {
+      setProductsToCreate((products) =>
+        products.map((product, i) =>
+          i === index ? { ...product, unit: product.unit === Unit.ML ? null : Unit.ML } : product
+        )
+      );
+    }, []);  
+    const handleGUnit = useCallback((index: number) => {
+      setProductsToCreate((products) =>
+        products.map((product, i) =>
+          i === index ? { ...product, unit: product.unit === Unit.G ? null : Unit.G } : product
+        )
+      );
+    }, []);
 
   const handleSellingPrice = useCallback((index: number, cost: number) => {
     setProductsToCreate((products) =>
@@ -106,8 +139,16 @@ export function OrderNewProductsPopup({
   const handleGlobalCategoryChange = useCallback(
     (selected: ProductCategory[] | null) => {
       const category = selected && selected.length > 0 ? selected[0] : null;
+      const isProductCategory = category?.name === "Produkty";
       setProductsToCreate((products) =>
-        products.map((product) => ({...product, category, vatRate: category?.name === "Produkty" ? VatRate.VAT_23 : null  })));     
+        products.map((product) => (
+          {...product, 
+            category, 
+            vatRate: isProductCategory ? VatRate.VAT_23 : null,
+            sellingPrice: isProductCategory ? product.sellingPrice : null,
+            unit: isProductCategory ? product.unit : Unit.ML,
+            volume: isProductCategory ? product.volume : null,  
+          })));     
     }, []);
 
   const handleGlobalCategoryReset = useCallback(() => {
@@ -227,6 +268,8 @@ export function OrderNewProductsPopup({
           category: item.category,
           brand: brand,
           supply: item.supply || 0,
+          volume: item.volume || 0,
+          unit: item.unit ,
           sellingPrice: item.sellingPrice,
         };
       });
@@ -238,7 +281,6 @@ export function OrderNewProductsPopup({
           return;
         }
       }
-
       const createdProducts = await AllProductService.createNewProducts(
         productsToValidate
       );
@@ -332,6 +374,24 @@ export function OrderNewProductsPopup({
               <section className="order-new-products-popup-input-section flex g-5px">
                 {item.category && item.category.name === "Produkty" && (
                   <>
+                  <div className="flex g-5px">
+                    
+                  <DigitInput onChange={(volume) => handleVolume(index, volume)} value={item.volume ?? 0} max={10000}/>
+                  <div className="flex-column space-between">
+                    <ActionButton
+                      disableImg ={true}
+                      text={"ml"}
+                      onClick={() => handleMlUnit(index)}
+                      className={`unit-b small ${item.unit === Unit.ML ? "active-g" : ""}`}
+                    />
+                    <ActionButton
+                      disableImg ={true}
+                      text={"g"}
+                      onClick={() => handleGUnit(index)}
+                      className={`unit-b small ${item.unit === Unit.G ? "active-y" : ""}`}
+                    />
+                  </div>  
+                  </div>
                   <CostInput onChange={(cost) => handleSellingPrice(index, cost)} selectedCost={item.sellingPrice ?? 0} />
                     <SelectVATButton
                       selectedVat={item.vatRate ?? VatRate.VAT_23}

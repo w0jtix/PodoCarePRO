@@ -59,7 +59,7 @@ public class VisitServiceImpl implements VisitService {
             filter = new VisitFilterDTO();
         }
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "date"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("date"), Sort.Order.desc("id")));
 
         LocalDate dateFrom = filter.getDateFrom() != null ? filter.getDateFrom() : LocalDate.of(1900, 1, 1);
         LocalDate dateTo = filter.getDateTo() != null ? filter.getDateTo() : LocalDate.of(2100, 12, 31);

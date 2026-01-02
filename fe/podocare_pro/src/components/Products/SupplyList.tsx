@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 import AllProductService from "../../services/AllProductService.tsx";
 import { ProductFilterDTO } from "../../models/product.tsx";
 import { Product } from "../../models/product";
-import { PRODUCT_LIST_ATTRIBUTES } from "../../constants/list-headers.ts";
+import { PRODUCT_LIST_ATTRIBUTES, PRODUCT_VOLUME_LIST_ATTRIBUTES } from "../../constants/list-headers.ts";
 import { useAlert } from "../Alert/AlertProvider.tsx";
 import { AlertType } from "../../models/alert.ts";
 
@@ -15,6 +15,7 @@ export interface SupplyListProps {
   setEditProductId: (productId: string | number | null) => void;
   setRemoveProductId: (productId: string | number | null) => void;
   className?: string;
+  productInfo?: boolean;
 }
 
 export function SupplyList ({
@@ -23,6 +24,7 @@ export function SupplyList ({
   setEditProductId,
   setRemoveProductId,
   className = "",
+  productInfo = false,
 }: SupplyListProps) {
   const [items, setItems] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -79,7 +81,7 @@ export function SupplyList ({
 
   return (
     <>
-      <ListHeader attributes={PRODUCT_LIST_ATTRIBUTES} />
+      <ListHeader attributes={productInfo ? PRODUCT_VOLUME_LIST_ATTRIBUTES : PRODUCT_LIST_ATTRIBUTES} />
       {loading ? (
         <div className="list-loading-container relative flex align-items-center justify-center">
           <div className="loading-dot relative flex align-items-center height-max width-25"></div>
@@ -94,12 +96,13 @@ export function SupplyList ({
       ) : (
         <section className="products-list-section width-95 flex align-items-center justify-center mt-05">
           <ItemList
-            attributes={PRODUCT_LIST_ATTRIBUTES}
+            attributes={productInfo ? PRODUCT_VOLUME_LIST_ATTRIBUTES : PRODUCT_LIST_ATTRIBUTES}
             items={items}
             setIsAddNewProductsPopupOpen={setIsAddNewProductsPopupOpen}
             setEditProductId={setEditProductId}
             setRemoveProductId={setRemoveProductId}
             className="products"
+            productInfo={productInfo}
           />
         </section>
       )}

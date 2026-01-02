@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 import CategoryButtons from "../CategoryButtons";
 import BrandService from "../../services/BrandService";
 import TextInput from "../TextInput";
-import { Product, NewProduct } from "../../models/product";
+import { Product, NewProduct, Unit } from "../../models/product";
 import { Action } from "../../models/action";
 import { Brand, KeywordDTO, NewBrand } from "../../models/brand";
 import { CategoryButtonMode, ProductCategory } from "../../models/categories";
@@ -14,6 +14,7 @@ import SelectVATButton from "../SelectVATButton";
 import { VatRate } from "../../models/vatrate";
 import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
+import ActionButton from "../ActionButton";
 
 export interface ProductFormProps {
   action: Action;
@@ -61,6 +62,8 @@ export function ProductForm({
         ...prev,
         category: newCategory,
         sellingPrice: isProductCategory ? prev.sellingPrice : null,
+        volume: isProductCategory ? prev.volume : null,
+        unit: isProductCategory ? prev.unit : null,
         vatRate: isProductCategory ? prev.vatRate : VatRate.VAT_23,
       };
     });
@@ -81,6 +84,12 @@ export function ProductForm({
     setProductDTO((prev) => ({
       ...prev,
       sellingPrice: newSellingPrice ?? 0,
+    }));
+  }, []);
+  const handleVolume = useCallback((newVolume: number | null) => {
+    setProductDTO((prev) => ({
+      ...prev,
+      volume: newVolume ?? 0,
     }));
   }, []);
   const handleVatSelect = useCallback((selectedVat: VatRate) => {
@@ -138,6 +147,19 @@ export function ProductForm({
 
   }, [showAlert]);
 
+  const handleMlUnit = useCallback(() => {
+    setProductDTO((prev) => ({
+      ...prev,
+      unit: prev.unit === Unit.ML ? null : Unit.ML,
+    }));
+  }, []);
+
+  const handleGUnit = useCallback(() => {
+    setProductDTO((prev) => ({
+      ...prev,
+      unit: prev.unit === Unit.G ? null : Unit.G,
+    }));
+  }, []);
 
   return (
     <div
@@ -173,7 +195,7 @@ export function ProductForm({
           <li className="popup-common-section-row flex align-items-center space-between g-10px mt-15 ">
             <a className="product-form-input-title">Marka Produktu:</a>
             <TextInput
-              key={`brand-input-${productDTO.brand?.id ?? 'new'}`}
+              key={`brand-input-${productDTO.brand && 'id' in productDTO.brand ? productDTO.brand.id : 'new'}`}
               dropdown={true}
               value={brandToCreate?.name ?? productDTO.brand?.name ?? ""}
               suggestions={brandSuggestions}
@@ -187,7 +209,7 @@ export function ProductForm({
           {productDTO.category?.name === "Produkty" && (
               <>
               <li className="popup-common-section-row flex align-items-center space-between g-10px mt-15 ">
-                <a className="product-form-input-title">Cena sprzedaży:</a>
+                <a className="product-form-input-title">Cena sprzedaży:</a>               
                 <CostInput
                   onChange={handleSellingPrice}
                   selectedCost={productDTO.sellingPrice ?? 0}
@@ -200,6 +222,27 @@ export function ProductForm({
                   onSelect={handleVatSelect}
                   className="product-form"
                 />
+              </li>
+              <li className="popup-common-section-row flex align-items-center space-between g-10px mt-15 ">
+                <a className="product-form-input-title">Objętość produktu [ml/g]:</a>
+                <div className="flex g-5px">
+                  <CostInput
+                    onChange={handleVolume}
+                    selectedCost={productDTO.volume ?? 0}
+                  />
+                  <ActionButton
+                    disableImg ={true}
+                    text={"ml"}
+                    onClick={handleMlUnit}
+                    className={`unit-b ${productDTO.unit === Unit.ML ? "active-g" : ""}`}
+                  />
+                  <ActionButton
+                    disableImg ={true}
+                    text={"g"}
+                    onClick={handleGUnit}
+                    className={`unit-b ${productDTO.unit === Unit.G ? "active-y" : ""}`}
+                  />
+                </div>
               </li>
               </>
             )}
