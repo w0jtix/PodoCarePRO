@@ -1,7 +1,4 @@
-import axios from "axios";
-import { AxiosResponse } from "axios";
 import { Order, OrderFilterDTO, NewOrder } from "../models/order";
-
 import { sendApiRequest } from "../components/send-api-request/SendApiRequest";
 
 class OrderService {

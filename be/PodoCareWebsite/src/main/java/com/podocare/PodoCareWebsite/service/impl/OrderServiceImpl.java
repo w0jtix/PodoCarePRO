@@ -35,6 +35,7 @@ public class OrderServiceImpl implements OrderService {
     private final SupplierRepo supplierRepo;
     private final ProductRepo productRepo;
     private final SaleItemRepo saleItemRepo;
+    private final UsageRecordRepo usageRecordRepo;
 
     @Override
     public OrderDTO getOrderById(Long id) {
@@ -277,8 +278,9 @@ public class OrderServiceImpl implements OrderService {
                 product.getId(), orderId);
 
         boolean hasSaleItemReferences = saleItemRepo.existsByProductId(product.getId());
+        boolean hasUsageRecord = usageRecordRepo.existsByProductId((product.getId()));
 
-        if(!hasOrderReferences && !hasSaleItemReferences) {
+        if(!hasOrderReferences && !hasSaleItemReferences && !hasUsageRecord) {
             productRepo.delete(product);
         }
     }

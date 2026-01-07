@@ -91,6 +91,8 @@ export function VisitDashboard() {
         setEmployees(data);
       })
       .catch((error) => {
+        console.error("Error fetching Employees: ", error);
+        showAlert("Błąd", AlertType.ERROR);
         setEmployees([]);
       });
   };

@@ -15,6 +15,7 @@ import { NewReview, Review } from "../models/review";
 import { AppSettings, NewAppSettings } from "../models/app_settings";
 import { Discount, NewDiscount, NewVisit, Visit, VisitDiscountType } from "../models/visit";
 import { PaymentMethod } from "../models/payment";
+import { UsageRecordItem } from "../models/usage-record";
 
   export function validateLoginForm(
     username: string,
@@ -662,3 +663,38 @@ const areOrderProductsEqual = (opList1: OrderProduct[], opList2: NewOrderProduct
       );
     });
   };
+
+  export function validateUsageRecordsForm(
+    usageRecordItems: UsageRecordItem[],
+    sharedFields: { employee: Employee | null; usageDate: string },
+    hasSupplyError: boolean = false
+  ): string | null {
+    if (!sharedFields.employee) {
+      return "Wybierz pracownika";
+    }
+
+    if (usageRecordItems.length === 0) {
+      return "Dodaj przynajmniej jeden produkt";
+    }
+
+    if (hasSupplyError) {
+      return "Ilość jednego lub więcej produktów przekracza dostępny stan magazynowy";
+    }
+
+    const invalidItems = usageRecordItems.filter((item) => item.quantity <= 0);
+    if (invalidItems.length > 0) {
+      return "Wszystkie produkty muszą mieć ilość większą niż 0";
+    }
+
+    const exceededItems = usageRecordItems.filter(
+      (item) => item.quantity > item.product.supply
+    );
+    if (exceededItems.length > 0) {
+      const productNames = exceededItems
+        .map((item) => item.product.name)
+        .join(", ");
+      return `Ilość przekracza dostępny stan dla: ${productNames}`;
+    }
+
+    return null;
+  }

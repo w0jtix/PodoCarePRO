@@ -29,10 +29,8 @@ export function SearchBar ({
   }, [onKeywordChange]);
 
   useEffect(() => {
-    if (resetTriggered) {
       setKeyword("");
-      onKeywordChange("");
-    }
+      onKeywordChange("");    
   }, [resetTriggered]);
 
   return (

@@ -196,6 +196,13 @@ export const PRODUCT_PRICE_LIST_WIDE_ATTRIBUTES: ListAttribute[] = [
     { name: "Stan Magazynowy", width: "10%", justify: "center" },
 ];
 
+export const PRODUCT_SELECT_LIST_ATTRIBUTES: ListAttribute[] = [
+    { name: "empty", width: "2%", justify: "start" },
+    { name: "", width: "10%", justify: "start" },
+    { name: "Nazwa", width: "72%", justify: "flex-start" },
+    { name: "Stan Magazynowy", width: "16%", justify: "center" },
+];
+
 export const SERVICE_VARIANTS_ATTRIBUTES: ListAttribute[] = [
   { name: "empty", width: "3%", justify: "start" },
     { name: "Nazwa", width: "67%", justify: "flex-start" },
@@ -285,3 +292,14 @@ export const ORDER_NEW_PRODUCTS_POPUP_ATTRIBUTES_WITH_SELLING_PRICE: ListAttribu
   { name: "Kategoria", width: "20%", justify: "center" },
   { name: "", width: "2%", justify: "flex-start" },
 ] 
+
+export const USAGE_RECORDS_LIST_ATTRIBUTES: ListAttribute[] = [
+  { name: "", width: "4%", justify: "flex-start" },
+  { name: "Produkt", width: "25%", justify: "flex-start" },
+  { name: "Pracownik", width: "18%", justify: "flex-start" },
+  { name: "Data", width: "23%", justify: "flex-start" },
+  { name: "Ilość", width: "5%", justify: "flex-start" },
+  
+  { name: "Powód", width: "20%", justify: "center" },
+  { name: "Opcje", width: "10%", justify: "center" },
+]

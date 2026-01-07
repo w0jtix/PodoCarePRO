@@ -16,6 +16,7 @@ import { Action } from "../../models/action";
 import { validateCategoryForm } from "../../utils/validators";
 import { extractCategoryErrorMessage } from "../../utils/errorHandler";
 import AllProductService from "../../services/AllProductService";
+import UsageRecordsManagePopup from "../Popups/UsageRecordsManagePopup";
 
 export function Dashboard() {
   const [isAddNewProductsPopupOpen, setIsAddNewProductsPopupOpen] =
@@ -26,6 +27,7 @@ export function Dashboard() {
     useState<string | number | null>(null);
   const [isCategoryPopupOpen, setIsCategoryPopupOpen] =
     useState<boolean>(false);
+  const [isUsageRecordsPopupOpen, setIsUsageRecordsPopupOpen] = useState<boolean>(true);
   const [filter, setFilter] = useState<ProductFilterDTO>({
     categoryIds: null,
     brandIds: null,
@@ -187,6 +189,12 @@ export function Dashboard() {
         </div>
         <section className="products-action-buttons width-80 flex align-self-center justify-end g-25 mt-1 mb-1">
           <ActionButton
+            src={"src/assets/usage.svg"}
+            alt={"Zużycie Produktów"}
+            text={"Zużycie Produktów"}
+            onClick={() => setIsUsageRecordsPopupOpen(true)}
+          />
+          <ActionButton
             src={"src/assets/addNew.svg"}
             alt={"Nowy Produkt"}
             text={"Nowy Produkt"}
@@ -240,6 +248,14 @@ export function Dashboard() {
           onClose={() => setIsCategoryPopupOpen(false)}
           onConfirm={handleCategoryAction}
         />
+      )}
+      {isUsageRecordsPopupOpen && (
+        <UsageRecordsManagePopup 
+          onClose={ () => {
+            setIsUsageRecordsPopupOpen(false);
+            handleResetFiltersAndData();
+          }}
+          />
       )}
     </div>
   );
