@@ -1,0 +1,721 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="3.1-client-debt-discount-payment-visit-sale-structure" author="Wojtek">
+
+        <createTable tableName="client">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="first_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="signed_regulations" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="boost_client" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="discount">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="percentage_value" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="sale">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="client_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_sale_client" references="client(id)"/>
+            </column>
+            <column name="employee_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="visit_id" type="BIGINT"/>
+            <column name="date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payment_status" type="VARCHAR(50)"/>
+            <column name="total_net" type="DOUBLE" defaultValueNumeric="0.0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_vat" type="DOUBLE" defaultValueNumeric="0.0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_value" type="DOUBLE" defaultValueNumeric="0.0">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="voucher">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="value" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="issue_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expiry_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="client_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_voucher_client" references="client(id)"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="visit">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="client_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_visit_client" references="client(id)"/>
+            </column>
+            <column name="employee_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="discount_id" type="BIGINT"/>
+            <column name="is_boost" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_vip" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="delay_time" type="INT"/>
+            <column name="absence" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payment_status" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_net" type="DOUBLE" defaultValueNumeric="0.0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_vat" type="DOUBLE" defaultValueNumeric="0.0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_value" type="DOUBLE" defaultValueNumeric="0.0">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="visit"
+                                 baseColumnNames="discount_id"
+                                 constraintName="fk_visit_discount"
+                                 referencedTableName="discount"
+                                 referencedColumnNames="id"/>
+
+        <createTable tableName="sale_item">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sale_id" type="BIGINT"/>
+            <column name="product_id" type="BIGINT"/>
+            <column name="voucher_id" type="BIGINT"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="net_value" type="DOUBLE" defaultValueNumeric="0.0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="vat_value" type="DOUBLE" defaultValueNumeric="0.0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="visit_item">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="visit_id" type="BIGINT"/>
+            <column name="service_id" type="BIGINT"/>
+            <column name="add_on_id" type="BIGINT"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="net_value" type="DOUBLE" defaultValueNumeric="0.0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="vat_value" type="DOUBLE" defaultValueNumeric="0.0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="client_debt">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="client_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_debt_client" references="client(id)"/>
+            </column>
+            <column name="visit_id" type="BIGINT"/>
+            <column name="sale_id" type="BIGINT"/>
+            <column name="type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="vat_rate" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payment_status" type="VARCHAR(50)" defaultValue="UNPAID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="debt_redemption">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="debt_id" type="BIGINT">
+                <constraints nullable="false" unique="true" foreignKeyName="fk_redemption_debt" references="client_debt(id)"/>
+            </column>
+            <column name="visit_id" type="BIGINT"/>
+            <column name="sale_id" type="BIGINT"/>
+            <column name="vat_rate" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="payment">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="method" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="visit_id" type="BIGINT"/>
+            <column name="sale_id" type="BIGINT"/>
+            <column name="voucher_id" type="BIGINT"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="payment" baseColumnNames="visit_id" referencedTableName="visit" referencedColumnNames="id" constraintName="fk_payment_visit"/>
+        <addForeignKeyConstraint baseTableName="payment" baseColumnNames="sale_id" referencedTableName="sale" referencedColumnNames="id" constraintName="fk_payment_sale"/>
+        <addForeignKeyConstraint baseTableName="payment" baseColumnNames="voucher_id" referencedTableName="voucher" referencedColumnNames="id" constraintName="fk_payment_voucher"/>
+
+        <addForeignKeyConstraint baseTableName="sale_item" baseColumnNames="sale_id" referencedTableName="sale" referencedColumnNames="id" constraintName="fk_sale_item_sale"/>
+        <addForeignKeyConstraint baseTableName="sale_item" baseColumnNames="voucher_id" referencedTableName="voucher" referencedColumnNames="id" constraintName="fk_sale_item_voucher"/>
+
+        <addForeignKeyConstraint baseTableName="visit_item" baseColumnNames="visit_id" referencedTableName="visit" referencedColumnNames="id" constraintName="fk_visit_item_visit"/>
+
+        <addForeignKeyConstraint baseTableName="debt_redemption" baseColumnNames="visit_id" referencedTableName="visit" referencedColumnNames="id" constraintName="fk_redemption_visit"/>
+        <addForeignKeyConstraint baseTableName="debt_redemption" baseColumnNames="sale_id" referencedTableName="sale" referencedColumnNames="id" constraintName="fk_redemption_sale"/>
+
+        <addForeignKeyConstraint baseTableName="client_debt" baseColumnNames="visit_id" referencedTableName="visit" referencedColumnNames="id" constraintName="fk_debt_visit"/>
+        <addForeignKeyConstraint baseTableName="client_debt" baseColumnNames="sale_id" referencedTableName="sale" referencedColumnNames="id" constraintName="fk_debt_sale"/>
+
+        <addForeignKeyConstraint baseTableName="sale" baseColumnNames="visit_id" referencedTableName="visit" referencedColumnNames="id" constraintName="fk_sale_visit"/>
+
+    </changeSet>
+
+    <changeSet id="3.2-add-vat-rate-to-product" author="Wojtek">
+        <addColumn tableName="product">
+            <column name="vat_rate" type="varchar(10)" defaultValue="VAT_23">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="3.3-update-voucher-visititem-clientdebt" author="Wojtek">
+
+        <addColumn tableName="voucher">
+            <column name="active" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <dropColumn tableName="visit_item" columnName="name"/>
+
+        <dropColumn tableName="client_debt" columnName="vat_rate"/>
+
+    </changeSet>
+
+    <changeSet id="3.4-debt-redemption-relations" author="Wojtek">
+        <addForeignKeyConstraint
+                baseTableName="debt_redemption"
+                baseColumnNames="visit_id"
+                constraintName="fk_debt_redemption_visit"
+                referencedTableName="visit"
+                referencedColumnNames="id"
+                onDelete="SET NULL"/>
+
+        <addForeignKeyConstraint
+                baseTableName="debt_redemption"
+                baseColumnNames="sale_id"
+                constraintName="fk_debt_redemption_sale"
+                referencedTableName="sale"
+                referencedColumnNames="id"
+                onDelete="SET NULL"/>
+    </changeSet>
+
+    <changeSet id="3.5-payment-remove-visit-sale" author="Wojtek">
+        <dropColumn tableName="payment" columnName="visit_id"/>
+
+        <dropColumn tableName="payment" columnName="sale_id"/>
+    </changeSet>
+
+    <changeSet id="3.6-add-date-to-client-debt" author="Wojtek">
+        <addColumn tableName="client_debt">
+            <column name="date" type="date">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="3.7-rename-date-to-createdAt" author="Wojtek">
+        <addColumn tableName="client_debt">
+            <column name="created_at" type="date">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <update tableName="client_debt">
+            <column name="created_at" valueComputed="date"/>
+        </update>
+
+        <dropColumn tableName="client_debt" columnName="date"/>
+    </changeSet>
+
+    <changeSet id="3.8-make-visit-sale-nullable-in-client-debt" author="Wojtek">
+        <dropNotNullConstraint
+                tableName="client_debt"
+                columnName="visit_id"
+                columnDataType="BIGINT"/>
+
+        <dropNotNullConstraint
+                tableName="client_debt"
+                columnName="sale_id"
+                columnDataType="BIGINT"/>
+    </changeSet>
+
+    <changeSet id="3.9-convert-voucher-active-to-status" author="Wojtek">
+        <addColumn tableName="voucher">
+            <column name="status" type="varchar(20)" defaultValue="ACTIVE" />
+        </addColumn>
+
+        <update tableName="voucher">
+            <column name="status" value="ACTIVE" />
+            <where>active = true</where>
+        </update>
+
+        <update tableName="voucher">
+            <column name="status" value="EXPIRED" />
+            <where>active = false</where>
+        </update>
+
+        <dropColumn tableName="voucher" columnName="active" />
+    </changeSet>
+
+    <changeSet id="3.10-add-review-table" author="Wojtek">
+        <createTable tableName="review">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="client_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="is_used" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="source" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="issue_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="review"
+                baseColumnNames="client_id"
+                referencedTableName="client"
+                referencedColumnNames="id"
+                constraintName="fk_review_client"/>
+    </changeSet>
+
+    <changeSet id="3.11-add-app-settings-table" author="Wojtek">
+        <createTable tableName="app_settings">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="voucher_expiry_time" type="INT" defaultValue="3">
+                <constraints nullable="false"/>
+            </column>
+            <column name="visit_absence_rate" type="INT" defaultValue="80">
+                <constraints nullable="false"/>
+            </column>
+            <column name="visit_vip_rate" type="INT" defaultValue="40">
+                <constraints nullable="false"/>
+            </column>
+            <column name="boost_net_rate" type="INT" defaultValue="45">
+                <constraints nullable="false"/>
+            </column>
+            <column name="google_review_discount" type="INT" defaultValue="5">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <insert tableName="app_settings">
+            <column name="id" value="1"/>
+            <column name="voucher_expiry_time" value="3"/>
+            <column name="visit_absence_rate" value="80"/>
+            <column name="visit_vip_rate" value="40"/>
+            <column name="boost_net_rate" value="45"/>
+            <column name="google_review_discount" value="5"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="3.12-add-booksy-happy-hours-column-in-settings" author="Wojtek">
+        <addColumn tableName="app_settings">
+            <column name="booksy_happy_hours" type="INT" defaultValue="5">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="3.13-add-is-boost-on" author="Wojtek">
+        <addColumn tableName="app_settings">
+            <column name="is_boost_on" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="3.14-add-client-discount" author="Wojtek">
+        <addColumn tableName="client">
+            <column name="discount_id" type="BIGINT"/>
+        </addColumn>
+
+        <addForeignKeyConstraint
+                baseTableName="client"
+                baseColumnNames="discount_id"
+                referencedTableName="discount"
+                referencedColumnNames="id"
+                constraintName="fk_client_discount"/>
+    </changeSet>
+
+    <changeSet id="3.15-discount-name-nullable-false" author="Wojtek">
+
+        <addNotNullConstraint
+                tableName="discount"
+                columnName="name"
+                columnDataType="VARCHAR(255)"/>
+    </changeSet>
+
+    <changeSet id="3.16-add-visit-discount-table" author="Wojtek">
+
+        <createTable tableName="visit_discount">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="value_type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="percentage_value" type="DOUBLE PRECISION"/>
+            <column name="amount_value" type="DOUBLE PRECISION"/>
+
+            <column name="client_discount_id" type="BIGINT"/>
+            <column name="review_id" type="BIGINT"/>
+            <column name="voucher_id" type="BIGINT"/>
+
+            <column name="visit_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_visit_discount_visit"
+                             referencedTableName="visit" referencedColumnNames="id"/>
+            </column>
+        </createTable>
+
+        <dropColumn tableName="visit" columnName="discount_id"/>
+
+        <createIndex tableName="visit_discount" indexName="idx_visit_discount_visit_id">
+            <column name="visit_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="3.17-update-sale-table" author="Wojtek">
+
+        <dropColumn tableName="sale" columnName="client_id"/>
+        <dropColumn tableName="sale" columnName="employee_id"/>
+        <dropColumn tableName="sale" columnName="visit_id"/>
+
+        <dropColumn tableName="sale" columnName="payment_status"/>
+        <dropColumn tableName="sale" columnName="date"/>
+
+        <dropColumn tableName="debt_redemption" columnName="sale_id"/>
+
+        <!--ClientDebt-->
+        <dropColumn tableName="client_debt" columnName="sale_id"/>
+
+        <dropColumn tableName="sale" columnName="visit_id" />
+
+
+
+    </changeSet>
+
+    <changeSet id="3.18-update-visit-entity" author="Wojtek">
+        <addColumn tableName="visit">
+            <column name="sale_id" type="BIGINT"/>
+        </addColumn>
+
+        <addForeignKeyConstraint
+                baseTableName="visit"
+                baseColumnNames="sale_id"
+                referencedTableName="sale"
+                referencedColumnNames="id"
+                constraintName="fk_visit_sale_id"
+                onDelete="SET NULL"/>
+    </changeSet>
+
+    <changeSet id="3.19-update-visit-discount-and-discount" author="Wojtek">
+        <update tableName="visit_discount">
+            <column name="percentage_value" valueComputed="ROUND(percentage_value)" />
+        </update>
+
+        <modifyDataType
+                tableName="visit_discount"
+                columnName="percentage_value"
+                newDataType="INT" />
+
+        <dropColumn
+                tableName="visit_discount"
+                columnName="voucher_id" />
+
+        <update tableName="discount">
+            <column name="percentage_value" valueComputed="ROUND(percentage_value)" />
+        </update>
+
+        <modifyDataType
+                tableName="discount"
+                columnName="percentage_value"
+                newDataType="INT" />
+    </changeSet>
+
+    <changeSet id="3.20-update-clientdebt-and-visititem" author="Wojtek">
+
+        <dropColumn tableName="visit_item" columnName="type" onFail="MARK_RAN"/>
+        <dropColumn tableName="visit_item" columnName="visit_id" onFail="MARK_RAN"/>
+        <dropColumn tableName="visit_item" columnName="net_value" onFail="MARK_RAN"/>
+        <dropColumn tableName="visit_item" columnName="vat_value" onFail="MARK_RAN"/>
+
+        <addColumn tableName="visit_item">
+            <column name="final_price" type="DOUBLE PRECISION">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="3.21-update-visit-discount" author="Wojtek">
+
+        <dropColumn tableName="visit_discount" columnName="value_type" onFail="MARK_RAN"/>
+        <dropColumn tableName="visit_discount" columnName="amount_value" onFail="MARK_RAN"/>
+
+    </changeSet>
+
+    <changeSet id="3.21-sale-refactor" author="Wojtek">
+        <dropColumn tableName="sale_item" columnName="type"/>
+
+        <dropForeignKeyConstraint baseTableName="sale_item" constraintName="fk_sale_item_sale"/>
+
+        <dropColumn tableName="sale_item" columnName="sale_id"/>
+
+        <addColumn tableName="sale_item">
+            <column name="sale_id" type="BIGINT"/>
+        </addColumn>
+
+        <addForeignKeyConstraint
+                baseTableName="sale_item"
+                baseColumnNames="sale_id"
+                constraintName="fk_sale_item_sale"
+                referencedTableName="sale"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="3.22-visit-date-to-localdate" author="Wojtek">
+
+        <addColumn tableName="visit">
+            <column name="date_tmp" type="DATE"/>
+        </addColumn>
+
+        <update tableName="visit">
+            <column name="date_tmp" valueComputed="DATE(date)"/>
+        </update>
+
+        <dropColumn tableName="visit" columnName="date"/>
+
+        <renameColumn tableName="visit"
+                      oldColumnName="date_tmp"
+                      newColumnName="date"
+                      columnDataType="DATE"/>
+    </changeSet>
+
+    <changeSet id="3.23-add-visit-id-to-visit-item" author="Wojtek">
+
+        <addColumn tableName="visit_item">
+            <column name="visit_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <addForeignKeyConstraint
+                baseTableName="visit_item"
+                baseColumnNames="visit_id"
+                constraintName="fk_visit_item_visit"
+                referencedTableName="visit"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+
+        <createIndex indexName="idx_visit_item_visit_id" tableName="visit_item">
+            <column name="visit_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="3.24-make-visit-id-nullable" author="Wojtek">
+
+        <dropNotNullConstraint
+                tableName="visit_item"
+                columnName="visit_id"
+                columnDataType="BIGINT"/>
+    </changeSet>
+
+    <changeSet id="3.25-add-visit-id-to-payment" author="Wojtek">
+
+        <addColumn tableName="payment">
+            <column name="visit_id" type="BIGINT">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <addForeignKeyConstraint
+                baseTableName="payment"
+                baseColumnNames="visit_id"
+                constraintName="fk_payment_visit"
+                referencedTableName="visit"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+
+        <createIndex indexName="idx_payment_visit_id" tableName="payment">
+            <column name="visit_id"/>
+        </createIndex>
+
+    </changeSet>
+
+    <changeSet id="3.26-make-visit-id-nullable" author="Wojtek">
+
+        <dropNotNullConstraint
+                tableName="visit_item"
+                columnName="visit_id"
+                columnDataType="BIGINT"/>
+    </changeSet>
+
+    <changeSet id="3.26-remove-vat-rate-from-debt-redemption" author="Wojtek">
+
+        <dropColumn tableName="debt_redemption" columnName="vat_rate"/>
+    </changeSet>
+
+    <changeSet id="3.27-add-variant-to-visit-item" author="Wojtek">
+
+        <addColumn tableName="visit_item">
+            <column name="service_variant_id" type="BIGINT"/>
+        </addColumn>
+
+        <addForeignKeyConstraint
+                baseTableName="visit_item"
+                baseColumnNames="service_variant_id"
+                referencedTableName="service_variant"
+                referencedColumnNames="id"
+                constraintName="fk_visit_item_service_variant"
+                onDelete="SET NULL"/>
+    </changeSet>
+
+    <changeSet id="3.28-remove-addons" author="Wojtek">
+
+        <dropColumn tableName="visit_item" columnName="add_on_id"/>
+
+        <dropTable tableName="service_addons"/>
+
+        <dropTable tableName="service_addon"/>
+
+    </changeSet>
+
+    <changeSet id="3.29-make-final-price-not-null" author="Wojtek">
+
+        <addNotNullConstraint
+                tableName="visit_item"
+                columnName="final_price"
+                columnDataType="DOUBLE PRECISION"/>
+    </changeSet>
+
+    <changeSet id="3.30-add-boost-item-to-visit-item" author="Wojtek">
+
+        <addColumn tableName="visit_item">
+            <column name="boost_item" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <update tableName="visit_item">
+            <column name="boost_item" valueBoolean="false"/>
+        </update>
+
+    </changeSet>
+
+    <changeSet id="3.31-remove-is-boost-on-from-app-settings" author="Wojtek">
+
+        <dropColumn tableName="app_settings" columnName="is_boost_on"/>
+
+    </changeSet>
+
+    <changeSet id="3.32-limit-discount-name-length" author="Wojtek">
+
+        <modifyDataType tableName="discount"
+                        columnName="name"
+                        newDataType="VARCHAR(6)"/>
+
+    </changeSet>
+
+</databaseChangeLog>
