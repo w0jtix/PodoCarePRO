@@ -287,15 +287,12 @@ export function VisitForm({
     setVisitDTO((prev) => {
       const newIsBoost = !prev.isBoost;
 
-      // Jeśli wyłączamy Boost, resetuj boostItem we wszystkich usługach
-      if (!newIsBoost) {
-        setChosenServices((prevServices) =>
-          prevServices.map((item) => ({
-            ...item,
-            boostItem: false,
-          }))
-        );
-      }
+      setChosenServices((prevServices) =>
+        prevServices.map((item) => ({
+          ...item,
+          boostItem: newIsBoost,
+        }))
+      );
 
       return {
         ...prev,

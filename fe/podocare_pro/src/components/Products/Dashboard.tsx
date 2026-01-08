@@ -27,7 +27,7 @@ export function Dashboard() {
     useState<string | number | null>(null);
   const [isCategoryPopupOpen, setIsCategoryPopupOpen] =
     useState<boolean>(false);
-  const [isUsageRecordsPopupOpen, setIsUsageRecordsPopupOpen] = useState<boolean>(true);
+  const [isUsageRecordsPopupOpen, setIsUsageRecordsPopupOpen] = useState<boolean>(false);
   const [filter, setFilter] = useState<ProductFilterDTO>({
     categoryIds: null,
     brandIds: null,
