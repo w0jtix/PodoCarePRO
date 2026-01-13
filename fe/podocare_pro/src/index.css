@@ -980,7 +980,8 @@ button.menu-button:hover a.menu-a {
   font-weight: 400;
   justify-self: center;
 }
-.order-product-list {
+.order-product-list,
+.expense-item-list {
   height:22.5rem;
   overflow: visible;
   color: white;
@@ -1253,7 +1254,8 @@ input[type="number"]::-webkit-inner-spin-button {
   background-color: rgba(255, 255, 255, 0.05);
 }
 /* ORDER CONTENT */
-.order-content.history{
+.order-content.history,
+.expense-content.history{
   margin-bottom:0;
 }
 /* ORDER PRODUCT LIST HEADER */
@@ -1339,7 +1341,8 @@ input[type="number"]::-webkit-inner-spin-button {
 .addon-popup-content,
 .visit-popup-content,
 .usage-record-popup-content,
-.manage-usage-records-popup-content {
+.manage-usage-records-popup-content,
+.expense-popup-content {
   background-image: linear-gradient(to right top, #000000, #0f0208, #160513, #19091c, #170e27, #170e27, #170e27, #170e27, #19091c, #160513, #0f0208, #000000);
   padding: 25px 50px 30px;
   border: 1px solid rgba(255, 255, 255, 0.4);
@@ -1440,6 +1443,11 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 .remove-order-popup-content{
   width: 40%;
+}
+.expense-popup-content {
+  width: 30%;
+  min-height: 80%;
+  max-height: 80%;
 }
 .add-popup-overlay.short-version .footer-popup-action-buttons {
   margin-bottom:5px;
@@ -1979,9 +1987,6 @@ input[type="number"]::-webkit-inner-spin-button {
   border-bottom: 1px solid rgba(255, 255, 255, 0.25);
   font-size: 12px;
 }
-.user-menu-dropdown-list {
-  height:117px;
-}
 .dropdown-item,
 .dropdown-item-user-menu{
   height:30px;
@@ -2421,12 +2426,11 @@ input[type="number"]::-webkit-inner-spin-button {
 .attribute-item.services.pricelist.qv {
   font-size: 12px;
 }
-
-
-
-
 .item-list.products{
   max-height: 550px;
+}
+.item-list.products.expenses {
+  overflow: auto;
 }
 .item-list.products.usage{
   overflow: auto;
@@ -2627,6 +2631,10 @@ input[type="number"]::-webkit-inner-spin-button {
   clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
   flex-shrink: 0;
   transition: transform 0.2s ease-in-out;
+}
+.color-symbol.invoice {
+  width: 15px;
+  height: 15px;
 }
 .product-action-button-icon.manage-addons {
   width: 18px;
@@ -3031,6 +3039,11 @@ input[type="number"]::-webkit-inner-spin-button {
 .qv-span.totals.warning {
   color:rgb(255, 179, 0);
 }
+.note-content {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
 .lists-container {
   height: 85%;
 }
@@ -3426,4 +3439,21 @@ background-color: rgba(0, 218, 0, 0.35);
 }
 .usage-record-date-filter .custom-calendar-button {
   width: 150px;
+}
+.searchable-dropdown.expense-category,
+.dropdown-header.expense-category {
+  width: 230px;
+}
+.input-container .text-input.invoice {
+  width: 216px;
+}
+.order-item-list.invoice {
+  min-height: 18.5rem;
+  max-height: 18.5rem;
+}
+.addons-list-header.invoice {
+  padding: 0 0 0.5rem 0;
+}
+.qv-span.op-lower {
+  opacity: 50%;
 }

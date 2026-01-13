@@ -226,17 +226,14 @@ export function ProfileDashboard() {
             </div>
             <div className="user-roles-container flex-column g-05 align-items-center">
               <h2 className="pw-header text-align-center mb-1">Role Użytkownika</h2>
-              {availableRoles.map((role) => (
+              {updatedUser?.roles.map((role) => (
                 <ActionButton
                   text={role.name.replace("ROLE_", "")}
                   disableImg={true}
-                  onClick={() => toggleRole(role)}
-                  className={`role-button ${
-                    updatedUser?.roles.some((r) => r.id === role.id)
-                      ? "selected"
-                      : ""
-                  }`}
+                  className="role-button selected"
                   key={role.id}
+                  default={true}
+                  onClick={() => undefined}
                 />
               ))}
             </div>

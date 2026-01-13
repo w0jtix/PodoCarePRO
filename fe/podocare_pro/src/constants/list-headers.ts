@@ -298,8 +298,45 @@ export const USAGE_RECORDS_LIST_ATTRIBUTES: ListAttribute[] = [
   { name: "Produkt", width: "25%", justify: "flex-start" },
   { name: "Pracownik", width: "18%", justify: "flex-start" },
   { name: "Data", width: "23%", justify: "flex-start" },
-  { name: "Ilość", width: "5%", justify: "flex-start" },
-  
+  { name: "Ilość", width: "5%", justify: "flex-start" }, 
   { name: "Powód", width: "20%", justify: "center" },
   { name: "Opcje", width: "10%", justify: "center" },
+]
+
+export const EXPENSE_HISTORY_ATTRIBUTES: ListAttribute[] = [
+  { name: " ", width: "5%", justify: "center" },
+  { name: "Dostawca", width: "51%", justify: "flex-start" },
+  { name: "Data Zamówienia", width: "16%", justify: "center" },
+  { name: "Produkty", width: "8%", justify: "center" },
+  { name: "Netto", width: "5%", justify: "center" },
+  { name: "VAT", width: "5%", justify: "center" },
+  { name: "Brutto", width: "5%", justify: "center" },
+  { name: "Opcje", width: "7%", justify: "center" },
+]
+
+export const EXPENSE_ITEM_ATTRIBUTES: ListAttribute[] = [
+  { name: "", width: "6%", justify: "center" },
+  { name: "Nazwa", width: "42%", justify: "flex-start" },
+  { name: "Cena jedn.", width: "13%", justify: "center" },
+  { name: "Ilość", width: "13%", justify: "center" },
+  { name: "VAT", width: "13%", justify: "center" },
+  { name: "Cena", width: "13%", justify: "center" },
+]
+
+export const EXPENSE_HANDY_HISTORY_ATTRIBUTES: ListAttribute[] = [
+  { name: "", width: "6%", justify: "center" },
+  { name: "Nazwa", width: "64%", justify: "flex-start" },
+  { name: "Ilość", width: "10%", justify: "center" },
+  { name: "Netto [szt]", width: "6%", justify: "center" },
+  { name: "VAT", width: "6%", justify: "center" },
+  { name: "Cena [szt]", width: "6%", justify: "center" },
+]
+
+export const EXPENSE_POPUP_HISTORY_ATTRIBUTES: ListAttribute[] = [
+  { name: "", width: "6%", justify: "center" },
+  { name: "Nazwa", width: "64%", justify: "flex-start" },
+  { name: "Ilość", width: "10%", justify: "center" },
+  { name: "Netto [szt]", width: "6%", justify: "center" },
+  { name: "VAT", width: "6%", justify: "center" },
+  { name: "Cena [szt]", width: "6%", justify: "center" },
 ]

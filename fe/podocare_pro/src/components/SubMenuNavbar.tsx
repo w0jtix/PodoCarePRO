@@ -1,17 +1,19 @@
 import React from "react";
 import { useState, useCallback } from "react";
-import { SUBMENU_ITEMS, getIconPath, getIconAlt, SubModuleType, SubMenuItem } from "../constants/modules";
+import { ORDER_SUBMENU_ITEMS, getIconPath, getIconAlt, SubModuleType, SubMenuItem } from "../constants/modules";
 
 export interface SubMenuNavbarProps {
   setModuleVisible: (module: SubModuleType) => void;
   className?: string;
   defaultSelected?: string;
+  submenuItems: SubMenuItem[];
 }
 
 export function SubMenuNavbar ( { 
   setModuleVisible,
   className = "",
-  defaultSelected = "Kreator"
+  submenuItems,
+  defaultSelected = submenuItems[0].name,
 }: SubMenuNavbarProps ) {
   const [selectedItem, setSelectedItem] = useState<string>(defaultSelected);
 
@@ -23,7 +25,7 @@ export function SubMenuNavbar ( {
 
   return (
     <div className={`submenu-navbar ${className} height-max flex align-self-center`}>
-      {SUBMENU_ITEMS.map((menuItem) => (
+      {submenuItems.map((menuItem) => (
         <div 
           key={menuItem.name} 
           className={`submenu-navbar-button-div relative width-fit-content ${

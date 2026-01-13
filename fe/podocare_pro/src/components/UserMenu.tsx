@@ -8,6 +8,8 @@ import {
 import AuthService from "../services/AuthService";
 import { useNavigate } from "react-router-dom";
 import { AVAILABLE_AVATARS } from "../constants/avatars";
+import { useUser } from "./User/UserProvider";
+import { RoleType } from "../models/login";
 
 export interface UserMenuProps {
   username?: string;
@@ -24,6 +26,7 @@ export function UserMenu({
   const menuRef = useRef<HTMLDivElement>(null);
 
   const navigate = useNavigate();
+  const { user } = useUser();
 
   const currentUser = AuthService.getCurrentUser();
   const displayUsername = username ?? currentUser?.username;
@@ -33,6 +36,24 @@ export function UserMenu({
       : currentUser?.avatar
       ? AVAILABLE_AVATARS[currentUser.avatar]
       : avatar5;
+
+  const hasPermission = (requiredPermissions?: string[]): boolean => {
+    if (!requiredPermissions || requiredPermissions.length === 0) {
+      return true;
+    }
+
+    if (!user || !user.roles) {
+      return false;
+    }
+
+    return requiredPermissions.some((permission) =>
+      user.roles.includes(permission as RoleType)
+    );
+  };
+
+  const visibleUserMenuItems = USER_MENU_ITEMS.filter((item) =>
+    hasPermission(item.permissions)
+  );
 
    const handleAction = (label: string) => {
     switch (label) {
@@ -84,7 +105,7 @@ export function UserMenu({
       {isMenuVisible && (
         <div className="dropdown-menu absolute mt-05" onClick={(e) => e.stopPropagation()}>
           <ul className="user-menu-dropdown-list m-0 p-0">
-            {USER_MENU_ITEMS.map((item) => (
+            {visibleUserMenuItems.map((item) => (
               <li
                 key={item.label}
                 className="dropdown-item-user-menu pointer flex align-items-center justify-start"

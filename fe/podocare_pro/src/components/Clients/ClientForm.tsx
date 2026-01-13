@@ -217,13 +217,15 @@ export function ClientForm({
       </section>
       
       {action === Action.EDIT && (
-        <section className="client-notes-section flex-column width-max height-fit-content align-items-start">
-          <ActionButton
+        <>
+        <ActionButton
             src={"src/assets/addNew.svg"}
             alt={"Dodaj notatkę"}
             text={"Dodaj notatkę"}
             onClick={addNote}
           />
+        <section className="client-notes-section flex-column width-max height-fit-content align-items-start">
+          
           {newClientNotesDTO.length > 0 && (
             <div className="client-notes-list flex-column align-items-center width-max g-05 mt-05 mb-05">
               {newClientNotesDTO.map((note, index) => (
@@ -322,6 +324,7 @@ export function ClientForm({
             </div>
           )}
         </section>
+        </>
       )}
     </div>
   );

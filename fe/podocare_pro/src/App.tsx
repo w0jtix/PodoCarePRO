@@ -12,6 +12,7 @@ import PriceList from "./pages/PriceList";
 import Clients from "./pages/Clients";
 import Settings from "./pages/Settings";
 import Visits from "./pages/Visits";
+import Business from "./pages/Business";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/wizyty" element={<Visits />}/>
             <Route path="/uslugi" element={<Services />}/>
             <Route path="/klienci" element={<Clients />}/>
+            <Route path="/moja-firma" element={<Business />}/>
             <Route path="/ustawienia" element={<Settings />}/>
           </Route>
           <Route path="/login" element={<Login />} />

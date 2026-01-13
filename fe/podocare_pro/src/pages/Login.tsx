@@ -6,9 +6,11 @@ import { AlertType } from "../models/alert";
 import { validateLoginForm } from "../utils/validators";
 import AuthService from "../services/AuthService";
 import { useAlert } from "../components/Alert/AlertProvider";
+import { useUser } from "../components/User/UserProvider";
 
 const Login = () => {
   const { showAlert } = useAlert();
+  const { setUser } = useUser();
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
@@ -23,6 +25,7 @@ const Login = () => {
         AuthService.login(username, password)
         .then((user) => {
             if(user) {
+                setUser(user);
                 showAlert(`Witaj ${user.username}!`, AlertType.SUCCESS);
                 navigate("/");
             } else {

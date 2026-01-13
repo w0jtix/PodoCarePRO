@@ -16,6 +16,8 @@ import { AppSettings, NewAppSettings } from "../models/app_settings";
 import { Discount, NewDiscount, NewVisit, Visit, VisitDiscountType } from "../models/visit";
 import { PaymentMethod } from "../models/payment";
 import { UsageRecordItem } from "../models/usage-record";
+import { CompanyExpense, CompanyExpenseItem, NewCompanyExpense, NewCompanyExpenseItem } from "../models/expense";
+import { exec } from "child_process";
 
   export function validateLoginForm(
     username: string,
@@ -28,6 +30,68 @@ import { UsageRecordItem } from "../models/usage-record";
       return "Brak hasła!";
     }
     return null;
+  };
+
+  export function validateExpenseForm(
+    expenseForm: CompanyExpense | NewCompanyExpense,
+    selectedExpense: CompanyExpense | null,
+    action: Action,
+  ): string | null {
+    if (Object.entries(expenseForm).some(([key, value]) => {
+      if (key === "invoiceNumber") return false;
+      return value === null || value === undefined;
+    })) {
+      return "Brak pełnych informacji!";
+    }
+
+    if (expenseForm.source && expenseForm.source.trim().length <= 2) {
+      return "Nazwa źródła za krótka! (2+)";
+    }
+
+    if(!expenseForm.expenseItems || expenseForm.expenseItems.length === 0) {
+      return "Puste zamówienie... Dodaj produkty!";
+    }
+
+    if (expenseForm.expenseItems.some(
+      (ei) => ei.quantity == 0
+    )) {
+      return action === Action.EDIT ? "Ilość = 0, usuń pozycję!" : "Ilość w pozycji nie może wynosić 0!";
+    }
+
+    if(action === Action.EDIT && selectedExpense) {
+      const noChangesDetected = 
+      expenseForm.source === selectedExpense.source &&
+      expenseForm.expenseDate == selectedExpense.expenseDate &&
+      expenseForm.invoiceNumber === selectedExpense.invoiceNumber &&
+      expenseForm.category === selectedExpense.category;
+
+      const noExpenseItemsChangesDetected = areExpenseItemsEqual(
+          selectedExpense.expenseItems,
+          expenseForm.expenseItems
+        )
+
+        if(noChangesDetected && noExpenseItemsChangesDetected) {
+          return "Brak zmian!";
+        }
+    }
+    return null;
+  }
+
+  const areExpenseItemsEqual = (eiList1: CompanyExpenseItem[], eiList2: NewCompanyExpenseItem[]) => {
+    if (eiList1.length != eiList2.length) return false;
+
+    const sorted1 = [...eiList1].sort((a, b) => a.name.localeCompare(b.name));
+    const sorted2 = [...eiList2].sort((a, b) => a.name.localeCompare(b.name));
+
+    return sorted1.every((ei1, index) => {
+      const ei2 = sorted2[index];
+      return (
+        ei1.name === ei2.name &&
+        ei1.quantity === ei2.quantity &&
+        ei1.vatRate === ei2.vatRate &&
+        ei1.price === ei2.price 
+      );
+    });
   };
 
   export  function validateProductForm(
@@ -645,6 +709,7 @@ import { UsageRecordItem } from "../models/usage-record";
 
     return null;
   }
+
 
 const areOrderProductsEqual = (opList1: OrderProduct[], opList2: NewOrderProduct[]) => {
     if (opList1.length != opList2.length) return false;
