@@ -1,0 +1,81 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="6.1-create-company-expense-table" author="Wojtek">
+        <createTable tableName="company_expense">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="source" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expense_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="invoice_number" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="category" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_net" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_vat" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_value" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex indexName="idx_company_expense_date" tableName="company_expense">
+            <column name="expense_date"/>
+        </createIndex>
+
+        <createIndex indexName="idx_company_expense_category" tableName="company_expense">
+            <column name="category"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="6.2-create-company-expense-item-table" author="Wojtek">
+        <createTable tableName="company_expense_item">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="company_expense_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="vat_rate" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="company_expense_item"
+                baseColumnNames="company_expense_id"
+                constraintName="fk_company_expense_item_expense"
+                referencedTableName="company_expense"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+
+        <createIndex indexName="idx_company_expense_item_expense_id"
+                     tableName="company_expense_item">
+            <column name="company_expense_id"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
