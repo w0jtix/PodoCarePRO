@@ -17,6 +17,7 @@ import { validateCategoryForm } from "../../utils/validators";
 import { extractCategoryErrorMessage } from "../../utils/errorHandler";
 import AllProductService from "../../services/AllProductService";
 import UsageRecordsManagePopup from "../Popups/UsageRecordsManagePopup";
+import ProductReportPopup from "../Popups/ProductReportPopup";
 
 export function Dashboard() {
   const [isAddNewProductsPopupOpen, setIsAddNewProductsPopupOpen] =
@@ -28,6 +29,7 @@ export function Dashboard() {
   const [isCategoryPopupOpen, setIsCategoryPopupOpen] =
     useState<boolean>(false);
   const [isUsageRecordsPopupOpen, setIsUsageRecordsPopupOpen] = useState<boolean>(false);
+  const [isProductReportPopupOpen, setIsProductReportPopupOpen] = useState<boolean>(false);
   const [filter, setFilter] = useState<ProductFilterDTO>({
     categoryIds: null,
     brandIds: null,
@@ -206,6 +208,12 @@ export function Dashboard() {
             text={"Nowa Kategoria"}
             onClick={() => setIsCategoryPopupOpen(true)}
           />
+          <ActionButton
+            src={"src/assets/pdf.svg"}
+            alt={"Wygeneruj PDF"}
+            text={"Wygeneruj PDF"}
+            onClick={() => setIsProductReportPopupOpen(true)}
+          />
         </section>
       </section>
       <SupplyList
@@ -257,6 +265,13 @@ export function Dashboard() {
           }}
           />
       )}
+      {isProductReportPopupOpen && (
+        <ProductReportPopup
+        onClose={() => setIsProductReportPopupOpen(false)}
+        />
+      )
+
+      }
     </div>
   );
 }

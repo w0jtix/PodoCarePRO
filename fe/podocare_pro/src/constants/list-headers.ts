@@ -170,6 +170,13 @@ export const PRODUCT_LIST_ATTRIBUTES: ListAttribute[] = [
     { name: "Opcje", width: "8%", justify: "center" },
 ];
 
+export const PRODUCT_POPUP_LIST_ATTRIBUTES: ListAttribute[] = [
+    { name: "", width: "6%", justify: "center" },
+    { name: "Nazwa", width: "50%", justify: "flex-start" },
+    { name: "Marka", width: "29%", justify: "center" },
+    { name: "Stan Magazynowy", width: "15%", justify: "center" },
+];
+
 export const PRODUCT_VOLUME_LIST_ATTRIBUTES: ListAttribute[] = [
     { name: "", width: "2%", justify: "end" },
     { name: "#", width: "3%", justify: "center" },
@@ -183,8 +190,8 @@ export const PRODUCT_VOLUME_LIST_ATTRIBUTES: ListAttribute[] = [
 export const PRODUCT_PRICE_LIST_ATTRIBUTES: ListAttribute[] = [
     { name: "empty", width: "2%", justify: "start" },
     { name: "", width: "10%", justify: "start" },
-    { name: "Nazwa", width: "56%", justify: "flex-start" },
-    { name: "Cena", width: "16%", justify: "center" },
+    { name: "Nazwa", width: "50%", justify: "flex-start" },
+    { name: "Cena", width: "22%", justify: "center" },
     { name: "Stan Magazynowy", width: "16%", justify: "center" },
 ];
 

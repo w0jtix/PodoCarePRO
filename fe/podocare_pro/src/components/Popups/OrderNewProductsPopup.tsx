@@ -339,11 +339,10 @@ export function OrderNewProductsPopup({
             />
           </button>
         </section>
-        <section className="order-new-products-popup-action-keys-section flex justify-center align-items-center g-2 mt-2 mb-15">
+        <section className="order-new-products-popup-action-keys-section flex space-between align-items-center g-2 mt-2 mb-15">
           <a className="order-new-products-popup-action-keys-title text-align-center">
             Przypisz dla wszystkich:
           </a>
-          <div className="order-new-products-popup-category-buttons flex g-15px justify-center align-items-center">
             <CategoryButtons
               categories={categories}
               onSelect={handleGlobalCategoryChange}
@@ -358,7 +357,6 @@ export function OrderNewProductsPopup({
               onClick={handleGlobalCategoryReset}
               disableText={true}
             />
-          </div>
         </section>
         <ListHeader
           attributes={hasProductCategory ? ORDER_NEW_PRODUCTS_POPUP_ATTRIBUTES_WITH_SELLING_PRICE : ORDER_NEW_PRODUCTS_POPUP_ATTRIBUTES}

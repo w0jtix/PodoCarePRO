@@ -50,6 +50,9 @@ export function UsageRecordForm({
     categoryIds: null,
     keyword: "",
   });
+  const [page, setPage] = useState<number>(0);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const { showAlert } = useAlert();
 
   const usageReasonItems = [
@@ -68,14 +71,24 @@ export function UsageRecordForm({
         setEmployees([]);
       });
   };
-  const fetchProducts = async (): Promise<void> => {
-    AllProductService.getProducts(productFilter)
+  const fetchProducts = async (pageNum: number = 0, append: boolean = false): Promise<void> => {
+    AllProductService.getProducts(productFilter, pageNum, 30)
       .then((data) => {
-        const sortedItems = data.sort((a, b) => a.name.localeCompare(b.name));
-        setProducts(sortedItems);
+        const content = data?.content || [];
+
+        if (append) {
+          setProducts((prev) => [...prev, ...content]);
+        } else {
+          setProducts(content);
+        }
+
+        setHasMore(!data.last);
+        setPage(pageNum);
+        setLoading(false);
       })
       .catch((error) => {
-        setProducts([]);
+        if (!append) setProducts([]);
+        setLoading(false);
         showAlert("Błąd", AlertType.ERROR);
         console.error("Error fetching products:", error);
       });
@@ -211,13 +224,27 @@ export function UsageRecordForm({
     [setUsageRecordItems]
   );
 
+  const handleScroll = useCallback(
+    (e: React.UIEvent<HTMLDivElement>) => {
+      const target = e.currentTarget;
+      const scrolledToBottom =
+        target.scrollHeight - target.scrollTop <= target.clientHeight + 100; // 100px b4 end of the list
+
+      if (scrolledToBottom && hasMore && !loading) {
+        fetchProducts(page + 1, true);
+      }
+    },
+    [hasMore, loading, page, productFilter]
+  );
+
   useEffect(() => {
-    fetchProducts();
+    fetchProducts(0, false);
+    setPage(0);
+    setHasMore(true);
   }, [productFilter]);
 
   useEffect(() => {
     fetchEmployees();
-    fetchProducts();
     fetchCategories();
   }, []);
 
@@ -344,6 +371,9 @@ export function UsageRecordForm({
             action={Action.DISPLAY}
             onClick={(prod) => handleSelectProducts(prod)}
             className="products pricelist popup usage"
+            onScroll={handleScroll}
+            isLoading={loading}
+            hasMore={hasMore}
           />
         </div>
       </div>

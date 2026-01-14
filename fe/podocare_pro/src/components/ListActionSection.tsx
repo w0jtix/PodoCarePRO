@@ -121,7 +121,7 @@ export function ListActionSection({
   }, [filter.brandIds, brands]);
 
   return (
-    <div className={`list-action-section ${className} flex f-1 justify-start align-items-center`}>
+    <div className={`list-action-section ${className} flex justify-start align-items-center width-fit-content g-4`}>
       <CategoryButtons
         categories={categories}
         selectedCategories={selectedCategories}

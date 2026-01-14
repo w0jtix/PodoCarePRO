@@ -11,11 +11,12 @@ interface ApiRequestOptions {
   body?: any;
   skipAuthHeader?: boolean;
   errorMessage?: string;
+  responseType?: "json" | "blob";
 }
 
 export const sendApiRequest = async <T>(
   endpoint: string,
-  { method, body, skipAuthHeader, errorMessage }: ApiRequestOptions
+  { method, body, skipAuthHeader, errorMessage, responseType = "json" }: ApiRequestOptions
 ): Promise<T> => {
   try {
     const config: AxiosRequestConfig = {
@@ -25,6 +26,7 @@ export const sendApiRequest = async <T>(
       headers: {
         "Content-Type": "application/json",
       },
+      responseType: responseType,
     };
 
     if (!skipAuthHeader) {

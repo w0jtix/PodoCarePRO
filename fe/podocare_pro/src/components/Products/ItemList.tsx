@@ -17,6 +17,9 @@ export interface ItemListProps {
   onClick?: (product: Product) => void;
   onRemoveByIndex?: (index: number) => void;
   productInfo?: boolean;
+  onScroll?: (e: React.UIEvent<HTMLDivElement>) => void;
+  isLoading?: boolean;
+  hasMore?: boolean;
 }
 
 export function ItemList ({
@@ -28,6 +31,9 @@ export function ItemList ({
   onClick,
   onRemoveByIndex,
   productInfo = false,
+  onScroll,
+  isLoading = false,
+  hasMore = true,
 }: ItemListProps) {
 
   const handleOnClickEdit = useCallback((e: React.MouseEvent, item: Product) => {
@@ -79,19 +85,19 @@ export function ItemList ({
                 : ''}
             </span>
           </div>
-        ) : item.name;
+        ) : (<span className={`qv-span ${className}`}>{item.name}</span>);
       
       case "Marka":
-        return(<span className="list-span ml-1">{item.brand.name}</span>);
+        return(<span className={`list-span ml-1 ${className}`}>{item.brand.name}</span>);
 
       case "Stan Magazynowy":
-        return(<span className="list-span ml-1">{item.supply}</span>);
+        return(<span className={`list-span ml-1 ${className}`}>{item.supply}</span>);
 
       case "Cena":
         if (item.category.name != "Produkty" || !item.sellingPrice) {
           return "";
         }
-        return(<span className="list-span ml-1">{item.sellingPrice} zł</span>);
+        return(<span className={`list-span ml-1 ${className}`}>{item.sellingPrice} zł</span>);
 
       case "empty": 
         return "";
@@ -125,7 +131,10 @@ export function ItemList ({
   };
 
   return (
-    <div className={`item-list width-max grid p-0 ${items.length === 0 ? "border-none" : ""} ${className}`}>
+    <div 
+    className={`item-list width-max grid p-0 ${items.length === 0 ? "border-none" : ""} ${className}`} 
+    onScroll={onScroll}
+    >
       {items.map((item, index) => (
         <div key={item.id} className={`product-wrapper ${className}`}>
           <div
@@ -154,6 +163,9 @@ export function ItemList ({
           </div>
         </div>
       ))}
+      {isLoading && (
+        <span className="qv-span text-align-center">Ładowanie...</span>
+      )}
     </div>
   );
 };

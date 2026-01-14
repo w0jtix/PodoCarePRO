@@ -10,8 +10,12 @@ class AllProductService {
     })
   }
 
-  static async getProducts(filter?: ProductFilterDTO):Promise<Product[]> {
-    return await sendApiRequest<Product[]>('products/search', {
+  static async getProducts(
+    filter?: ProductFilterDTO,
+    page: number = 0, 
+    size: number = 30
+  ):Promise<{ content: Product[], totalPages: number, totalElements: number, last: boolean }> {
+    return await sendApiRequest<{ content: Product[], totalPages: number, totalElements: number, last: boolean }>(`products/search?page=${page}&size=${size}`, {
       method: "post",
       body: filter ?? {},
       errorMessage: "Error fetching products."
@@ -46,6 +50,15 @@ class AllProductService {
     return await sendApiRequest<void>(`products/${id}`, {
       method: "delete",
       errorMessage: "Error removing Product.",
+    })
+  }
+
+  static async generateInventoryReport(filter: ProductFilterDTO): Promise<Blob> {
+    return await sendApiRequest<Blob>(`products/inventory-report`, {
+      method: "post",
+      body: filter,
+      responseType: "blob",
+      errorMessage: "Error generating PDF file"
     })
   }
 }

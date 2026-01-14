@@ -27,8 +27,9 @@ export function SupplyList ({
   productInfo = false,
 }: SupplyListProps) {
   const [items, setItems] = useState<Product[]>([]);
+  const [page, setPage] = useState<number>(0);
+  const [hasMore, setHasMore] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
   const { showAlert } = useAlert();
 
   const buildFilterDTO = (filter: ProductFilterDTO) => {
@@ -52,32 +53,47 @@ export function SupplyList ({
     return filterDTO;
   };
 
-  const fetchItems = async (filter: ProductFilterDTO): Promise<void> => {
+  const fetchItems = async (pageNum: number = 0, append: boolean = false): Promise<void> => {
+    setLoading(true);
     const filterDTO = buildFilterDTO(filter);
 
-    AllProductService.getProducts(filterDTO)
+    AllProductService.getProducts(filterDTO, pageNum, 30)
       .then((data) => {
-        const sortedItems = data.sort((a, b) =>
-          a.name.localeCompare(b.name)
-        );
-        setItems(sortedItems);
-        setError(null);
+        const content = data?.content || [];
+
+        if (append) {
+          setItems(prev => [...prev, ...content]);
+        } else {
+          setItems(content);
+        }
+
+        setHasMore(!data.last);
+        setPage(pageNum);
+        setLoading(false);
       })
       .catch((error) => {
-        setItems([]);
+        if(!append) setItems([]);
+        setLoading(false);
         showAlert("Błąd", AlertType.ERROR);
-        setError("Błąd podczas pobierania produktów");
         console.error("Error fetching products:", error);
       })
-      .finally(() => {
-        setLoading(false);
-      });
   };
 
   useEffect(() => {
-    setLoading(true);
-    fetchItems(filter);
+    fetchItems(0, false);
+    setPage(0);
+    setHasMore(true);
   }, [filter]);
+
+  const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
+      const target = e.currentTarget;
+      const scrolledToBottom = 
+        target.scrollHeight - target.scrollTop <= target.clientHeight + 100; // 100px b4 end of the list
+  
+      if (scrolledToBottom && hasMore && !loading) {
+        fetchItems(page + 1, true);
+      }
+    }, [hasMore, loading, page, filter]);
 
   return (
     <>
@@ -89,10 +105,6 @@ export function SupplyList ({
           <div className="loading-dot relative flex align-items-center height-max width-25"></div>
           <div className="loading-dot relative flex align-items-center height-max width-25"></div>
         </div>
-      ) : error ? (
-        <div className="list-error absolute flex-column justify-items-center align-items-center">
-          <h2>Coś poszło nie tak 😵</h2>
-        </div>
       ) : (
         <section className="products-list-section width-95 flex align-items-center justify-center mt-05">
           <ItemList
@@ -103,6 +115,9 @@ export function SupplyList ({
             setRemoveProductId={setRemoveProductId}
             className="products"
             productInfo={productInfo}
+            onScroll={handleScroll}
+            isLoading={loading}
+            hasMore={hasMore}
           />
         </section>
       )}

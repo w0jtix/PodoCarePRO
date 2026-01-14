@@ -31,6 +31,9 @@ export function PriceListDashboard() {
     categoryIds: [1],
     keyword: "",
   });
+  const [page, setPage] = useState<number>(0);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const [services, setServices] = useState<BaseService[]>([]);
   const [serviceFilter, setServiceFilter] = useState<ServiceFilterDTO>({
     categoryIds: null,
@@ -46,14 +49,24 @@ export function PriceListDashboard() {
   const { showAlert } = useAlert();
 
 
-  const fetchProducts = async (): Promise<void> => {
+  const fetchProducts = async (pageNum: number = 0, append: boolean = false): Promise<void> => {
     AllProductService.getProducts(productFilter)
       .then((data) => {
-        const sortedItems = data.sort((a, b) => a.name.localeCompare(b.name));
-        setProducts(sortedItems);
+        const content = data?.content || [];
+
+        if (append) {
+          setProducts((prev) => [...prev, ...content]);
+        } else {
+          setProducts(content);
+        }
+
+        setHasMore(!data.last);
+        setPage(pageNum);
+        setLoading(false);
       })
       .catch((error) => {
-        setProducts([]);
+        if (!append) setProducts([]);
+        setLoading(false);
         showAlert("Błąd", AlertType.ERROR);
         console.error("Error fetching products:", error);
       });
@@ -124,10 +137,28 @@ export function PriceListDashboard() {
   };
 
   useEffect(() => {
-    fetchProducts();
     fetchServices();
     fetchCategories();
-  }, [productFilter, serviceFilter]);
+  }, [serviceFilter]);
+
+  useEffect(() => {
+    fetchProducts(0, false);
+    setPage(0);
+    setHasMore(true);
+  }, [productFilter]);
+
+  const handleScroll = useCallback(
+    (e: React.UIEvent<HTMLDivElement>) => {
+      const target = e.currentTarget;
+      const scrolledToBottom =
+        target.scrollHeight - target.scrollTop <= target.clientHeight + 100; // 100px b4 end of the list
+
+      if (scrolledToBottom && hasMore && !loading) {
+        fetchProducts(page + 1, true);
+      }
+    },
+    [hasMore, loading, page, productFilter]
+  );
 
   return (
     <div className="dashboard-panel width-85 height-max flex-column align-items-center">
@@ -234,6 +265,9 @@ export function PriceListDashboard() {
               setQuickVisitSummaryVisible(true);
             }}
             className="products pricelist"
+            onScroll={handleScroll}
+            isLoading={loading}
+            hasMore={hasMore}
           />
         </div>
       </div>

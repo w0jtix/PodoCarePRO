@@ -13,6 +13,10 @@ import com.podocare.PodoCareWebsite.repo.SaleItemRepo;
 import com.podocare.PodoCareWebsite.repo.UsageRecordRepo;
 import com.podocare.PodoCareWebsite.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,6 +55,26 @@ public class ProductServiceImpl implements ProductService {
                 .stream()
                 .map(ProductDTO::new)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<ProductDTO> getProducts(ProductFilterDTO filter, int page, int size) {
+        if(isNull(filter)) {
+            filter = new ProductFilterDTO();
+        }
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc("brand.name"), Sort.Order.asc("name")));
+
+        Page<Product> products = productRepo.findAllWithFilters(
+                filter.getProductIds(),
+                filter.getCategoryIds(),
+                filter.getBrandIds(),
+                filter.getKeyword(),
+                filter.getIncludeZero(),
+                filter.getIsDeleted(),
+                pageable);
+
+        return products.map(ProductDTO::new);
     }
 
     @Override
