@@ -1,0 +1,250 @@
+import { Action } from "../../models/action";
+import {
+  BaseService,
+  NewBaseService,
+  NewServiceVariant,
+  ServiceVariant,
+} from "../../models/service";
+import { useState, useEffect, useCallback } from "react";
+import { BaseServiceCategory } from "../../models/categories";
+import BaseServiceCategoryService from "../../services/BaseServiceCategoryService";
+import ActionButton from "../ActionButton";
+import TextInput from "../TextInput";
+import DigitInput from "../DigitInput";
+import DropdownSelect from "../DropdownSelect";
+import VariantForm from "./VariantForm";
+import { useAlert } from "../Alert/AlertProvider";
+import { AlertType } from "../../models/alert";
+
+export interface ServiceFormProps {
+  serviceDTO: NewBaseService | BaseService;
+  setServiceDTO: React.Dispatch<
+    React.SetStateAction<NewBaseService | BaseService>
+  >;
+  action: Action;
+  className?: string;
+}
+
+export function ServiceForm({
+  serviceDTO,
+  action,
+  setServiceDTO,
+  className = "",
+}: ServiceFormProps) {
+  const [categories, setCategories] = useState<BaseServiceCategory[]>([]);
+  const [expandedVariantIndex, setExpandedVariantIndex] = useState<
+    number | null
+  >(null);
+  const { showAlert } = useAlert();
+
+  const fetchCategories = async (): Promise<void> => {
+    BaseServiceCategoryService.getCategories()
+      .then((data) => {
+        setCategories(data);
+      })
+      .catch((error) => {
+        setCategories([]);
+        showAlert("Błąd", AlertType.ERROR);
+        console.error("Error fetching categories: ", error);
+      });
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const toggleVariantExpand = (index: number) => {
+    setExpandedVariantIndex((prev) => (prev === index ? null : index));
+  };
+
+  const handleCategoryChange = useCallback(
+    (categories: BaseServiceCategory | BaseServiceCategory[] | null) => {
+      setServiceDTO((prev) => ({
+        ...prev,
+        category: Array.isArray(categories)
+          ? categories[0] || null
+          : categories,
+      }));
+    },
+    []
+  );
+
+  const handleNameChange = useCallback((name: string) => {
+    setServiceDTO((prev) => ({
+      ...prev,
+      name: name,
+    }));
+  }, []);
+
+  const handlePriceChange = useCallback((price: number | null) => {
+    if (price === null) {
+      price = 0;
+    }
+    setServiceDTO((prev) => ({
+      ...prev,
+      price: price,
+    }));
+  }, []);
+
+  const handleDurationChange = useCallback((duration: number | null) => {
+    if (duration === null) {
+      duration = 0;
+    }
+
+    setServiceDTO((prev) => ({
+      ...prev,
+      duration: duration,
+    }));
+  }, []);
+
+  const handleAddVariant = useCallback(() => {
+    setServiceDTO((prev) => ({
+      ...prev,
+      variants: [
+        ...(prev.variants || []),
+        {
+          name: "",
+          price: 0,
+          duration: 0,
+        },
+      ],
+    }));
+  }, [setServiceDTO]);
+
+  const handleRemoveVariant = useCallback((indexToRemove: number) => {
+    setServiceDTO((prev) => ({
+      ...prev,
+      variants: prev.variants.filter((_, index) => index !== indexToRemove),
+    }));
+  }, []);
+
+  const handleVariantChange = useCallback(
+    (index: number, updatedVariant: ServiceVariant | NewServiceVariant) => {
+      setServiceDTO((prev) => ({
+        ...prev,
+        variants: prev.variants.map((v, i) =>
+          i === index ? updatedVariant : v
+        ),
+      }));
+    },
+    []
+  );
+
+  return (
+    <div
+      className={`custom-form-container flex-column width-max g-05 ${action
+        .toString()
+        .toLowerCase()} ${className}`}
+    >
+      <section className="form-row flex width-max align-items-center space-between">
+        <span className="input-label">Nazwa:</span>
+        <TextInput
+          dropdown={false}
+          value={serviceDTO.name}
+          onSelect={(inputName) => {
+            if (typeof inputName === "string") {
+              handleNameChange(inputName);
+            }
+          }}
+          className="name"
+        />
+      </section>
+      <section className="form-row flex width-max align-items-center space-between">
+        <span className="input-label">Kategoria:</span>
+        <DropdownSelect
+          items={categories}
+          value={serviceDTO.category}
+          onChange={(cat) => handleCategoryChange(cat)}
+          placeholder="Kategoria"
+          searchable={false}
+          allowNew={false}
+          className="categories"
+        />
+      </section>
+      <section className="form-row flex width-max align-items-center space-between">
+        <span className="input-label">Czas trwania (min):</span>
+        <DigitInput
+          onChange={handleDurationChange}
+          value={serviceDTO.duration}
+          max={999}
+          className={"service"}
+        />
+      </section>
+      <section className="form-row flex width-max align-items-center space-between">
+        <span className="input-label">Cena:</span>
+        <DigitInput
+          onChange={handlePriceChange}
+          value={serviceDTO.price}
+          max={999}
+          className={"service"}
+        />
+      </section>
+      <section className="service-variants-container">
+        <ActionButton
+          src={"src/assets/addNew.svg"}
+          alt={"Dodaj Wariant"}
+          text={"Dodaj wariant usługi"}
+          onClick={() => handleAddVariant()}
+          className=""
+        />
+        <div className="variants-list flex-column mt-1 mb-1 g-05">
+          {serviceDTO.variants.length > 0 &&
+            serviceDTO.variants.map((variant, index) => (
+              <div key={index} className="variant-wrapper">
+                <div
+                  className={`variant-header pointer flex width-max space-between align-items-center ${
+                    expandedVariantIndex === index ? "expanded" : ""
+                  }`}
+                  onClick={() => toggleVariantExpand(index)}
+                >
+                  <div className="variant-name-div ml-05 g-1 flex align-items-center">
+                    <img
+                      src={"src/assets/arrow_down.svg"}
+                      alt="Toggle dropdown"
+                      className={`arrow-down ${
+                        expandedVariantIndex === index ? "rotated" : ""
+                      }`}
+                    />
+                    <span className="variant-value name">
+                      {variant.name === ""
+                        ? `Wariant ${index + 1}`
+                        : variant.name}
+                    </span>
+                  </div>
+                  <div className="variant-dp flex align-items-center g-2">
+                    <span className="variant-value">{variant.duration}min</span>
+                    <span className="variant-value">{variant.price}zł</span>
+                    <ActionButton
+                      src="src/assets/cancel.svg"
+                      alt="Usuń Wariant"
+                      iconTitle={"Usuń Wariant"}
+                      text="Usuń"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveVariant(index);
+                      }}
+                      disableText={true}
+                      className="variant-remove"
+                    />
+                  </div>
+                </div>
+                {expandedVariantIndex === index && (
+                  <VariantForm
+                    variant={variant}
+                    handleVariant={(updated) =>
+                      handleVariantChange(index, updated)
+                    }
+                    action={action}
+                    className="variant-form"
+                  />
+                )}
+              </div>
+            ))}
+        </div>
+      </section>
+      
+    </div>
+  );
+}
+
+export default ServiceForm;

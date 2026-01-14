@@ -1,0 +1,129 @@
+import avatar5 from "../assets/avatars/avatar5.png";
+import { useState, useEffect, useRef, useCallback } from "react";
+import {
+  USER_MENU_ITEMS,
+  getIconPath,
+  getIconAlt,
+} from "../constants/modules";
+import AuthService from "../services/AuthService";
+import { useNavigate } from "react-router-dom";
+import { AVAILABLE_AVATARS } from "../constants/avatars";
+import { useUser } from "./User/UserProvider";
+import { RoleType } from "../models/login";
+
+export interface UserMenuProps {
+  username?: string;
+  avatar?: string;
+  className?: string;
+}
+
+export function UserMenu({
+  username,
+  avatar,
+  className = "",
+}: UserMenuProps) {
+  const [isMenuVisible, setMenuVisible] = useState<boolean>(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  const navigate = useNavigate();
+  const { user } = useUser();
+
+  const currentUser = AuthService.getCurrentUser();
+  const displayUsername = username ?? currentUser?.username;
+  const displayAvatar =
+    avatar
+      ? AVAILABLE_AVATARS[avatar]
+      : currentUser?.avatar
+      ? AVAILABLE_AVATARS[currentUser.avatar]
+      : avatar5;
+
+  const hasPermission = (requiredPermissions?: string[]): boolean => {
+    if (!requiredPermissions || requiredPermissions.length === 0) {
+      return true;
+    }
+
+    if (!user || !user.roles) {
+      return false;
+    }
+
+    return requiredPermissions.some((permission) =>
+      user.roles.includes(permission as RoleType)
+    );
+  };
+
+  const visibleUserMenuItems = USER_MENU_ITEMS.filter((item) =>
+    hasPermission(item.permissions)
+  );
+
+   const handleAction = (label: string) => {
+    switch (label) {
+      case "Profil":
+        navigate("/profile");
+        break;
+      case "Ustawienia":
+        navigate("/ustawienia");
+        break;
+      case "Wyloguj":
+        AuthService.logout();
+        break;
+    }
+    setMenuVisible(false);
+  };
+
+  const toggleMenu = useCallback(() => {
+    setMenuVisible((prev) => !prev);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuVisible(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  return (
+    <div className={`user-menu flex-column justify-center height-auto transparent border-none relative ${className}`} ref={menuRef}>
+      <button className="dropdown-button flex justify-center align-items-center transparent pointer g-10px border-none" onClick={toggleMenu}>
+        <img
+          src={displayAvatar}
+          alt={`${username} profile picture`}
+          className="user-pfp"
+        />
+        <h2 className="username">{displayUsername}</h2>
+        <img
+          src="src/assets/arrow_down.svg"
+          alt="arrow down"
+          className={`arrow-down ${isMenuVisible ? "rotated" : ""}`}
+        />
+      </button>
+      {isMenuVisible && (
+        <div className="dropdown-menu absolute mt-05" onClick={(e) => e.stopPropagation()}>
+          <ul className="user-menu-dropdown-list m-0 p-0">
+            {visibleUserMenuItems.map((item) => (
+              <li
+                key={item.label}
+                className="dropdown-item-user-menu pointer flex align-items-center justify-start"
+                onClick={() => handleAction(item.label)}
+              >
+                <img
+                  src={getIconPath(item.icon)}
+                  alt={getIconAlt(item.icon)}
+                  className={item.className}
+                />
+                {item.label}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default UserMenu;
