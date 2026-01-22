@@ -1,0 +1,12 @@
+# Node.js / React
+/fe/node_modules/
+/fe/.env
+
+# IntelliJ IDEA
+.idea/
+
+# Java
+/be/PodoCareWebsite/target/
+/be/.idea/
+/be/logs/
+/be/PodoCareWebsite/logs/*.log
