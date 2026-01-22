@@ -197,7 +197,6 @@ export function UsageRecordsManagePopup({
 
   useEffect(() => {
     fetchUsageRecords();
-    console.log(filter);
   }, [filter]);
 
   const handleScroll = useCallback(

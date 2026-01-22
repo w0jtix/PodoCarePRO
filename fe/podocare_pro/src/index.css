@@ -44,6 +44,13 @@
   --yellow-podocare: #fcb50c;
 }
 
+.text-ellipsis {
+  white-space: nowrap;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 175px;
+}
 .relative {
   position: relative;
 }
@@ -120,6 +127,9 @@
 }
 .mr-1 {
   margin-right: 1rem;
+}
+.mr-2 {
+  margin-right: 2rem;
 }
 .mt-auto {
   margin-top:auto;
@@ -324,6 +334,9 @@
 }
 .g-05 {
   gap:0.5rem;
+}
+.g-075 {
+  gap:0.75rem;
 }
 .g-1{
   gap: 1rem;
@@ -2040,10 +2053,8 @@ input[type="number"]::-webkit-inner-spin-button {
   background: #f0f0f0;
 }
 .dropdown-item.disabled {
-  color: #999;
-  cursor:default;
-  font-size:13px;
-  justify-content: center;
+  color: rgba(255,255,255,0.3);
+  cursor:not-allowed;
 }
 /* DATE INPUT */
 
@@ -3484,4 +3495,291 @@ background-color: rgba(0, 218, 0, 0.35);
 }
 .product-action-button.supply-filter {
   width: 203px;
+}
+
+
+.employee-stat-card{
+  height:320px;
+  border-radius: 15px;
+  border:var(--border-dashboard-inner);
+  background-color: #0e011fc8;
+}
+.employee-stat-card.selected{
+  background-color: #110126c8;
+  border: 1px solid rgb(97, 47, 162);  
+}
+
+.emp-card-header{
+  height:50px;
+  overflow: visible;
+}
+.emp-card-scroll-container{
+  overflow: hidden;
+  scroll-behavior: smooth;
+}
+.empl-stat-card-body{
+  height:fit-content;
+  flex-shrink: 0;
+}
+.empl-stat-card-body.last{
+  margin-bottom: 2rem;
+}
+.empl-avatar-div{
+  height: 50px;
+  width:50px;
+  border-radius: 50%;
+  border: 2px solid white;
+  overflow: hidden;
+  margin-top: -5px;
+  margin-left: -26px;
+}
+.empl-avatar{
+  object-fit: cover;
+}
+
+/* Progress Bar */
+.progress-bar-container {
+  width: 100%;
+  height: 14px;
+  border-radius: 4px;
+  position: relative;
+  overflow: visible;
+}
+.progress-bar-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+}
+.progress-bar-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: 4px;
+  animation: progressLoad 2s ease-out;
+}
+@keyframes progressLoad {
+  from { width: 0; }
+}
+.progress-bar-marker {
+  position: absolute;
+  top: -3px;
+  width: 2px;
+  height: calc(100% + 6px);
+  background-color: white;
+  border-radius: 1px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  animation: markerFadeIn 1s ease-in 1s forwards;
+}
+@keyframes markerFadeIn {
+  to { opacity: 1; }
+}
+.progress-bar-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 9px;
+  font-weight: 500;
+  color: white;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+}
+.stat-span {
+  
+  font-size:13px;
+}
+.stat-span.green {
+  color:rgb(0, 254, 0);
+  font-size:14px;
+}
+.stat-span.green.f13 {
+  color:rgb(0, 254, 0);
+  font-size:13px;
+}
+.stat-span.red {
+  color:red;
+  font-size:14px;
+}
+.stat-span.red.f13 {
+  color:red;
+  font-size:13px;
+}
+.stat-span.yellow {
+  color:var(--yellow-podocare);
+  font-size:14px;
+}
+.stat-span.white {
+  color: white;
+  font-size:14px;
+}
+.stat-counter-box{
+  border: var(--border-dashboard-inner);
+  border-radius:5px;
+  padding:8px;
+  background-color: rgb(12, 1, 25);
+  box-shadow: inset 0 0 100px rgba(255, 255, 255, 0.1);
+}
+.product-action-button-container.emp-stats-scroll {
+  justify-self:center;
+  align-self:center;
+  width: 100%;
+  margin-top: 1rem;
+}
+.product-action-button-container.emp-stats-scroll.down {
+  margin-top:1.2rem;
+} 
+.product-action-button.emp-stats-scroll {
+  border: none;
+  width: 100%;
+  height: 17px;
+  border-radius: 5px;
+}
+.product-action-button.emp-stats-scroll .product-action-button-icon.emp-stats-scroll {
+  opacity:40%;
+}
+.product-action-button.emp-stats-scroll .product-action-button-icon.emp-stats-scroll.up {
+  rotate:180deg;
+}
+.product-action-button.emp-stats-scroll:hover {
+  background-color: rgba(255, 255, 255, 0.07);
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+.product-action-button.emp-stats-scroll.up:hover {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.product-action-button.emp-stats-scroll:hover .product-action-button-icon.emp-stats-scroll {
+  opacity: 75%;
+}
+
+/* ==================== EMPLOYEE REVENUE CHART ==================== */
+.chart-employees {
+  height: 350px;
+}
+
+.employee-revenue-chart {
+  background-color: #0e011fc8;
+  border: var(--border-dashboard-inner);
+  border-radius: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.chart-filters {
+  flex-wrap: wrap;
+}
+
+.chart-type-toggle {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  color: #e5e7eb;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: auto;
+}
+
+.chart-type-toggle:hover {
+  background: rgba(139, 92, 246, 0.2);
+  border-color: rgba(139, 92, 246, 0.5);
+}
+
+.chart-select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  color: #e5e7eb;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 150px;
+}
+
+.chart-container {
+  width: 100%;
+  min-height: 300px;
+}
+
+.chart-container *:focus,
+.recharts-wrapper:focus,
+.recharts-surface:focus {
+  outline: none;
+  border: none;
+  box-shadow: none;
+}
+.recharts-tooltip-cursor {
+  fill: rgba(139, 92, 246, 0.2);
+}
+.recharts-cartesian-axis-tick-labels.recharts-xAxis-tick-labels,
+.recharts-cartesian-axis-tick-labels.recharts-yAxis-tick-labels,
+.chart-tooltip-label,
+.chart-tooltip-item {
+  font-family: var(--font-h2-outfit);
+}
+/* Tooltip */
+.chart-tooltip {
+  background-color: #0e011f;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 0rem 1rem 0.5rem 1rem;
+  box-shadow: inset 0 0 25px rgba(255, 255, 255, 0.05);
+}
+.chart-tooltip-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.chart-tooltip-item {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.25px;
+}
+.chart-tooltip-value {
+  font-weight: 600;
+  color: #fff;
+}
+@media (max-width: 768px) {
+  .chart-filters {
+    flex-direction: column;
+  }
+
+  .chart-select {
+    width: 100%;
+  }
+
+  .employee-revenue-chart {
+    padding: 1rem;
+  }
+}
+.product-action-button.chart-selected {
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.12) ;
+}
+
+.setting-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+}
+.month-row .product-action-button {
+  min-width: 100px;
+}
+.month-row .product-action-button.selected {
+  border: 1px solid var(--yellow-podocare);
+  background-color: rgba(251,197,12,0.2);
+}
+.card-date {
+  font-size: 11px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.6);
 }

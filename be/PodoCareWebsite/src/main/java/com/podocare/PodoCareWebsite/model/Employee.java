@@ -1,6 +1,9 @@
 package com.podocare.PodoCareWebsite.model;
 
+import com.podocare.PodoCareWebsite.model.constants.EmploymentType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 
 @Entity
@@ -24,6 +27,21 @@ public class Employee {
     @Column(nullable = false)
     @Builder.Default
     private Boolean isDeleted = false;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private EmploymentType employmentType = EmploymentType.FULL;
+
+    @Min(0)
+    @Max(100)
+    @Builder.Default
+    private Double bonusPercent = 0.0;
+
+    @Min(0)
+    @Max(100)
+    @Builder.Default
+    private Double saleBonusPercent = 0.0;
 
     public void softDelete() {
         this.isDeleted = true;

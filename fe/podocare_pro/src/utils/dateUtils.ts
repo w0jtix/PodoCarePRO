@@ -63,3 +63,30 @@
     const currentMonth = new Date().getMonth();
     return MONTHS[currentMonth].name;
   };
+
+  // Chart Axis Labels
+  export const MONTH_LABELS_SHORT = [
+    "Sty", "Lut", "Mar", "Kwi", "Maj", "Cze",
+    "Lip", "Sie", "Wrz", "Paź", "Lis", "Gru"
+  ];
+
+   export const SHORT_TO_INDEX: Record<string, number> = {
+    "Sty": 0, "Lut": 1, "Mar": 2, "Kwi": 3, "Maj": 4, "Cze": 5,
+    "Lip": 6, "Sie": 7, "Wrz": 8, "Paź": 9, "Lis": 10, "Gru": 11
+  };
+
+  // For Chart Day Axis
+  export const getDaysInMonth = (year: number, month: number): number => {
+    return new Date(year, month, 0).getDate();
+  };
+
+  // DailyChart Axis Labels
+  export const generateDailyLabels = (year: number, month: number): string[] => {
+    const daysCount = getDaysInMonth(year, month);
+    return Array.from({ length: daysCount }, (_, i) => String(i + 1));
+  };
+
+  // MonthlyChart Axis Labels
+  export const generateMonthlyLabels = (): string[] => {
+    return [...MONTH_LABELS_SHORT];
+  };

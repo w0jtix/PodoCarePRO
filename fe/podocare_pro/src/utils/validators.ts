@@ -18,6 +18,7 @@ import { PaymentMethod } from "../models/payment";
 import { UsageRecordItem } from "../models/usage-record";
 import { CompanyExpense, CompanyExpenseItem, NewCompanyExpense, NewCompanyExpenseItem } from "../models/expense";
 import { exec } from "child_process";
+import { NewStatSettings, StatSettings } from "../models/business_settings";
 
   export function validateLoginForm(
     username: string,
@@ -236,6 +237,44 @@ import { exec } from "child_process";
     sameClients;
     
   if (noChangesDetected) {
+        return "Brak zmian!";
+      }
+    }
+    return null;
+  }
+
+  export function validateStatSettingsForm(
+  settingsForm: NewStatSettings | StatSettings,
+  existingSettings: StatSettings
+  ): string | null {
+    if(Object.values(settingsForm).some(
+      (value) => value === null || value === undefined
+    )) {
+      return "Brak pełnych informacji!";
+    }
+    if(Object.entries(settingsForm).some(
+      ([key, value]) => key !== 'saleBonusPayoutMonths' && value === 0
+    )) {
+      return "Wartość nie może być 0!";
+    }
+    const months = settingsForm.saleBonusPayoutMonths;
+    if (months.length !== 4) {
+      return "Wybierz dokładnie 4 miesiące!";
+    }
+    const firstMonthMod = months[0] % 3;
+    if (!months.every(m => m % 3 === firstMonthMod)) {
+      return "Premia kwartalna wybierz co 3 miesiąc!";
+    }
+    if(!existingSettings) {
+      return "Błąd walidacji formularza."
+    }
+    if(existingSettings) {
+      const noChangesDetected =
+      settingsForm.bonusThreshold === existingSettings.bonusThreshold &&
+      settingsForm.servicesRevenueGoal === existingSettings.servicesRevenueGoal &&
+      settingsForm.productsRevenueGoal === existingSettings.productsRevenueGoal &&
+      JSON.stringify([...settingsForm.saleBonusPayoutMonths].sort()) === JSON.stringify([...existingSettings.saleBonusPayoutMonths].sort());
+      if (noChangesDetected) {
         return "Brak zmian!";
       }
     }

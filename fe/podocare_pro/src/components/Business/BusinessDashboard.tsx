@@ -2,6 +2,8 @@ import ModulesNavigationBar from "../Orders/ModulesNavigationBar";
 import { BUSINESS_SUBMENU_ITEMS, SubModuleType } from "../../constants/modules";
 import { useState } from "react";
 import ExpenseHistory from "./ExpenseHistory";
+import EmployeesStats from "./EmployeesStats";
+import BusinessSettings from "./BusinessSettings";
 
 export function BusinessDashboard() {
     const [moduleVisible, setModuleVisible] = useState<SubModuleType>("Common");
@@ -15,6 +17,8 @@ export function BusinessDashboard() {
             submenuItems={submenuItems}
         />
         {moduleVisible === "Common" && <ExpenseHistory/>}
+        {moduleVisible === "Employees" && <EmployeesStats/>}
+        {moduleVisible === "Settings" && <BusinessSettings />}
         </div>
     );
 

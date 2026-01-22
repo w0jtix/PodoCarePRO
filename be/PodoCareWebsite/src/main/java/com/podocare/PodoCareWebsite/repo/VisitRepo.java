@@ -1,5 +1,6 @@
 package com.podocare.PodoCareWebsite.repo;
 
+import com.podocare.PodoCareWebsite.model.SaleItem;
 import com.podocare.PodoCareWebsite.model.Visit;
 import com.podocare.PodoCareWebsite.model.constants.PaymentStatus;
 import org.springframework.data.domain.Page;
@@ -9,6 +10,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import com.podocare.PodoCareWebsite.repo.projection.EmployeeRevenueProjection;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -146,5 +149,320 @@ public interface VisitRepo extends JpaRepository<Visit, Long>, JpaSpecificationE
     Optional<Visit> findByReviewId(@Param("reviewId") Long reviewId);
 
     boolean existsByClientId(Long clientId);
+
+    // Monthly revenue aggregation - sums payments for non-absence visits grouped by employee and month
+    @Query("""
+        SELECT e.id AS employeeId,
+               e.name AS employeeName,
+               MONTH(v.date) AS period,
+               COALESCE(SUM(p.amount), 0) AS revenue
+        FROM Visit v
+        JOIN v.employee e
+        LEFT JOIN v.payments p
+        WHERE v.absence = false
+          AND YEAR(v.date) = :year
+        GROUP BY e.id, e.name, MONTH(v.date)
+        ORDER BY e.id, MONTH(v.date)
+    """)
+    List<EmployeeRevenueProjection> findMonthlyRevenueByYear(@Param("year") Integer year);
+
+    // Daily revenue aggregation - sums payments for non-absence visits grouped by employee and day
+    @Query("""
+        SELECT e.id AS employeeId,
+               e.name AS employeeName,
+               DAY(v.date) AS period,
+               COALESCE(SUM(p.amount), 0) AS revenue
+        FROM Visit v
+        JOIN v.employee e
+        LEFT JOIN v.payments p
+        WHERE v.absence = false
+          AND YEAR(v.date) = :year
+          AND MONTH(v.date) = :month
+        GROUP BY e.id, e.name, DAY(v.date)
+        ORDER BY e.id, DAY(v.date)
+    """)
+    List<EmployeeRevenueProjection> findDailyRevenueByYearAndMonth(
+            @Param("year") Integer year,
+            @Param("month") Integer month
+    );
+
+    // ========== Employee Stats Queries ==========
+
+    @Query("""
+        SELECT COALESCE(SUM(vi.duration), 0)
+        FROM Visit v
+        JOIN v.items vi
+        WHERE v.employee.id = :empId
+          AND v.absence = false
+          AND v.date BETWEEN :from AND :to
+    """)
+    Integer sumHoursWithClients(
+            @Param("empId") Long empId,
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+
+    @Query("""
+        SELECT COALESCE(SUM(vi.finalPrice), 0)
+        FROM Visit v
+        JOIN v.items vi
+        WHERE v.employee.id = :empId
+          AND v.absence = false
+          AND v.date BETWEEN :from AND :to
+    """)
+    Double sumServicesRevenue(
+            @Param("empId") Long empId,
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+
+    @Query("""
+        SELECT COALESCE(SUM(cd.value), 0)
+        FROM Visit v
+        JOIN v.debtRedemptions dr
+        JOIN dr.debtSource cd
+        WHERE v.employee.id = :empId
+          AND v.date BETWEEN :from AND :to
+          AND cd.type = com.podocare.PodoCareWebsite.model.constants.DebtType.ABSENCE_FEE
+    """)
+    Double sumAbsenceFeeRedemptions(
+            @Param("empId") Long empId,
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+
+    @Query("""
+        SELECT COALESCE(SUM(s.totalValue), 0)
+        FROM Visit v
+        JOIN v.sale s
+        WHERE v.employee.id = :empId
+          AND v.absence = false
+          AND v.date BETWEEN :from AND :to
+    """)
+    Double sumProductsRevenue(
+            @Param("empId") Long empId,
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+
+    @Query("""
+        SELECT COALESCE(SUM(p.amount), 0)
+        FROM Visit v
+        JOIN v.payments p
+        WHERE v.employee.id = :empId
+          AND v.absence = false
+          AND v.date BETWEEN :from AND :to
+    """)
+    Double sumTotalRevenue(
+            @Param("empId") Long empId,
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+
+    @Query("""
+        SELECT COUNT(vi)
+        FROM Visit v
+        JOIN v.items vi
+        WHERE v.employee.id = :empId
+          AND v.absence = false
+          AND v.date BETWEEN :from AND :to
+    """)
+    Integer countServicesDone(
+            @Param("empId") Long empId,
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+
+    @Query("""
+        SELECT COUNT(si)
+        FROM Visit v
+        JOIN v.sale s
+        JOIN s.items si
+        WHERE v.employee.id = :empId
+          AND v.absence = false
+          AND v.date BETWEEN :from AND :to
+          AND si.product IS NOT NULL
+    """)
+    Integer countProductsSold(
+            @Param("empId") Long empId,
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+
+    @Query("""
+        SELECT COUNT(si)
+        FROM Visit v
+        JOIN v.sale s
+        JOIN s.items si
+        WHERE v.employee.id = :empId
+          AND v.absence = false
+          AND v.date BETWEEN :from AND :to
+          AND si.voucher IS NOT NULL
+    """)
+    Integer countVouchersSold(
+            @Param("empId") Long empId,
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+
+    @Query("""
+        SELECT COUNT(DISTINCT v.client.id)
+        FROM Visit v
+        WHERE v.employee.id = :empId
+          AND v.date BETWEEN :from AND :to
+          AND v.client.id NOT IN (
+              SELECT DISTINCT v2.client.id
+              FROM Visit v2
+              WHERE v2.date < :from
+          )
+    """)
+    Integer countNewClients(
+            @Param("empId") Long empId,
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+
+    @Query("""
+        SELECT COUNT(DISTINCT v.client.id)
+        FROM Visit v
+        WHERE v.employee.id = :empId
+          AND v.isBoost = true
+          AND v.date BETWEEN :from AND :to
+          AND v.client.id NOT IN (
+              SELECT DISTINCT v2.client.id
+              FROM Visit v2
+              WHERE v2.date < :from
+          )
+    """)
+    Integer countNewBoostClients(
+            @Param("empId") Long empId,
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+
+    @Query(value = """
+        SELECT vi.name
+        FROM visit v
+        JOIN visit_item vi ON vi.visit_id = v.id
+        WHERE v.employee_id = :empId
+          AND v.absence = false
+          AND v.date BETWEEN :from AND :to
+        GROUP BY vi.name
+        ORDER BY COUNT(vi.id) DESC
+        LIMIT 1
+    """, nativeQuery = true)
+    String findTopSellingServiceName(
+            @Param("empId") Long empId,
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+
+    @Query(value = """
+        SELECT si.name
+        FROM visit v
+        JOIN sale s ON v.sale_id = s.id
+        JOIN sale_item si ON si.sale_id = s.id
+        WHERE v.employee_id = :empId
+          AND v.absence = false
+          AND v.date BETWEEN :from AND :to
+          AND si.product_id IS NOT NULL
+        GROUP BY si.name
+        ORDER BY COUNT(si.id) DESC
+        LIMIT 1
+    """, nativeQuery = true)
+    String findTopSellingProductName(
+            @Param("empId") Long empId,
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+
+    @Query("""
+        SELECT COUNT(DISTINCT c.id)
+        FROM Client c
+        WHERE (SELECT COUNT(v) FROM Visit v
+               WHERE v.client.id = c.id AND v.employee.id = :empId) >= 2
+    """)
+    Integer countClientsWithSecondVisit(@Param("empId") Long empId);
+
+    @Query("""
+        SELECT COUNT(DISTINCT c.id)
+        FROM Client c
+        WHERE (c.boostClient = true OR c.id IN (
+            SELECT DISTINCT v.client.id
+            FROM Visit v
+            WHERE v.isBoost = true AND v.employee.id = :empId
+        ))
+        AND (SELECT COUNT(v2) FROM Visit v2 WHERE v2.client.id = c.id AND v2.employee.id = :empId) >= 2
+    """)
+    Integer countBoostClientsWithSecondVisit(@Param("empId") Long empId);
+
+    @Query("""
+        SELECT COUNT(DISTINCT c.id)
+        FROM Client c
+        WHERE c.id IN (
+            SELECT DISTINCT v.client.id
+            FROM Visit v
+            WHERE v.employee.id = :empId
+        )
+    """)
+    Integer countTotalClients(@Param("empId") Long empId);
+
+    @Query("""
+        SELECT COUNT(DISTINCT c.id)
+        FROM Client c
+        WHERE c.id IN (
+            SELECT DISTINCT v.client.id
+            FROM Visit v
+            WHERE v.employee.id = :empId AND (v.isBoost = true OR v.client.boostClient = true)
+        )
+    """)
+    Integer countTotalBoostClients(@Param("empId") Long empId);
+
+    @Query("""
+        SELECT si
+        FROM Visit v
+        JOIN v.sale s
+        JOIN s.items si
+        WHERE v.employee.id = :empId
+          AND v.absence = false
+          AND v.date BETWEEN :from AND :to
+          AND si.product IS NOT NULL
+    """)
+    List<SaleItem> findSaleItemsWithProducts(
+            @Param("empId") Long empId,
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+
+    @Query("""
+        SELECT COALESCE(SUM(p.amount), 0)
+        FROM Visit v
+        JOIN v.payments p
+        WHERE v.employee.id = :empId
+          AND v.absence = false
+          AND v.date BETWEEN :from AND :to
+          AND p.method = com.podocare.PodoCareWebsite.model.constants.PaymentMethod.VOUCHER
+    """)
+    Double sumVoucherPayments(
+            @Param("empId") Long empId,
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+
+    @Query("""
+        SELECT COALESCE(SUM(si.price), 0)
+        FROM Visit v
+        JOIN v.sale s
+        JOIN s.items si
+        WHERE v.employee.id = :empId
+          AND v.absence = false
+          AND v.date BETWEEN :from AND :to
+          AND si.voucher IS NOT NULL
+    """)
+    Double sumVouchersSoldValue(
+            @Param("empId") Long empId,
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
 
 }

@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -34,4 +36,6 @@ public interface OrderProductRepo extends JpaRepository<OrderProduct, Long> {
     @Query("SELECT COUNT(op) FROM OrderProduct op WHERE op.product.id = :productId")
     long countByProductId(@Param("productId") Long productId);
 
+    @Query("SELECT op FROM OrderProduct op WHERE op.product.id = :productId ORDER BY op.order.orderDate DESC")
+    List<OrderProduct> findLatestByProductId(@Param("productId") Long productId, Pageable pageable);
 }

@@ -28,7 +28,7 @@ export const getIconAlt = (iconName: string): string => {
   return `${iconName}-icon`;
 };
 
-export type SubModuleType = 'Create' | 'History' | 'Common' | 'Stats' | 'Calculations';
+export type SubModuleType = 'Create' | 'History' | 'Common' | 'Stats' | 'Employees' | 'Settings';
 
 export interface SubMenuItem {
   name: string;
@@ -60,9 +60,9 @@ export const BUSINESS_SUBMENU_ITEMS: SubMenuItem[] = [
     alt: 'submenu-common'
   },
   { 
-    name: "Kalkulatory", 
-    module: 'Calculations', 
-    icon: 'math',
+    name: "Pracownicy", 
+    module: 'Employees', 
+    icon: 'employees',
     alt: 'submenu-calcs'
   },
   { 
@@ -70,6 +70,12 @@ export const BUSINESS_SUBMENU_ITEMS: SubMenuItem[] = [
     module: 'Stats', 
     icon: 'chart',
     alt: 'submenu-stats'
+  },
+  { 
+    name: "Ustawienia", 
+    module: 'Settings', 
+    icon: 'ustawienia',
+    alt: 'submenu-settings'
   },
 ];
 

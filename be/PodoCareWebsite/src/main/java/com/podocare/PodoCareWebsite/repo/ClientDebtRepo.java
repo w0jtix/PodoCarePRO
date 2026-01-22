@@ -35,4 +35,7 @@ public interface ClientDebtRepo extends JpaRepository<ClientDebt, Long> {
     );
 
     boolean existsByClientId(Long clientId);
+
+    @Query("SELECT COALESCE(SUM(cd.value), 0) FROM ClientDebt cd JOIN cd.sourceVisit v WHERE v.employee.id = :empId AND cd.createdAt BETWEEN :from AND :to")
+    Double sumDebtsCreated(@Param("empId") Long empId, @Param("from") java.time.LocalDate from, @Param("to") java.time.LocalDate to);
 }

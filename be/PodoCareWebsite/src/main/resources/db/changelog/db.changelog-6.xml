@@ -78,4 +78,107 @@
         </createIndex>
     </changeSet>
 
+    <changeSet id="6.3-add-employee-employment-type-and-bonus" author="Wojtek">
+        <addColumn tableName="employee">
+            <column name="employment_type" type="VARCHAR(20)" defaultValue="FULL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bonus_percent" type="DOUBLE PRECISION" defaultValueNumeric="0.0"/>
+            <column name="sale_bonus_percent" type="DOUBLE PRECISION" defaultValueNumeric="30.0"/>
+        </addColumn>
+
+        <update tableName="employee">
+            <column name="employment_type" value="FULL"/>
+            <column name="bonus_percent" valueNumeric="15.0"/>
+            <where>name = 'Maria'</where>
+        </update>
+
+        <update tableName="employee">
+            <column name="employment_type" value="THREE_QUARTERS"/>
+            <column name="bonus_percent" valueNumeric="15.0"/>
+            <where>name = 'Olga'</where>
+        </update>
+
+        <update tableName="employee">
+            <column name="employment_type" value="HALF"/>
+            <column name="bonus_percent" valueNumeric="15.0"/>
+            <where>name = 'Wojtek'</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="6.4-create-app-settings-sale-bonus-payout-months-table" author="Wojtek">
+        <createTable tableName="app_settings_sale_bonus_payout_months">
+            <column name="app_settings_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="month" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="app_settings_sale_bonus_payout_months"
+                baseColumnNames="app_settings_id"
+                constraintName="fk_app_settings_sale_bonus_payout_months"
+                referencedTableName="app_settings"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+
+        <!-- Default payout months: January, April, July, October -->
+        <insert tableName="app_settings_sale_bonus_payout_months"><column name="app_settings_id" valueNumeric="1"/><column name="month" valueNumeric="1"/></insert>
+        <insert tableName="app_settings_sale_bonus_payout_months"><column name="app_settings_id" valueNumeric="1"/><column name="month" valueNumeric="4"/></insert>
+        <insert tableName="app_settings_sale_bonus_payout_months"><column name="app_settings_id" valueNumeric="1"/><column name="month" valueNumeric="7"/></insert>
+        <insert tableName="app_settings_sale_bonus_payout_months"><column name="app_settings_id" valueNumeric="1"/><column name="month" valueNumeric="10"/></insert>
+    </changeSet>
+
+    <changeSet id="6.5-create-stat-settings-table" author="Wojtek">
+        <createTable tableName="stat_settings">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="bonus_threshold" type="INTEGER" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="services_revenue_goal" type="INTEGER" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="products_revenue_goal" type="INTEGER" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <insert tableName="stat_settings">
+            <column name="id" valueNumeric="1"/>
+            <column name="bonus_threshold" valueNumeric="1000"/>
+            <column name="services_revenue_goal" valueNumeric="3000"/>
+            <column name="products_revenue_goal" valueNumeric="500"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="6.6-move-sale-bonus-payout-months-to-stat-settings" author="Wojtek">
+        <createTable tableName="stat_settings_sale_bonus_payout_months">
+            <column name="stat_settings_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="month" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="stat_settings_sale_bonus_payout_months"
+                baseColumnNames="stat_settings_id"
+                constraintName="fk_stat_settings_sale_bonus_payout_months"
+                referencedTableName="stat_settings"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+
+        <sql>
+            INSERT INTO stat_settings_sale_bonus_payout_months (stat_settings_id, month)
+            SELECT 1, month FROM app_settings_sale_bonus_payout_months WHERE app_settings_id = 1
+        </sql>
+
+        <dropTable tableName="app_settings_sale_bonus_payout_months"/>
+    </changeSet>
+
 </databaseChangeLog>

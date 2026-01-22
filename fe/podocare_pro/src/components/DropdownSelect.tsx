@@ -32,6 +32,7 @@ export interface DropdownSelectProps<T extends DropdownItem> {
   newItemProps?: Record<string, any>;
 
   disabled?: boolean;
+  disabledItemIds?: (string | number)[];
   className?: string;
   searchPlaceholder?: string;
   emptyMessage?: string;
@@ -57,6 +58,7 @@ export function DropdownSelect<T extends DropdownItem>({
   newItemComponent: NewItemComponent,
   newItemProps = {},
   disabled = false,
+  disabledItemIds = [],
   className = "",
   searchPlaceholder = "Szukaj...",
   emptyMessage = "Nie znaleziono 🙄",
@@ -157,6 +159,10 @@ export function DropdownSelect<T extends DropdownItem>({
     return selectedItems.some((s) => s.id === item.id);
   };
 
+  const isItemDisabled = (item: T): boolean => {
+    return disabledItemIds.includes(item.id);
+  };
+
   return (
     <div className={`searchable-dropdown relative height-auto transparent border-none ${className}`} ref={dropdownRef}>
       <button
@@ -221,10 +227,10 @@ export function DropdownSelect<T extends DropdownItem>({
               filteredItems.map((item) => (
                 <li
                   key={item.id}
-                  className={`dropdown-item pointer flex align-items-center space-between ${
+                  className={`dropdown-item flex align-items-center space-between ${
                     isItemSelected(item) ? "selected" : ""
-                  } ${className}`}
-                  onClick={() => handleSelect(item)}
+                  } ${isItemDisabled(item) ? "disabled" : "pointer"} ${className}`}
+                  onClick={() => !isItemDisabled(item) && handleSelect(item)}
                 >
                   <div className={`dropdown-left flex align-items-center g-05 ml-05 ${className}`}>
                   {item.color && (
