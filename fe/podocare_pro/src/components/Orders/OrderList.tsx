@@ -86,32 +86,32 @@ export function OrderList({
         return formatDate(order.orderDate);
 
       case "Produkty":
-        return `${calculateOrderItems(order)}`
+        return <span className="qv-span clients ml-1">{calculateOrderItems(order)}</span>;
 
       case "Netto":
         return (
-          <span className="order-values-lower-font-size">
+          <span className="order-values-lower-font-size ml-1">
             {order.totalNet.toFixed(2)}
           </span>
         );
 
       case "VAT":
         return (
-          <span className="order-values-lower-font-size">
+          <span className="order-values-lower-font-size ml-1">
             {order.totalVat.toFixed(2)}
           </span>
         );
 
       case "Brutto":
         return (
-          <span className="order-values-lower-font-size">
+          <span className="order-values-lower-font-size ml-1">
             {order.totalValue.toFixed(2)}
           </span>
         );
 
       case "Opcje":
         return (
-          <div className="item-list-single-item-action-buttons flex">
+          <div className="item-list-single-item-action-buttons flex ml-1">
             <ActionButton
               src={"src/assets/edit.svg"}
               alt={"Edytuj Produkt"}

@@ -92,40 +92,40 @@ export function ExpensesList({
           </div>
         );
 
-      case "Data Zamówienia":
+      case "Data":
         return (
-          <span className="qv-span">
+          <span className="qv-span ml-1">
             {formatDate(expense.expenseDate)}
           </span> 
         );
 
       case "Produkty":
-        return `${calculateExpenseItems(expense)}`;
+        return <span className="qv-span ml-1">{calculateExpenseItems(expense)}</span>;
 
       case "Netto":
         return (
-          <span className="order-values-lower-font-size">
+          <span className="order-values-lower-font-size ml-1">
             {expense.totalNet.toFixed(2)}
           </span>
         );
 
       case "VAT":
         return (
-          <span className="order-values-lower-font-size">
+          <span className="order-values-lower-font-size ml-1">
             {expense.totalVat.toFixed(2)}
           </span>
         );
 
       case "Brutto":
         return (
-          <span className="order-values-lower-font-size">
+          <span className="order-values-lower-font-size ml-1">
             {expense.totalValue.toFixed(2)}
           </span>
         );
 
       case "Opcje":
         return (
-          <div className="item-list-single-item-action-buttons flex">
+          <div className="item-list-single-item-action-buttons flex ml-1">
             <ActionButton
               src={"src/assets/edit.svg"}
               alt={"Edytuj Produkt"}

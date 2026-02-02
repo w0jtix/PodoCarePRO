@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.podocare.PodoCareWebsite.repo.projection.CompanyRevenueProjection;
 import com.podocare.PodoCareWebsite.repo.projection.EmployeeRevenueProjection;
 
 import java.time.LocalDate;
@@ -461,6 +462,150 @@ public interface VisitRepo extends JpaRepository<Visit, Long>, JpaSpecificationE
     """)
     Double sumVouchersSoldValue(
             @Param("empId") Long empId,
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+
+    @Query("""
+        SELECT MONTH(v.date) AS period,
+               COALESCE(SUM(p.amount), 0) AS revenue
+        FROM Visit v
+        LEFT JOIN v.payments p
+        WHERE v.absence = false
+          AND YEAR(v.date) = :year
+        GROUP BY MONTH(v.date)
+        ORDER BY MONTH(v.date)
+    """)
+    List<CompanyRevenueProjection> findCompanyMonthlyRevenueByYear(@Param("year") Integer year);
+
+    @Query("""
+        SELECT DAY(v.date) AS period,
+               COALESCE(SUM(p.amount), 0) AS revenue
+        FROM Visit v
+        LEFT JOIN v.payments p
+        WHERE v.absence = false
+          AND YEAR(v.date) = :year
+          AND MONTH(v.date) = :month
+        GROUP BY DAY(v.date)
+        ORDER BY DAY(v.date)
+    """)
+    List<CompanyRevenueProjection> findCompanyDailyRevenueByYearAndMonth(
+            @Param("year") Integer year,
+            @Param("month") Integer month
+    );
+
+    @Query("""
+        SELECT COALESCE(SUM(p.amount), 0)
+        FROM Visit v
+        JOIN v.payments p
+        WHERE v.absence = false
+          AND v.date BETWEEN :from AND :to
+    """)
+    Double sumCompanyTotalRevenue(
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+
+    @Query("""
+        SELECT COALESCE(SUM(vi.finalPrice), 0)
+        FROM Visit v
+        JOIN v.items vi
+        WHERE v.absence = false
+          AND v.date BETWEEN :from AND :to
+    """)
+    Double sumCompanyServicesRevenue(
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+
+    @Query("""
+        SELECT COALESCE(SUM(s.totalValue), 0)
+        FROM Visit v
+        JOIN v.sale s
+        WHERE v.absence = false
+          AND v.date BETWEEN :from AND :to
+    """)
+    Double sumCompanyProductsRevenue(
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+
+    @Query("""
+        SELECT COALESCE(SUM(p.amount), 0)
+        FROM Visit v
+        JOIN v.payments p
+        WHERE v.absence = false
+          AND v.date BETWEEN :from AND :to
+          AND p.method = com.podocare.PodoCareWebsite.model.constants.PaymentMethod.VOUCHER
+    """)
+    Double sumCompanyVoucherPayments(
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+
+    @Query("""
+        SELECT COALESCE(SUM(si.price), 0)
+        FROM Visit v
+        JOIN v.sale s
+        JOIN s.items si
+        WHERE v.absence = false
+          AND v.date BETWEEN :from AND :to
+          AND si.voucher IS NOT NULL
+    """)
+    Double sumCompanyVouchersSoldValue(
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+
+    @Query("""
+        SELECT COALESCE(SUM(cd.value), 0)
+        FROM Visit v
+        JOIN v.debtRedemptions dr
+        JOIN dr.debtSource cd
+        WHERE v.absence = false
+          AND v.date BETWEEN :from AND :to
+    """)
+    Double sumCompanyAllDebtRedemptions(
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+
+    @Query("""
+        SELECT COALESCE(SUM(cd.value), 0)
+        FROM Visit v
+        JOIN v.debtRedemptions dr
+        JOIN dr.debtSource cd
+        WHERE v.absence = false
+          AND v.date BETWEEN :from AND :to
+          AND cd.createdAt < :from
+    """)
+    Double sumCompanyPreviousPeriodDebtRedemptions(
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+
+    @Query("""
+        SELECT COALESCE(SUM(vi.finalPrice), 0)
+        FROM Visit v
+        JOIN v.items vi
+        WHERE v.absence = false
+          AND v.paymentStatus = com.podocare.PodoCareWebsite.model.constants.PaymentStatus.PARTIAL
+          AND v.date BETWEEN :from AND :to
+    """)
+    Double sumCompanyPartialVisitsServicesValue(
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+
+    @Query("""
+        SELECT COALESCE(SUM(p.amount), 0)
+        FROM Visit v
+        JOIN v.payments p
+        WHERE v.absence = false
+          AND v.paymentStatus = com.podocare.PodoCareWebsite.model.constants.PaymentStatus.PARTIAL
+          AND v.date BETWEEN :from AND :to
+    """)
+    Double sumCompanyPartialVisitsPayments(
             @Param("from") LocalDate from,
             @Param("to") LocalDate to
     );

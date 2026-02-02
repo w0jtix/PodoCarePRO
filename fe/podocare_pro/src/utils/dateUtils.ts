@@ -55,6 +55,20 @@
     return currentMonth === 0 ? currentYear - 1 : currentYear;
   };
 
+  export const getPreviousMonthYearByDate = (date: Date): string => {
+    const month = date.getMonth();
+    const year = date.getFullYear();
+
+    const previousMonth = month === 0 ? 12 : month;
+    const previousYear = month === 0 ? year - 1 : year;
+
+    return `${String(previousMonth).padStart(2, "0")}.${String(previousYear).slice(-2)}`;
+  }
+
+  export const getSameMonthPreviousYearByDate = (date: Date): string => {
+    return `${String(date.getMonth() + 1).padStart(2, "0")}.${String(date.getFullYear() - 1).slice(-2)}`;
+  }
+
   export const getCurrentYear = (): number => {
     return new Date().getFullYear();
   };

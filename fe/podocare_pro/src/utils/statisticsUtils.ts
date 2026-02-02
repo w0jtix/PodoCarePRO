@@ -151,3 +151,9 @@ export const processEmployeeRevenueResponse = (
     series
   };
 };
+
+export const SERIES_CONFIG = [
+  { key: "Przychód", color: "#1199ed" },
+  { key: "Koszty", color: "#e10f0f" },
+  { key: "Dochód", color: "#14dc1e" },
+];

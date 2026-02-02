@@ -33,6 +33,8 @@ export function ExpenseHistory() {
   const [loading, setLoading] = useState<boolean>(true);
 
   const years = useMemo(() => getYears(), []);
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth() + 1;
 
   const handleResetFiltersAndData = useCallback(() => {
     const now = new Date();
@@ -71,6 +73,11 @@ export function ExpenseHistory() {
     },
     [filter]
   );
+
+  const disabledMonthIds = useMemo(() => {
+      if (filter.year !== currentYear) return [];
+      return MONTHS.filter((m) => m.id > currentMonth).map((m) => m.id);
+    }, [filter.year, currentYear, currentMonth]);
 
   useEffect(() => {
       fetchExpenses(0, false);
@@ -179,6 +186,8 @@ export function ExpenseHistory() {
         allowNew={false}
         placeholder="Wybierz"
         className="expense-month"
+        divided={true}
+        disabledItemIds={disabledMonthIds}
       />
     </section>
     <section className="order-history-action-button-title flex g-15px">

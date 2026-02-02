@@ -11,7 +11,7 @@ import { CARD_BACKGROUND_COLORS, CHART_COLORS } from "../../utils/statisticsUtil
 
 export function EmployeesStats() {
   const { showAlert } = useAlert();
-  const [selectedEmployeeIds, setSelectedEmployeeIds] = useState<number[]>([1, 2, 3]);
+  const [selectedEmployeeIds, setSelectedEmployeeIds] = useState<number[]>([]);
   const [visibleView, setVisibleView] = useState<{ [key: number]: 'first' | 'second' }>({});
   const [animatedOnce, setAnimatedOnce] = useState<{ [key: number]: boolean }>({});
   const scrollContainerRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
@@ -29,7 +29,7 @@ export function EmployeesStats() {
     StatisticsService.getEmployeeStats(statRequest)
       .then((data) => {
         setEmployeeStats(data);
-        console.log(data);
+        setSelectedEmployeeIds(data.map((employee) => employee.id));
       })
       .catch((error) => {
         showAlert("Błąd!", AlertType.ERROR);

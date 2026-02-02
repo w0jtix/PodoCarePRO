@@ -118,7 +118,7 @@ public class VisitServiceImpl implements VisitService {
             visit.setId(savedVisit.getId());
 
             processVisitDiscounts(visit, client, appSettings, false);
-            processBoostFlag(visit, client); // w saleItem dodać oznaczenie BoostItem???
+            processBoostFlag(visit, client);
             processDebtRedemptions(visit, client, false);
             processVisitItems(visit);
             processSale(visit, appSettings, false);
@@ -562,9 +562,9 @@ public class VisitServiceImpl implements VisitService {
         calculateSaleTotals(sale);
     }
     private void processPayments(VisitDTO visit) {
-        if (visit.getPayments() == null || (visit.getPayments().isEmpty() && !visit.getAbsence())) {
+        if (visit.getPayments() == null || visit.getPayments().isEmpty()) {
             return;
-        };
+        }
 
         Set<Long> usedVoucherIds = new HashSet<>();
         for (PaymentDTO payment : visit.getPayments()) {

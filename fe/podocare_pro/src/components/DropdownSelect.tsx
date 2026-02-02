@@ -28,6 +28,7 @@ export interface DropdownSelectProps<T extends DropdownItem> {
   reversed?: boolean;
   showNewPopup?: boolean;
   allowColors?: boolean;
+  divided?: boolean;
   newItemComponent?: React.ComponentType<any> /* React.ComponentType<NewItemComponentProps>; */;
   newItemProps?: Record<string, any>;
 
@@ -55,6 +56,7 @@ export function DropdownSelect<T extends DropdownItem>({
   reversed = false,
   showNewPopup = false,
   allowColors = false,
+  divided = false,
   newItemComponent: NewItemComponent,
   newItemProps = {},
   disabled = false,
@@ -197,7 +199,7 @@ export function DropdownSelect<T extends DropdownItem>({
         />
       </button>
       {isDropdownVisible && !isAddNewPopupOpen && (
-        <div className={`dropdown-menu ${reversed ? "reversed" : ""} absolute mt-05 ${className}`}>
+        <div className={`dropdown-menu ${reversed ? "reversed" : ""} ${divided ? "divided" : ""}  absolute mt-05 ${className}`}>
           {(searchable || allowNew) && (
             <section className="dropdown-search-and-add-new flex space-between">
               <input
@@ -222,7 +224,7 @@ export function DropdownSelect<T extends DropdownItem>({
               )}
             </section>
           )}
-          <ul className={`dropdown-list m-0 p-0 ${className}`}>
+          <ul className={`dropdown-list m-0 p-0 ${divided ? "divided" : ""} ${className}`}>
             {filteredItems.length > 0 ? (
               filteredItems.map((item) => (
                 <li

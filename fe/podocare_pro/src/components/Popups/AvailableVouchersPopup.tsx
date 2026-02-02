@@ -23,6 +23,7 @@ export function AvailableVouchersPopup({
   attachedVoucher,
 }: AvailableVouchersPopupProps) {
   const [availableVouchers, setAvailableVouchers] = useState<Voucher[]>([]);
+  const [expiredVouchers, setExpiredVouchers] = useState<Voucher[]>([]);
   const [selectedVoucher, setSelectedVoucher] = useState<Voucher | null>(null);
   const { showAlert } = useAlert();
 
@@ -42,6 +43,22 @@ export function AvailableVouchersPopup({
         console.error("Error fetching active Vouchers: ", error);
       });
   };
+  const fetchExpiredVouchers = async (): Promise<void> => {
+    VoucherService.getVouchers({ status: VoucherStatus.EXPIRED })
+      .then((data) => {
+        const sortedData = data.sort((a, b) => {
+          const dateA = new Date(a.issueDate);
+          const dateB = new Date(b.issueDate);
+          return dateB.getTime() - dateA.getTime();
+        });
+        setExpiredVouchers(sortedData);
+      })
+      .catch((error) => {
+        setExpiredVouchers([]);
+        showAlert("Błąd", AlertType.ERROR);
+        console.error("Error fetching expired Vouchers: ", error);
+      });
+  };
   const handleVoucherSelection = useCallback(
     (selection: Voucher | null) => {
       if (selection) {
@@ -57,6 +74,7 @@ export function AvailableVouchersPopup({
 
   useEffect(() => {
     fetchAvailableVouchers();
+    fetchExpiredVouchers();
     setSelectedVoucher(attachedVoucher);
   }, []);
 
@@ -94,12 +112,13 @@ export function AvailableVouchersPopup({
         <VouchersList
           attributes={VOUCHERS_VISIT_LIST_ATTRIBUTES}
           items={availableVouchers}
-          className={`products popup-list ${className}`}
+          expiredVouchers={expiredVouchers}
+          className={`products popup-list ${className} vouchers`}
           setSelectedVoucher={(selected) => handleVoucherSelection(selected)}
           selectedVoucher={selectedVoucher}
         />
 
-        <div className="mt-1 flex width-max align-items-center justify-center">
+        <div className="mt-1 flex width-max align-items-end justify-center f-1 ">
           <ActionButton
             src={"src/assets/tick.svg"}
             alt={"Zapisz"}

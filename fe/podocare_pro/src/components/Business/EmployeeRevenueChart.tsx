@@ -60,7 +60,6 @@ export function EmployeeRevenueChart({
     setLoading(true);
     StatisticsService.getEmployeeRevenue(statRequest)
       .then((backendData) => {
-        console.log(backendData)
         let filteredData = backendData;
         if (selectedEmployeeIds && selectedEmployeeIds.length > 0) {
           filteredData = {

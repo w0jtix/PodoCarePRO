@@ -1,3 +1,4 @@
+import { ExpenseCategory } from "./expense";
 
 export enum ChartMode {
     MONTHLY = "MONTHLY",
@@ -67,4 +68,53 @@ export interface EmployeeStats {
     boostClientsSecondVisitConversion: number;
     topSellingServiceName: string;
     topSellingProductName: string;
+}
+
+export interface CompanyFinancialSummary {
+    currentRevenue: number;
+    currentExpenses: number;
+    currentIncome: number;
+
+    previousPeriodRevenue: number;
+    previousPeriodExpenses: number;
+    previousPeriodIncome: number;
+
+    lastYearRevenue: number;
+    lastYearExpenses: number;
+    lastYearIncome: number;
+
+    revenueChangeVsPrevPeriod: number;
+    expensesChangeVsPrevPeriod: number;
+    incomeChangeVsPrevPeriod: number;
+
+    revenueChangeVsLastYear: number;
+    expensesChangeVsLastYear: number;
+    incomeChangeVsLastYear: number;
+}
+
+export interface ExpenseCategoryBreakdown {
+    category: ExpenseCategory;
+    amount: number;
+    sharePercent: number;
+}
+
+export interface CompanyStats {
+    servicesRevenue: number;
+    productsRevenue: number;
+    totalRevenue: number;
+    servicesRevenueShare: number;
+    productsRevenueShare: number;
+
+    totalExpenses: number;
+    expensesByCategory: ExpenseCategoryBreakdown[];
+
+    totalIncome: number;
+    costShareInRevenue: number;
+    profitabilityPercent: number;
+}
+
+export interface CompanyRevenue {
+    revenueData: (number | null)[];
+    expensesData: (number | null)[];
+    incomeData: (number | null)[];
 }

@@ -313,7 +313,7 @@ export const USAGE_RECORDS_LIST_ATTRIBUTES: ListAttribute[] = [
 export const EXPENSE_HISTORY_ATTRIBUTES: ListAttribute[] = [
   { name: " ", width: "5%", justify: "center" },
   { name: "Dostawca", width: "51%", justify: "flex-start" },
-  { name: "Data Zamówienia", width: "16%", justify: "center" },
+  { name: "Data", width: "16%", justify: "center" },
   { name: "Produkty", width: "8%", justify: "center" },
   { name: "Netto", width: "5%", justify: "center" },
   { name: "VAT", width: "5%", justify: "center" },

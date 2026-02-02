@@ -4,6 +4,7 @@ import { useState } from "react";
 import ExpenseHistory from "./ExpenseHistory";
 import EmployeesStats from "./EmployeesStats";
 import BusinessSettings from "./BusinessSettings";
+import { CompanyStatistics } from "./CompanyStatistics";
 
 export function BusinessDashboard() {
     const [moduleVisible, setModuleVisible] = useState<SubModuleType>("Common");
@@ -18,6 +19,7 @@ export function BusinessDashboard() {
         />
         {moduleVisible === "Common" && <ExpenseHistory/>}
         {moduleVisible === "Employees" && <EmployeesStats/>}
+        {moduleVisible === "Stats" && <CompanyStatistics />}
         {moduleVisible === "Settings" && <BusinessSettings />}
         </div>
     );

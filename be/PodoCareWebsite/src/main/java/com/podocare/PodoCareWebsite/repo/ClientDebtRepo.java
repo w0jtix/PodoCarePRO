@@ -38,4 +38,13 @@ public interface ClientDebtRepo extends JpaRepository<ClientDebt, Long> {
 
     @Query("SELECT COALESCE(SUM(cd.value), 0) FROM ClientDebt cd JOIN cd.sourceVisit v WHERE v.employee.id = :empId AND cd.createdAt BETWEEN :from AND :to")
     Double sumDebtsCreated(@Param("empId") Long empId, @Param("from") java.time.LocalDate from, @Param("to") java.time.LocalDate to);
+
+    @Query("""
+        SELECT COALESCE(SUM(cd.value), 0)
+        FROM ClientDebt cd
+        WHERE cd.createdAt BETWEEN :from AND :to
+          AND cd.type IN (com.podocare.PodoCareWebsite.model.constants.DebtType.PARTIAL_PAYMENT,
+                          com.podocare.PodoCareWebsite.model.constants.DebtType.UNPAID)
+    """)
+    Double sumCompanyUnpaidDebts(@Param("from") java.time.LocalDate from, @Param("to") java.time.LocalDate to);
 }

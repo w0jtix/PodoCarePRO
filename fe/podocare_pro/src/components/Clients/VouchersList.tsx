@@ -7,6 +7,7 @@ import VisitPopup from "../Popups/VisitPopup";
 export interface VouchersListProps {
   attributes: ListAttribute[];
   items: Voucher[];
+  expiredVouchers?: Voucher[];
   setEditVoucherId?: (voucherId: string | number | null) => void;
   setRemoveVoucherId?: (voucherId: string | number | null) => void;
   setSelectedVoucher?: (voucher: Voucher | null) => void;
@@ -18,6 +19,7 @@ export interface VouchersListProps {
 export function VouchersList({
   attributes,
   items,
+  expiredVouchers,
   setEditVoucherId,
   setRemoveVoucherId,
   setSelectedVoucher,
@@ -155,6 +157,29 @@ export function VouchersList({
             className={`item align-items-center flex ${className} ${
               selectedVoucher?.id === item.id ? "selected" : ""
             }`}
+          >
+            {attributes.map((attr) => (
+              <div
+                key={`${item.id}-${attr.name}`}
+                className={`attribute-item flex  ${className}`}
+                style={{
+                  width: attr.width,
+                  justifyContent: attr.justify,
+                }}
+              >
+                {renderAttributeContent(attr, item, index)}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+      {expiredVouchers && expiredVouchers.map((item, index) => (
+        <div
+          key={item.id}
+          className={`product-wrapper ${className} disabled expired-voucher`}          
+        >
+          <div
+            className={`item align-items-center flex ${className} disabled expired-voucher`}
           >
             {attributes.map((attr) => (
               <div

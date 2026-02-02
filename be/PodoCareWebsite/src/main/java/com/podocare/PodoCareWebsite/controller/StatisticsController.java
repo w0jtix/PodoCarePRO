@@ -1,8 +1,8 @@
 package com.podocare.PodoCareWebsite.controller;
 
-import com.podocare.PodoCareWebsite.DTO.EmployeeRevenueDTO;
-import com.podocare.PodoCareWebsite.DTO.EmployeeStatsDTO;
+import com.podocare.PodoCareWebsite.DTO.*;
 import com.podocare.PodoCareWebsite.DTO.request.EmployeeRevenueFilterDTO;
+import com.podocare.PodoCareWebsite.service.CompanyStatsService;
 import com.podocare.PodoCareWebsite.service.StatisticsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +18,9 @@ import java.util.List;
 public class StatisticsController {
 
     private final StatisticsService statisticsService;
+    private final CompanyStatsService companyStatsService;
+
+    // ========== Employee Stats ==========
 
     @PostMapping("/employee-revenue")
     @PreAuthorize("hasRole('ADMIN')")
@@ -34,6 +37,33 @@ public class StatisticsController {
             @RequestBody EmployeeRevenueFilterDTO filter
     ) {
         List<EmployeeStatsDTO> result = statisticsService.getEmployeeStats(filter);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PostMapping("/company-summary")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CompanyFinancialSummaryDTO> getCompanyFinancialSummary(
+            @RequestBody EmployeeRevenueFilterDTO filter
+    ) {
+        CompanyFinancialSummaryDTO result = companyStatsService.getFinancialSummary(filter);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PostMapping("/company-stats")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CompanyStatsDTO> getCompanyStats(
+            @RequestBody EmployeeRevenueFilterDTO filter
+    ) {
+        CompanyStatsDTO result = companyStatsService.getCompanyStats(filter);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PostMapping("/company-revenue")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CompanyRevenueDTO> getCompanyRevenue(
+            @RequestBody EmployeeRevenueFilterDTO filter
+    ) {
+        CompanyRevenueDTO result = companyStatsService.getCompanyRevenueChart(filter);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

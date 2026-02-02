@@ -169,7 +169,7 @@ export function VisitList({
 
       case "Wartość":
         return (
-          <span className="order-values-lower-font-size">
+          <span className="order-values-lower-font-size ml-1">
             {visit.totalValue}zł
           </span>
         );
@@ -177,7 +177,7 @@ export function VisitList({
       case "Status":
         return (
           <span
-            className={`order-values-lower-font-size ${visit.paymentStatus.toLocaleLowerCase()}`}
+            className={`order-values-lower-font-size ml-1 ${visit.paymentStatus.toLocaleLowerCase()}`}
           >
             {translatePaymentStatus(visit.paymentStatus)}
           </span>
