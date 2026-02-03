@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
 import { useState, useRef, useEffect } from "react";
+import ActionButton from "./ActionButton";
 
 interface SuggestionItem {
   id: string | number;
@@ -19,6 +20,7 @@ export interface TextInputProps<T extends SuggestionItem = SuggestionItem> {
   disabled?: boolean;
   maxLength?: number;
   numbersOnly?: boolean;
+  password?: boolean;
 }
 
 export function TextInput<T extends SuggestionItem = SuggestionItem> ({
@@ -34,10 +36,12 @@ export function TextInput<T extends SuggestionItem = SuggestionItem> ({
   disabled = false,
   maxLength,
   numbersOnly = false,
+  password = false,
 }: TextInputProps<T>) {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [keyword, setKeyword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isUserInteracting, setIsUserInteracting] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<T | null>(null);
 
@@ -201,7 +205,7 @@ export function TextInput<T extends SuggestionItem = SuggestionItem> ({
   return (
         <div className={`input-container relative inline-block transparent ${className}`} ref={dropdownRef}>
           <input
-            type="text"
+            type={password && !showPassword ? "password" : "text"}
             className={`text-input flex align-items-center space-between g-10px pointer transparent category ${className}`}
             placeholder={placeholder}
             value={getInputValue()}
@@ -211,6 +215,14 @@ export function TextInput<T extends SuggestionItem = SuggestionItem> ({
             disabled={disabled}
             maxLength={maxLength}
           />
+          {password && (
+            <ActionButton
+              src={showPassword ? "src/assets/hide.svg" : "src/assets/preview.svg"}
+              disableText={true}
+              onClick={() => setShowPassword(!showPassword)}
+              className="password-toggle-btn"
+            />
+          )}
           {dropdown &&
             isDropdownOpen &&
             keyword != "" &&

@@ -42,7 +42,7 @@ public class EmployeeController {
 
     @PutMapping("/{id}")
     @PreAuthorize(("hasRole('ADMIN')"))
-    public ResponseEntity<EmployeeDTO> updateEmployee(@PathVariable(value="id") Long id, EmployeeDTO employee) {
+    public ResponseEntity<EmployeeDTO> updateEmployee(@PathVariable(value="id") Long id, @NonNull @RequestBody EmployeeDTO employee) {
         EmployeeDTO saved = employeeService.updateEmployee(id, employee);
         return new ResponseEntity<>(saved, HttpStatus.OK);
     }

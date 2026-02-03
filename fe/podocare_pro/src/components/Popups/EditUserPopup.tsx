@@ -14,8 +14,6 @@ import DropdownSelect from "../DropdownSelect";
 import { Employee } from "../../models/employee";
 
 export interface EditUserPopupProps {
-  AddNewEmployeePopup: React.ComponentType<any>;
-  handleAddNewEmployee: () => void;
   onClose: () => void;
   className?: string;
   userId: number | string | null;
@@ -25,8 +23,6 @@ export interface EditUserPopupProps {
 }
 
 export function EditUserPopup({
-  AddNewEmployeePopup,
-  handleAddNewEmployee,
   onClose,
   className = "",
   userId,
@@ -39,7 +35,7 @@ export function EditUserPopup({
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [showForceChangePw, setShowForceChangePw] = useState<boolean>(false);
   const [updatedUser, setUpdatedUser] = useState<User | null>(null);
-   const [fetchedUser, setFetchedUser] = useState<User | null>(null);
+  const [fetchedUser, setFetchedUser] = useState<User | null>(null);
 
   const handleShowForceChangePw = () => {
     setShowForceChangePw((prev) => !prev);
@@ -121,8 +117,9 @@ export function EditUserPopup({
         `Użytkownik ${updatedUser.username} zaktualizowany!`,
         AlertType.SUCCESS
       );
-    } catch (error) {
-      showAlert("Błąd aktualizacji!", AlertType.ERROR);
+    } catch (error: any) {
+      const message = error?.response?.data || "Błąd aktualizacji!";
+      showAlert(message, AlertType.ERROR);
     }
   };
 
@@ -210,15 +207,13 @@ export function EditUserPopup({
           <h2 className="pw-header text-align-center m-0">Pracownik:</h2>
           <DropdownSelect
             items={employees}
+
             onChange={handleEmployeeSelect}
             value={updatedUser?.employee}
             placeholder="NIE WYBRANO"
             multiple={false}
             showNewPopup={true}
-            newItemComponent={AddNewEmployeePopup as React.ComponentType<any>}
-            newItemProps={{
-              onAddNew: handleAddNewEmployee,
-            }}
+            allowNew={false}
           />
         </div>
         <ActionButton

@@ -1,8 +1,9 @@
+import { RoleType } from "./login";
 
 export interface RegisterRequest {
     username: string;
     password: string;
-    roles: string[];
+    role: RoleType[];
 }
 
 export interface MessageResponse {

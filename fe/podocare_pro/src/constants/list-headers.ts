@@ -37,6 +37,13 @@ export const DISCOUNTS_LIST_ATTRIBUTES: ListAttribute[] = [
   { name: "Opcje", width: "15%", justify: "center" },
 ]
 
+export const EMPLOYEES_LIST_ATTRIBUTES: ListAttribute[] = [
+  { name: " ", width: "5%", justify: "center" },
+  { name: "Imię Nazwisko", width: "60%", justify: "start" },
+  { name: "Użytkownik", width: "20%", justify: "center" },
+  { name: "Opcje", width: "15%", justify: "center" },
+]
+
 export const REVIEWS_LIST_ATTRIBUTES: ListAttribute[] = [
   { name: "Źródło", width: "10%", justify: "center" },
   { name: "Status", width: "12%", justify: "center" },

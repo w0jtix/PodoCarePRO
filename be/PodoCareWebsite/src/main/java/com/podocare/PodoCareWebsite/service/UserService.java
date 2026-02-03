@@ -13,4 +13,6 @@ public interface UserService {
     UserDTO getUserByEmployeeId(Long employeeId);
 
     UserDTO updateUser(Long id, UserDTO user);
+
+    List<UserDTO> getUsersWithoutEmployee();
 }

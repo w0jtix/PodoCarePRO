@@ -5,6 +5,7 @@ export interface LoginRequest {
     password: string;
 }
 
+
 export interface JwtUser {
     token: string;
     type: string;

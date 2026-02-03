@@ -9,6 +9,7 @@ interface SliderProps {
   onChange?: (value: number) => void;
   toggleOn?: boolean;
   toggleValue?: boolean;
+  toggleLabel?: string;
   toggleChange?:(isOn : boolean) => void;
   label?: string;
   unit?: string;
@@ -25,6 +26,7 @@ export function Slider({
   onChange,
   toggleOn = false,
   toggleValue,
+  toggleLabel,
   toggleChange,
   label,
   unit = '',
@@ -75,7 +77,7 @@ export function Slider({
       {toggleOn && (
         <ToggleButton
           value={toggleValue}
-          label={"Boost:"}
+          prefix={toggleLabel || ""}
           onChange={handleToggleChange}
         />
       )}

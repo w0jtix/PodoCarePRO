@@ -1,6 +1,7 @@
 package com.podocare.PodoCareWebsite.service.impl;
 
 import com.podocare.PodoCareWebsite.DTO.UserDTO;
+import com.podocare.PodoCareWebsite.exceptions.ConflictException;
 import com.podocare.PodoCareWebsite.exceptions.ResourceNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.UpdateException;
 import com.podocare.PodoCareWebsite.model.Employee;
@@ -53,8 +54,14 @@ public class UserServiceImpl implements UserService {
 
             Employee employee = existingUser.getEmployee();
             if(user.getEmployee() != null && user.getEmployee().getId() != null) {
-                employee = employeeRepo.findById(user.getEmployee().getId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Employee not found with given id: " + user.getEmployee().getId()));
+                Long employeeId = user.getEmployee().getId();
+                userRepo.findByEmployeeId(employeeId).ifPresent(assignedUser -> {
+                    if (!assignedUser.getId().equals(id)) {
+                        throw new ConflictException("Pracownik " + assignedUser.getEmployee().getName() + " " +assignedUser.getEmployee().getSecondName()  + " jest już przypisany do Użytkownika: " + assignedUser.getUsername());
+                    }
+                });
+                employee = employeeRepo.findById(employeeId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Employee not found with given id: " + employeeId));
             } else if (user.getEmployee() == null) {
                 employee = null;
             }
@@ -72,8 +79,17 @@ public class UserServiceImpl implements UserService {
             userRepo.saveAndFlush(entity);
             return new UserDTO(userRepo.findOneById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("User not found with given id: " + id)));
+        } catch (ConflictException | ResourceNotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new UpdateException("Failed to update User, Reason: " + e.getMessage(), e);
         }
+    }
+
+    @Override
+    public List<UserDTO> getUsersWithoutEmployee() {
+        return userRepo.findByEmployeeIsNull().stream()
+                .map(UserDTO::new)
+                .collect(Collectors.toList());
     }
 }

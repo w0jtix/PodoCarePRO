@@ -26,6 +26,7 @@ import ActionButton from "../ActionButton";
 import StatisticsService from "../../services/StatisticsService";
 import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
+import EmployeeManagePopup from "../Popups/EmployeeManagePopup";
 
 export interface EmployeeRevenueChartProps {
   selectedEmployeeIds?: number[];
@@ -45,6 +46,8 @@ export function EmployeeRevenueChart({
   const [chartType, setChartType] = useState<ChartType>("line");
   const [isCumulative, setIsCumulative] = useState(true);
   const [loading, setLoading] = useState(false);
+  
+  const [isManageEmployeesPopupOpen, setIsManageEmployeesPopupOpen] = useState<boolean>(false);
 
   const { showAlert } = useAlert();
   const years = useMemo(() => getYears(), []);
@@ -193,7 +196,6 @@ export function EmployeeRevenueChart({
 
       <div className="chart-filters flex width-90 align-items-center mt-1 space-between">
         <div className="flex g-1 align-items-center">
-        <div className="flex">
           <DropdownSelect
             items={chartModeItems}
             value={
@@ -211,9 +213,7 @@ export function EmployeeRevenueChart({
             multiple={false}
             className=""
           />
-        </div>
 
-        <div className="flex">
           <DropdownSelect
             items={years}
             value={
@@ -227,7 +227,6 @@ export function EmployeeRevenueChart({
             placeholder="Wybierz"
             className="expense-year"
           />
-        </div>
 
         {statRequest.mode === "DAILY" && (
           <div className="flex">
@@ -248,6 +247,13 @@ export function EmployeeRevenueChart({
           </div>
         )}
         </div>
+
+        <ActionButton
+                      text={"Zarządzaj Pracownikami"}
+                      src={"src/assets/manage.svg"}
+                      alt="Zarządzaj Pracownikami"
+                      onClick={() => setIsManageEmployeesPopupOpen(true)}
+                    />
 
         <div className="flex g-05 align-items-center">
           {chartType === "line" && (
@@ -369,6 +375,11 @@ export function EmployeeRevenueChart({
           </ResponsiveContainer>
         )}
       </div>
+      {isManageEmployeesPopupOpen && (
+              <EmployeeManagePopup
+              onClose={() => setIsManageEmployeesPopupOpen(false)}
+              />
+            )}
     </div>
   );
 }

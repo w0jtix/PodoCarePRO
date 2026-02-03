@@ -24,6 +24,7 @@ public class User {
     @Column(nullable = false)
     private String password;
     @Column(nullable = false)
+    @Builder.Default
     private String avatar = "avatar5.png";
 
     @ManyToMany(fetch = FetchType.LAZY)

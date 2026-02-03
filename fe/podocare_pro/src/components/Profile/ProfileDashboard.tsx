@@ -14,11 +14,8 @@ import { validateUpdateUser } from "../../utils/validators";
 import { useUser } from "../User/UserProvider";
 import DropdownSelect from "../DropdownSelect";
 import EmployeeService from "../../services/EmployeeService";
-import { Employee, NewEmployee } from "../../models/employee";
-import { validateEmployeeForm } from "../../utils/validators";
-import { Action } from "../../models/action";
-import { extractEmployeesErrorMessage } from "../../utils/errorHandler";
-import AddNewEmployeePopup from "../Popups/AddNewEmployeePopup";
+import { Employee } from "../../models/employee";
+import UserPopup from "../Popups/UserPopup";
 
 export function ProfileDashboard() {
   const { user, setUser, refreshUser } = useUser();
@@ -30,6 +27,7 @@ export function ProfileDashboard() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [editUserId, setEditUserId] = useState<number | string | null>(null);
   const [updatedUser, setUpdatedUser] = useState<User | null>(null);
+  const [isCreateUserPopupOpen, setIsCreateUserPopupOpen] = useState<boolean>(false);
 
   const fetchUsers = async () => {
     try {
@@ -78,56 +76,9 @@ export function ProfileDashboard() {
     setIsAvatarPickerOpen(false);
   };
 
-  const toggleRole = (role: Role) => {
-    if (user?.roles.includes(RoleType.ROLE_ADMIN)) {
-      setUpdatedUser((prev) => {
-        if (!prev) return prev;
-        const hasRole = prev.roles.some((r) => r.id === role.id);
-        return {
-          ...prev,
-          roles: hasRole
-            ? prev.roles.filter((r) => r.id !== role.id)
-            : [...prev.roles, role],
-        };
-      });
-    }
-  };
-
   const handleLogout = () => {
     AuthService.logout();
   };
-
-  const handleAddNewEmployee = useCallback(
-    async (newEmployee: NewEmployee) => {
-      const error = validateEmployeeForm(newEmployee, undefined, Action.CREATE);
-      if (error) {
-        showAlert(error, AlertType.ERROR);
-        return null;
-      }
-
-      EmployeeService.createEmployee(newEmployee)
-        .then((data) => {
-          setUpdatedUser((prev) => {
-            if (!prev) return prev;
-            return {
-              ...prev,
-              employee: data,
-            } as User;
-          });
-          showAlert("Pomyślnie utworzono pracownika.", AlertType.SUCCESS);
-          fetchEmployees();
-        })
-        .catch((error) => {
-          console.error("Error creating new Employee.", error);
-          const errorMessage = extractEmployeesErrorMessage(
-            error,
-            Action.CREATE
-          );
-          showAlert(errorMessage, AlertType.ERROR);
-        });
-    },
-    [showAlert]
-  );
 
   const avatarSrc = updatedUser?.avatar
     ? AVAILABLE_AVATARS[updatedUser.avatar]
@@ -249,12 +200,7 @@ export function ProfileDashboard() {
                 placeholder="Nie wybrano"
                 multiple={false}
                 showNewPopup={true}
-                newItemComponent={
-                  AddNewEmployeePopup as React.ComponentType<any>
-                }
-                newItemProps={{
-                  onAddNew: handleAddNewEmployee,
-                }}
+                allowNew={false}
               />
               </div>
               <ActionButton
@@ -276,8 +222,27 @@ export function ProfileDashboard() {
 
         <ChangePasswordForm />
       </div>
-      <div className="all-user-container mt-5 width-85 g-1 height-fit-content">
-        <h2 className="pw-header text-align-center all-users">Wszyscy Użytkownicy</h2>
+      <div className="all-user-container mt-5 width-85 g-1 height-fit-content justify-center">
+        <div className="width-95 flex align-items-center">
+          {user?.roles.includes(RoleType.ROLE_ADMIN) ? (
+            <>
+            <div className="f-1"></div>
+          <h2 className="pw-header text-align-center all-users">Wszyscy Użytkownicy</h2>
+          <div className="f-1 flex justify-end">
+            <ActionButton
+              text={"Nowy Użytkownik"}
+              src={"src/assets/addNew.svg"}
+              alt="Nowy Użytkownik"
+              onClick={() => setIsCreateUserPopupOpen(true)}
+            />
+          </div>
+          </>
+          ) : (
+            <h2 className="pw-header text-align-center all-users">Wszyscy Użytkownicy</h2>
+          )}
+          
+        </div>
+        
         <div className="all-user-list width-max flex-column g-05 mb-1">
           {users.map((u) => (
             <div className="single-user-container flex width-90 align-self-center g-2" key={u.id}>
@@ -332,14 +297,21 @@ export function ProfileDashboard() {
       )}
       {editUserId != null && (
         <EditUserPopup
-          AddNewEmployeePopup={AddNewEmployeePopup}
-          handleAddNewEmployee={() => handleAddNewEmployee}
           onClose={() => setEditUserId(null)}
           className={"force-change-pw"}
           userId={editUserId}
           availableRoles={availableRoles}
           refreshUserList={fetchUsers}
           employees={employees}
+        />
+      )}
+      {isCreateUserPopupOpen && (
+        <UserPopup
+          onClose={() => {
+            setIsCreateUserPopupOpen(false);
+            fetchUsers();
+          }
+          }
         />
       )}
     </div>

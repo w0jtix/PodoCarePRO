@@ -19,6 +19,7 @@ import { UsageRecordItem } from "../models/usage-record";
 import { CompanyExpense, CompanyExpenseItem, NewCompanyExpense, NewCompanyExpenseItem } from "../models/expense";
 import { exec } from "child_process";
 import { NewStatSettings, StatSettings } from "../models/business_settings";
+import { RegisterRequest } from "../models/register";
 
   export function validateLoginForm(
     username: string,
@@ -308,6 +309,29 @@ import { NewStatSettings, StatSettings } from "../models/business_settings";
       if (noChangesDetected) {
         return "Brak zmian!";
       }
+    }
+    return null;
+  }
+
+  export function validateUserForm(
+    signupRequest: RegisterRequest
+  ): string | null {
+    if(Object.values(signupRequest).some(
+      (value) => value === null || value === undefined
+    )) {
+      return "Brak pełnych informacji!";
+    }
+    if(signupRequest.username.trim().length <= 3) {
+      return "Nazwa Użytkownika za krótka! (3+)"
+    }
+    if(signupRequest.username.trim().length >= 20) {
+      return "Nazwa Użytkownika za długa! (max 20 znaków)"
+    }
+    if(signupRequest.username.trim().length <= 6) {
+      return "Hasło Użytkownika za krótkie! (6+)"
+    }
+    if(signupRequest.username.trim().length >= 40) {
+      return "Hasło Użytkownika za długie! (max 40 znaków)"
     }
     return null;
   }
@@ -692,7 +716,12 @@ import { NewStatSettings, StatSettings } from "../models/business_settings";
       return "Nazwisko za krótkie! (2+)"
     }
     if(action === Action.EDIT && selectedEmployee) {
-      const noChangesDetected = employeeForm.name === selectedEmployee.name && employeeForm.secondName === selectedEmployee.secondName;
+      const noChangesDetected = 
+      employeeForm.name === selectedEmployee.name && 
+      employeeForm.secondName === selectedEmployee.secondName &&
+      employeeForm.employmentType === selectedEmployee.employmentType &&
+      employeeForm.bonusPercent === selectedEmployee.bonusPercent &&
+      employeeForm.saleBonusPercent === selectedEmployee.saleBonusPercent;
     if (noChangesDetected) {
       return "Brak zmian!";
     }   

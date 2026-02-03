@@ -13,7 +13,6 @@ export function EmployeesStats() {
   const { showAlert } = useAlert();
   const [selectedEmployeeIds, setSelectedEmployeeIds] = useState<number[]>([]);
   const [visibleView, setVisibleView] = useState<{ [key: number]: 'first' | 'second' }>({});
-  const [animatedOnce, setAnimatedOnce] = useState<{ [key: number]: boolean }>({});
   const scrollContainerRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const scrollButtonRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
 
@@ -197,9 +196,6 @@ export function EmployeesStats() {
                       behavior: 'smooth'
                     });
                     setVisibleView(prev => ({ ...prev, [employee.id]: isSecond ? 'first' : 'second' }));
-                    if (!isSecond) {
-                      setAnimatedOnce(prev => ({ ...prev, [employee.id]: true }));
-                    }
                   }}
                   disableText={true}
                   className={`emp-stats-scroll ${visibleView[employee.id] === 'second' ? 'up' : 'down'}`}

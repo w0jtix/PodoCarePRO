@@ -10,6 +10,13 @@ class EmployeeService {
         })
     }
 
+    static async getEmployeeById(id: number ): Promise<Employee> {
+        return await sendApiRequest<Employee>(`employee/${id}`, {
+            method: "get",
+            errorMessage: "Error fetching Employee."
+        })
+    }
+
     static async createEmployee(employee: NewEmployee): Promise<Employee> {
         return await sendApiRequest<Employee> ('employee', {
             method: 'post',
@@ -18,7 +25,7 @@ class EmployeeService {
         })
     }
 
-    static async updateEmployee(id: number, employee: Employee): Promise<Employee> {
+    static async updateEmployee(id: number, employee: NewEmployee,): Promise<Employee> {
         return await sendApiRequest<Employee>(`employee/${id}`, {
             method: "put",
             body: employee,

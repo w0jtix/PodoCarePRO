@@ -44,6 +44,13 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    @GetMapping("/unassigned")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<List<UserDTO>> getUsersWithoutEmployee() {
+        List<UserDTO> users = userService.getUsersWithoutEmployee();
+        return new ResponseEntity<>(users, users.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
+    }
+
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<UserDTO> updateUser(@PathVariable(value = "id") Long id, @NonNull @RequestBody UserDTO user) {

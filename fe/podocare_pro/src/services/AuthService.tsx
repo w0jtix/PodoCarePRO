@@ -40,11 +40,11 @@ class AuthService {
     async register(
         username: string,
         password: string,
-        roles: RoleType[],
+        role: RoleType[],
     ): Promise<string> {
         return sendApiRequest<MessageResponse>('auth/createUser', {
             method: "post",
-            body: { username, password, roles } as RegisterRequest,
+            body: { username, password, role } as RegisterRequest,
             errorMessage: "Error while registering new user.",
         })
         .then((response) => {
