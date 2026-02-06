@@ -24,14 +24,14 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/all")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<UserDTO> userDTOList = userService.getAllUsers();
         return new ResponseEntity<>(userDTOList, userDTOList.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDTO> getUserById(@PathVariable(value = "id") Long id) {
         UserDTO user = userService.getUserById(id);
         return  new ResponseEntity<>(user, HttpStatus.OK);
@@ -42,13 +42,6 @@ public class UserController {
     public ResponseEntity<UserDTO> getUserByEmployeeId(@PathVariable(value = "employeeId") Long employeeId) {
         UserDTO user = userService.getUserByEmployeeId(employeeId);
         return new ResponseEntity<>(user, HttpStatus.OK);
-    }
-
-    @GetMapping("/unassigned")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<List<UserDTO>> getUsersWithoutEmployee() {
-        List<UserDTO> users = userService.getUsersWithoutEmployee();
-        return new ResponseEntity<>(users, users.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
     @PutMapping("/{id}")

@@ -32,7 +32,7 @@ import VisitCartItemList from "./VisitCartItemList";
 import ActionButton from "../ActionButton";
 import DateInput from "../DateInput";
 import { ClientDebt } from "../../models/debt";
-import { AppSettings } from "../../models/app_settings";
+import { DiscountSettings } from "../../models/app_settings";
 import AppSettingsService from "../../services/AppSettingsService";
 import { PaymentMethod } from "../../models/payment";
 import { DropdownItem } from "../DropdownSelect";
@@ -68,7 +68,7 @@ export function VisitForm({
   onClose,
 }: VisitFormProps) {
   const { user } = useUser();
-  const [settings, setSettings] = useState<AppSettings | null>(null);
+  const [discountSettings, setDiscountSettings] = useState<DiscountSettings | null>(null);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [clients, setClients] = useState<Client[]>([]);
   const [chosenServices, setChosenServices] = useState<NewVisitItem[]>([]);
@@ -157,15 +157,15 @@ export function VisitForm({
         console.error("Error fetching Clients: ", error);
       });
   };
-  const fetchSettings = async () => {
-    AppSettingsService.getSettings()
+  const fetchDiscountSettings = async () => {
+    AppSettingsService.getDiscountSettings()
       .then((data) => {
-        setSettings(data);
+        setDiscountSettings(data);
       })
       .catch((error) => {
-        setSettings(null);
+        setDiscountSettings(null);
         showAlert("Błąd", AlertType.ERROR);
-        console.error("Error fetching settings:", error);
+        console.error("Error fetching DiscountSettings:", error);
       });
   };
   const getVisitPreview = async () => {
@@ -253,7 +253,7 @@ export function VisitForm({
     setAllItemsHaveFinalPrice(false);
     fetchEmployees();
     fetchClients();
-    fetchSettings();
+    fetchDiscountSettings();
   };
 
   const handleVisitAction = useCallback(async () => {
@@ -689,7 +689,7 @@ export function VisitForm({
   useEffect(() => {
     fetchEmployees();
     fetchClients();
-    fetchSettings();
+    fetchDiscountSettings();
   }, []);
 
   useEffect(() => {
@@ -1196,7 +1196,7 @@ export function VisitForm({
                         text={discountLabelFor(
                           type,
                           visitDTO,
-                          settings as AppSettings
+                          discountSettings as DiscountSettings
                         )}
                         onClick={() => toggleDiscount(type)}
                         className={`pricelist qv sel discount ${

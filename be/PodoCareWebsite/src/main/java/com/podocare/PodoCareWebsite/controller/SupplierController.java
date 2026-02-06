@@ -40,16 +40,16 @@ public class SupplierController {
         SupplierDTO newSupplier = supplierService.createSupplier(supplier);
         return new ResponseEntity<>(newSupplier, HttpStatus.CREATED);
     }
-
+    //currently not supported
     @PutMapping("/{id}")
-    @PreAuthorize(("hasRole('USER')"))
+    @PreAuthorize(("hasRole('ADMIN')"))
     public ResponseEntity<SupplierDTO> updateSupplier(@PathVariable(value = "id") Long id, @NonNull @RequestBody SupplierDTO supplier) {
         SupplierDTO saved = supplierService.updateSupplier(id, supplier);
         return new ResponseEntity<>(saved, HttpStatus.OK);
     }
-
+    //currently not supported
     @DeleteMapping("/{id}")
-    @PreAuthorize(("hasRole('USER')"))
+    @PreAuthorize(("hasRole('ADMIN')"))
     public ResponseEntity<Void> deleteSupplier(@PathVariable(value = "id") Long id) {
         supplierService.deleteSupplierById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

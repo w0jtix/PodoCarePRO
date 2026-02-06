@@ -103,7 +103,7 @@ export function EmployeeRevenueChart({
         }
         return {
           ...prev,
-          year: year ?? null,
+          year: year ?? prev.year,
           month: newMonth,
         };
       });
@@ -118,7 +118,7 @@ export function EmployeeRevenueChart({
       const month = Array.isArray(selected) ? selected[0]?.id : selected?.id;
       setStatRequest((prev) => ({
         ...prev,
-        month: month ?? null,
+        month: month ?? prev.month,
       }));
     },
     []
@@ -231,6 +231,7 @@ export function EmployeeRevenueChart({
         {statRequest.mode === "DAILY" && (
           <div className="flex">
             <DropdownSelect
+              divided={true}
               items={MONTHS}
               value={
                 statRequest.month

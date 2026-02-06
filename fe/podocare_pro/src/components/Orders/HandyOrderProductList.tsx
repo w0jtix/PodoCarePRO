@@ -51,7 +51,7 @@ export function HandyOrderProductList({
         .then((data) => {
           order.orderProducts.forEach((orderProduct) => {
             const productId = orderProduct.product?.id;
-            const supplyData = data.find((d) => d.id === productId);
+            const supplyData = data.content.find((d) => d.id === productId);
             const activeCount = supplyData ? supplyData.supply : 0;
             const opQuantity = orderProduct.quantity;
             const shouldWarn = opQuantity > 0 && opQuantity > activeCount;

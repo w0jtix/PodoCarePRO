@@ -14,5 +14,4 @@ public interface UserService {
 
     UserDTO updateUser(Long id, UserDTO user);
 
-    List<UserDTO> getUsersWithoutEmployee();
 }

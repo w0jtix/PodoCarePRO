@@ -52,8 +52,16 @@ public class OrderServiceImpl implements OrderService {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("orderDate"), Sort.Order.desc("id")));
 
-        LocalDate dateFrom = filter.getDateFrom() != null ? filter.getDateFrom() : LocalDate.of(1900, 1, 1);
-        LocalDate dateTo = filter.getDateTo() != null ? filter.getDateTo() : LocalDate.of(2100, 12, 31);
+        LocalDate dateFrom;
+        LocalDate dateTo;
+
+        if (filter.getMonth() != null) {
+            dateFrom = LocalDate.of(filter.getYear(), filter.getMonth(), 1);
+            dateTo = dateFrom.withDayOfMonth(dateFrom.lengthOfMonth());
+        } else {
+            dateFrom = LocalDate.of(filter.getYear(), 1, 1);
+            dateTo = LocalDate.of(filter.getYear(), 12, 31);
+        }
 
         Page<Order> orders = orderRepo.findAllWithFilters(
                 filter.getSupplierIds(),

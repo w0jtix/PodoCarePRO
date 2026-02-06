@@ -20,8 +20,8 @@ public class VisitFilterDTO {
     private Boolean absence;
     private Boolean hasDiscount;
     private Boolean hasSale;
-    private LocalDate dateFrom;
-    private LocalDate dateTo;
+    private Integer year;
+    private Integer month;
     private PaymentStatus paymentStatus;
     private Double totalValueFrom;
     private Double totalValueTo;

@@ -12,8 +12,8 @@ export const chartModeItems = [
 
 export interface EmployeeRevenueFilter {
     mode: ChartMode;
-    year: number |null;
-    month?: number |null;
+    year: number;
+    month?: number;
 }
 
 // Backend Data

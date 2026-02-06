@@ -28,13 +28,10 @@ const Login = () => {
                 setUser(user);
                 showAlert(`Witaj ${user.username}!`, AlertType.SUCCESS);
                 navigate("/");
-            } else {
-                showAlert("Nieprawidłowa nazwa użytkownika lub hasło", AlertType.ERROR);
-                setPassword("");
             }
         })
-        .catch(() => {
-            showAlert("Wystąpił błąd podczas logowania", AlertType.ERROR);
+        .catch((error) => {
+            showAlert("Wystąpił błąd podczas logowania", AlertType.ERROR);          
             setPassword("");
         })
     }
@@ -50,6 +47,7 @@ const Login = () => {
               <input
                 type="text"
                 className="login-input text-align-left"
+                value={username}
                 onChange={(value: React.ChangeEvent<HTMLInputElement>) => setUsername(value.target.value)}
                 required={true}
                 autoComplete="off"
@@ -60,6 +58,7 @@ const Login = () => {
               <input
                 type="password"
                 className="login-input text-align-left"
+                value={password}
                 onChange={(value: React.ChangeEvent<HTMLInputElement>) => setPassword(value.target.value)}
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                   if(e.key === 'Enter') {

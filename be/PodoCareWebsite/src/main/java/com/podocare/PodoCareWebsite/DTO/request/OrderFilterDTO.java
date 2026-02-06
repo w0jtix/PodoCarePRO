@@ -10,6 +10,6 @@ import java.util.List;
 @Setter
 public class OrderFilterDTO {
     private List<Long> supplierIds;
-    private LocalDate dateFrom;
-    private LocalDate dateTo;
+    private Integer year;
+    private Integer month;
 }

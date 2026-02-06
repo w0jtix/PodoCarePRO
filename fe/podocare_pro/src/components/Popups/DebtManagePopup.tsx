@@ -147,7 +147,7 @@ export function DebtManagePopup({
           setRemoveDebtId={setRemoveDebtId}
         />
         <span className="popup-category-description flex justify-center width-max flex-grow align-items-end">
-          Długi powstały podczas Wizyty może być usunięty tylko z Wizytą!
+          Dług powstały podczas Wizyty może być usunięty tylko z Wizytą!
         </span>
       </div>
 

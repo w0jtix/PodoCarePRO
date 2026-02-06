@@ -85,11 +85,4 @@ public class UserServiceImpl implements UserService {
             throw new UpdateException("Failed to update User, Reason: " + e.getMessage(), e);
         }
     }
-
-    @Override
-    public List<UserDTO> getUsersWithoutEmployee() {
-        return userRepo.findByEmployeeIsNull().stream()
-                .map(UserDTO::new)
-                .collect(Collectors.toList());
-    }
 }

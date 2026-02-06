@@ -1,10 +1,7 @@
 package com.podocare.PodoCareWebsite.controller;
 
 import com.podocare.PodoCareWebsite.DTO.VisitDTO;
-import com.podocare.PodoCareWebsite.DTO.VisitDTO;
 import com.podocare.PodoCareWebsite.DTO.request.VisitFilterDTO;
-import com.podocare.PodoCareWebsite.DTO.request.VisitFilterDTO;
-import com.podocare.PodoCareWebsite.model.Visit;
 import com.podocare.PodoCareWebsite.service.VisitService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

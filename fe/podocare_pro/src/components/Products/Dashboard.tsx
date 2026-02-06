@@ -18,6 +18,8 @@ import { extractCategoryErrorMessage } from "../../utils/errorHandler";
 import AllProductService from "../../services/AllProductService";
 import UsageRecordsManagePopup from "../Popups/UsageRecordsManagePopup";
 import ProductReportPopup from "../Popups/ProductReportPopup";
+import { useUser } from "../User/UserProvider";
+import { RoleType } from "../../models/login";
 
 export function Dashboard() {
   const [isAddNewProductsPopupOpen, setIsAddNewProductsPopupOpen] =
@@ -40,6 +42,7 @@ export function Dashboard() {
   const [productInfo, setProductInfo] = useState<boolean>(false);
   const [resetTriggered, setResetTriggered] = useState<boolean>(false);
   const [categories, setCategories] = useState<ProductCategory[]>([]);
+  const { user, setUser, refreshUser } = useUser();
   const { showAlert } = useAlert();
 
   const fetchCategories = useCallback(async () => {
@@ -202,12 +205,14 @@ export function Dashboard() {
             text={"Nowy Produkt"}
             onClick={() => setIsAddNewProductsPopupOpen(true)}
           />
-          <ActionButton
+          {user?.roles.includes(RoleType.ROLE_ADMIN) && ( 
+            <ActionButton
             src={"src/assets/addNew.svg"}
             alt={"Nowa Kategoria"}
             text={"Nowa Kategoria"}
             onClick={() => setIsCategoryPopupOpen(true)}
           />
+          )}
           <ActionButton
             src={"src/assets/pdf.svg"}
             alt={"Wygeneruj PDF"}

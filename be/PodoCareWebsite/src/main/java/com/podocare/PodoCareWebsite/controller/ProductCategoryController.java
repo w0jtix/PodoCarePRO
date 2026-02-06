@@ -34,21 +34,21 @@ public class ProductCategoryController {
     }
 
     @PostMapping
-    @PreAuthorize(("hasRole('USER')"))
+    @PreAuthorize(("hasRole('ADMIN')"))
     public ResponseEntity<ProductCategoryDTO> createCategory(@NonNull @RequestBody ProductCategoryDTO category) {
         ProductCategoryDTO newCategory = productCategoryService.createCategory(category);
         return new ResponseEntity<>(newCategory, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize(("hasRole('USER')"))
+    @PreAuthorize(("hasRole('ADMIN')"))
     public ResponseEntity<ProductCategoryDTO> updateCategory(@PathVariable(value = "id") Long id, @NonNull @RequestBody ProductCategoryDTO category){
         ProductCategoryDTO saved = productCategoryService.updateCategory(id, category);
         return new ResponseEntity<>(saved, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize(("hasRole('USER')"))
+    @PreAuthorize(("hasRole('ADMIN')"))
     public ResponseEntity<Void> deleteCategory(@PathVariable(value = "id") Long id) {
         productCategoryService.deleteCategoryById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

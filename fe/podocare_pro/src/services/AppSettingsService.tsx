@@ -1,5 +1,5 @@
 import { sendApiRequest } from "../components/send-api-request/SendApiRequest";
-import { AppSettings, NewAppSettings } from "../models/app_settings";
+import { AppSettings, NewAppSettings, DiscountSettings } from "../models/app_settings";
 
 class AppSettingsService {
     static async getSettings(): Promise<AppSettings> {
@@ -8,6 +8,13 @@ class AppSettingsService {
             body: {},
             errorMessage: "Error fetching AppSettings.",
         });
+    }
+
+    static async getDiscountSettings(): Promise<DiscountSettings> {
+        return await sendApiRequest<DiscountSettings> (`settings/discounts`, {
+            method: "get",
+            errorMessage: "Error fetching DiscountSettings.",
+        })
     }
 
     static async updateSettings(

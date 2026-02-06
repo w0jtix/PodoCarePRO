@@ -106,6 +106,14 @@ export const SERVICES_LIST_ATTRIBUTES: ListAttribute[] = [
   { name: "Opcje", width: "8%", justify: "center" },
 ]
 
+export const USER_SERVICES_LIST_ATTRIBUTES: ListAttribute[] = [
+  { name: "", width: "2%", justify: "start" },
+  { name: "Kategoria", width: "13%", justify: "start" },
+  { name: "Nazwa", width: "65%", justify: "start" },
+  { name: "Czas", width: "10%", justify: "center" },
+  { name: "Cena", width: "10%", justify: "center" },
+]
+
 export const SERVICES_PRICE_LIST_ATTRIBUTES: ListAttribute[] = [
   { name: "", width: "4%", justify: "start" },
   { name: "Nazwa", width: "76%", justify: "start" },

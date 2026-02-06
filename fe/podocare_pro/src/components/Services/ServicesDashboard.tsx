@@ -13,12 +13,14 @@ import { Action } from "../../models/action";
 import { validateCategoryForm } from "../../utils/validators";
 import { extractCategoryErrorMessage } from "../../utils/errorHandler";
 import ServiceList from "./ServiceList";
-import { SERVICES_LIST_ATTRIBUTES } from "../../constants/list-headers";
+import { SERVICES_LIST_ATTRIBUTES, USER_SERVICES_LIST_ATTRIBUTES } from "../../constants/list-headers";
 import { BaseService } from "../../models/service";
 import BaseServiceService from "../../services/BaseServiceService";
 import ServicePopup from "../Popups/ServicePopup";
 import RemovePopup from "../Popups/RemovePopup";
 import DropdownSelect from "../DropdownSelect";
+import { useUser } from "../User/UserProvider";
+import { RoleType } from "../../models/login";
 
 export function ServicesDashboard() {
   const [keyword, setKeyword] = useState<string | undefined>(undefined);
@@ -34,6 +36,7 @@ export function ServicesDashboard() {
     useState<boolean>(false);
   const [isCategoryPopupOpen, setIsCategoryPopupOpen] =
     useState<boolean>(false);
+  const { user, setUser, refreshUser } = useUser();
   const { showAlert } = useAlert();
 
   const fetchCategories = async (): Promise<void> => {
@@ -193,7 +196,9 @@ export function ServicesDashboard() {
         />
       </NavigationBar>
       <section className="action-buttons-section width-93 flex space-around align-items-center">
-        <section className="products-action-buttons width-80 flex align-self-center justify-end g-25 mt-1 mb-1">
+        <section className="products-action-buttons services-list width-80 flex align-self-center justify-end g-25 mt-1 mb-1">
+        {user?.roles.includes(RoleType.ROLE_ADMIN) && (  
+          <>
           <ActionButton
             src={"src/assets/addNew.svg"}
             alt={"Nowa Usługa"}
@@ -206,11 +211,13 @@ export function ServicesDashboard() {
             text={"Nowa Kategoria"}
             onClick={() => setIsCategoryPopupOpen(true)}
           />
+          </>
+        )}
         </section>
       </section>
       <div className="services-list-section width-90 flex align-items-center justify-center">
         <ServiceList
-          attributes={SERVICES_LIST_ATTRIBUTES}
+          attributes={user?.roles.includes(RoleType.ROLE_ADMIN) ? SERVICES_LIST_ATTRIBUTES : USER_SERVICES_LIST_ATTRIBUTES}
           items={services}
           setRemoveServiceId={setRemoveServiceId}
           setEditServiceId={setEditServiceId}

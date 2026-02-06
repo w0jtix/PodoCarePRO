@@ -24,13 +24,6 @@ class UserService {
         })
     }
 
-    static async getUsersWithoutEmployee(): Promise<User[]> {
-        return await sendApiRequest<User[]>(`user/unassigned`, {
-            method: "get",
-            errorMessage: "Error fetching users with unassigned employee."
-        })
-    }
-
     static async updateUser(id: number, user: User): Promise<User | undefined> {
         return await sendApiRequest<User>(`user/${id}`, {
             method: "put",

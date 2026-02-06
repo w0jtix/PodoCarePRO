@@ -150,7 +150,6 @@ export function VisitPopup({
       VisitService.getVisitById(visitId)
         .then((data) => {
           setVisit(data);
-          console.log("visit", data)
         })
         .catch((error) => {
           setVisit(null);

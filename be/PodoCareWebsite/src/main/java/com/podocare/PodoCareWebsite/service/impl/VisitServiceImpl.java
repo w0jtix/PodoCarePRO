@@ -61,8 +61,8 @@ public class VisitServiceImpl implements VisitService {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("date"), Sort.Order.desc("id")));
 
-        LocalDate dateFrom = filter.getDateFrom() != null ? filter.getDateFrom() : LocalDate.of(1900, 1, 1);
-        LocalDate dateTo = filter.getDateTo() != null ? filter.getDateTo() : LocalDate.of(2100, 12, 31);
+        LocalDate dateFrom = LocalDate.of(filter.getYear(), filter.getMonth(), 1);
+        LocalDate dateTo = dateFrom.withDayOfMonth(dateFrom.lengthOfMonth());
 
         Page<Visit> visits = visitRepo.findAllWithFilters(
                 filter.getClientIds(),

@@ -4,7 +4,7 @@ import { Employee } from "./employee";
 import { Sale, NewSale } from "./sale";
 import { BaseService, ServiceVariant } from "./service";
 import { Payment, PaymentStatus, NewPayment } from "./payment";
-import { AppSettings } from "./app_settings";
+import { DiscountSettings } from "./app_settings";
 
 export interface Discount {
     id: number;
@@ -27,7 +27,7 @@ export enum VisitDiscountType {
     CUSTOM = "CUSTOM"
 }
 
-export const discountLabelFor = (type: VisitDiscountType, visit: Visit | NewVisit, settings: AppSettings) => {
+export const discountLabelFor = (type: VisitDiscountType, visit: Visit | NewVisit, discountSettings: DiscountSettings) => {
     switch (type) {
       case VisitDiscountType.CLIENT_DISCOUNT:
         if ('id' in visit) {
@@ -38,9 +38,9 @@ export const discountLabelFor = (type: VisitDiscountType, visit: Visit | NewVisi
         }
         return `${visit.client?.discount?.name} ${visit.client?.discount?.percentageValue}%`;
       case VisitDiscountType.HAPPY_HOURS:
-        return `Booksy ${settings?.booksyHappyHours}%`;
+        return `Booksy ${discountSettings?.booksyHappyHours}%`;
       case VisitDiscountType.GOOGLE_REVIEW:
-        return `Opinia ${settings?.googleReviewDiscount}%`;
+        return `Opinia ${discountSettings?.googleReviewDiscount}%`;
       case VisitDiscountType.CUSTOM:
         return `Własny`;
       default:
@@ -148,9 +148,9 @@ export interface VisitFilterDTO {
     absence?: boolean | null;
     hasDiscount?: boolean | null;
     hasSale?: boolean | null;
-    dateFrom?: string | null;
-    dateTo?: string | null;
     paymentStatus?: PaymentStatus | null;
     totalValueFrom?: number | null;
     totalValueTo?: number | null;
+    year?: number;
+    month?:number;
 }

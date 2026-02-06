@@ -23,5 +23,4 @@ public interface UserRepo extends JpaRepository<User, Long> {
     @Query("SELECT u.avatar FROM User u WHERE u.employee.id = :employeeId")
     String findAvatarByEmployeeId(@Param("employeeId") Long employeeId);
 
-    List<User> findByEmployeeIsNull();
 }

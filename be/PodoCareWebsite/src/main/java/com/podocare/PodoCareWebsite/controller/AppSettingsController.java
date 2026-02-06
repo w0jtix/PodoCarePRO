@@ -1,6 +1,7 @@
 package com.podocare.PodoCareWebsite.controller;
 
 import com.podocare.PodoCareWebsite.DTO.AppSettingsDTO;
+import com.podocare.PodoCareWebsite.DTO.DiscountSettingsDTO;
 import com.podocare.PodoCareWebsite.service.AppSettingsService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,13 @@ public class AppSettingsController {
     public ResponseEntity<AppSettingsDTO> getSettings() {
         AppSettingsDTO settings = settingsService.getSettings();
         return new ResponseEntity<>(settings, HttpStatus.OK);
+    }
+
+    @GetMapping("/discounts")
+    @PreAuthorize(("hasRole('USER')"))
+    public ResponseEntity<DiscountSettingsDTO> getDiscountSettings() {
+        DiscountSettingsDTO discountSettings = settingsService.getDiscountSettings();
+        return new ResponseEntity<>(discountSettings, HttpStatus.OK);
     }
 
     @PutMapping

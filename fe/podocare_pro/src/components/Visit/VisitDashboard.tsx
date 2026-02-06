@@ -1,7 +1,7 @@
 import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
 import ActionButton from "../ActionButton";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import NavigationBar from "../NavigationBar";
 import ListHeader from "../ListHeader";
 import { VISIT_LIST_ATTRIBUTES } from "../../constants/list-headers";
@@ -17,6 +17,7 @@ import EmployeeService from "../../services/EmployeeService";
 import CostInput from "../CostInput";
 import { PaymentStatus } from "../../models/payment";
 import VisitPopup from "../Popups/VisitPopup";
+import { getYears, MONTHS } from "../../utils/dateUtils";
 
 export function VisitDashboard() {
   const { showAlert } = useAlert();
@@ -26,7 +27,7 @@ export function VisitDashboard() {
   const [selectedClients, setSelectedClients] = useState<Client[] | null>(null);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [selectedEmployees, setSelectedEmployees] = useState<Employee[] | null>(
-    null
+    null,
   );
   const [page, setPage] = useState<number>(0);
   const [hasMore, setHasMore] = useState<boolean>(true);
@@ -41,25 +42,35 @@ export function VisitDashboard() {
     absence: null,
     hasDiscount: null,
     hasSale: null,
-    dateFrom: null,
-    dateTo: null,
     paymentStatus: null,
     totalValueFrom: null,
     totalValueTo: null,
+
+    month: new Date().getMonth() + 1,
+    year: new Date().getFullYear(),
   });
-  const [isAddNewVisitPopupOpen, setIsAddNewVisitPopupOpen] = useState<boolean>(false);
+  const [isAddNewVisitPopupOpen, setIsAddNewVisitPopupOpen] =
+    useState<boolean>(false);
+  const years = useMemo(() => getYears(), []);
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth() + 1;
+
+  const disabledMonthIds = useMemo(() => {
+    if (filter.year !== currentYear) return [];
+    return MONTHS.filter((m) => m.id > currentMonth).map((m) => m.id);
+  }, [filter.year, currentYear, currentMonth]);
 
   const fetchVisits = async (pageNum: number = 0, append: boolean = false) => {
     if (isLoading) return;
-    
+
     setIsLoading(true);
-    
+
     VisitService.getVisits(filter, pageNum, 30)
       .then((data) => {
         const content = data?.content || [];
-        
+
         if (append) {
-          setVisits(prev => [...prev, ...content]);
+          setVisits((prev) => [...prev, ...content]);
         } else {
           setVisits(content);
         }
@@ -77,7 +88,7 @@ export function VisitDashboard() {
     ClientService.getClients()
       .then((data) => {
         const sortedClients = [...data].sort((a, b) =>
-          a.firstName.localeCompare(b.firstName, "pl", { sensitivity: "base" })
+          a.firstName.localeCompare(b.firstName, "pl", { sensitivity: "base" }),
         );
         setClients(sortedClients);
       })
@@ -108,11 +119,12 @@ export function VisitDashboard() {
       absence: null,
       hasDiscount: null,
       hasSale: null,
-      dateFrom: null,
-      dateTo: null,
       paymentStatus: null,
       totalValueFrom: null,
       totalValueTo: null,
+
+      month: new Date().getMonth() + 1,
+      year: new Date().getFullYear(),
     });
     setSelectedClients(null);
     setSelectedEmployees(null);
@@ -140,7 +152,7 @@ export function VisitDashboard() {
         setSelectedClients(null);
       }
     },
-    []
+    [],
   );
   const handleEmployeesChange = useCallback(
     (employees: Employee | Employee[] | null) => {
@@ -156,7 +168,7 @@ export function VisitDashboard() {
           employeeIds: employeeIds.length > 0 ? employeeIds : null,
         }));
         setSelectedEmployees(
-          selectedEmployees.length > 0 ? selectedEmployees : null
+          selectedEmployees.length > 0 ? selectedEmployees : null,
         );
       } else {
         setFilter((prev) => ({
@@ -166,42 +178,45 @@ export function VisitDashboard() {
         setSelectedEmployees(null);
       }
     },
-    []
+    [],
   );
 
-  const handleDateFromChange = useCallback(
-    (newDateString: string | null) => {
-      setFilter((prevFilter) => {
-        if (newDateString && prevFilter.dateTo) {
-          if (newDateString > prevFilter.dateTo) {
-            showAlert(
-              "Błędne daty:  Data od późniejsza niż Data do!",
-              AlertType.ERROR
-            );
-            return prevFilter;
-          }
+  const handleYearChange = useCallback(
+    (
+      selected:
+        | { id: number; name: string }
+        | { id: number; name: string }[]
+        | null,
+    ) => {
+      const year = Array.isArray(selected) ? selected[0]?.id : selected?.id;
+      setFilter((prev) => {
+        let newMonth = prev.month;
+        if (year === currentYear && prev.month && prev.month > currentMonth) {
+          newMonth = currentMonth;
         }
-        return { ...prevFilter, dateFrom: newDateString };
+        return {
+          ...prev,
+          year: year ?? prev.year,
+          month: newMonth,
+        };
       });
     },
-    [showAlert]
+    [currentYear, currentMonth],
   );
-  const handleDateToChange = useCallback(
-    (newDateString: string | null) => {
-      setFilter((prevFilter) => {
-        if (newDateString && prevFilter.dateFrom) {
-          if (newDateString < prevFilter.dateFrom) {
-            showAlert(
-              "Błędne daty: Data do wcześniejsza niż Data od!",
-              AlertType.ERROR
-            );
-            return prevFilter;
-          }
-        }
-        return { ...prevFilter, dateTo: newDateString };
-      });
+  const handleMonthChange = useCallback(
+    (
+      selected:
+        | { id: number; name: string }
+        | { id: number; name: string }[]
+        | null,
+    ) => {
+      const month = Array.isArray(selected) ? selected[0]?.id : selected?.id;
+      setFilter((prev) => ({
+        ...prev,
+        month: month ?? prev.month,
+      }));
     },
-    [showAlert]
+    [],
   );
 
   const handleValueFromChange = useCallback((valueFrom: number | null) => {
@@ -234,15 +249,18 @@ export function VisitDashboard() {
     });
   }, []);
 
-  const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
-    const target = e.currentTarget;
-    const scrolledToBottom = 
-      target.scrollHeight - target.scrollTop <= target.clientHeight + 100; // 100px b4 end of the list
+  const handleScroll = useCallback(
+    (e: React.UIEvent<HTMLDivElement>) => {
+      const target = e.currentTarget;
+      const scrolledToBottom =
+        target.scrollHeight - target.scrollTop <= target.clientHeight + 100; // 100px b4 end of the list
 
-    if (scrolledToBottom && hasMore && !isLoading) {
-      fetchVisits(page + 1, true);
-    }
-  }, [hasMore, isLoading, page, filter]);
+      if (scrolledToBottom && hasMore && !isLoading) {
+        fetchVisits(page + 1, true);
+      }
+    },
+    [hasMore, isLoading, page, filter],
+  );
 
   useEffect(() => {
     fetchVisits(0, false);
@@ -264,79 +282,89 @@ export function VisitDashboard() {
         replaceSearchbar={true}
       >
         <ActionButton
-            src={"src/assets/addNew.svg"}
-            alt={"Nowa Wizyta"}
-            text={"Nowa Wizyta"}           
-            onClick={() => setIsAddNewVisitPopupOpen(true)}
-          />
+          src={"src/assets/addNew.svg"}
+          alt={"Nowa Wizyta"}
+          text={"Nowa Wizyta"}
+          onClick={() => setIsAddNewVisitPopupOpen(true)}
+        />
       </NavigationBar>
       <section className="products-action-buttons visits width-80 flex align-self-center space-between mt-1 mb-1">
-        <section className="visit-filters width-fit-content flex-column g-05">
+        <div className="flex-column g-05 align-items-center">
+          <span className="qv-span visit-list text-align-center">Pracownik:</span>
+          <DropdownSelect<Employee>
+            items={employees}
+            onChange={handleEmployeesChange}
+            value={selectedEmployees}
+            placeholder="Nie wybrano"
+            searchable={false}
+            multiple={true}
+            allowNew={false}
+            className="visit-list"
+          />
+        </div>
+        <div className="flex-column g-05 align-items-center">
+          <span className="qv-span  visit-list text-align-center">Klienci:</span>
+          <DropdownSelect<Client>
+            items={clients}
+            onChange={handleClientsChange}
+            value={selectedClients}
+            allowNew={false}
+            multiple={true}
+            getItemLabel={(c) => `${c.firstName} ${c.lastName}`}
+            className="clients visit-list"
+            placeholder="Nie wybrano"
+          />
+        </div>
+        <div className="flex-column g-05 align-items-center">
+          <span className="qv-span visit-list text-align-center">Rok:</span>
+          <DropdownSelect
+            items={years}
+            value={
+              filter.year
+                ? (years.find((y) => y.id === filter.year) ?? null)
+                : null
+            }
+            onChange={handleYearChange}
+            searchable={false}
+            allowNew={false}
+            placeholder="Wybierz"
+            className="expense-year"
+          />
+        </div>
+        <div className="flex-column g-05 align-items-center">
+          <span className="qv-span visit-list text-align-center">Miesiąc:</span>
+          <DropdownSelect
+            divided={true}
+            items={MONTHS}
+            value={
+              filter.month
+                ? (MONTHS.find((m) => m.id === filter.month) ?? null)
+                : null
+            }
+            onChange={handleMonthChange}
+            searchable={false}
+            allowNew={false}
+            placeholder="Wybierz"
+            className="expense-month"
+            disabledItemIds={disabledMonthIds}
+          />
+        </div>
+        <div className="flex-column g-05 align-items-center">
+          <span className="qv-span visit-list text-align-center">Wartość:</span>
           <div className="flex g-05 align-items-center">
-            <span className="qv-span visit-list">Pracownik:</span>
-            <DropdownSelect<Employee>
-              items={employees}
-              onChange={handleEmployeesChange}
-              value={selectedEmployees}
-              placeholder="Nie wybrano"
-              searchable={false}
-              multiple={true}
-              allowNew={false}
-              className="visit-list"
-            />
-          </div>
-          <div className="flex g-05 align-items-center">
-            <span className="qv-span  visit-list">Klienci:</span>
-            <DropdownSelect<Client>
-              items={clients}
-              onChange={handleClientsChange}
-              value={selectedClients}
-              allowNew={false}
-              multiple={true}
-              getItemLabel={(c) => `${c.firstName} ${c.lastName}`}
-              className="clients visit-list"
-              placeholder="Nie wybrano"
-            />
-          </div>
-        </section>
-
-        <section className="visit-filters width-fit-content flex-column g-05">
-          <div className="flex g-05 align-items-center">
-            <span className="qv-span visit-list">Data od:</span>
-            <DateInput
-              onChange={handleDateFromChange}
-              selectedDate={filter.dateFrom || null}
-              showPlaceholder={true}
-            />
-          </div>
-          <div className="flex g-05 align-items-center">
-            <span className="qv-span visit-list">Data do:</span>
-            <DateInput
-              onChange={handleDateToChange}
-              selectedDate={filter.dateTo || null}
-              showPlaceholder={true}
-            />
-          </div>
-        </section>
-
-        <section className="visit-filters width-fit-content flex-column g-05">
-          <div className="flex g-05 align-items-center">
-            <span className="qv-span visit-list">Wartość od:</span>
             <CostInput
               onChange={handleValueFromChange}
               selectedCost={filter.totalValueFrom ?? 0}
               className="thin"
             />
-          </div>
-          <div className="flex g-05 align-items-center">
-            <span className="qv-span visit-list">Wartość do:</span>
+            <span className="qv-span">-</span>
             <CostInput
               onChange={handleValueToChange}
               selectedCost={filter.totalValueTo ?? 0}
               className="thin"
             />
           </div>
-        </section>
+        </div>
         <ActionButton
           src={"src/assets/reset.svg"}
           alt={"Reset"}
@@ -344,7 +372,7 @@ export function VisitDashboard() {
           text={"Reset"}
           onClick={handleResetFiltersAndData}
           disableText={true}
-          className="vf-button"
+          className="vf-button align-self-end"
         />
       </section>
       <section className="visit-filters width-90 flex space-between mb-1">
@@ -355,20 +383,20 @@ export function VisitDashboard() {
             filter.paymentStatus === null
               ? "wszystkie"
               : filter.paymentStatus === PaymentStatus.PAID
-              ? "opłacone"
-              : filter.paymentStatus === PaymentStatus.PARTIAL
-              ? "częściowo"
-              : "nieopłacone"
+                ? "opłacone"
+                : filter.paymentStatus === PaymentStatus.PARTIAL
+                  ? "częściowo"
+                  : "nieopłacone"
           }`}
           onClick={toggleFilterPaymentStatus}
           className={`v-f-width ${
             filter.paymentStatus === null
               ? "wszystkie"
               : filter.paymentStatus === PaymentStatus.PAID
-              ? "paid"
-              : filter.paymentStatus === PaymentStatus.PARTIAL
-              ? "partial"
-              : "unpaid"
+                ? "paid"
+                : filter.paymentStatus === PaymentStatus.PARTIAL
+                  ? "partial"
+                  : "unpaid"
           }`}
         />
 
@@ -459,7 +487,7 @@ export function VisitDashboard() {
         <VisitPopup
           onClose={() => {
             setIsAddNewVisitPopupOpen(false);
-          fetchVisits(0, false);
+            fetchVisits(0, false);
           }}
         />
       )}

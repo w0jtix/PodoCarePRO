@@ -80,7 +80,7 @@ export function OrderItemList({
         const initialMap = new Map<number, number>();
         const previewMap = new Map<number, number>();
 
-        products.forEach(product => {
+        products.content.forEach(product => {
           initialMap.set(product.id, product.supply);
           previewMap.set(product.id, product.supply);
         });
@@ -128,7 +128,8 @@ export function OrderItemList({
 
       if (selected.trim().length > 0) {
         try {
-          suggestions = await AllProductService.getProducts(filter);
+          const response = await AllProductService.getProducts(filter);
+          suggestions = response.content;
         } catch (error) {
           showAlert("Błąd", AlertType.ERROR);
           console.error("Error fetching filtered products:", error);

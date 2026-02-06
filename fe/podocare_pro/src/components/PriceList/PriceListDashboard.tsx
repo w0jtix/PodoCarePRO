@@ -21,7 +21,7 @@ import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
 
 export function PriceListDashboard() {
-  const [keyword, setKeyword] = useState<string | undefined>(undefined);
+  
   const [categories, setCategories] = useState<BaseServiceCategory[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<
     BaseServiceCategory[]
@@ -235,7 +235,7 @@ export function PriceListDashboard() {
               setSelectedService(serv);
               setQuickVisitSummaryVisible(true);
             }}
-            className="services pricelist"
+            className={`services pricelist ${quickVisitSummaryVisible ? "cropped" : ""}`}
           />
         </div>
         <div
@@ -264,7 +264,7 @@ export function PriceListDashboard() {
               setSelectedProduct(prod);
               setQuickVisitSummaryVisible(true);
             }}
-            className="products pricelist"
+            className="products pricelist normal-size"
             onScroll={handleScroll}
             isLoading={loading}
             hasMore={hasMore}

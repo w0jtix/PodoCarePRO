@@ -44,21 +44,21 @@ public class BaseServiceController {
     }
 
     @PostMapping
-    @PreAuthorize(("hasRole('USER')"))
+    @PreAuthorize(("hasRole('ADMIN')"))
     public ResponseEntity<BaseServiceDTO> createBaseService(@RequestBody BaseServiceDTO baseService) {
         BaseServiceDTO newService = baseServiceService.createBaseService(baseService);
         return new ResponseEntity<>(newService, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize(("hasRole('USER')"))
+    @PreAuthorize(("hasRole('ADMIN')"))
     public ResponseEntity<BaseServiceDTO> updateBaseService(@PathVariable(value = "id") Long id, @NonNull @RequestBody BaseServiceDTO baseService) {
         BaseServiceDTO saved = baseServiceService.updateBaseService(id, baseService);
         return new ResponseEntity<>(saved, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize(("hasRole('USER')"))
+    @PreAuthorize(("hasRole('ADMIN')"))
     public ResponseEntity<Void> deleteBaseService(@PathVariable(value = "id") Long id) {
         baseServiceService.deleteBaseServiceById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

@@ -47,16 +47,16 @@ public class BrandController {
         List<BrandDTO> createdBrands = brandService.createBrands(brands);
         return new ResponseEntity<>(createdBrands, HttpStatus.CREATED);
     }
-
+    //currently not supported
     @PutMapping("/{id}")
-    @PreAuthorize(("hasRole('USER')"))
+    @PreAuthorize(("hasRole('ADMIN')"))
     public ResponseEntity<BrandDTO> updateBrand(@PathVariable(value = "id") Long id, @NonNull @RequestBody BrandDTO brand){
         BrandDTO saved = brandService.updateBrand(id, brand);
         return new ResponseEntity<>(saved, HttpStatus.OK);
     }
-
+    //currently not supported
     @DeleteMapping("/{id}")
-    @PreAuthorize(("hasRole('USER')"))
+    @PreAuthorize(("hasRole('ADMIN')"))
     public ResponseEntity<Void> deleteBrand(@PathVariable(value = "id") Long id) {
         brandService.deleteBrandById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

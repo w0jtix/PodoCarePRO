@@ -20,7 +20,7 @@ public class RoleController {
     private final RoleService roleService;
 
     @GetMapping("/all")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<RoleDTO>> getAllUsers() {
         List<RoleDTO> roleDTOList = roleService.getAllRoles();
         return new ResponseEntity<>(roleDTOList, HttpStatus.OK);

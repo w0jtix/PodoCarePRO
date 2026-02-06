@@ -17,7 +17,6 @@ import { Discount, NewDiscount, NewVisit, Visit, VisitDiscountType } from "../mo
 import { PaymentMethod } from "../models/payment";
 import { UsageRecordItem } from "../models/usage-record";
 import { CompanyExpense, CompanyExpenseItem, NewCompanyExpense, NewCompanyExpenseItem } from "../models/expense";
-import { exec } from "child_process";
 import { NewStatSettings, StatSettings } from "../models/business_settings";
 import { RegisterRequest } from "../models/register";
 
@@ -25,6 +24,9 @@ import { RegisterRequest } from "../models/register";
     username: string,
     password: string
   ): string | null {
+    if(!username && ! password) {
+      return "Uzupełnij nazwę użytkownika i hasło!";
+    }
     if(!username) {
       return "Brak nazwy użytkownika!";
     }

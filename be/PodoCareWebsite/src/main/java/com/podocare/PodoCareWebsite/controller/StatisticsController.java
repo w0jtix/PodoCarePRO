@@ -20,8 +20,6 @@ public class StatisticsController {
     private final StatisticsService statisticsService;
     private final CompanyStatsService companyStatsService;
 
-    // ========== Employee Stats ==========
-
     @PostMapping("/employee-revenue")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EmployeeRevenueDTO> getEmployeeRevenue(

@@ -38,7 +38,6 @@ export function ProfileDashboard() {
       console.error("Błąd podczas pobierania użytkowników!", err);
     }
   };
-
   const fetchEmployees = async () => {
     EmployeeService.getAllEmployees()
       .then((data) => {
@@ -49,6 +48,30 @@ export function ProfileDashboard() {
         showAlert("Błąd", AlertType.ERROR);
         console.error("Error fetching employees:", error);
       });
+  };
+  const fetchRoles = async () => {
+    try {
+      const response = await RoleService.getAllRoles();
+      setAvailableRoles(response);
+    } catch (err) {
+      showAlert("Błąd", AlertType.ERROR);
+      console.error("Błąd podczas pobierania roli!", err);
+    }
+  };
+
+  const initUpdatedUser = () => {
+    const jwtUser = AuthService.getCurrentUser() as JwtUser;
+    const mappedRoles: Role[] = jwtUser.roles.map((roleName, index) => ({
+      id: index,
+      name: roleName,
+    }));
+    setUpdatedUser({
+      id: jwtUser.id,
+      username: jwtUser.username,
+      avatar: jwtUser.avatar,
+      roles: mappedRoles,
+      employee: jwtUser.employee,
+    });
   };
 
   const handleEmployeeSelect = (value: Employee | Employee[] | null) => {
@@ -63,11 +86,9 @@ export function ProfileDashboard() {
       };
     });
   };
-
   const toggleAvatarPicker = () => {
     setIsAvatarPickerOpen((prev) => !prev);
   };
-
   const handleAvatarChange = (avatar: string) => {
     setUpdatedUser((prev) => {
       if (!prev) return prev;
@@ -75,7 +96,6 @@ export function ProfileDashboard() {
     });
     setIsAvatarPickerOpen(false);
   };
-
   const handleLogout = () => {
     AuthService.logout();
   };
@@ -98,7 +118,6 @@ export function ProfileDashboard() {
 
     handleEditUser();
   };
-
   const handleEditUser = async () => {
     if (!updatedUser) return;
 
@@ -125,41 +144,24 @@ export function ProfileDashboard() {
   };
 
   useEffect(() => {
-    const fetchRoles = async () => {
-      try {
-        const response = await RoleService.getAllRoles();
-        setAvailableRoles(response);
-
-        const jwtUser = AuthService.getCurrentUser() as JwtUser;
-
-        const mappedRoles = response.filter((role: Role) =>
-          jwtUser.roles.includes(role.name)
-        );
-        setUpdatedUser({
-          id: jwtUser.id,
-          username: jwtUser.username,
-          avatar: jwtUser.avatar,
-          roles: mappedRoles,
-          employee: jwtUser.employee,
-        });
-      } catch (err) {
-        showAlert("Błąd", AlertType.ERROR);
-        console.error("Błąd podczas pobierania roli!", err);
-      }
-    };
-
-    fetchUsers();
-    fetchRoles();
-    fetchEmployees();
     refreshUser();
+    initUpdatedUser();
+
+    if(user?.roles.includes(RoleType.ROLE_ADMIN)) {
+      fetchUsers();
+      fetchRoles();
+      fetchEmployees();
+    }
   }, []);
 
   return (
     <div className="dashboard-panel width-85 height-max flex-column align-items-center">
-      <div className="user-container flex align-items-center space-between width-85 mt-1">
-        <div className="user-basic-info relative flex-column g-1">
-          <div className="profile-container flex align-items-center g-10">
-            <div className="flex-column align-items-center g-1">
+      <div className={`user-container flex align-items-center space-between width-85 mt-1`}>
+        <div className={`user-basic-info relative flex-column`}>
+          <div className="profile-container flex align-items-center space-between">
+            <div className="width-max space-around flex align-items-center g-1">
+
+              <div className="flex-column align-items-center g-1">
               <h2 className="h2-username text-align-center">{user?.username}</h2>
               <div className="profile-avatar flex align-items-center justify-center mb-1">
                 <img
@@ -168,30 +170,10 @@ export function ProfileDashboard() {
                   className="profile-avatar-image width-max height-max"
                 />
               </div>
-              <ActionButton
-                text={"Wybierz Avatar"}
-                disableImg={true}
-                onClick={toggleAvatarPicker}
-                className="avatar-button"
-              />
-            </div>
-            <div className="user-roles-container flex-column g-05 align-items-center">
-              <h2 className="pw-header text-align-center mb-1">Role Użytkownika</h2>
-              {updatedUser?.roles.map((role) => (
-                <ActionButton
-                  text={role.name.replace("ROLE_", "")}
-                  disableImg={true}
-                  className="role-button selected"
-                  key={role.id}
-                  default={true}
-                  onClick={() => undefined}
-                />
-              ))}
-            </div>
-          </div>
-          {user?.roles.includes(RoleType.ROLE_ADMIN) ? (
-            <div className="user-details-bottom-section flex g-1 align-items-center">
-              <div className="employee-dropdown-container flex align-items-center g-1">
+              </div>
+
+              {user?.roles.includes(RoleType.ROLE_ADMIN) && (
+              <div className="employee-dropdown-container flex-column align-items-center g-1 align-self-start mt-05">
               <h2 className="pw-header text-align-center m-0">Pracownik:</h2>
               <DropdownSelect
                 items={employees}
@@ -203,6 +185,18 @@ export function ProfileDashboard() {
                 allowNew={false}
               />
               </div>
+              )}
+            </div>
+            
+            
+          </div>
+            <div className="user-details-bottom-section height-85 align-self-center flex g-1 align-items-center width-max space-around">             
+              <ActionButton
+                text={"Wybierz Avatar"}
+                disableImg={true}
+                onClick={toggleAvatarPicker}
+                className="avatar-button"
+              />
               <ActionButton
                 text={"Zapisz Zmiany"}
                 src={"src/assets/tick.svg"}
@@ -210,20 +204,13 @@ export function ProfileDashboard() {
                 className="user-update-button"
               />
             </div>
-          ) : (
-            <ActionButton
-              text={"Zapisz Zmiany"}
-              src={"src/assets/tick.svg"}
-              onClick={handleValidateUpdatedUser}
-              className="user-update-button"
-            />
-          )}
         </div>
 
         <ChangePasswordForm />
       </div>
+      {user?.roles.includes(RoleType.ROLE_ADMIN) && (
       <div className="all-user-container mt-5 width-85 g-1 height-fit-content justify-center">
-        <div className="width-95 flex align-items-center">
+        <div className="width-95 flex align-items-center justify-center">
           {user?.roles.includes(RoleType.ROLE_ADMIN) ? (
             <>
             <div className="f-1"></div>
@@ -278,7 +265,12 @@ export function ProfileDashboard() {
             </div>
           ))}
         </div>
+          
+
+
+
       </div>
+      )}
       <div className="quick-action-buttons flex width-85 mt-2 justify-end">
         <ActionButton
           src="src/assets/logout.svg"

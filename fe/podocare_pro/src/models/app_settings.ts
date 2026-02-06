@@ -16,3 +16,8 @@ export interface NewAppSettings {
     googleReviewDiscount: number;
     booksyHappyHours: number;
 }
+
+export interface DiscountSettings {
+    googleReviewDiscount: number;
+    booksyHappyHours: number;
+}

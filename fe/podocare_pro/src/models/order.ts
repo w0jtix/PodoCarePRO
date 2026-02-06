@@ -22,6 +22,6 @@ export interface NewOrder {
 
 export interface OrderFilterDTO {
     supplierIds?: number[] | null;
-    dateFrom?: string | null;
-    dateTo?: string | null;
+    month?: number | null;
+    year?:number;
 }

@@ -293,6 +293,9 @@
 .height-90 {
   height: 90%;
 }
+.height-85 {
+  height: 85%;
+}
 .height-80 {
   height: 80%;
 }
@@ -719,6 +722,9 @@ button.menu-button:hover a.menu-a {
 .order-history-action-buttons .custom-calendar-button,
 .products-action-buttons.visits .custom-calendar-button{
   width: var(--button-wider-width);
+}
+.products-action-buttons.services-list {
+  min-height: 32px;
 }
 .order-history-action-buttons-a{
   color:rgba(255, 255, 255, 0.8);
@@ -2235,6 +2241,8 @@ input[type="number"]::-webkit-inner-spin-button {
   max-height: 320px;
 }
 .user-basic-info {
+  width: 420px;
+  height: 265px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 20px;
   padding: 1.5rem 4rem;
@@ -2453,7 +2461,10 @@ input[type="number"]::-webkit-inner-spin-button {
 .item-list.products.pricelist,
 .item-list.services.pricelist {
   padding: 0 0.5rem 0.25rem 0;
-  max-height: 450px;
+  max-height: 505px;
+}
+.item-list.services.pricelist.cropped {
+  max-height: 460px;
 }
 .item-list.products.pricelist.popup,
 .item-list.services.pricelist.popup {
@@ -2481,6 +2492,9 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 .product-wrapper.services.client {
   height:30px;
+}
+.product-wrapper.products.pricelist.normal-size {
+  height: 45px;
 }
 .product-wrapper.services.pricelist.qv {
   height: 24px;

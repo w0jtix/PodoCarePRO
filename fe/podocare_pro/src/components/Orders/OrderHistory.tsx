@@ -1,7 +1,7 @@
 import React from "react";
 import ListHeader from "../ListHeader.js";
 import OrderList from "./OrderList.jsx";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import OrderService from "../../services/OrderService.jsx";
 import ActionButton from "../ActionButton.jsx";
 import DropdownSelect from "../DropdownSelect.js";
@@ -12,6 +12,7 @@ import { Supplier } from "../../models/supplier.js";
 import { Alert, AlertType } from "../../models/alert.js";
 import { ORDER_HISTORY_ATTRIBUTES } from "../../constants/list-headers.js";
 import { useAlert } from "../Alert/AlertProvider.js";
+import { getYears, MONTHS } from "../../utils/dateUtils.js";
 
 export function OrderHistory() {
   const { showAlert } = useAlert();
@@ -20,12 +21,20 @@ export function OrderHistory() {
   const [selectedSuppliers, setSelectedSuppliers] = useState<Supplier[]>([]);
   const [filter, setFilter] = useState<OrderFilterDTO>({
     supplierIds: null,
-    dateFrom: null,
-    dateTo: null,
+    month: null,
+    year: new Date().getFullYear(),
   });
   const [page, setPage] = useState<number>(0);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(true);
+  const years = useMemo(() => getYears(), []);
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth() + 1;
+  
+    const disabledMonthIds = useMemo(() => {
+      if (filter.year !== currentYear) return [];
+      return MONTHS.filter((m) => m.id > currentMonth).map((m) => m.id);
+    }, [filter.year, currentYear, currentMonth]);
 
   const handleSuccess = useCallback(
     () => {
@@ -37,8 +46,8 @@ export function OrderHistory() {
   const handleResetFiltersAndData = useCallback(() => {
     setFilter({
       supplierIds: null,
-      dateFrom: null,
-      dateTo: null,
+      month: null,
+      year: new Date().getFullYear(),
     });
     setSelectedSuppliers([]);
     setPage(0);
@@ -118,39 +127,42 @@ export function OrderHistory() {
     }));
   }, [selectedSuppliers]);
 
-  const handleDateFromChange = useCallback(
-    (newDateString: string | null) => {
-      setFilter((prevFilter) => {
-        if (newDateString && prevFilter.dateTo) {
-          if (newDateString > prevFilter.dateTo) {
-            showAlert(
-              "Błędne daty:  Data od późniejsza niż Data do!",
-              AlertType.ERROR
-            );
-            return prevFilter;
-          }
+  const handleYearChange = useCallback(
+    (
+      selected:
+        | { id: number; name: string }
+        | { id: number; name: string }[]
+        | null,
+    ) => {
+      const year = Array.isArray(selected) ? selected[0]?.id : selected?.id;
+      setFilter((prev) => {
+        let newMonth = prev.month;
+        if (year === currentYear && prev.month && prev.month > currentMonth) {
+          newMonth = currentMonth;
         }
-        return { ...prevFilter, dateFrom: newDateString };
+        return {
+          ...prev,
+          year: year ?? prev.year,
+          month: newMonth,
+        };
       });
     },
-    [showAlert]
+    [currentYear, currentMonth],
   );
-  const handleDateToChange = useCallback(
-    (newDateString: string | null) => {
-      setFilter((prevFilter) => {
-        if (newDateString && prevFilter.dateFrom) {
-          if (newDateString < prevFilter.dateFrom) {
-            showAlert(
-              "Błędne daty: Data do wcześniejsza niż Data od!",
-              AlertType.ERROR
-            );
-            return prevFilter;
-          }
-        }
-        return { ...prevFilter, dateTo: newDateString };
-      });
+  const handleMonthChange = useCallback(
+    (
+      selected:
+        | { id: number; name: string }
+        | { id: number; name: string }[]
+        | null,
+    ) => {
+      const month = Array.isArray(selected) ? selected[0]?.id : selected?.id;
+      setFilter((prev) => ({
+        ...prev,
+        month: month ?? null,
+      }));
     },
-    [showAlert]
+    [],
   );
 
   const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
@@ -178,20 +190,36 @@ export function OrderHistory() {
         />
 
         <section className="order-history-action-button-title flex g-15px">
-          <a className="order-history-action-buttons-a align-center">Data od:</a>
-          <DateInput
-            onChange={handleDateFromChange}
-            selectedDate={filter.dateFrom || null}
-            showPlaceholder={true}
-          />
+          <DropdownSelect
+                      items={years}
+                      value={
+                        filter.year
+                          ? (years.find((y) => y.id === filter.year) ?? null)
+                          : null
+                      }
+                      onChange={handleYearChange}
+                      searchable={false}
+                      allowNew={false}
+                      placeholder="Rok"
+                      className="expense-year"
+                    />
         </section>
         <section className="order-history-action-button-title flex g-15px">
-          <a className="order-history-action-buttons-a align-center">Data do:</a>
-          <DateInput
-            onChange={handleDateToChange}
-            selectedDate={filter.dateTo || null}
-            showPlaceholder={true}
-          />
+          <DropdownSelect
+                      divided={true}
+                      items={MONTHS}
+                      value={
+                        filter.month
+                          ? (MONTHS.find((m) => m.id === filter.month) ?? null)
+                          : null
+                      }
+                      onChange={handleMonthChange}
+                      searchable={false}
+                      allowNew={false}
+                      placeholder="Miesiąc"
+                      className="expense-month"
+                      disabledItemIds={disabledMonthIds}
+                    />
         </section>
         <ActionButton
           src={"src/assets/reset.svg"}

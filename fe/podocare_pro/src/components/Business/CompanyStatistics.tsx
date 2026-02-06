@@ -46,7 +46,6 @@ export function CompanyStatistics() {
     StatisticsService.getCompanyStats(statRequest)
       .then((data) => {
         setCompanyStats(data);
-        console.log("stats:", data);
       })
       .catch((error) => {
         showAlert("Błąd!", AlertType.ERROR);
@@ -58,7 +57,6 @@ export function CompanyStatistics() {
     StatisticsService.getCompanyFinancialSummary(statRequest)
       .then((data) => {
         setCompanySummary(data);
-        console.log("summary:", data);
       })
       .catch((error) => {
         showAlert("Błąd!", AlertType.ERROR);

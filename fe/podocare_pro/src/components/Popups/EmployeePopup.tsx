@@ -38,7 +38,6 @@ export function EmployeePopup ({
         .then((data) => {
           setFetchedEmployee(data);
           setEmployeeDTO(data);
-          console.log(data);
         })
         .catch((error) => {
           console.error("Error fetching employee: ", error);
@@ -73,7 +72,6 @@ export function EmployeePopup ({
           employeeId,
           employeeDTO as NewEmployee
         );
-        console.log(employeeDTO);
         showAlert(`Pracownik zaktualizowany!`, AlertType.SUCCESS);
       }
       onClose();
