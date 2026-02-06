@@ -1,0 +1,158 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="4.1-add-soft-delete-and-snapshot-columns" author="Wojtek">
+
+        <!-- Add isDeleted columns to multiple tables -->
+        <addColumn tableName="client">
+            <column name="is_deleted" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="employee">
+            <column name="is_deleted" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="service">
+            <column name="is_deleted" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="service_variant">
+            <column name="is_deleted" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="service_category">
+            <column name="is_deleted" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <!-- Add snapshot columns to visit_item (nullable first for data migration) -->
+        <addColumn tableName="visit_item">
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="duration" type="INT"/>
+        </addColumn>
+
+        <!-- Add name column to visit_discount (nullable for other discount types) -->
+        <addColumn tableName="visit_discount">
+            <column name="name" type="VARCHAR(255)"/>
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="4.2-migrate-visit-discount-names" author="Wojtek">
+
+        <!-- Set name for CLIENT_DISCOUNT type -->
+        <update tableName="visit_discount">
+            <column name="name" value="Rabat Klienta"/>
+            <where>type = 'CLIENT_DISCOUNT'</where>
+        </update>
+
+    </changeSet>
+
+    <changeSet id="4.3-migrate-visit-item-data-without-variant" author="Wojtek" dbms="postgresql">
+
+        <!-- Update visit_item records where only baseService is assigned (no variant) -->
+        <sql>
+            UPDATE visit_item
+            SET
+                name = s.name,
+                duration = s.duration
+            FROM service s
+            WHERE s.id = visit_item.service_id
+              AND visit_item.service_variant_id IS NULL
+        </sql>
+
+    </changeSet>
+
+    <changeSet id="4.4-migrate-visit-item-data-with-variant" author="Wojtek" dbms="postgresql">
+
+        <!-- Update visit_item records where both baseService and variant are assigned -->
+        <sql>
+            UPDATE visit_item
+            SET
+                name = s.name || ' ' || sv.name,
+                duration = sv.duration
+            FROM service s, service_variant sv
+            WHERE s.id = visit_item.service_id
+              AND sv.id = visit_item.service_variant_id
+              AND visit_item.service_variant_id IS NOT NULL
+        </sql>
+
+    </changeSet>
+
+    <changeSet id="4.5-add-not-null-constraints-to-visit-item" author="Wojtek">
+
+        <addNotNullConstraint tableName="visit_item" columnName="name" columnDataType="VARCHAR(255)"/>
+        <addNotNullConstraint tableName="visit_item" columnName="duration" columnDataType="INT"/>
+
+    </changeSet>
+
+    <changeSet id="4.6-add-notes-and-receipt-columns-to-visit" author="Wojtek">
+
+        <addColumn tableName="visit">
+            <column name="notes" type="VARCHAR(1000)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="visit">
+            <column name="receipt" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="4.7-add-phone-number-and-red-flag-to-client" author="Wojtek">
+
+        <addColumn tableName="client">
+            <column name="phone_number" type="VARCHAR(20)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="client">
+            <column name="red_flag" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="4.8-create-client-note-table" author="Wojtek">
+
+        <createTable tableName="client_note">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="content" type="VARCHAR(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_client_note_employee"
+                             references="employee(id)"/>
+            </column>
+            <column name="client_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_client_note_client"
+                             references="client(id)"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+
+</databaseChangeLog>
