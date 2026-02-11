@@ -14,6 +14,7 @@ import com.podocare.PodoCareWebsite.repo.AppSettingsRepo;
 import com.podocare.PodoCareWebsite.repo.SaleItemRepo;
 import com.podocare.PodoCareWebsite.repo.VisitRepo;
 import com.podocare.PodoCareWebsite.repo.VoucherRepo;
+import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.VoucherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -34,6 +35,7 @@ public class VoucherServiceImpl  implements VoucherService {
     private final SaleItemRepo saleItemRepo;
     private final AppSettingsRepo settingsRepo;
     private final VisitRepo visitRepo;
+    private final AuditLogService auditLogService;
 
     @Override
     public VoucherDTO getVoucherById(Long id) {
@@ -68,7 +70,9 @@ public class VoucherServiceImpl  implements VoucherService {
                 LocalDate expiryDate = voucher.getIssueDate().plusMonths(settings.getVoucherExpiryTime());
                 voucher.setExpiryDate(expiryDate);
             }
-           return new VoucherDTO(voucherRepo.save(voucher.toEntity()));
+            VoucherDTO savedDTO = new VoucherDTO(voucherRepo.save(voucher.toEntity()));
+            auditLogService.logCreate("Voucher", savedDTO.getId(), "Voucher Klienta: " + savedDTO.getClient().getFirstName() + savedDTO.getClient().getLastName(), savedDTO);
+            return savedDTO;
         } catch (Exception e) {
             throw new CreationException("Failed to create Voucher. Reason: " + e.getMessage(), e);
         }
@@ -78,9 +82,11 @@ public class VoucherServiceImpl  implements VoucherService {
     @Transactional
     public VoucherDTO updateVoucher(Long id, VoucherDTO voucher) {
         try{
-            getVoucherById(id);
+            VoucherDTO oldVoucherSnapshot = getVoucherById(id);
             voucher.setId(id);
-            return new VoucherDTO(voucherRepo.save(voucher.toEntity()));
+            VoucherDTO savedDTO = new VoucherDTO(voucherRepo.save(voucher.toEntity()));
+            auditLogService.logUpdate("Voucher", id, "Voucher Klienta: " + oldVoucherSnapshot.getClient().getFirstName() + oldVoucherSnapshot.getClient().getLastName(), oldVoucherSnapshot, savedDTO);
+            return savedDTO;
         } catch (Exception e) {
             throw new UpdateException("Failed to update Voucher. Reason: " + e.getMessage(), e);
         }
@@ -89,7 +95,9 @@ public class VoucherServiceImpl  implements VoucherService {
     @Override
     public void deleteVoucherById(Long id) {
         try{
-            voucherRepo.deleteById(getVoucherById(id).getId());
+            VoucherDTO voucherSnapshot = getVoucherById(id);
+            voucherRepo.deleteById(id);
+            auditLogService.logDelete("Voucher", id, "Voucher Klienta: " + voucherSnapshot.getClient().getFirstName() + voucherSnapshot.getClient().getLastName(), voucherSnapshot);
         } catch (Exception e) {
             throw new DeletionException("Failed to delete Voucher. Reason: "+ e.getMessage(), e);
         }

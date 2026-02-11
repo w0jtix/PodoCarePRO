@@ -9,6 +9,7 @@ import com.podocare.PodoCareWebsite.exceptions.UpdateException;
 import com.podocare.PodoCareWebsite.model.Brand;
 import com.podocare.PodoCareWebsite.model.Supplier;
 import com.podocare.PodoCareWebsite.repo.SupplierRepo;
+import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.SupplierService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SupplierServiceImpl implements SupplierService {
     private final SupplierRepo supplierRepo;
+    private final AuditLogService auditLogService;
 
     @Override
     public SupplierDTO getSupplierById(Long id) {
@@ -44,7 +46,9 @@ public class SupplierServiceImpl implements SupplierService {
             if (supplierAlreadyExists(supplier)) {
                 throw new CreationException("Supplier already exists: " + supplier.getName());
             }
-            return new SupplierDTO(supplierRepo.save(supplier.toEntity()));
+            SupplierDTO savedDTO = new SupplierDTO(supplierRepo.save(supplier.toEntity()));
+            auditLogService.logCreate("Supplier", savedDTO.getId(), savedDTO.getName(), savedDTO);
+            return savedDTO;
         } catch (Exception e) {
             throw new CreationException("Failed to create Supplier. Reason: " + e.getMessage(), e);
         }
@@ -54,11 +58,13 @@ public class SupplierServiceImpl implements SupplierService {
     @Transactional
     public SupplierDTO updateSupplier(Long id, SupplierDTO supplier) {
         try{
-            getSupplierById(id);
+            SupplierDTO oldSupplierSnapshot = getSupplierById(id);
 
             checkForDuplicatesExcludingCurrent(supplier, id);
             supplier.setId(id);
-            return new SupplierDTO(supplierRepo.save(supplier.toEntity()));
+            SupplierDTO savedDTO = new SupplierDTO(supplierRepo.save(supplier.toEntity()));
+            auditLogService.logUpdate("Supplier", id, oldSupplierSnapshot.getName(), oldSupplierSnapshot, savedDTO);
+            return savedDTO;
         } catch (Exception e) {
             throw new UpdateException("Failed to update Supplier, Reason: " + e.getMessage(), e);
         }
@@ -68,7 +74,9 @@ public class SupplierServiceImpl implements SupplierService {
     @Transactional
     public void deleteSupplierById(Long id) {
         try{
-            supplierRepo.deleteById(getSupplierById(id).getId());
+            SupplierDTO supplierSnapshot = getSupplierById(id);
+            supplierRepo.deleteById(id);
+            auditLogService.logDelete("Supplier", id, supplierSnapshot.getName(), supplierSnapshot);
         } catch (Exception e) {
             throw new DeletionException("Failed to delete Supplier, Reason: " + e.getMessage(), e);
         }

@@ -59,19 +59,17 @@ export function ProfileDashboard() {
     }
   };
 
-  const initUpdatedUser = () => {
+  const fetchCurrentUser = async () => {
     const jwtUser = AuthService.getCurrentUser() as JwtUser;
-    const mappedRoles: Role[] = jwtUser.roles.map((roleName, index) => ({
-      id: index,
-      name: roleName,
-    }));
-    setUpdatedUser({
-      id: jwtUser.id,
-      username: jwtUser.username,
-      avatar: jwtUser.avatar,
-      roles: mappedRoles,
-      employee: jwtUser.employee,
-    });
+    if (!jwtUser?.id) return;
+
+    try {
+      const userData = await UserService.getUserById(jwtUser.id);
+      setUpdatedUser(userData);
+    } catch (error) {
+      console.error("Error fetching current user:", error);
+      showAlert("Błąd pobierania danych użytkownika!", AlertType.ERROR);
+    }
   };
 
   const handleEmployeeSelect = (value: Employee | Employee[] | null) => {
@@ -108,8 +106,7 @@ export function ProfileDashboard() {
     if (!updatedUser) {
       showAlert("Brak danych użytkownika do aktualizacji!", AlertType.ERROR);
       return;
-    }
-
+    } 
     const error = validateUpdateUser(updatedUser, user);
     if (error) {
       showAlert(error, AlertType.ERROR);
@@ -119,8 +116,8 @@ export function ProfileDashboard() {
     handleEditUser();
   };
   const handleEditUser = async () => {
+    console.log(updatedUser)
     if (!updatedUser) return;
-
     try {
       const data = await UserService.updateUser(updatedUser.id, updatedUser);
 
@@ -145,7 +142,7 @@ export function ProfileDashboard() {
 
   useEffect(() => {
     refreshUser();
-    initUpdatedUser();
+    fetchCurrentUser();
 
     if(user?.roles.includes(RoleType.ROLE_ADMIN)) {
       fetchUsers();

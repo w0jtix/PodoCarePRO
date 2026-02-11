@@ -39,6 +39,7 @@ export function OrderItemList({
   const initialSupplyRef = useRef<Map<number, number>>(new Map()); // initial warehouse supply snapshot
   const initialOrderProductsRef = useRef<NewOrderProduct[]>([]); // initial order products qty snapshot
   const [productWarnings, setProductWarnings] = useState<Map<number, boolean>>(new Map());
+  const latestRequestRef = useRef<Map<number, number>>(new Map()); // index -> request id to handle race conditions
 
 
   const updateWarnings = useCallback(() => {
@@ -123,17 +124,37 @@ export function OrderItemList({
   const handleOrderProductNameChange = useCallback(async (index: number, selected: string | Product) => {
 
     if (typeof selected === 'string') {
+      const requestId = Date.now();
+      latestRequestRef.current.set(index, requestId);
+
+      // Update name immediately to avoid lag
+      setOrderProducts((prev) =>
+        prev.map((op, i) => i === index ? { ...op, name: selected } : op)
+      );
+
       const filter: ProductFilterDTO = { keyword: selected, includeZero: true };
       let suggestions: Product[] = [];
 
       if (selected.trim().length > 0) {
         try {
           const response = await AllProductService.getProducts(filter);
-          suggestions = response.content;
+
+          // Check if this request is still the latest one for this index
+          if (latestRequestRef.current.get(index) !== requestId) {
+            return; // Abort - a newer request has been made
+          }
+
+          suggestions = response?.content ?? [];
         } catch (error) {
           showAlert("Błąd", AlertType.ERROR);
           console.error("Error fetching filtered products:", error);
+          return;
         }
+      }
+
+      // Double-check we're still the latest request before updating state
+      if (latestRequestRef.current.get(index) !== requestId) {
+        return;
       }
 
       const exactMatch = suggestions.find(p => p.name === selected);
@@ -175,6 +196,7 @@ export function OrderItemList({
         return newMap;
       });
     }
+    
   },[showAlert])
 
   const handleInputChange = useCallback(

@@ -10,6 +10,7 @@ import com.podocare.PodoCareWebsite.model.Client;
 import com.podocare.PodoCareWebsite.model.ClientDebt;
 import com.podocare.PodoCareWebsite.model.Sale;
 import com.podocare.PodoCareWebsite.repo.*;
+import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ public class ClientServiceImpl implements ClientService {
     private final ClientDebtRepo clientDebtRepo;
     private final VoucherRepo voucherRepo;
     private final ReviewRepo reviewRepo;
+    private final AuditLogService auditLogService;
 
     @Override
     public ClientDTO getClientById(Long id) {
@@ -52,7 +54,9 @@ public class ClientServiceImpl implements ClientService {
     @Transactional
     public ClientDTO createClient(ClientDTO clientDTO) {
         try{
-            return new ClientDTO(clientRepo.save(clientDTO.toEntity()));
+            Client saved = clientRepo.save(clientDTO.toEntity());
+            auditLogService.logCreate("Client", saved.getId(), saved.getFirstName() + saved.getLastName(), saved);
+            return new ClientDTO(saved);
         } catch(Exception e) {
             throw new CreationException("Failed to create Client. Reason: " + e.getMessage(), e);
         }
@@ -62,9 +66,15 @@ public class ClientServiceImpl implements ClientService {
     @Transactional
     public ClientDTO updateClient(Long id, ClientDTO clientDTO) {
         try{
-            getClientById(id);
+            Client oldClient = clientRepo.findOneById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Client not found with given id: " + id));
+
+            ClientDTO oldClientSnapshot = new ClientDTO(oldClient);
+
             clientDTO.setId(id);
-            return new ClientDTO(clientRepo.save(clientDTO.toEntity()));
+            Client saved = clientRepo.save(clientDTO.toEntity());
+            auditLogService.logUpdate("Client", id, oldClientSnapshot.getFirstName() + oldClientSnapshot.getLastName(), oldClientSnapshot, new ClientDTO(saved));
+            return new ClientDTO(saved);
         } catch(Exception e) {
             throw new UpdateException("Failed to update Client. Reason: " + e.getMessage(), e);
         }
@@ -88,6 +98,8 @@ public class ClientServiceImpl implements ClientService {
             } else {
                 clientRepo.deleteById(id);
             }
+
+            auditLogService.logDelete("Client", id, client.getFirstName() + client.getLastName(), client);
         } catch (ResourceNotFoundException | DeletionException e) {
             throw e;
         } catch (Exception e) {

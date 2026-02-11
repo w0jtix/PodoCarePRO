@@ -191,7 +191,7 @@ export function OrderList({
           orderId={removeOrderId}
         />
       )}
-      {isLoading && (
+      {isLoading &&  (
         <span className="qv-span text-align-center">Ładowanie...</span>
       )}
     </div>

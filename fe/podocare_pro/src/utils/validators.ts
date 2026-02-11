@@ -323,16 +323,17 @@ import { RegisterRequest } from "../models/register";
     )) {
       return "Brak pełnych informacji!";
     }
+    console.log(signupRequest)
     if(signupRequest.username.trim().length <= 3) {
       return "Nazwa Użytkownika za krótka! (3+)"
     }
     if(signupRequest.username.trim().length >= 20) {
       return "Nazwa Użytkownika za długa! (max 20 znaków)"
     }
-    if(signupRequest.username.trim().length <= 6) {
+    if(signupRequest.password.trim().length <= 6) {
       return "Hasło Użytkownika za krótkie! (6+)"
     }
-    if(signupRequest.username.trim().length >= 40) {
+    if(signupRequest.password.trim().length >= 40) {
       return "Hasło Użytkownika za długie! (max 40 znaków)"
     }
     return null;
@@ -441,8 +442,8 @@ import { RegisterRequest } from "../models/register";
     action: Action,
     selectedDebt: ClientDebt | null | undefined,
   ): string | null {
-    if(Object.values(debtForm).some(
-      (value) => value === null || value === undefined
+    if(Object.entries(debtForm).some(
+      ([key, value]) => key !== "sourceVisit" && (value === null || value === undefined)
     )) {
       return "Brak pełnych informacji!";
     }

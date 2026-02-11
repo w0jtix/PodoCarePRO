@@ -10,6 +10,7 @@ import com.podocare.PodoCareWebsite.exceptions.UpdateException;
 import com.podocare.PodoCareWebsite.model.constants.DebtType;
 import com.podocare.PodoCareWebsite.model.constants.PaymentStatus;
 import com.podocare.PodoCareWebsite.repo.ClientDebtRepo;
+import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.ClientDebtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ import static java.util.Objects.isNull;
 public class ClientDebtServiceImpl implements ClientDebtService {
 
     private final ClientDebtRepo debtRepo;
+    private final AuditLogService auditLogService;
 
     @Override
     public ClientDebtDTO getDebtById(Long id) {
@@ -65,7 +67,9 @@ public class ClientDebtServiceImpl implements ClientDebtService {
     @Transactional
     public ClientDebtDTO createDebt(ClientDebtDTO debt) {
         try{
-            return new ClientDebtDTO(debtRepo.save(debt.toEntity()));
+            ClientDebtDTO savedDebt = new ClientDebtDTO(debtRepo.save(debt.toEntity()));
+            auditLogService.logCreate("ClientDebt", savedDebt.getId(), "Dług Klienta: " + savedDebt.getClient().getFirstName() + savedDebt.getClient().getLastName(), savedDebt);
+            return savedDebt;
         } catch (Exception e) {
             throw new CreationException("Failed to create ClientDebt: " + e.getMessage(), e);
         }
@@ -75,10 +79,13 @@ public class ClientDebtServiceImpl implements ClientDebtService {
     @Transactional
     public ClientDebtDTO updateDebt(Long id, ClientDebtDTO debt) {
         try{
-            getDebtById(id);
+            ClientDebtDTO oldDebtSnapshot = getDebtById(id);
 
             debt.setId(id);
-            return new ClientDebtDTO(debtRepo.save(debt.toEntity()));
+            ClientDebtDTO savedDebt = new ClientDebtDTO(debtRepo.save(debt.toEntity()));
+
+            auditLogService.logUpdate("ClientDebt", id,"Dług Klienta: " + oldDebtSnapshot.getClient().getFirstName() + oldDebtSnapshot.getClient().getLastName(), oldDebtSnapshot, savedDebt);
+            return savedDebt;
         } catch (Exception e) {
             throw new UpdateException("Failed to update ClientDebt, Reason: " + e.getMessage(), e);
         }
@@ -88,7 +95,9 @@ public class ClientDebtServiceImpl implements ClientDebtService {
     @Transactional
     public void deleteDebtById(Long id) {
         try{
-            debtRepo.deleteById(getDebtById(id).getId());
+            ClientDebtDTO debtSnapshot = getDebtById(id);
+            debtRepo.deleteById(id);
+            auditLogService.logDelete("ClientDebt", id,"Dług Klienta: " + debtSnapshot.getClient().getFirstName() + debtSnapshot.getClient().getLastName(),  debtSnapshot);
         } catch (Exception e) {
             throw new DeletionException("Failed to delete ClientDebt, Reason: " + e.getMessage(), e);
         }

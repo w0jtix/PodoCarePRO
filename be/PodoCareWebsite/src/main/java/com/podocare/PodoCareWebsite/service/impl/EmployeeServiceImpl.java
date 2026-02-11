@@ -7,6 +7,7 @@ import com.podocare.PodoCareWebsite.exceptions.ResourceNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.UpdateException;
 import com.podocare.PodoCareWebsite.model.Employee;
 import com.podocare.PodoCareWebsite.repo.EmployeeRepo;
+import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ import static java.util.Objects.isNull;
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepo employeeRepo;
+    private final AuditLogService auditLogService;
 
     @Override
     public List<EmployeeDTO> getAllEmployees() {
@@ -46,7 +48,9 @@ public class EmployeeServiceImpl implements EmployeeService {
                 return null;
             }
             Employee savedEmployee = employeeRepo.save(employee.toEntity());
-            return new EmployeeDTO(savedEmployee);
+            EmployeeDTO savedDTO = new EmployeeDTO(savedEmployee);
+            auditLogService.logCreate("Employee", savedDTO.getId(), savedDTO.getName() + savedDTO.getSecondName(), savedDTO);
+            return savedDTO;
         } catch (Exception e) {
             throw new CreationException("Failed to create Employee. Reason: " + e.getMessage(), e);
         }
@@ -56,10 +60,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDTO updateEmployee(Long id, EmployeeDTO employee) {
         try{
-            getEmployeeById(id);
+            EmployeeDTO oldEmployeeSnapshot = getEmployeeById(id);
 
             employee.setId(id);
-            return new EmployeeDTO(employeeRepo.save(employee.toEntity()));
+            EmployeeDTO savedDTO = new EmployeeDTO(employeeRepo.save(employee.toEntity()));
+            auditLogService.logUpdate("Employee", id, oldEmployeeSnapshot.getName() + oldEmployeeSnapshot.getSecondName(), oldEmployeeSnapshot, savedDTO);
+            return savedDTO;
         } catch(Exception e) {
             throw new UpdateException("Failed to update Employee, Reason: " + e.getMessage(), e);
         }
@@ -75,8 +81,10 @@ public class EmployeeServiceImpl implements EmployeeService {
                 throw new DeletionException("Employee is already soft-deleted.");
             }
 
+            EmployeeDTO employeeSnapshot = new EmployeeDTO(employee);
             employee.softDelete();
             employeeRepo.save(employee);
+            auditLogService.logDelete("Employee", id, employeeSnapshot.getName() + employeeSnapshot.getSecondName(), employeeSnapshot);
         } catch (ResourceNotFoundException | DeletionException e) {
             throw e;
         } catch (Exception e) {

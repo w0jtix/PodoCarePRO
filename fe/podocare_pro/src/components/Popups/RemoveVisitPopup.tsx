@@ -63,7 +63,7 @@ export function RemoveVisitPopup({
   const handleRemove = useCallback(async () => {
     VisitService.deleteVisit(visitId)
       .then((status) => {
-        showAlert("Wizyta pomyślnie usunięta!", AlertType.SUCCESS);
+        showAlert("Wizyta usunięta!", AlertType.SUCCESS);
         handleResetFiltersAndData();
         setTimeout(() => {
           onClose();

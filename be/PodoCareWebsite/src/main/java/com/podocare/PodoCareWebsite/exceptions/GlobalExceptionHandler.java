@@ -39,4 +39,10 @@ public class GlobalExceptionHandler {
         log.error("Conflict: {}", ex.getMessage());
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(AuditException.class)
+    public ResponseEntity<String> handleAuditException(AuditException ex) {
+        log.error("Audit failed: {}", ex.getMessage());
+        return new ResponseEntity<>("Operation failed due to audit logging error.", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

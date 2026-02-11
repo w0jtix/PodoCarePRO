@@ -9,6 +9,7 @@ import com.podocare.PodoCareWebsite.exceptions.ResourceNotFoundException;
 import com.podocare.PodoCareWebsite.model.*;
 import com.podocare.PodoCareWebsite.model.constants.*;
 import com.podocare.PodoCareWebsite.repo.*;
+import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.VisitService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -45,6 +46,7 @@ public class VisitServiceImpl implements VisitService {
     private final BaseServiceRepo baseServiceRepo;
     private final BaseServiceVariantRepo baseServiceVariantRepo;
     private final SaleItemRepo saleItemRepo;
+    private final AuditLogService auditLogService;
 
 
     @Override
@@ -131,7 +133,9 @@ public class VisitServiceImpl implements VisitService {
 
             processPaymentStatus(savedVisit, appSettings);
 
-            return new VisitDTO(updatedVisit);
+            VisitDTO savedDTO = new VisitDTO(updatedVisit);
+            auditLogService.logCreate("Visit", savedDTO.getId(), "Wizyta Klienta: " + savedDTO.getClient().getFirstName() + savedDTO.getClient().getLastName(), savedDTO);
+            return savedDTO;
         } catch (Exception e) {
             throw new CreationException("Failed to create Visit. Reason: " + e.getMessage(), e);
         }
@@ -190,6 +194,8 @@ public class VisitServiceImpl implements VisitService {
             Visit existingVisit = visitRepo.findOneById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Visit not found with given id: " + id));
 
+            VisitDTO visitSnapshot = new VisitDTO(existingVisit);
+
             undoSale(existingVisit);
             undoVoucherPayment(existingVisit);
             undoClientDebtRedemption(existingVisit);
@@ -201,6 +207,7 @@ public class VisitServiceImpl implements VisitService {
             }
             removePayments(existingVisit);
             visitRepo.deleteById(id);
+            auditLogService.logDelete("Visit", id, "Wizyta Klienta: " + visitSnapshot.getClient().getFirstName() + visitSnapshot.getClient().getLastName(), visitSnapshot);
         } catch (Exception e) {
             throw new DeletionException("Failed to delete Visit, Reason: " + e.getMessage(), e);
         }
@@ -375,8 +382,8 @@ public class VisitServiceImpl implements VisitService {
 
         Double vatVal = itemTotalPrice - netVal;
 
-        saleItem.setNetValue(netVal);
-        saleItem.setVatValue(vatVal);
+        saleItem.setNetValue(roundPrice(netVal));
+        saleItem.setVatValue(roundPrice(vatVal));
     }
     private void calculateSaleTotals(SaleDTO sale) {
         Double netVal = 0.0;

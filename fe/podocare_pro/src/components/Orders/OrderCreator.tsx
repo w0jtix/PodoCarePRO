@@ -25,6 +25,7 @@ import { useAlert } from "../Alert/AlertProvider";
 export interface OrderCreatorProps {
   setSelectedSupplier?: (supplier: Supplier | null) => void;
   selectedOrderProduct?: OrderProduct | null;
+  setSelectedOrderProduct?: (orderProduct: OrderProduct | null) => void;
   setExpandedOrderIds?: (ids: number[]) => void;
   selectedOrder?: Order | null;
   onSuccess?: () => void;
@@ -37,6 +38,7 @@ export interface OrderCreatorProps {
 export function OrderCreator({
   setSelectedSupplier,
   selectedOrderProduct,
+  setSelectedOrderProduct,
   setExpandedOrderIds,
   selectedOrder,
   onSuccess,
@@ -259,8 +261,9 @@ export function OrderCreator({
   useEffect(() => {
     if(selectedOrderProduct != null) {
       handleAddNewProduct(selectedOrderProduct);
+      setSelectedOrderProduct?.(null);
     }
-  },[selectedOrderProduct])
+  },[selectedOrderProduct, setSelectedOrderProduct])
 
   useEffect(() => {
     setOrderDTO((prev) => ({

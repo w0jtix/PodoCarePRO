@@ -163,7 +163,7 @@ export function ItemList ({
           </div>
         </div>
       ))}
-      {isLoading && (
+      {isLoading &&  (
         <span className="qv-span text-align-center">Ładowanie...</span>
       )}
     </div>

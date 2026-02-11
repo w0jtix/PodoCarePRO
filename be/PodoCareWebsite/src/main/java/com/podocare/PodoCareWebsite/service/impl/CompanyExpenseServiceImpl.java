@@ -12,6 +12,7 @@ import com.podocare.PodoCareWebsite.model.CompanyExpenseItem;
 import com.podocare.PodoCareWebsite.model.constants.ExpenseCategory;
 import com.podocare.PodoCareWebsite.repo.CompanyExpenseItemRepo;
 import com.podocare.PodoCareWebsite.repo.CompanyExpenseRepo;
+import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.CompanyExpenseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -33,6 +34,7 @@ public class CompanyExpenseServiceImpl implements CompanyExpenseService {
 
     private final CompanyExpenseRepo companyExpenseRepo;
     private final CompanyExpenseItemRepo companyExpenseItemRepo;
+    private final AuditLogService auditLogService;
 
     @Override
     public CompanyExpenseDTO getExpenseById(Long id) {
@@ -116,7 +118,9 @@ public class CompanyExpenseServiceImpl implements CompanyExpenseService {
             expense.calculateTotals();
 
             CompanyExpense savedExpense = companyExpenseRepo.save(expense);
-            return new CompanyExpenseDTO(savedExpense);
+            CompanyExpenseDTO savedExpenseDTO = new CompanyExpenseDTO(savedExpense);
+            auditLogService.logCreate("CompanyExpense", savedExpenseDTO.getId(), "Koszt: " + savedExpenseDTO.getSource(), savedExpenseDTO);
+            return savedExpenseDTO;
         } catch (Exception e) {
             throw new CreationException("Failed to create company expense. Reason: " + e.getMessage(), e);
         }
@@ -128,6 +132,8 @@ public class CompanyExpenseServiceImpl implements CompanyExpenseService {
         try {
             CompanyExpense existingExpense = companyExpenseRepo.findOneByIdWithItems(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Company expense not found with ID: " + id));
+
+            CompanyExpenseDTO oldExpenseSnapshot = new CompanyExpenseDTO(existingExpense);
 
             existingExpense.getExpenseItems().clear();
 
@@ -150,7 +156,10 @@ public class CompanyExpenseServiceImpl implements CompanyExpenseService {
             existingExpense.calculateTotals();
 
             CompanyExpense savedExpense = companyExpenseRepo.save(existingExpense);
-            return new CompanyExpenseDTO(savedExpense);
+            CompanyExpenseDTO savedExpenseDTO = new CompanyExpenseDTO(savedExpense);
+
+            auditLogService.logUpdate("CompanyExpense", id, "Koszt: " + oldExpenseSnapshot.getSource(), oldExpenseSnapshot, savedExpenseDTO);
+            return savedExpenseDTO;
         } catch (ResourceNotFoundException e) {
             throw e;
         } catch (Exception e) {
@@ -165,7 +174,11 @@ public class CompanyExpenseServiceImpl implements CompanyExpenseService {
             CompanyExpense existingExpense = companyExpenseRepo.findOneByIdWithItems(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Company expense not found with ID: " + id));
 
+            CompanyExpenseDTO expenseSnapshot = new CompanyExpenseDTO(existingExpense);
+
             companyExpenseRepo.delete(existingExpense);
+
+            auditLogService.logDelete("CompanyExpense", id, "Koszt: " + expenseSnapshot.getSource(), expenseSnapshot);
         } catch (ResourceNotFoundException e) {
             throw e;
         } catch (Exception e) {

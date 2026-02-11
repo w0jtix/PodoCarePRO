@@ -11,6 +11,7 @@ import com.podocare.PodoCareWebsite.model.UsageRecord;
 import com.podocare.PodoCareWebsite.repo.EmployeeRepo;
 import com.podocare.PodoCareWebsite.repo.ProductRepo;
 import com.podocare.PodoCareWebsite.repo.UsageRecordRepo;
+import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.UsageRecordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -32,6 +33,7 @@ public class UsageRecordServiceImpl implements UsageRecordService {
     private final UsageRecordRepo usageRecordRepo;
     private final ProductRepo productRepo;
     private final EmployeeRepo employeeRepo;
+    private final AuditLogService auditLogService;
 
     @Override
     public UsageRecordDTO getUsageRecordById(Long id) {
@@ -82,7 +84,9 @@ public class UsageRecordServiceImpl implements UsageRecordService {
                     .usageReason(usageRecordDTO.getUsageReason())
                     .build();
 
-            return new UsageRecordDTO(usageRecordRepo.save(usageRecord));
+            UsageRecordDTO savedDTO = new UsageRecordDTO(usageRecordRepo.save(usageRecord));
+            auditLogService.logCreate("UsageRecord", savedDTO.getId(), "Zużycie: " + savedDTO.getProduct().getName(), savedDTO);
+            return savedDTO;
         } catch (ResourceNotFoundException e) {
             throw e;
         } catch (Exception e) {
@@ -105,6 +109,8 @@ public class UsageRecordServiceImpl implements UsageRecordService {
             UsageRecord usageRecord = usageRecordRepo.findOneById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("UsageRecord not found with id: " + id));
 
+            UsageRecordDTO usageRecordSnapshot = new UsageRecordDTO(usageRecord);
+
             Product product = usageRecord.getProduct();
             if(product.getIsDeleted()) {
                 product.restore(usageRecord.getQuantity());
@@ -114,6 +120,7 @@ public class UsageRecordServiceImpl implements UsageRecordService {
             productRepo.save(product);
 
             usageRecordRepo.deleteById(id);
+            auditLogService.logDelete("UsageRecord", id, "Zużycie: " + usageRecordSnapshot.getProduct().getName(), usageRecordSnapshot);
         } catch (ResourceNotFoundException e) {
             throw e;
         } catch (Exception e) {

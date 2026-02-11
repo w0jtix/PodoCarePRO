@@ -66,17 +66,18 @@ export function OrderHistory() {
           setOrders(content);
         }
 
-
         setHasMore(!data.last);
         setPage(pageNum);
-        setLoading(false);
       })
       .catch((error) => {
         if(!append) setOrders([]);
-        setLoading(false);
+        setHasMore(false);
         showAlert("Błąd", AlertType.ERROR);
         console.error("Error fetching Orders:", error);
       })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [filter]);
 
   const fetchSuppliers = useCallback(async () => {

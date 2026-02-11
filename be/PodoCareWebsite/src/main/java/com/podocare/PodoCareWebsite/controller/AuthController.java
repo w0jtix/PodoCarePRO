@@ -17,6 +17,7 @@ import com.podocare.PodoCareWebsite.model.User;
 import com.podocare.PodoCareWebsite.model.constants.RoleType;
 import com.podocare.PodoCareWebsite.repo.RoleRepo;
 import com.podocare.PodoCareWebsite.repo.UserRepo;
+import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.EmployeeService;
 import com.podocare.PodoCareWebsite.utils.SessionUtils;
 import jakarta.validation.Valid;
@@ -37,6 +38,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -51,6 +53,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
     private final EmployeeService employeeService;
+    private final AuditLogService auditLogService;
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -64,6 +67,8 @@ public class AuthController {
             List<String> roles = userDetails.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList());
+
+            auditLogService.logCreate("User-Login", userDetails.getId(), userDetails.getUsername(), Map.of("username", userDetails.getUsername()));
 
             return new ResponseEntity<>(JwtResponse.builder()
                     .token(jwt)
@@ -99,11 +104,13 @@ public class AuthController {
                                     .orElseThrow(() -> new ResourceNotFoundException("Role not found.")))
                     .collect(Collectors.toSet());
         }
-        userRepo.save(User.builder()
+        User savedUser = userRepo.save(User.builder()
                 .username(signupRequest.getUsername())
                 .password(encoder.encode((signupRequest.getPassword())))
                 .roles(roles)
                 .build());
+
+        auditLogService.logCreate("User", savedUser.getId(), savedUser.getUsername(), Map.of("username", savedUser.getUsername()));
 
         return new ResponseEntity<>(new MessageResponse("User registered successfully!"), HttpStatus.OK);
     }
@@ -116,6 +123,9 @@ public class AuthController {
         if(encoder.matches(changePasswordRequest.getOldPassword(), loggedUser.getPassword())) {
             loggedUser.setPassword(encoder.encode(changePasswordRequest.getNewPassword()));
             userRepo.save(loggedUser);
+            auditLogService.logUpdate("User-Password", loggedUser.getId(), loggedUser.getUsername(),
+                    Map.of("action", ""),
+                    Map.of("action", "Wymuszono zmianę hasła dla Użytkownika: " + loggedUser.getUsername()));
             return new ResponseEntity<>(new MessageResponse("Password changed successfully"), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(new MessageResponse("Old password doesn't match"),HttpStatus.BAD_REQUEST);
@@ -130,6 +140,10 @@ public class AuthController {
 
         user.setPassword(encoder.encode(forceChangePasswordRequest.getNewPassword()));
         userRepo.save(user);
+        auditLogService.logUpdate("User-Password", user.getId(), user.getUsername(),
+                Map.of("action", ""),
+                Map.of("action", "Wymuszono zmianę hasła dla Użytkownika: " + user.getUsername()));
+
         return new ResponseEntity<>(new MessageResponse("Password changed successfully"), HttpStatus.OK);
     }
 }

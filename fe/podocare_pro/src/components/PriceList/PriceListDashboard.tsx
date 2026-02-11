@@ -50,6 +50,7 @@ export function PriceListDashboard() {
 
 
   const fetchProducts = async (pageNum: number = 0, append: boolean = false): Promise<void> => {
+    setLoading(true);
     AllProductService.getProducts(productFilter)
       .then((data) => {
         const content = data?.content || [];
@@ -62,13 +63,15 @@ export function PriceListDashboard() {
 
         setHasMore(!data.last);
         setPage(pageNum);
-        setLoading(false);
       })
       .catch((error) => {
         if (!append) setProducts([]);
-        setLoading(false);
+        setHasMore(false);
         showAlert("Błąd", AlertType.ERROR);
         console.error("Error fetching products:", error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
   const fetchServices = async (): Promise<void> => {

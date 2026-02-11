@@ -11,6 +11,7 @@ import com.podocare.PodoCareWebsite.repo.OrderProductRepo;
 import com.podocare.PodoCareWebsite.repo.ProductRepo;
 import com.podocare.PodoCareWebsite.repo.SaleItemRepo;
 import com.podocare.PodoCareWebsite.repo.UsageRecordRepo;
+import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -33,6 +34,7 @@ public class ProductServiceImpl implements ProductService {
     private final OrderProductRepo orderProductRepo;
     private final SaleItemRepo saleItemRepo;
     private final UsageRecordRepo usageRecordRepo;
+    private final AuditLogService auditLogService;
 
     @Override
     public ProductDTO getProductById(Long id) {
@@ -90,12 +92,16 @@ public class ProductServiceImpl implements ProductService {
                 Product existing = existingProduct.get();
 
                 if (existing.getIsDeleted()) {
-                    return restoreProduct(existing, product);
+                    ProductDTO restoredDTO = restoreProduct(existing, product);
+                    auditLogService.logCreate("Product", restoredDTO.getId(), restoredDTO.getName(), restoredDTO);
+                    return restoredDTO;
                 } else {
                     throw new CreationException("Product already exists: " + product.getName());
                 }
             }
-            return new ProductDTO(productRepo.save(product.toEntity()));
+            ProductDTO savedDTO = new ProductDTO(productRepo.save(product.toEntity()));
+            auditLogService.logCreate("Product", savedDTO.getId(), savedDTO.getName(), savedDTO);
+            return savedDTO;
         } catch (Exception e) {
             throw new CreationException("Failed to create Product. Reason: " + e.getMessage(), e);
         }
@@ -113,11 +119,13 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public ProductDTO updateProduct(Long id, ProductDTO product) {
         try {
-            getProductById(id);
+            ProductDTO oldProductSnapshot = getProductById(id);
 
             checkForDuplicatesExcludingCurrent(product, id);
             product.setId(id);
-            return new ProductDTO(productRepo.save(product.toEntity()));
+            ProductDTO savedDTO = new ProductDTO(productRepo.save(product.toEntity()));
+            auditLogService.logUpdate("Product", id, oldProductSnapshot.getName(), oldProductSnapshot, savedDTO);
+            return savedDTO;
         } catch (Exception e) {
             throw new UpdateException("Failed to update Product, Reason: " + e.getMessage(), e);
         }
@@ -133,12 +141,15 @@ public class ProductServiceImpl implements ProductService {
             if (product.getIsDeleted()) {
                 throw new DeletionException("Product is already softDeleted.");
             }
+
+            ProductDTO productSnapshot = new ProductDTO(product);
             if (hasOrderProductReferences(id) || hasSaleItemReferences(id) || hasUsageRecords(id)) {
                 product.softDelete();
                 productRepo.save(product);
             } else {
                 productRepo.deleteById(id);
             }
+            auditLogService.logDelete("Product", id, productSnapshot.getName(), productSnapshot);
         } catch (ResourceNotFoundException | DeletionException e) {
             throw e;
         } catch (Exception e) {

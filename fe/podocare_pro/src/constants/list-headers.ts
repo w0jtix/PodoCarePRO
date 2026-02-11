@@ -97,6 +97,17 @@ export const DEBTS_BY_VISIT_LIST_ATTRIBUTES: ListAttribute[] = [
   { name: "Wartość", width: "25%", justify: "center" },
 ]
 
+export const AUDIT_LOG_LIST_ATTRIBUTES: ListAttribute[] = [
+  { name: "", width: "4%", justify: "center" },
+  { name: " ", width: "5%", justify: "start" },
+  { name: "Użytkownik", width: "10%", justify: "start" },
+  { name: "Obiekt", width: "10%", justify: "center" },
+  { name: "ID", width: "7%", justify: "center" },
+  { name: "   ", width: "28%", justify: "center" },
+  { name: "Zmiana", width: "20%", justify: "center" },
+  { name: "Data", width: "16%", justify: "center" },
+]
+
 export const SERVICES_LIST_ATTRIBUTES: ListAttribute[] = [
   { name: "", width: "2%", justify: "start" },
   { name: "Kategoria", width: "13%", justify: "start" },

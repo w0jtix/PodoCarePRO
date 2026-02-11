@@ -9,6 +9,7 @@ import com.podocare.PodoCareWebsite.exceptions.UpdateException;
 import com.podocare.PodoCareWebsite.model.Brand;
 import com.podocare.PodoCareWebsite.model.ProductCategory;
 import com.podocare.PodoCareWebsite.repo.ProductCategoryRepo;
+import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.ProductCategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProductCategoryServiceImpl implements ProductCategoryService {
     private final ProductCategoryRepo productCategoryRepo;
+    private final AuditLogService auditLogService;
 
     @Override
     public ProductCategoryDTO getCategoryById(Long id){
@@ -44,7 +46,9 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
             if(categoryAlreadyExists(category)) {
                 throw new CreationException("Category already exists: " + category.getName());
             }
-            return new ProductCategoryDTO(productCategoryRepo.save(category.toEntity()));
+            ProductCategoryDTO savedDTO = new ProductCategoryDTO(productCategoryRepo.save(category.toEntity()));
+            auditLogService.logCreate("ProductCategory", savedDTO.getId(), savedDTO.getName(), savedDTO);
+            return savedDTO;
         } catch (Exception e) {
             throw new CreationException("Failed to create Category. Reason: " + e.getMessage(), e);
         }
@@ -54,11 +58,13 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     @Transactional
     public ProductCategoryDTO updateCategory(Long id, ProductCategoryDTO category) {
         try{
-            getCategoryById(id);
+            ProductCategoryDTO oldCategorySnapshot = getCategoryById(id);
 
             checkForDuplicatesExcludingCurrent(category, id);
             category.setId(id);
-            return new ProductCategoryDTO(productCategoryRepo.save(category.toEntity()));
+            ProductCategoryDTO savedDTO = new ProductCategoryDTO(productCategoryRepo.save(category.toEntity()));
+            auditLogService.logUpdate("ProductCategory", id, oldCategorySnapshot.getName(), oldCategorySnapshot, savedDTO);
+            return savedDTO;
         } catch (Exception e) {
             throw new UpdateException("Failed to update Category, Reason: " + e.getMessage(), e);
         }
@@ -68,7 +74,9 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     @Transactional
     public void deleteCategoryById(Long id) {
         try{
-            productCategoryRepo.deleteById(getCategoryById(id).getId());
+            ProductCategoryDTO categorySnapshot = getCategoryById(id);
+            productCategoryRepo.deleteById(id);
+            auditLogService.logDelete("ProductCategory", id, categorySnapshot.getName(), categorySnapshot);
         } catch (Exception e) {
             throw new DeletionException("Failed to delete Category, Reason: " + e.getMessage(), e);
         }

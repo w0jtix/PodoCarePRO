@@ -11,6 +11,7 @@ import com.podocare.PodoCareWebsite.exceptions.UpdateException;
 import com.podocare.PodoCareWebsite.model.Review;
 import com.podocare.PodoCareWebsite.model.constants.ReviewSource;
 import com.podocare.PodoCareWebsite.repo.ReviewRepo;
+import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import static java.util.Objects.isNull;
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepo reviewRepo;
+    private final AuditLogService auditLogService;
 
     @Override
     public ReviewDTO getReviewById(Long id) {
@@ -57,7 +59,9 @@ public class ReviewServiceImpl implements ReviewService {
                 markOtherReviewsAsUsed(review.getClient().getId());
             }
 
-            return new ReviewDTO(reviewRepo.save(review.toEntity()));
+            ReviewDTO savedDTO = new ReviewDTO(reviewRepo.save(review.toEntity()));
+            auditLogService.logCreate("Review", savedDTO.getId(),"Opinia Klienta: "+ savedDTO.getClient().getFirstName() + savedDTO.getClient().getLastName(), savedDTO);
+            return savedDTO;
         } catch (Exception e) {
             throw new CreationException("Failed to create Review. Reason: " + e.getMessage(), e);
         }
@@ -67,9 +71,11 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public ReviewDTO updateReview(Long id, ReviewDTO review) {
         try{
-            getReviewById(id);
+            ReviewDTO oldReviewSnapshot = getReviewById(id);
             review.setId(id);
-            return new ReviewDTO(reviewRepo.save(review.toEntity()));
+            ReviewDTO savedDTO = new ReviewDTO(reviewRepo.save(review.toEntity()));
+            auditLogService.logUpdate("Review", id,"Opinia Klienta: "+ oldReviewSnapshot.getClient().getFirstName() + oldReviewSnapshot.getClient().getLastName(), oldReviewSnapshot, savedDTO);
+            return savedDTO;
         } catch (Exception e) {
             throw new UpdateException("Failed to update Review. Reason: " + e.getMessage(), e);
         }
@@ -78,7 +84,9 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public void deleteReviewById(Long id) {
         try{
-            reviewRepo.deleteById(getReviewById(id).getId());
+            ReviewDTO reviewSnapshot = getReviewById(id);
+            reviewRepo.deleteById(id);
+            auditLogService.logDelete("Review", id,"Opinia Klienta: "+ reviewSnapshot.getClient().getFirstName() + reviewSnapshot.getClient().getLastName(), reviewSnapshot);
         } catch (Exception e) {
             throw new DeletionException("Failed to delete Review. Reason: "+ e.getMessage(), e);
         }

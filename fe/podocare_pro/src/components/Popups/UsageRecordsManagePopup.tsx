@@ -51,6 +51,7 @@ export function UsageRecordsManagePopup({
     pageNum: number = 0,
     append: boolean = false
   ): Promise<void> => {
+    setLoading(true);
     UsageRecordService.getUsageRecords(filter, pageNum, 30)
       .then((data) => {
         const content = data?.content || [];
@@ -62,12 +63,15 @@ export function UsageRecordsManagePopup({
 
         setHasMore(!data.last);
         setPage(pageNum);
-        setLoading(false);
       })
       .catch((error) => {
         if (!append) setUsageRecords([]);
+        setHasMore(false);
         showAlert("Błąd", AlertType.ERROR);
         console.error("Error fetching UsageRecords: ", error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
   const fetchEmployees = async () => {

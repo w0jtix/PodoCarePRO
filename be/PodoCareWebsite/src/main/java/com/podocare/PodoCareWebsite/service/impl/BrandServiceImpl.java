@@ -10,6 +10,7 @@ import com.podocare.PodoCareWebsite.exceptions.UpdateException;
 import com.podocare.PodoCareWebsite.model.Brand;
 import com.podocare.PodoCareWebsite.model.Product;
 import com.podocare.PodoCareWebsite.repo.BrandRepo;
+import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.BrandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ import static java.util.Objects.isNull;
 @RequiredArgsConstructor
 public class BrandServiceImpl implements BrandService {
     private final BrandRepo brandRepo;
+    private final AuditLogService auditLogService;
 
     @Override
     public BrandDTO getBrandById(Long id){
@@ -51,7 +53,9 @@ public class BrandServiceImpl implements BrandService {
             if (brandAlreadyExists(brand)) {
                 throw new CreationException("Brand already exists: " + brand.getName());
             }
-            return new BrandDTO(brandRepo.save(brand.toEntity()));
+            BrandDTO savedBrand = new BrandDTO(brandRepo.save(brand.toEntity()));
+            auditLogService.logCreate("Brand", savedBrand.getId(), savedBrand.getName(), savedBrand);
+            return savedBrand;
         } catch (Exception e) {
             throw new CreationException("Failed to create Brand. Reason: " + e.getMessage(), e);
         }
@@ -69,11 +73,14 @@ public class BrandServiceImpl implements BrandService {
     @Transactional
     public BrandDTO updateBrand(Long id, BrandDTO brand) {
         try{
-            getBrandById(id);
+            BrandDTO oldBrandSnapshot = getBrandById(id);
 
             checkForDuplicatesExcludingCurrent(brand, id);
             brand.setId(id);
-            return new BrandDTO(brandRepo.save(brand.toEntity()));
+            BrandDTO savedBrand = new BrandDTO(brandRepo.save(brand.toEntity()));
+
+            auditLogService.logUpdate("Brand", id, oldBrandSnapshot.getName(), oldBrandSnapshot, savedBrand);
+            return savedBrand;
         } catch (Exception e) {
             throw new UpdateException("Failed to update Brand, Reason: " + e.getMessage(), e);
         }
@@ -83,7 +90,9 @@ public class BrandServiceImpl implements BrandService {
     @Transactional
     public void deleteBrandById(Long id) {
         try{
-            brandRepo.deleteById(getBrandById(id).getId());
+            BrandDTO brandSnapshot = getBrandById(id);
+            brandRepo.deleteById(id);
+            auditLogService.logDelete("Brand", id, brandSnapshot.getName(), brandSnapshot);
         } catch (Exception e) {
             throw new DeletionException("Failed to delete Brand, Reason: " + e.getMessage(), e);
         }

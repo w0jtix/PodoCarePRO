@@ -8,6 +8,7 @@ import com.podocare.PodoCareWebsite.exceptions.UpdateException;
 import com.podocare.PodoCareWebsite.model.BaseServiceCategory;
 import com.podocare.PodoCareWebsite.repo.BaseServiceCategoryRepo;
 import com.podocare.PodoCareWebsite.repo.BaseServiceRepo;
+import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.BaseServiceCategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 public class BaseServiceCategoryServiceImpl implements BaseServiceCategoryService {
     private final BaseServiceCategoryRepo serviceCategoryRepo;
     private final BaseServiceRepo baseServiceRepo;
+    private final AuditLogService auditLogService;
 
     @Override
     public BaseServiceCategoryDTO getCategoryById(Long id) {
@@ -45,7 +47,9 @@ public class BaseServiceCategoryServiceImpl implements BaseServiceCategoryServic
             if(serviceCategoryRepo.existsByName(category.getName())) {
                 throw new CreationException("Category already exists: " + category.getName());
             }
-            return new BaseServiceCategoryDTO(serviceCategoryRepo.save(category.toEntity()));
+            BaseServiceCategoryDTO savedCategory = new BaseServiceCategoryDTO(serviceCategoryRepo.save(category.toEntity()));
+            auditLogService.logCreate("BaseServiceCategory", savedCategory.getId(), savedCategory.getName(), savedCategory);
+            return savedCategory;
         } catch (Exception e) {
             throw new CreationException("Failed to create Category. Reason: " + e.getMessage(), e);
         }
@@ -55,11 +59,14 @@ public class BaseServiceCategoryServiceImpl implements BaseServiceCategoryServic
     @Transactional
     public BaseServiceCategoryDTO updateCategory(Long id, BaseServiceCategoryDTO category) {
         try{
-            getCategoryById(id);
+            BaseServiceCategoryDTO oldCategorySnapshot = getCategoryById(id);
 
             checkForDuplicatesExcludingCurrent(category, id);
             category.setId(id);
-            return new BaseServiceCategoryDTO(serviceCategoryRepo.save(category.toEntity()));
+            BaseServiceCategoryDTO savedCategory = new BaseServiceCategoryDTO(serviceCategoryRepo.save(category.toEntity()));
+
+            auditLogService.logUpdate("BaseServiceCategory", id, oldCategorySnapshot.getName(), oldCategorySnapshot, savedCategory);
+            return savedCategory;
         } catch (Exception e) {
             throw new UpdateException("Failed to update Category, Reason: " + e.getMessage(), e);
         }
@@ -76,6 +83,8 @@ public class BaseServiceCategoryServiceImpl implements BaseServiceCategoryServic
                 throw new DeletionException("Category is already soft-deleted.");
             }
 
+            BaseServiceCategoryDTO categorySnapshot = new BaseServiceCategoryDTO(category);
+
             long activeServicesCount = baseServiceRepo.countByCategoryIdAndIsDeletedFalse(id);
             long totalServicesCount = baseServiceRepo.countByCategoryId(id);
 
@@ -90,6 +99,8 @@ public class BaseServiceCategoryServiceImpl implements BaseServiceCategoryServic
             } else {
                 serviceCategoryRepo.deleteById(id);
             }
+
+            auditLogService.logDelete("BaseServiceCategory", id,category.getName(), categorySnapshot);
         } catch (ResourceNotFoundException | DeletionException e) {
             throw e;
         } catch (Exception e) {

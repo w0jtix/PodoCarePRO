@@ -11,6 +11,7 @@ import com.podocare.PodoCareWebsite.model.Employee;
 import com.podocare.PodoCareWebsite.repo.ClientNoteRepo;
 import com.podocare.PodoCareWebsite.repo.ClientRepo;
 import com.podocare.PodoCareWebsite.repo.EmployeeRepo;
+import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.ClientNoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class ClientNoteServiceImpl implements ClientNoteService {
     private final ClientNoteRepo clientNoteRepo;
     private final ClientRepo clientRepo;
     private final EmployeeRepo employeeRepo;
+    private final AuditLogService auditLogService;
 
     @Override
     public ClientNoteDTO getClientNoteById(Long id) {
@@ -43,8 +45,9 @@ public class ClientNoteServiceImpl implements ClientNoteService {
     @Transactional
     public ClientNoteDTO createClientNote(ClientNoteDTO clientNoteDTO) {
         try {
-
-            return new ClientNoteDTO(clientNoteRepo.save(clientNoteDTO.toEntity()));
+            ClientNoteDTO savedNote = new ClientNoteDTO(clientNoteRepo.save(clientNoteDTO.toEntity()));
+            auditLogService.logCreate("ClientNote", savedNote.getId(), savedNote.getClient().getFirstName() + savedNote.getClient().getLastName(), savedNote);
+            return savedNote;
         } catch (Exception e) {
             throw new CreationException("Failed to create ClientNote. Reason: " + e.getMessage(), e);
         }
@@ -54,10 +57,12 @@ public class ClientNoteServiceImpl implements ClientNoteService {
     @Transactional
     public ClientNoteDTO updateClientNote(Long id, ClientNoteDTO clientNoteDTO) {
         try {
-            getClientNoteById(id);
+            ClientNoteDTO oldNoteSnapshot = getClientNoteById(id);
             clientNoteDTO.setId(id);
 
-            return new ClientNoteDTO(clientNoteRepo.save(clientNoteDTO.toEntity()));
+            ClientNoteDTO savedNote = new ClientNoteDTO(clientNoteRepo.save(clientNoteDTO.toEntity()));
+            auditLogService.logUpdate("ClientNote", id, oldNoteSnapshot.getClient().getFirstName() + oldNoteSnapshot.getClient().getLastName(), oldNoteSnapshot, savedNote);
+            return savedNote;
         } catch (Exception e) {
             throw new UpdateException("Failed to update ClientNote. Reason: " + e.getMessage(), e);
         }
@@ -67,8 +72,9 @@ public class ClientNoteServiceImpl implements ClientNoteService {
     @Transactional
     public void deleteClientNoteById(Long id) {
         try {
-            getClientNoteById(id);
+            ClientNoteDTO noteSnapshot = getClientNoteById(id);
             clientNoteRepo.deleteById(id);
+            auditLogService.logDelete("ClientNote", id, noteSnapshot.getClient().getFirstName() + noteSnapshot.getClient().getLastName(), noteSnapshot);
         } catch (Exception e) {
             throw new DeletionException("Failed to delete ClientNote. Reason: " + e.getMessage(), e);
         }

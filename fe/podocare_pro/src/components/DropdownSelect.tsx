@@ -148,13 +148,13 @@ export function DropdownSelect<T extends DropdownItem>({
     if (multiple) {
       if (selectedItems.length === 1){
         const item = selectedItems[0];
-    return item.name || `${item.firstName ?? ""} ${item.lastName ?? ""}`.trim();
-      } 
+        return getItemLabel ? getItemLabel(item) : (item.name || `${item.firstName ?? ""} ${item.lastName ?? ""}`.trim());
+      }
       return `[${selectedItems.length}]`;
     }
 
     const item = selectedItems[0];
-    return item.name || `${item.firstName ?? ""} ${item.lastName ?? ""}`.trim();
+    return getItemLabel ? getItemLabel(item) : (item.name || `${item.firstName ?? ""} ${item.lastName ?? ""}`.trim());
   };
 
   const isItemSelected = (item: T): boolean => {

@@ -9,6 +9,7 @@ import com.podocare.PodoCareWebsite.model.User;
 import com.podocare.PodoCareWebsite.model.constants.RoleType;
 import com.podocare.PodoCareWebsite.repo.EmployeeRepo;
 import com.podocare.PodoCareWebsite.repo.UserRepo;
+import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.UserService;
 import com.podocare.PodoCareWebsite.utils.SessionUtils;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepo userRepo;
     private final EmployeeRepo employeeRepo;
+    private final AuditLogService auditLogService;
 
     @Override
     public List<UserDTO> getAllUsers() {
@@ -52,6 +54,8 @@ public class UserServiceImpl implements UserService {
             User existingUser = userRepo.findOneById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("User not found with given id: " + id));
 
+            UserDTO oldUserSnapshot = new UserDTO(existingUser);
+
             Employee employee = existingUser.getEmployee();
             if(user.getEmployee() != null && user.getEmployee().getId() != null) {
                 Long employeeId = user.getEmployee().getId();
@@ -69,6 +73,7 @@ public class UserServiceImpl implements UserService {
             entity.setId(id);
             entity.setPassword(existingUser.getPassword());
             entity.setEmployee(employee);
+            entity.setAvatar(user.getAvatar());
             //disable these if not ROLE_ADMIN
             if (!SessionUtils.hasUserRole(RoleType.ROLE_ADMIN)) {
                 entity.setRoles(existingUser.getRoles());
@@ -77,8 +82,10 @@ public class UserServiceImpl implements UserService {
             }
 
             userRepo.saveAndFlush(entity);
-            return new UserDTO(userRepo.findOneById(id)
+            UserDTO savedDTO = new UserDTO(userRepo.findOneById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("User not found with given id: " + id)));
+            auditLogService.logUpdate("User", id, oldUserSnapshot.getUsername(), oldUserSnapshot, savedDTO);
+            return savedDTO;
         } catch (ConflictException | ResourceNotFoundException e) {
             throw e;
         } catch (Exception e) {

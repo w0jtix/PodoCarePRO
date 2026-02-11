@@ -13,6 +13,7 @@ import com.podocare.PodoCareWebsite.model.BaseService;
 import com.podocare.PodoCareWebsite.model.BaseServiceVariant;
 import com.podocare.PodoCareWebsite.repo.BaseServiceRepo;
 import com.podocare.PodoCareWebsite.repo.VisitItemRepo;
+import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.BaseServiceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ public class BaseServiceServiceImpl implements BaseServiceService {
 
     private final BaseServiceRepo baseServiceRepo;
     private final VisitItemRepo visitItemRepo;
+    private final AuditLogService auditLogService;
 
     @Override
     public BaseServiceDTO getBaseServiceById(Long id) {
@@ -60,7 +62,9 @@ public class BaseServiceServiceImpl implements BaseServiceService {
             if(baseServiceRepo.existsByName(service.getName())) {
                 throw new CreationException("Service already exists: " + service.getName());
             }
-            return new BaseServiceDTO(baseServiceRepo.save(service.toEntity()));
+            BaseServiceDTO savedService = new BaseServiceDTO(baseServiceRepo.save(service.toEntity()));
+            auditLogService.logCreate("BaseService", savedService.getId(), savedService.getName(), savedService);
+            return savedService;
         } catch (Exception e) {
             throw new CreationException("Failed to create Service. Reason: " + e.getMessage(), e);
         }
@@ -72,6 +76,8 @@ public class BaseServiceServiceImpl implements BaseServiceService {
         try {
             BaseService existingService = baseServiceRepo.findOneById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Service not found with id: " + id));
+
+            BaseServiceDTO oldServiceSnapshot = new BaseServiceDTO(existingService);
 
             checkForDuplicatesExcludingCurrent(serviceDTO, id);
 
@@ -95,7 +101,10 @@ public class BaseServiceServiceImpl implements BaseServiceService {
             serviceDTO.getVariants().addAll(variantsToKeep);
 
             serviceDTO.setId(id);
-            return new BaseServiceDTO(baseServiceRepo.save(serviceDTO.toEntity()));
+            BaseServiceDTO savedService = new BaseServiceDTO(baseServiceRepo.save(serviceDTO.toEntity()));
+
+            auditLogService.logUpdate("BaseService", id, oldServiceSnapshot.getName(), oldServiceSnapshot, savedService);
+            return savedService;
 
         } catch (ResourceNotFoundException e) {
             throw e;
@@ -115,12 +124,16 @@ public class BaseServiceServiceImpl implements BaseServiceService {
                 throw new DeletionException("Service is already soft-deleted.");
             }
 
+            BaseServiceDTO serviceSnapshot = new BaseServiceDTO(service);
+
             if (hasVisitItemReferences(id)) {
                 service.softDelete();
                 baseServiceRepo.save(service);
             } else {
                 baseServiceRepo.deleteById(id);
             }
+
+            auditLogService.logDelete("BaseService", id, serviceSnapshot.getName(), serviceSnapshot);
         } catch (ResourceNotFoundException | DeletionException e) {
             throw e;
         } catch (Exception e) {

@@ -720,7 +720,8 @@ button.menu-button:hover a.menu-a {
 }
 /* PRODUCT ACTION BUTTON */
 .order-history-action-buttons .custom-calendar-button,
-.products-action-buttons.visits .custom-calendar-button{
+.products-action-buttons.visits .custom-calendar-button,
+.logs-popup-content .custom-calendar-button{
   width: var(--button-wider-width);
 }
 .products-action-buttons.services-list {
@@ -951,6 +952,15 @@ button.menu-button:hover a.menu-a {
 }
 .order-values-lower-font-size {
   font-size:var(--font-size-text);
+}
+.order-values-lower-font-size.fields-changed,
+.order-values-lower-font-size.entity-key-trait{
+  max-width: 200px;
+  overflow-x: hidden;
+  text-wrap: nowrap;
+}
+.order-values-lower-font-size.entity-key-trait{
+  max-width: 240px;
 }
 .item-list-single-item-action-buttons {
   gap:14px;
@@ -1359,6 +1369,7 @@ input[type="number"]::-webkit-inner-spin-button {
 .voucher-popup-content,
 .variants-popup-content,
 .debt-popup-content,
+.logs-popup-content,
 .voucher-select-popup-content,
 .discount-popup-content,
 .employee-popup-content,
@@ -1439,6 +1450,11 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 .debt-popup-content {
   width: 55%;
+  min-height: 80%;
+  max-height: 80%;
+}
+.logs-popup-content {
+  width: 60%;
   min-height: 80%;
   max-height: 80%;
 }
@@ -3136,6 +3152,14 @@ input[type="number"]::-webkit-inner-spin-button {
   height: 14px;
   width: 14px;
 }
+.visit-form-icon.addNew {
+  height: 17px;
+  width: 17px;
+}
+.visit-form-icon.edit {
+  height: 16px;
+  width: 16px;
+}
 .input-label.visit-form,
 .dropdown-left.quick-visit {
   font-size: 12px;
@@ -4099,4 +4123,124 @@ background-color: rgba(0, 218, 0, 0.35);
 .emp-user {
   min-width: 70px;
   max-width: 70px;
+}
+.item-list.products.logs {
+  overflow-y:auto;
+}
+.item.order.products.logs {
+  min-height:30px;
+  height: fit-content;
+}
+.log-item-row{
+  min-height:30px;
+}
+.item.order.logs.delete,
+.item.order.products.logs.delete,
+.product-action-button.audit-action-filter.delete {
+  background-color: rgba(220, 53, 69, 0.4);
+  border: 1px solid #dc354681;
+}
+.product-action-button.audit-action-filter.delete {
+  background-color: rgba(220, 53, 69, 0.1);
+}
+.item.order.logs.edit,
+.item.order.products.logs.edit,
+.product-action-button.audit-action-filter.update {
+  background-color: rgba(65, 165, 255, 0.4);
+  border: 1px solid #41a6ff70;
+}
+.product-action-button.audit-action-filter.update{
+  background-color: rgba(65, 165, 255, 0.1);
+}
+.item.order.logs.create,
+.item.order.products.logs.create,
+.product-action-button.audit-action-filter.create {
+  background-color: rgba(72, 199, 116, 0.4);
+  border: 1px solid #48c77473;
+}
+.product-action-button.audit-action-filter.create {
+  background-color: rgba(72, 199, 116, 0.1);
+}
+.item.order.logs.info,
+.item.order.products.logs.info {
+  background-color: rgba(229, 192, 30, 0.6);
+  border: 1px solid #dca3279e;
+}
+.log-content-diff {
+  padding: 10px;
+  box-sizing: border-box;
+  cursor: default;
+}
+.log-diff-container {
+  border-radius: 6px;
+  overflow: hidden;
+}
+.log-diff-side {
+  background-color: rgba(30, 30, 40, 0.6);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.log-diff-side.old {
+  border: 1px solid rgba(220, 53, 69, 0.4);
+}
+.log-diff-side.new {
+  border: 1px solid rgba(72, 199, 116, 0.4);
+}
+.log-diff-header {
+  padding: 8px 12px;
+  font-weight: 600;
+  font-size: 12px;
+  font-family: var(--font-h2-outfit);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.log-diff-side.old .log-diff-header {
+  background-color: rgba(220, 53, 69, 0.2);
+  color: #ff6b7a;
+}
+.log-diff-side.new .log-diff-header {
+  background-color: rgba(72, 199, 116, 0.2);
+  color: #6fdc8c;
+}
+.log-diff-body {
+  padding: 8px 0;
+  font-family: monospace;
+  font-size: 12px;
+}
+.log-diff-line {
+  padding: 4px 12px;
+  gap: 8px;
+}
+.log-diff-key {
+  color: #8be9fd;
+  min-width: 120px;
+}
+.log-diff-value {
+  color: #f8f8f2;
+  word-break: break-word;
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+.log-diff-value.removed {
+  background-color: rgba(220, 53, 69, 0.35);
+}
+.log-diff-value.added {
+  background-color: rgba(72, 199, 116, 0.35);
+}
+.log-diff-value.changed-old {
+  background-color: rgba(220, 53, 69, 0.35);
+}
+.log-diff-value.changed-new {
+  background-color: rgba(72, 199, 116, 0.35);
+}
+.log-diff-side.disabled {
+  opacity: 0.5;
+  border: 1px solid rgba(128, 128, 128, 0.4);
+}
+.log-diff-side.disabled .log-diff-header {
+  background-color: rgba(128, 128, 128, 0.2);
+  color: #888;
+}
+.product-action-button.audit-action-filter {
+  width: 155px;
 }

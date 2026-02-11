@@ -7,6 +7,7 @@ import { validateStatSettingsForm } from "../../utils/validators";
 import { NewStatSettings, StatSettings } from "../../models/business_settings";
 import StatSettingsService from "../../services/StatSettingsService";
 import { MONTHS } from "../../utils/dateUtils";
+import LogsPopup from "../Popups/LogsPopup";
 
 export function BusinessSettings() {
   const [initialSettings, setIninitalSettings] = useState<StatSettings>({
@@ -22,6 +23,7 @@ export function BusinessSettings() {
     productsRevenueGoal: 0,
     saleBonusPayoutMonths: [],
   });
+  const [logsPopupOpen, setLogsPopupOpen] = useState<boolean>(false);
   const { showAlert } = useAlert();
 
   const fetchStatSettings = async () => {
@@ -94,8 +96,17 @@ export function BusinessSettings() {
 
   return (
     <div className="flex-column align-items-center">
+
+    <div className="flex width-90 mt-1 justify-end">
+      <ActionButton
+        src={"/src/assets/logs.svg"}
+        alt={"Logs"}
+        text={"Wyświetl logi"}
+        onClick={() => setLogsPopupOpen(true)}
+      />
+      </div>
      
-      <div className="settings-grid grid g-2 width-90 mt-3">
+      <div className="settings-grid grid g-2 width-90 mt-1">
         
         <div className="setting-container flex width-max align-items-center justify-center">
           <Slider
@@ -174,6 +185,11 @@ export function BusinessSettings() {
           className="yellow"
         />
       </div>
+      {logsPopupOpen && (
+        <LogsPopup
+        onClose={() => setLogsPopupOpen(false)}
+        />
+      )}
     </div>
   );
 }

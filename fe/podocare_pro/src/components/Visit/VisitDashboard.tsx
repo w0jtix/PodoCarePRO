@@ -77,10 +77,12 @@ export function VisitDashboard() {
 
         setHasMore(!data.last);
         setPage(pageNum);
-        setIsLoading(false);
       })
       .catch((error) => {
         if (!append) setVisits([]);
+        setHasMore(false);
+      })
+      .finally(() => {
         setIsLoading(false);
       });
   };

@@ -10,6 +10,7 @@ import com.podocare.PodoCareWebsite.exceptions.UpdateException;
 import com.podocare.PodoCareWebsite.model.*;
 import com.podocare.PodoCareWebsite.model.constants.VatRate;
 import com.podocare.PodoCareWebsite.repo.*;
+import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
@@ -36,6 +37,7 @@ public class OrderServiceImpl implements OrderService {
     private final ProductRepo productRepo;
     private final SaleItemRepo saleItemRepo;
     private final UsageRecordRepo usageRecordRepo;
+    private final AuditLogService auditLogService;
 
     @Override
     public OrderDTO getOrderById(Long id) {
@@ -55,7 +57,10 @@ public class OrderServiceImpl implements OrderService {
         LocalDate dateFrom;
         LocalDate dateTo;
 
-        if (filter.getMonth() != null) {
+        if (filter.getYear() == null) {
+            dateFrom = LocalDate.of(1900, 1, 1);
+            dateTo = LocalDate.now();
+        } else if (filter.getMonth() != null) {
             dateFrom = LocalDate.of(filter.getYear(), filter.getMonth(), 1);
             dateTo = dateFrom.withDayOfMonth(dateFrom.lengthOfMonth());
         } else {
@@ -113,6 +118,7 @@ public class OrderServiceImpl implements OrderService {
             order.calculateTotals();
 
             Order savedOrder = orderRepo.save(order);
+            auditLogService.logCreate("Order", savedOrder.getId(), "Zamówienie od: " + savedOrder.getSupplier().getName(), new OrderDTO(savedOrder));
             return new OrderDTO(savedOrder);
         } catch (ResourceNotFoundException e) {
             throw e;
@@ -127,6 +133,8 @@ public class OrderServiceImpl implements OrderService {
         try{
             Order existingOrder = orderRepo.findOneByIdWithProducts(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + id));
+
+            OrderDTO oldOrderSnapshot = new OrderDTO(existingOrder);
 
             Map<Long, Integer> inventoryAdjustments = new HashMap<>();
             for (OrderProduct existingOrderProduct : existingOrder.getOrderProducts()) {
@@ -172,6 +180,7 @@ public class OrderServiceImpl implements OrderService {
 
             Order savedOrder = orderRepo.save(updatedOrder);
 
+            auditLogService.logUpdate("Order", id, "Zamówienie od: " + oldOrderSnapshot.getSupplier().getName(), oldOrderSnapshot, new OrderDTO(savedOrder));
             return new OrderDTO(savedOrder);
         } catch (ResourceNotFoundException e) {
             throw e;
@@ -187,6 +196,8 @@ public class OrderServiceImpl implements OrderService {
             Order existingOrder = orderRepo.findOneByIdWithProducts(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + id));
 
+            OrderDTO orderSnapshot = new OrderDTO(existingOrder);
+
             Map<Long, Integer> inventoryAdjustments = new HashMap<>();
             for (OrderProduct orderProduct : existingOrder.getOrderProducts()) {
                 Long productId = orderProduct.getProduct().getId();
@@ -199,6 +210,8 @@ public class OrderServiceImpl implements OrderService {
             checkForProductDeletions(inventoryAdjustments, id);
 
             orderRepo.delete(existingOrder);
+
+            auditLogService.logDelete("Order", id, "Zamówienie od: " + orderSnapshot.getSupplier().getName(), orderSnapshot);
         } catch (ResourceNotFoundException e) {
             throw e;
         } catch (Exception e) {

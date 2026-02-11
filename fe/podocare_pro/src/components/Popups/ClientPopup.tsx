@@ -66,6 +66,7 @@ export function ClientPopup({
           boostClient: data.boostClient,
           redFlag: data.redFlag,
           phoneNumber: data.phoneNumber,
+          discount:data.discount,
         });
         setFetchedClient(data)
       })

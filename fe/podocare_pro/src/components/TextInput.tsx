@@ -124,7 +124,7 @@ export function TextInput<T extends SuggestionItem = SuggestionItem> ({
     if (event.key == "Enter" && keyword && !selectedItem) {
       /* onSelect(keyword); */
       event.preventDefault();
-      const matchedSuggestion = suggestions.find(
+      const matchedSuggestion = suggestions?.find(
         (s) => getDisplayText(s).toLowerCase() === keyword.toLowerCase()
       );
 
@@ -139,12 +139,12 @@ export function TextInput<T extends SuggestionItem = SuggestionItem> ({
         setIsUserInteracting(false);
       }, 0);
     }
-  }, [multiline, keyword, selectedItem]);
+  }, [multiline, keyword, selectedItem, suggestions]);
 
   const handleInputBlur = useCallback((): void => {
     if (multiline) return;
     if (keyword !== undefined && !selectedItem) {
-      const matchedSuggestion = suggestions.find(
+      const matchedSuggestion = suggestions?.find(
         (s) => getDisplayText(s).toLowerCase() === keyword.toLowerCase()
       );
 
@@ -157,7 +157,7 @@ export function TextInput<T extends SuggestionItem = SuggestionItem> ({
     setTimeout(() => {
       setIsUserInteracting(false);
     }, 0);
-  },[keyword, multiline, selectedItem]);
+  },[keyword, multiline, selectedItem, suggestions]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {

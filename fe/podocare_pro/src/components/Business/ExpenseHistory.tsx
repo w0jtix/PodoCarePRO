@@ -62,13 +62,15 @@ export function ExpenseHistory() {
 
           setHasMore(!data.last);
           setPage(pageNum);
-          setLoading(false);
         })
         .catch((error) => {
           if (!append) setExpenses([]);
-          setLoading(false);
+          setHasMore(false);
           showAlert("Błąd", AlertType.ERROR);
           console.error("Error fetching Expenses:", error);
+        })
+        .finally(() => {
+          setLoading(false);
         });
     },
     [filter]
