@@ -1,0 +1,220 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="2.1-create-roles-table" author="Wojtek">
+        <createTable tableName="roles">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2.2-create-users-table" author="Wojtek">
+        <createTable tableName="users">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2.3-create-users-roles-table" author="Wojtek">
+        <createTable tableName="users_roles">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="users_roles" baseColumnNames="user_id"
+                referencedTableName="users" referencedColumnNames="id"
+                constraintName="fk_users_roles_user"/>
+
+        <addForeignKeyConstraint
+                baseTableName="users_roles" baseColumnNames="role_id"
+                referencedTableName="roles" referencedColumnNames="id"
+                constraintName="fk_users_roles_role"/>
+    </changeSet>
+
+    <changeSet id="2.4-insert-start-roles" author="Wojtek">
+        <insert tableName="roles">
+            <column name="id" valueNumeric="1"/>
+            <column name="name" value="ROLE_USER"/>
+        </insert>
+        <insert tableName="roles">
+            <column name="id" valueNumeric="2"/>
+            <column name="name" value="ROLE_ADMIN"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="2.5-add-avatar-to-users" author="Wojtek">
+        <addColumn tableName="users">
+            <column name="avatar" type="varchar(255)" defaultValue="avatar5.png">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="2.6-add-user-employee-relation" author="Wojtek">
+        <modifyDataType tableName="employee" columnName="id" newDataType="BIGINT"/>
+
+        <addColumn tableName="users">
+            <column name="employee_id" type="BIGINT">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+
+        <addForeignKeyConstraint
+                baseTableName="users"
+                baseColumnNames="employee_id"
+                constraintName="fk_users_employee"
+                referencedTableName="employee"
+                referencedColumnNames="id"
+                onDelete="SET NULL"/>
+
+        <dropColumn tableName="employee" columnName="username"/>
+    </changeSet>
+
+    <changeSet id="2.7-create-service-category" author="Wojtek">
+        <createTable tableName="service_category">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="color" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2.8-create-service-addon" author="Wojtek">
+        <createTable tableName="service_addon">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="duration" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2.9-create-service" author="Wojtek">
+        <createTable tableName="service">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="duration" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="service_category_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_service_category"
+                             referencedTableName="service_category"
+                             referencedColumnNames="id"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2.10-create-service-addons-join" author="Wojtek">
+        <createTable tableName="service_addons">
+            <column name="service_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="service_addon_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey
+                columnNames="service_id, service_addon_id"
+                tableName="service_addons"
+                constraintName="pk_service_addons"/>
+
+        <addForeignKeyConstraint
+                baseTableName="service_addons"
+                baseColumnNames="service_id"
+                constraintName="fk_service_addons_service"
+                referencedTableName="service"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="service_addons"
+                baseColumnNames="service_addon_id"
+                constraintName="fk_service_addons_addon"
+                referencedTableName="service_addon"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="2.11-update-service-category-nullable" author="Wojtek">
+        <modifyDataType tableName="service" columnName="service_category_id" newDataType="BIGINT"/>
+        <dropNotNullConstraint tableName="service" columnName="service_category_id" columnDataType="BIGINT"/>
+    </changeSet>
+
+    <changeSet id="2.12-create-service-variant" author="Wojtek">
+        <createTable tableName="service_variant">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="duration" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="base_service_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="service_variant"
+                baseColumnNames="base_service_id"
+                referencedTableName="service"
+                referencedColumnNames="id"
+                onDelete="CASCADE"
+                constraintName="fk_service_variant_service"/>
+    </changeSet>
+
+    <changeSet id="2.13-add-selling-price-to-product" author="Wojtek">
+        <addColumn tableName="product">
+            <column name="selling_price" type="DOUBLE PRECISION">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+
+</databaseChangeLog>

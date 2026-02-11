@@ -1,0 +1,184 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="6.1-create-company-expense-table" author="Wojtek">
+        <createTable tableName="company_expense">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="source" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expense_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="invoice_number" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="category" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_net" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_vat" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_value" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex indexName="idx_company_expense_date" tableName="company_expense">
+            <column name="expense_date"/>
+        </createIndex>
+
+        <createIndex indexName="idx_company_expense_category" tableName="company_expense">
+            <column name="category"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="6.2-create-company-expense-item-table" author="Wojtek">
+        <createTable tableName="company_expense_item">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="company_expense_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="vat_rate" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="company_expense_item"
+                baseColumnNames="company_expense_id"
+                constraintName="fk_company_expense_item_expense"
+                referencedTableName="company_expense"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+
+        <createIndex indexName="idx_company_expense_item_expense_id"
+                     tableName="company_expense_item">
+            <column name="company_expense_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="6.3-add-employee-employment-type-and-bonus" author="Wojtek">
+        <addColumn tableName="employee">
+            <column name="employment_type" type="VARCHAR(20)" defaultValue="FULL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bonus_percent" type="DOUBLE PRECISION" defaultValueNumeric="0.0"/>
+            <column name="sale_bonus_percent" type="DOUBLE PRECISION" defaultValueNumeric="30.0"/>
+        </addColumn>
+
+        <update tableName="employee">
+            <column name="employment_type" value="FULL"/>
+            <column name="bonus_percent" valueNumeric="15.0"/>
+            <where>name = 'Maria'</where>
+        </update>
+
+        <update tableName="employee">
+            <column name="employment_type" value="THREE_QUARTERS"/>
+            <column name="bonus_percent" valueNumeric="15.0"/>
+            <where>name = 'Olga'</where>
+        </update>
+
+        <update tableName="employee">
+            <column name="employment_type" value="HALF"/>
+            <column name="bonus_percent" valueNumeric="15.0"/>
+            <where>name = 'Wojtek'</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="6.4-create-app-settings-sale-bonus-payout-months-table" author="Wojtek">
+        <createTable tableName="app_settings_sale_bonus_payout_months">
+            <column name="app_settings_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="month" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="app_settings_sale_bonus_payout_months"
+                baseColumnNames="app_settings_id"
+                constraintName="fk_app_settings_sale_bonus_payout_months"
+                referencedTableName="app_settings"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+
+        <!-- Default payout months: January, April, July, October -->
+        <insert tableName="app_settings_sale_bonus_payout_months"><column name="app_settings_id" valueNumeric="1"/><column name="month" valueNumeric="1"/></insert>
+        <insert tableName="app_settings_sale_bonus_payout_months"><column name="app_settings_id" valueNumeric="1"/><column name="month" valueNumeric="4"/></insert>
+        <insert tableName="app_settings_sale_bonus_payout_months"><column name="app_settings_id" valueNumeric="1"/><column name="month" valueNumeric="7"/></insert>
+        <insert tableName="app_settings_sale_bonus_payout_months"><column name="app_settings_id" valueNumeric="1"/><column name="month" valueNumeric="10"/></insert>
+    </changeSet>
+
+    <changeSet id="6.5-create-stat-settings-table" author="Wojtek">
+        <createTable tableName="stat_settings">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="bonus_threshold" type="INTEGER" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="services_revenue_goal" type="INTEGER" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="products_revenue_goal" type="INTEGER" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <insert tableName="stat_settings">
+            <column name="id" valueNumeric="1"/>
+            <column name="bonus_threshold" valueNumeric="1000"/>
+            <column name="services_revenue_goal" valueNumeric="3000"/>
+            <column name="products_revenue_goal" valueNumeric="500"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="6.6-move-sale-bonus-payout-months-to-stat-settings" author="Wojtek">
+        <createTable tableName="stat_settings_sale_bonus_payout_months">
+            <column name="stat_settings_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="month" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="stat_settings_sale_bonus_payout_months"
+                baseColumnNames="stat_settings_id"
+                constraintName="fk_stat_settings_sale_bonus_payout_months"
+                referencedTableName="stat_settings"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+
+        <sql>
+            INSERT INTO stat_settings_sale_bonus_payout_months (stat_settings_id, month)
+            SELECT 1, month FROM app_settings_sale_bonus_payout_months WHERE app_settings_id = 1
+        </sql>
+
+        <dropTable tableName="app_settings_sale_bonus_payout_months"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,37 @@
+<configuration>
+    <!-- Console Appender for logging to the console with INFO level -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- File Appender for logging to a file with DEBUG level -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/application.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/application.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Root Logger Configuration: Use INFO level for console and DEBUG level for file -->
+    <root level="INFO">
+        <appender-ref ref="FILE" />
+        <appender-ref ref="CONSOLE" />
+    </root>
+
+    <!-- Specific Logger for Tomcat (Catalina) with INFO level to capture Tomcat logs -->
+    <logger name="org.apache.catalina" level="INFO" />
+
+    <!-- Specific Logger for Spring Boot with INFO level to capture startup and other important logs -->
+    <logger name="org.springframework.boot" level="INFO"/>
+
+    <!-- You can set specific package-level logging if required -->
+    <logger name="org.springframework" level="INFO" />
+    <logger name="org.springframework.web" level="INFO" />
+</configuration>
