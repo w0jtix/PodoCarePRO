@@ -10,7 +10,7 @@ export function LogContent({ log }: LogContentProps) {
 
   const toggleExpand = (key: string, side: "old" | "new") => {
     const fullKey = `${side}-${key}`;
-    setExpandedKeys(prev => {
+    setExpandedKeys((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(fullKey)) {
         newSet.delete(fullKey);
@@ -22,8 +22,8 @@ export function LogContent({ log }: LogContentProps) {
   };
 
   useEffect(() => {
-    console.log(log)
-  },[])
+    console.log(log);
+  }, []);
 
   const parseValue = (value: string | null): Record<string, unknown> => {
     if (!value) return {};
@@ -38,17 +38,21 @@ export function LogContent({ log }: LogContentProps) {
   const newData = parseValue(log.newValue);
 
   const allKeys = Array.from(
-    new Set([...Object.keys(oldData), ...Object.keys(newData)])
+    new Set([...Object.keys(oldData), ...Object.keys(newData)]),
   );
 
   // Prettify JSON with empty line between obj
   const prettyPrint = (obj: unknown): string => {
     const json = JSON.stringify(obj, null, 2);
     // Add empty line between obj
-    return json.replace(/\},\n(\s+)\{/g, '},\n\n$1{');
+    return json.replace(/\},\n(\s+)\{/g, "},\n\n$1{");
   };
 
-  const formatValue = (value: unknown, key: string, side: "old" | "new"): React.ReactNode => {
+  const formatValue = (
+    value: unknown,
+    key: string,
+    side: "old" | "new",
+  ): React.ReactNode => {
     if (value === null || value === undefined) return "null";
 
     // onClick for arrays and obj
@@ -87,36 +91,76 @@ export function LogContent({ log }: LogContentProps) {
   };
 
   return (
-    <div className="log-content-diff width-max" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="log-content-diff width-max"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="flex width-fit-content  mt-05 mb-1 g-25">
+        <div className="flex">
+          <span className="order-values-lower-font-size ml-05">Urządzenie:</span>
+          <span className="order-values-lower-font-size ml-05">
+            {log.deviceType}
+          </span>
+        </div>
+        <div className="flex">
+          <span className="order-values-lower-font-size ml-05">Przglądarka:</span>
+          <span className="order-values-lower-font-size ml-05">
+            {log.browserName}
+          </span>
+        </div>
+        <div className="flex">
+          <span className="order-values-lower-font-size ml-05">Session ID:</span>
+          <span className="order-values-lower-font-size ml-05">
+            {log.sessionId}
+          </span>
+        </div>
+
+        
+      </div>
+
       <div className="log-diff-container flex g-10px width-max">
-        <div className={`log-diff-side f-1 old ${log.action === AuditAction.CREATE ? "disabled" : ""}`}>
+        <div
+          className={`log-diff-side f-1 old ${log.action === AuditAction.CREATE ? "disabled" : ""}`}
+        >
           <div className="log-diff-header">Przed zmianą</div>
           <div className="log-diff-body">
             {allKeys.map((key) => {
               const isRemoved = isFieldRemoved(key);
-              const isChanged = log.action === AuditAction.UPDATE && isFieldChanged(key);
+              const isChanged =
+                log.action === AuditAction.UPDATE && isFieldChanged(key);
               return (
                 <div key={key} className="log-diff-line flex">
                   <span className="log-diff-key">{key}:</span>
-                  <span className={`log-diff-value ${isRemoved ? "removed" : ""} ${isChanged ? "changed-old" : ""}`}>
-                    {key in oldData ? formatValue(oldData[key], key, "old") : ""}
+                  <span
+                    className={`log-diff-value ${isRemoved ? "removed" : ""} ${isChanged ? "changed-old" : ""}`}
+                  >
+                    {key in oldData
+                      ? formatValue(oldData[key], key, "old")
+                      : ""}
                   </span>
                 </div>
               );
             })}
           </div>
         </div>
-        <div className={`log-diff-side f-1 new ${log.action === AuditAction.DELETE ? "disabled" : ""}`}>
+        <div
+          className={`log-diff-side f-1 new ${log.action === AuditAction.DELETE ? "disabled" : ""}`}
+        >
           <div className="log-diff-header">Po zmianie</div>
           <div className="log-diff-body">
             {allKeys.map((key) => {
               const isAdded = isFieldAdded(key);
-              const isChanged = log.action === AuditAction.UPDATE && isFieldChanged(key);
+              const isChanged =
+                log.action === AuditAction.UPDATE && isFieldChanged(key);
               return (
                 <div key={key} className="log-diff-line flex">
                   <span className="log-diff-key">{key}:</span>
-                  <span className={`log-diff-value ${isAdded ? "added" : ""} ${isChanged ? "changed-new" : ""}`}>
-                    {key in newData ? formatValue(newData[key], key, "new") : ""}
+                  <span
+                    className={`log-diff-value ${isAdded ? "added" : ""} ${isChanged ? "changed-new" : ""}`}
+                  >
+                    {key in newData
+                      ? formatValue(newData[key], key, "new")
+                      : ""}
                   </span>
                 </div>
               );

@@ -10,6 +10,7 @@ import com.podocare.PodoCareWebsite.model.AuditLog;
 import com.podocare.PodoCareWebsite.model.constants.AuditAction;
 import com.podocare.PodoCareWebsite.repo.AuditLogRepo;
 import com.podocare.PodoCareWebsite.service.AuditLogService;
+import com.podocare.PodoCareWebsite.utils.RequestContextUtils;
 import com.podocare.PodoCareWebsite.utils.SessionUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 
@@ -43,6 +43,10 @@ public class AuditLogServiceImpl implements AuditLogService {
                     .oldValue(null)
                     .newValue(toJson(newEntity))
                     .changedFields(null)
+                    .ipAddress(RequestContextUtils.getClientIpAddress())
+                    .sessionId(RequestContextUtils.getSessionId())
+                    .deviceType(RequestContextUtils.getDeviceType())
+                    .browserName(RequestContextUtils.getBrowserName())
                     .build();
 
             auditLogRepo.save(auditLog);
@@ -103,6 +107,10 @@ public class AuditLogServiceImpl implements AuditLogService {
                     .oldValue(oldJson)
                     .newValue(newJson)
                     .changedFields(String.join(",", changedFields))
+                    .ipAddress(RequestContextUtils.getClientIpAddress())
+                    .sessionId(RequestContextUtils.getSessionId())
+                    .deviceType(RequestContextUtils.getDeviceType())
+                    .browserName(RequestContextUtils.getBrowserName())
                     .build();
 
             auditLogRepo.save(auditLog);
@@ -126,6 +134,10 @@ public class AuditLogServiceImpl implements AuditLogService {
                     .oldValue(toJson(deletedEntity))
                     .newValue(null)
                     .changedFields(null)
+                    .ipAddress(RequestContextUtils.getClientIpAddress())
+                    .sessionId(RequestContextUtils.getSessionId())
+                    .deviceType(RequestContextUtils.getDeviceType())
+                    .browserName(RequestContextUtils.getBrowserName())
                     .build();
 
             auditLogRepo.save(auditLog);

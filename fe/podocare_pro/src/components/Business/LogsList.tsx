@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
-import { useState, useCallback } from "react";
-import ActionButton from "../ActionButton";
+import React from "react";
+import { useState } from "react";
 import { ListAttribute } from "../../constants/list-headers";
 import { formatTimestamp } from "../../utils/dateUtils";
 import { AuditAction, AuditLog } from "../../models/audit_log";
@@ -10,6 +9,13 @@ const actionIconMap: Record<AuditAction, string> = {
   [AuditAction.CREATE]: "addNew",
   [AuditAction.UPDATE]: "edit",
   [AuditAction.DELETE]: "cancel",
+};
+
+const getActionIcon = (log: AuditLog): string => {
+  if (log.action === AuditAction.CREATE && log.entityType === "User-Login") {
+    return "login";
+  }
+  return actionIconMap[log.action];
 };
 
 export interface LogsListProps {
@@ -61,9 +67,9 @@ export function LogsList({
         case " ":
         return (
           <img
-            src={`src/assets/${actionIconMap[log.action]}.svg`}
+            src={`src/assets/${getActionIcon(log)}.svg`}
             alt="action icon"
-            className={`visit-form-icon ${actionIconMap[log.action]} ml-05`}
+            className={`visit-form-icon ${getActionIcon(log)} ml-05`}
           />
         );
 
@@ -112,6 +118,12 @@ export function LogsList({
           </span>
         );
 
+        case "IP":
+        return (
+          <span className="order-values-lower-font-size ml-05">
+             {log.ipAddress} 
+          </span>
+        );
       
 
       default:

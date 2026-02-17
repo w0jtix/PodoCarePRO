@@ -24,6 +24,10 @@ public class AuditLogDTO {
     private String oldValue;
     private String newValue;
     private String changedFields;
+    private String ipAddress;
+    private String sessionId;
+    private String deviceType;
+    private String browserName;
 
     public AuditLogDTO(AuditLog auditLog) {
         this.id = auditLog.getId();
@@ -36,5 +40,9 @@ public class AuditLogDTO {
         this.oldValue = auditLog.getOldValue();
         this.newValue = auditLog.getNewValue();
         this.changedFields = auditLog.getChangedFields();
+        this.ipAddress = auditLog.getIpAddress();
+        this.sessionId = auditLog.getSessionId();
+        this.deviceType = auditLog.getDeviceType();
+        this.browserName = auditLog.getBrowserName();
     }
 }

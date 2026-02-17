@@ -15,6 +15,10 @@ export interface AuditLog {
     oldValue: string | null;
     newValue: string | null;
     changedFields: string;
+    ipAddress: string;
+    sessionId: string;
+    deviceType: string;
+    browserName: string;
 }
 
 export interface AuditLogFilterDTO {

@@ -46,4 +46,16 @@ public class AuditLog {
 
     @Column
     private String changedFields;
+
+    @Column
+    private String ipAddress;
+
+    @Column
+    private String sessionId;
+
+    @Column
+    private String deviceType;
+
+    @Column
+    private String browserName;
 }

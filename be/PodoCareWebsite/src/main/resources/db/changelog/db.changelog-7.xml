@@ -58,4 +58,29 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="7.3-add-request-context-columns" author="Wojtek">
+        <addColumn tableName="audit_log">
+            <column name="ip_address" type="VARCHAR(45)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="user_agent" type="VARCHAR(500)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="session_id" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="device_type" type="VARCHAR(20)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="browser_name" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="7.4-drop-user-agent-column" author="Wojtek">
+        <dropColumn tableName="audit_log" columnName="user_agent"/>
+    </changeSet>
+
 </databaseChangeLog>

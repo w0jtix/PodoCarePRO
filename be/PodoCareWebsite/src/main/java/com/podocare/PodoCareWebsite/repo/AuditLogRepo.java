@@ -21,7 +21,9 @@ public interface AuditLogRepo extends JpaRepository<AuditLog, Long> {
           AND (:performedBy IS NULL OR a.performedBy = :performedBy)
           AND (:keyword IS NULL
                OR LOWER(a.oldValue) LIKE LOWER(CONCAT('%', :keyword, '%'))
-               OR LOWER(a.newValue) LIKE LOWER(CONCAT('%', :keyword, '%')))
+               OR LOWER(a.newValue) LIKE LOWER(CONCAT('%', :keyword, '%'))
+               OR LOWER(a.ipAddress) LIKE LOWER(CONCAT('%', :keyword, '%'))
+               OR LOWER(a.sessionId) LIKE LOWER(CONCAT('%', :keyword, '%')))
           AND a.timestamp >= :dateFrom
           AND a.timestamp <= :dateTo
         ORDER BY a.timestamp DESC
