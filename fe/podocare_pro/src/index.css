@@ -4244,3 +4244,19 @@ background-color: rgba(0, 218, 0, 0.35);
 .product-action-button.audit-action-filter {
   width: 155px;
 }
+
+.access-denied-container {
+  flex: 1;
+}
+.access-denied-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  font-family: var(--font-h1-sulphur);
+}
+.access-denied-text {
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.5);
+  font-family: var(--font-h2-outfit);
+}

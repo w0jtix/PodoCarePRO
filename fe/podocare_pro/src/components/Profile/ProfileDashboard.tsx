@@ -64,7 +64,7 @@ export function ProfileDashboard() {
     if (!jwtUser?.id) return;
 
     try {
-      const userData = await UserService.getUserById(jwtUser.id);
+      const userData = await UserService.getCurrentUser();
       setUpdatedUser(userData);
     } catch (error) {
       console.error("Error fetching current user:", error);

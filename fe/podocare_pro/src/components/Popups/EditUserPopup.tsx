@@ -60,6 +60,7 @@ export function EditUserPopup({
   }, [])
 
   const toggleRole = (role: Role) => {
+    if (role.name === "ROLE_ADMIN") return;
     setUpdatedUser((prev) => {
       if (!prev) return prev;
       const hasRole = prev.roles.some((r) => r.id === role.id);
@@ -199,6 +200,7 @@ export function EditUserPopup({
                     : ""
                 }`}
                 key={role.id}
+                disabled={role.name === "ROLE_ADMIN"}
               />
             ))}
           </div>

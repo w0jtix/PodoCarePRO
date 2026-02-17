@@ -13,6 +13,8 @@ import Clients from "./pages/Clients";
 import Settings from "./pages/Settings";
 import Visits from "./pages/Visits";
 import Business from "./pages/Business";
+import AccessDenied from "./pages/AccessDenied";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -22,14 +24,15 @@ function App() {
         <Routes>
           <Route element={<Main />}>
             <Route path="/" element={<Warehouse />} />
-            <Route path="/zamowienia" element={<Orders />} />
+            <Route path="/orders" element={<Orders />} />
             <Route path="/profile" element={<Profile />}/>
-            <Route path="/cennik" element={<PriceList />}/>
-            <Route path="/wizyty" element={<Visits />}/>
-            <Route path="/uslugi" element={<Services />}/>
-            <Route path="/klienci" element={<Clients />}/>
-            <Route path="/moja-firma" element={<Business />}/>
-            <Route path="/ustawienia" element={<Settings />}/>
+            <Route path="/pricelist" element={<PriceList />}/>
+            <Route path="/visits" element={<Visits />}/>
+            <Route path="/services" element={<Services />}/>
+            <Route path="/clients" element={<Clients />}/>
+            <Route path="/my-company" element={<ProtectedRoute permissions={['ROLE_ADMIN']}><Business /></ProtectedRoute>}/>
+            <Route path="/settings" element={<ProtectedRoute permissions={['ROLE_ADMIN']}><Settings /></ProtectedRoute>}/>
+            <Route path="/no-access" element={<AccessDenied />}/>
           </Route>
           <Route path="/login" element={<Login />} />
         </Routes>

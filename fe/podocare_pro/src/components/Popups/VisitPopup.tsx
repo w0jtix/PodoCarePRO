@@ -15,7 +15,7 @@ import {
   discountSrcFor,
 } from "../../models/visit";
 import AppSettingsService from "../../services/AppSettingsService";
-import { AppSettings } from "../../models/app_settings";
+import { DiscountSettings } from "../../models/app_settings";
 import { PaymentMethod } from "../../models/payment";
 import { translatePaymentMethod } from "../../utils/paymentUtils";
 import UserService from "../../services/UserService";
@@ -58,7 +58,7 @@ export function VisitPopup({
   voucherId,
   className = "",
 }: VisitPopupProps) {
-  const [settings, setSettings] = useState<AppSettings | null>(null);
+  const [discountSettings, setDiscountSettings] = useState<DiscountSettings | null>(null);
   const [visit, setVisit] = useState<Visit | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [debtFromThisVisit, setDebtFromThisVisit] = useState<ClientDebt | null>(
@@ -103,15 +103,15 @@ export function VisitPopup({
       visit.isVip ||
       visit.receipt == false);
 
-  const fetchSettings = async () => {
-    AppSettingsService.getSettings()
+  const fetchDiscountSettings = async () => {
+    AppSettingsService.getDiscountSettings()
       .then((data) => {
-        setSettings(data);
+        setDiscountSettings(data);
       })
       .catch((error) => {
-        setSettings(null);
+        setDiscountSettings(null);
         showAlert("Błąd", AlertType.ERROR);
-        console.error("Error fetching settings:", error);
+        console.error("Error fetching DiscountSettings:", error);
       });
   };
   const fetchUser = async () => {
@@ -282,7 +282,7 @@ export function VisitPopup({
   }, [productFilter]);
 
   useEffect(() => {
-    fetchSettings();
+    fetchDiscountSettings();
     if (action === Action.DISPLAY) {
       if (
         visitId ||
@@ -514,7 +514,7 @@ export function VisitPopup({
                             text={discountLabelFor(
                               type,
                               visit,
-                              settings as AppSettings
+                              discountSettings as DiscountSettings
                             )}
                             className={`pricelist qv sel discount active-g`}
                           />

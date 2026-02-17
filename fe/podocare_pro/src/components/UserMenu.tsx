@@ -61,7 +61,7 @@ export function UserMenu({
         navigate("/profile");
         break;
       case "Ustawienia":
-        navigate("/ustawienia");
+        navigate("/settings");
         break;
       case "Wyloguj":
         AuthService.logout();

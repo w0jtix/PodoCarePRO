@@ -221,7 +221,7 @@ export function ServicesDashboard() {
           items={services}
           setRemoveServiceId={setRemoveServiceId}
           setEditServiceId={setEditServiceId}
-          className="services"
+          className="services list"
         />
       </div>
       {isAddNewServicePopupOpen && (

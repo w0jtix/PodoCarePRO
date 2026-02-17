@@ -30,11 +30,19 @@ public class UserController {
         return new ResponseEntity<>(userDTOList, userDTOList.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<UserDTO> getCurrentUser() {
+        Long userId = SessionUtils.getUserIdFromSession();
+        UserDTO user = userService.getUserById(userId);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDTO> getUserById(@PathVariable(value = "id") Long id) {
         UserDTO user = userService.getUserById(id);
-        return  new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @GetMapping("/employee/{employeeId}")

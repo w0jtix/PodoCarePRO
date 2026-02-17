@@ -9,15 +9,15 @@ export interface MenuItem {
 
 export const MENU_ITEMS: MenuItem[] = [
   { name: "Magazyn", href: '/', icon: 'magazyn' },
-  { name: "Zamówienia", href: '/zamowienia', icon: 'zamówienia' },
+  { name: "Zamówienia", href: '/orders', icon: 'zamówienia' },
   /* { name: "Utarg", href: '/utarg', icon: 'utarg' }, */
-  { name: "Cennik", href: '/cennik', icon: 'cennik'},
-  { name: "Usługi", href: '/uslugi', icon: 'uslugi'},
-  { name: "Klienci", href: '/klienci', icon: 'klienci' },
-  { name: "Wizyty", href: '/wizyty', icon: 'wizyty' },
+  { name: "Cennik", href: '/pricelist', icon: 'cennik'},
+  { name: "Usługi", href: '/services', icon: 'uslugi'},
+  { name: "Klienci", href: '/clients', icon: 'klienci' },
+  { name: "Wizyty", href: '/visits', icon: 'wizyty' },
   /* { name: "Statystyki", href: '/statystyki', icon: 'statystyki'}, */
-  { name: "Firma", href: '/moja-firma', icon: 'firma', permissions: ['ROLE_ADMIN'] },
-  { name: "Ustawienia", href: '/ustawienia', icon: 'ustawienia', permissions: ['ROLE_ADMIN'] },
+  { name: "Firma", href: '/my-company', icon: 'firma', permissions: ['ROLE_ADMIN'] },
+  { name: "Ustawienia", href: '/settings', icon: 'ustawienia', permissions: ['ROLE_ADMIN'] },
 ];
 
 export const getIconPath = (iconName: string): string => {

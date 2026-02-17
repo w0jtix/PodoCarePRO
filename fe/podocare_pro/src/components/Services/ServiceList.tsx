@@ -119,7 +119,7 @@ export function ServiceList({
       {items.map((item, index) => (
         <div key={`${item.id}-${index}`} className={`product-wrapper ${className}`}>
           <div
-            className={`item align-items-center pointer flex ${className}`}
+            className={`item align-items-center ${className === "services list" ? "default" : "pointer"} flex ${className}`}
             onClick={() => toggleServices(item.id, item)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
