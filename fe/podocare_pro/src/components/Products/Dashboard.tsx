@@ -7,7 +7,7 @@ import AddEditProductPopup from "../Popups/AddEditProductPopup";
 import RemovePopup from "../Popups/RemovePopup";
 import CategoryPopup from "../Popups/CategoryPopup";
 import { useAlert } from "../Alert/AlertProvider";
-import { Product, ProductFilterDTO } from "../../models/product";
+import { ProductFilterDTO } from "../../models/product";
 import { AlertType } from "../../models/alert";
 import ListActionSection from "../ListActionSection";
 import { ProductCategory, NewProductCategory } from "../../models/categories";
@@ -17,7 +17,6 @@ import { validateCategoryForm } from "../../utils/validators";
 import { extractCategoryErrorMessage } from "../../utils/errorHandler";
 import AllProductService from "../../services/AllProductService";
 import UsageRecordsManagePopup from "../Popups/UsageRecordsManagePopup";
-import ProductReportPopup from "../Popups/ProductReportPopup";
 import { useUser } from "../User/UserProvider";
 import { RoleType } from "../../models/login";
 
@@ -31,7 +30,6 @@ export function Dashboard() {
   const [isCategoryPopupOpen, setIsCategoryPopupOpen] =
     useState<boolean>(false);
   const [isUsageRecordsPopupOpen, setIsUsageRecordsPopupOpen] = useState<boolean>(false);
-  const [isProductReportPopupOpen, setIsProductReportPopupOpen] = useState<boolean>(false);
   const [filter, setFilter] = useState<ProductFilterDTO>({
     categoryIds: null,
     brandIds: null,
@@ -213,12 +211,6 @@ export function Dashboard() {
             onClick={() => setIsCategoryPopupOpen(true)}
           />
           )}
-          <ActionButton
-            src={"src/assets/pdf.svg"}
-            alt={"Wygeneruj PDF"}
-            text={"Wygeneruj PDF"}
-            onClick={() => setIsProductReportPopupOpen(true)}
-          />
         </section>
       </section>
       <SupplyList
@@ -270,13 +262,6 @@ export function Dashboard() {
           }}
           />
       )}
-      {isProductReportPopupOpen && (
-        <ProductReportPopup
-        onClose={() => setIsProductReportPopupOpen(false)}
-        />
-      )
-
-      }
     </div>
   );
 }

@@ -4,6 +4,7 @@ import com.podocare.PodoCareWebsite.model.UsageRecord;
 import com.podocare.PodoCareWebsite.model.constants.UsageReason;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import com.podocare.PodoCareWebsite.service.ProductReferenceChecker;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UsageRecordRepo extends JpaRepository<UsageRecord, Long> {
+public interface UsageRecordRepo extends JpaRepository<UsageRecord, Long>, ProductReferenceChecker {
 
     @Query("SELECT ur FROM UsageRecord ur " +
            "LEFT JOIN FETCH ur.product p " +

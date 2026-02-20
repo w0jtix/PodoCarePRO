@@ -3,6 +3,7 @@ package com.podocare.PodoCareWebsite.repo;
 import com.podocare.PodoCareWebsite.model.Order;
 import com.podocare.PodoCareWebsite.model.OrderProduct;
 import com.podocare.PodoCareWebsite.model.Product;
+import com.podocare.PodoCareWebsite.service.ProductReferenceChecker;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -16,16 +17,17 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface OrderProductRepo extends JpaRepository<OrderProduct, Long> {
+public interface OrderProductRepo extends JpaRepository<OrderProduct, Long>, ProductReferenceChecker {
 
     boolean existsByProductId(Long productId);
 
+    @Override
     @Query("SELECT CASE WHEN COUNT(op) > 0 THEN true ELSE false END " +
             "FROM OrderProduct op " +
             "WHERE op.product.id = :productId " +
-            "AND (:excludeOrderId IS NULL OR op.order.id != :excludeOrderId)")
-    boolean existsByProductIdAndOrderIdNot(@Param("productId") Long productId,
-                                           @Param("excludeOrderId") Long excludeOrderId);
+            "AND op.order.id != :excludeParentId")
+    boolean existsByProductIdExcluding(@Param("productId") Long productId,
+                                       @Param("excludeParentId") Long excludeParentId);
 
     List<OrderProduct> findByProductId(Long productId);
 

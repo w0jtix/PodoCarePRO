@@ -48,7 +48,7 @@ export function RemovePopup ({
         </section>
         <section className="remove-product-popup-interior width-90 mb-1">
           <section>
-            <a className="remove-popup-warning-a flex justify-center text-align-center">
+            <a className="remove-popup-warning-a flex justify-center text-align-center" style={{ whiteSpace: "pre-line" }}>
               {warningText}
             </a>
             <br />

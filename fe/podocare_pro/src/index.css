@@ -113,6 +113,9 @@
 .ml-1 {
   margin-left: 1rem;
 }
+.ml-15 {
+  margin-left: 1.5rem;
+}
 .ml-3 {
   margin-left: 3rem;
 }
@@ -582,9 +585,50 @@ button.menu-button:hover {
 button.menu-button:hover a.menu-a {
   font-weight: 500; 
 }
+.menu-a {
+  font-size: var(--font-size-h2-a);
+  letter-spacing: 0.5px;
+  text-decoration: none;
+}
 .menuItem-icon {
   width:25px;
   height:25px;
+}
+.menu-item-with-sub {
+  width: 100%;
+}
+.menu-subitem-icon,
+.menu-sub-arrow {
+  width: 14px;
+  height: 14px;
+}
+.menu-sub-arrow {
+  transition: transform 0.2s ease;
+  margin-top: 3px;
+}
+.menu-sub-arrow.rotated {
+  transform: rotate(180deg);
+}
+.menu-sub-dropdown {
+  padding-left: 15px;
+}
+.menu-sub-item {
+  color: #fff;
+  font-family: var(--font-h2-outfit);
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 0.5px;
+  padding: 4px 0;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 0.15s ease;
+  height: 20px;
+}
+.menu-sub-div {
+  opacity: 0.7;
+}
+.menu-sub-div:hover {
+  opacity: 1;
 }
 /* SOCIALS */
 .social-icon {
@@ -1378,6 +1422,7 @@ input[type="number"]::-webkit-inner-spin-button {
 .addon-popup-content,
 .visit-popup-content,
 .usage-record-popup-content,
+.stock-adjustment-report-content,
 .manage-usage-records-popup-content,
 .expense-popup-content,
 .product-report-popup-content {
@@ -1411,6 +1456,11 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 .usage-record-popup-content {
   min-height: 70%;
+}
+.stock-adjustment-report-content {
+  width: 70%;
+  max-width: 70%;
+  min-height: 75%;
 }
 .force-change-pw-content,
 .service-popup-content,
@@ -1784,7 +1834,8 @@ input[type="number"]::-webkit-inner-spin-button {
 .new-products-popup-digit-input{
   width:20px;
   padding: 8px 5px;
-  cursor:auto;
+  cursor: text;
+  caret-color: white;
 }
 .new-products-popup-digit-input.disabled,
 .cost-input.disabled {
@@ -1910,6 +1961,9 @@ input[type="number"]::-webkit-inner-spin-button {
   font-size: var(--font-size-text);
   font-weight: 300;
   height:var(--action-button-height);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .dropdown-header-a.center{
   font-size:var(--font-size-text);
@@ -1943,7 +1997,7 @@ input[type="number"]::-webkit-inner-spin-button {
   font-family: var(--font-h2-outfit);
   letter-spacing: 0.5px;
   font-weight: 200;
-  font-size: 13px;
+  font-size: 12px;
 }
 .product-searchable-dropdown .dropdown-menu {
   border:var(--border-dashboard-outer);
@@ -1971,7 +2025,7 @@ input[type="number"]::-webkit-inner-spin-button {
   box-sizing: border-box;
   font-family: var(--font-h2-outfit);
   font-weight: 300;
-  font-size: var( --font-size-dashboard-text);
+  font-size: 12px;
   color:white;
   border-top-left-radius: var(--action-button-border-radius);
 }
@@ -1999,6 +2053,7 @@ input[type="number"]::-webkit-inner-spin-button {
   height:fit-content;
   min-height: 72px;
   overflow-y: auto;
+  overflow-x: hidden;
   scrollbar-width:thin;
   scrollbar-color: rgba(100, 100, 100, 0.2) transparent;
 }
@@ -2054,6 +2109,9 @@ input[type="number"]::-webkit-inner-spin-button {
   height:30px;
   padding: 3px 12px;
   border-bottom: var(--border-dashboard-inner);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .product-searchable-dropdown .dropdown-item {
   opacity:80%;
@@ -2462,6 +2520,11 @@ input[type="number"]::-webkit-inner-spin-button {
   scrollbar-width: thin;
   scrollbar-color: rgba(100, 100, 100, 0.2) transparent;
 }
+.item-list.services.inv-rep {
+  overflow-y: auto;
+  margin-top: 0;
+  max-height: 565px;
+}
 .item-list.services.emp {
   max-height: 220px;
   overflow-y: auto;
@@ -2491,10 +2554,12 @@ input[type="number"]::-webkit-inner-spin-button {
 .item-list.products.pricelist.popup.usage {
   max-height: 294px;
 }
+.item-list.products.pricelist.popup.inv-report {
+  max-height: 375px;
+}
 .item-list.services.pricelist.visit-preview {
   padding: 0;
 }
-
 .item-list.services.pricelist.qv {
   overflow-y: auto;
 }
@@ -2582,7 +2647,8 @@ input[type="number"]::-webkit-inner-spin-button {
 .product-wrapper.services.popup {
   height: 40px;
 }
-.product-wrapper.order.products {
+.product-wrapper.order.products,
+.product-wrapper.services.inv-rep {
   /* min-height: 40px; */
   height: fit-content;
 }
@@ -3160,6 +3226,9 @@ input[type="number"]::-webkit-inner-spin-button {
   height: 16px;
   width: 16px;
 }
+.dropdown-left {
+  font-size:12px;
+}
 .input-label.visit-form,
 .dropdown-left.quick-visit {
   font-size: 12px;
@@ -3496,6 +3565,10 @@ background-color: rgba(0, 218, 0, 0.35);
   scrollbar-width:thin;
   scrollbar-color: rgba(100, 100, 100, 0.2) transparent;
 }
+.selected-usage-product-list.report {
+  height: 550px;
+  max-height: 550px;
+} 
 .category-container.usage-record {
   width: 15px;
 }
@@ -3519,6 +3592,8 @@ background-color: rgba(0, 218, 0, 0.35);
 .usage-item-row:first-child {
  background-color: rgba(255, 255, 255, 0.05);
  border-bottom:var(--border-dashboard-inner);
+ border-top-left-radius: 8px;
+ border-top-right-radius: 8px;
 }
 .create-usage-popup {
   margin: 2rem 0rem;
@@ -4244,10 +4319,6 @@ background-color: rgba(0, 218, 0, 0.35);
 .product-action-button.audit-action-filter {
   width: 155px;
 }
-
-.access-denied-container {
-  flex: 1;
-}
 .access-denied-title {
   font-size: 28px;
   font-weight: 600;
@@ -4259,4 +4330,71 @@ background-color: rgba(0, 218, 0, 0.35);
   font-weight: 300;
   color: rgba(255, 255, 255, 0.5);
   font-family: var(--font-h2-outfit);
+}
+.product-action-button-container.bottom-push {
+  align-items: end;
+}
+.report-supply-change {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  min-width: 43px;
+}
+.report-supply-change.list{
+  font-size:15px;
+}
+.report-supply-change.neutral {
+  color:white;
+}
+.report-supply-change.positive {
+  color:rgb(49, 246, 0);
+}
+.report-supply-change.negative {
+  color:rgb(255, 0, 0);
+}
+.usage-item-row.positive {
+  background-color: rgb(4, 206, 17, 0.3);
+}
+.usage-item-row.negative {
+  background-color:  rgba(206, 4, 4, 0.3);
+}
+.ir-item {
+  height: 30px;
+  border-bottom: var(--border-dashboard-inner);
+}
+.ir-item:last-child {
+  border-bottom: none;
+}
+.ir-item:first-child {
+  border-top: var(--border-dashboard-inner);
+}
+.ir-item-header {
+  min-height:32px;
+}
+.ir-content .category-container {
+  width:20%;
+  height: 30%;
+}
+.ir-change-icon {
+  height: 15px;
+  width: 15px;
+}
+.ir-item-span {
+  font-size:12px;
+}
+.qv-span.info {
+  opacity: 0.8;
+  color:var(--yellow-podocare)
+}
+.qv-span.action {
+  color: #00fe00;
+}
+.product-action-button.ir {
+  height: 27px;
+  padding: 4px 8px;
+  opacity: 0.9;
+  border-radius: 7px;
+}
+.qv-span.ir {
+  font-size: 16px;
 }

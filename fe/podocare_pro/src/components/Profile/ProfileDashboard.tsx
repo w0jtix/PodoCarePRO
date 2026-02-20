@@ -116,7 +116,6 @@ export function ProfileDashboard() {
     handleEditUser();
   };
   const handleEditUser = async () => {
-    console.log(updatedUser)
     if (!updatedUser) return;
     try {
       const data = await UserService.updateUser(updatedUser.id, updatedUser);
@@ -129,7 +128,10 @@ export function ProfileDashboard() {
       AuthService.setCurrentUser(data);
       refreshUser();
 
-      await fetchUsers();
+      if(user?.roles.includes(RoleType.ROLE_ADMIN)) {
+        await fetchUsers();
+      }
+      
 
       showAlert(
         `Użytkownik ${updatedUser.username} zaktualizowany!`,

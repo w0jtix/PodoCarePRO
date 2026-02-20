@@ -16,14 +16,14 @@ public class ClientNoteDTO {
     private Long id;
     private String content;
     private LocalDate createdAt;
-    private EmployeeDTO createdBy;
+    private EmployeeSummaryDTO createdBy;
     private ClientDTO client;
 
     public ClientNoteDTO(ClientNote clientNote) {
         this.id = clientNote.getId();
         this.content = clientNote.getContent();
         this.createdAt = clientNote.getCreatedAt();
-        this.createdBy = new EmployeeDTO(clientNote.getCreatedBy());
+        this.createdBy = new EmployeeSummaryDTO(clientNote.getCreatedBy());
         this.client = new ClientDTO(clientNote.getClient());
     }
 

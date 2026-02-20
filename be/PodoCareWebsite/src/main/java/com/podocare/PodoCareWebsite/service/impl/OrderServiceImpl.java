@@ -12,6 +12,7 @@ import com.podocare.PodoCareWebsite.model.constants.VatRate;
 import com.podocare.PodoCareWebsite.repo.*;
 import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.OrderService;
+import com.podocare.PodoCareWebsite.service.ProductReferenceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
@@ -35,8 +36,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderProductRepo orderProductRepo;
     private final SupplierRepo supplierRepo;
     private final ProductRepo productRepo;
-    private final SaleItemRepo saleItemRepo;
-    private final UsageRecordRepo usageRecordRepo;
+    private final ProductReferenceService productReferenceService;
     private final AuditLogService auditLogService;
 
     @Override
@@ -295,13 +295,8 @@ public class OrderServiceImpl implements OrderService {
         if(!product.getIsDeleted()) {
             return;
         }
-        boolean hasOrderReferences = orderProductRepo.existsByProductIdAndOrderIdNot(
-                product.getId(), orderId);
 
-        boolean hasSaleItemReferences = saleItemRepo.existsByProductId(product.getId());
-        boolean hasUsageRecord = usageRecordRepo.existsByProductId((product.getId()));
-
-        if(!hasOrderReferences && !hasSaleItemReferences && !hasUsageRecord) {
+        if(!productReferenceService.hasAnyReferencesExcluding(product.getId(), orderId)) {
             productRepo.delete(product);
         }
     }

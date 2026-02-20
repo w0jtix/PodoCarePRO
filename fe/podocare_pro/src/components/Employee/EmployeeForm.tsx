@@ -40,10 +40,10 @@ export function EmployeeForm ({
       name,
     }));
   }, []);
-  const handleSecondName = useCallback((secondName: string) => {
+  const handleLastName = useCallback((lastName: string) => {
     setEmployeeDTO((prev) => ({
       ...prev,
-      secondName: secondName || "",
+      lastName: lastName || "",
     }));
   }, []);
   const handleEmploymentTypeChange = useCallback((selected: { id: string; name: string } | { id: string; name: string }[] | null) => {
@@ -88,11 +88,11 @@ export function EmployeeForm ({
             <a className="supplier-form-input-title">Nazwisko:</a>
             <TextInput
               dropdown={false}
-              value={employeeDTO.secondName}
+              value={employeeDTO.lastName}
               placeholder=""
-              onSelect={(secondName) => {
-                if (typeof secondName === "string") {
-                  handleSecondName(secondName);
+              onSelect={(lastName) => {
+                if (typeof lastName === "string") {
+                  handleLastName(lastName);
                 }
               }}
               className="invoice"

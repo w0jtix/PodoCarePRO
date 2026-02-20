@@ -7,11 +7,9 @@ import com.podocare.PodoCareWebsite.exceptions.DeletionException;
 import com.podocare.PodoCareWebsite.exceptions.ResourceNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.UpdateException;
 import com.podocare.PodoCareWebsite.model.Product;
-import com.podocare.PodoCareWebsite.repo.OrderProductRepo;
 import com.podocare.PodoCareWebsite.repo.ProductRepo;
-import com.podocare.PodoCareWebsite.repo.SaleItemRepo;
-import com.podocare.PodoCareWebsite.repo.UsageRecordRepo;
 import com.podocare.PodoCareWebsite.service.AuditLogService;
+import com.podocare.PodoCareWebsite.service.ProductReferenceService;
 import com.podocare.PodoCareWebsite.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,9 +29,7 @@ import static java.util.Objects.isNull;
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
     private final ProductRepo productRepo;
-    private final OrderProductRepo orderProductRepo;
-    private final SaleItemRepo saleItemRepo;
-    private final UsageRecordRepo usageRecordRepo;
+    private final ProductReferenceService productReferenceService;
     private final AuditLogService auditLogService;
 
     @Override
@@ -143,7 +139,7 @@ public class ProductServiceImpl implements ProductService {
             }
 
             ProductDTO productSnapshot = new ProductDTO(product);
-            if (hasOrderProductReferences(id) || hasSaleItemReferences(id) || hasUsageRecords(id)) {
+            if (productReferenceService.hasAnyReferences(id)) {
                 product.softDelete();
                 productRepo.save(product);
             } else {
@@ -175,18 +171,6 @@ public class ProductServiceImpl implements ProductService {
         deletedProduct.restore(newProductData.getSupply());
         deletedProduct.setDescription(newProductData.getDescription());
         return new ProductDTO(productRepo.save(deletedProduct));
-    }
-
-    private boolean hasOrderProductReferences(Long productId) {
-        return orderProductRepo.existsByProductId(productId);
-    }
-
-    private boolean hasSaleItemReferences(Long productId) {
-        return saleItemRepo.existsByProductId(productId);
-    }
-
-    private boolean hasUsageRecords(Long productId) {
-        return usageRecordRepo.existsByProductId((productId));
     }
 
 }

@@ -1,8 +1,7 @@
 package com.podocare.PodoCareWebsite.config.security.services;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.podocare.PodoCareWebsite.DTO.EmployeeDTO;
-import com.podocare.PodoCareWebsite.model.Employee;
+import com.podocare.PodoCareWebsite.DTO.EmployeeSummaryDTO;
 import com.podocare.PodoCareWebsite.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,7 +26,7 @@ public class UserDetailsImpl implements UserDetails {
 
     private String avatar;
 
-    private EmployeeDTO employee;
+    private EmployeeSummaryDTO employee;
 
     private Collection<? extends GrantedAuthority> authorities;
 
@@ -41,13 +40,13 @@ public class UserDetailsImpl implements UserDetails {
                 user.getUsername(),
                 user.getPassword(),
                 user.getAvatar(),
-                new EmployeeDTO(user.getEmployee()),
+                new EmployeeSummaryDTO(user.getEmployee()),
                 authorities);
     }
 
     public String getAvatar() { return avatar; }
 
-    public EmployeeDTO getEmployee() { return employee; }
+    public EmployeeSummaryDTO getEmployee() { return employee; }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() { return authorities; };

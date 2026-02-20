@@ -8,7 +8,7 @@ export enum EmploymentType {
 export interface Employee {
     id: number;
     name: string;
-    secondName: string;   
+    lastName: string;   
     isDeleted?: boolean;
     employmentType: EmploymentType;
     bonusPercent: number;
@@ -18,7 +18,7 @@ export interface Employee {
 
 export interface NewEmployee {
     name?: string;
-    secondName?: string;
+    lastName?: string;
     employmentType?: EmploymentType;
     bonusPercent?: number | null;
     saleBonusPercent?: number | null;

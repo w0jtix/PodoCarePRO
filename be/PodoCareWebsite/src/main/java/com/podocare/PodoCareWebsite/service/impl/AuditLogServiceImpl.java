@@ -191,7 +191,7 @@ public class AuditLogServiceImpl implements AuditLogService {
         }
     }
 
-    private static final Set<String> ENTITIES_WITH_SMART_LIST_COMPARE = Set.of("Order", "CompanyExpense");
+    private static final Set<String> ENTITIES_WITH_SMART_LIST_COMPARE = Set.of("Order", "CompanyExpense", "InventoryReport");
 
     @SuppressWarnings("unchecked")
     private boolean areValuesEqual(Object oldVal, Object newVal, boolean useSmartListCompare) {

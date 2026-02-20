@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
                 Long employeeId = user.getEmployee().getId();
                 userRepo.findByEmployeeId(employeeId).ifPresent(assignedUser -> {
                     if (!assignedUser.getId().equals(id)) {
-                        throw new ConflictException("Pracownik " + assignedUser.getEmployee().getName() + " " +assignedUser.getEmployee().getSecondName()  + " jest już przypisany do Użytkownika: " + assignedUser.getUsername());
+                        throw new ConflictException("Pracownik " + assignedUser.getEmployee().getName() + " " +assignedUser.getEmployee().getLastName()  + " jest już przypisany do Użytkownika: " + assignedUser.getUsername());
                     }
                 });
                 employee = employeeRepo.findById(employeeId)

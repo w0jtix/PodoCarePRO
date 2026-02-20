@@ -1,22 +1,37 @@
 import AuthService from "../services/AuthService";
 
+export interface MenuSubItem {
+  name: string;
+  module: string;
+}
+
 export interface MenuItem {
   name: string;
   href: string;
   icon: string;
   permissions?: string[];
+  subItems?: MenuSubItem[];
 }
 
 export const MENU_ITEMS: MenuItem[] = [
-  { name: "Magazyn", href: '/', icon: 'magazyn' },
-  { name: "Zamówienia", href: '/orders', icon: 'zamówienia' },
-  /* { name: "Utarg", href: '/utarg', icon: 'utarg' }, */
+  { name: "Magazyn", href: '/', icon: 'magazyn', subItems: [
+    { name: "Produkty", module: 'Products' },
+    { name: "Raporty Stanu Mag.", module: 'InventoryReport' },
+  ]},
+  { name: "Zamówienia", href: '/orders', icon: 'zamówienia', subItems: [
+    { name: "Kreator", module: 'Create' },
+    { name: "Historia", module: 'History' },
+  ]},
   { name: "Cennik", href: '/pricelist', icon: 'cennik'},
   { name: "Usługi", href: '/services', icon: 'uslugi'},
   { name: "Klienci", href: '/clients', icon: 'klienci' },
   { name: "Wizyty", href: '/visits', icon: 'wizyty' },
-  /* { name: "Statystyki", href: '/statystyki', icon: 'statystyki'}, */
-  { name: "Firma", href: '/my-company', icon: 'firma', permissions: ['ROLE_ADMIN'] },
+  { name: "Firma", href: '/my-company', icon: 'firma', permissions: ['ROLE_ADMIN'], subItems: [
+    { name: "Faktury Kosztowe", module: 'Expenses' },
+    { name: "Pracownicy", module: 'Employees' },
+    { name: "Statystyki", module: 'Statistics' },
+    { name: "Ustawienia firmowe", module: 'CompanySettings' },
+  ]},
   { name: "Ustawienia", href: '/settings', icon: 'ustawienia', permissions: ['ROLE_ADMIN'] },
 ];
 
@@ -28,7 +43,7 @@ export const getIconAlt = (iconName: string): string => {
   return `${iconName}-icon`;
 };
 
-export type SubModuleType = 'Create' | 'History' | 'Common' | 'Stats' | 'Employees' | 'Settings';
+export type SubModuleType = 'Create' | 'History' | 'Expenses' | 'Statistics' | 'Employees' | 'CompanySettings' | 'Products' | 'InventoryReport';
 
 export interface SubMenuItem {
   name: string;
@@ -52,12 +67,27 @@ export const ORDER_SUBMENU_ITEMS: SubMenuItem[] = [
   },
 ];
 
+export const WAREHOUSE_SUBMENU_ITEMS: SubMenuItem[] = [
+  {
+    name: "Produkty",
+    module: 'Products',
+    icon: 'products',
+    alt: 'submenu-products'
+  },
+  {
+    name: "Raporty",
+    module: 'InventoryReport',
+    icon: 'check_list',
+    alt: 'submenu-inventory-report'
+  },
+];
+
 export const BUSINESS_SUBMENU_ITEMS: SubMenuItem[] = [
   { 
-    name: "Ogólne", 
-    module: 'Common', 
+    name: "Faktury Kosztowe", 
+    module: 'Expenses', 
     icon: 'list',
-    alt: 'submenu-common'
+    alt: 'submenu-expenses'
   },
   { 
     name: "Pracownicy", 
@@ -67,15 +97,15 @@ export const BUSINESS_SUBMENU_ITEMS: SubMenuItem[] = [
   },
   { 
     name: "Statystyki", 
-    module: 'Stats', 
+    module: 'Statistics', 
     icon: 'chart',
     alt: 'submenu-stats'
   },
   { 
     name: "Ustawienia", 
-    module: 'Settings', 
+    module: 'CompanySettings', 
     icon: 'ustawienia',
-    alt: 'submenu-settings'
+    alt: 'submenu-companySettings'
   },
 ];
 

@@ -25,7 +25,7 @@ export function EmployeePopup ({
   const [fetchedEmployee, setFetchedEmployee] = useState<Employee | null>(null);
   const [employeeDTO, setEmployeeDTO] = useState<NewEmployee>({
     name: "",
-    secondName: "",
+    lastName: "",
     employmentType: EmploymentType.HALF,
     bonusPercent: 15,
     saleBonusPercent: 30,
@@ -63,7 +63,7 @@ export function EmployeePopup ({
         await EmployeeService.createEmployee(employeeDTO as NewEmployee);
         showAlert(
           `Pracownik ${
-            employeeDTO.name + " " + employeeDTO.secondName
+            employeeDTO.name + " " + employeeDTO.lastName
           } utworzony!`,
           AlertType.SUCCESS
         );

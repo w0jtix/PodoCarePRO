@@ -16,7 +16,7 @@ public class EmployeeDTO {
 
     private Long id;
     private String name;
-    private String secondName;
+    private String lastName;
     private Boolean isDeleted;
     private EmploymentType employmentType;
     private Double bonusPercent;
@@ -25,7 +25,7 @@ public class EmployeeDTO {
     public EmployeeDTO(Employee employee) {
         this.id = employee.getId();
         this.name = employee.getName();
-        this.secondName = employee.getSecondName();
+        this.lastName = employee.getLastName();
         this.isDeleted = employee.getIsDeleted();
         this.employmentType = employee.getEmploymentType();
         this.bonusPercent = employee.getBonusPercent();
@@ -37,7 +37,7 @@ public class EmployeeDTO {
         return Employee.builder()
                 .id(this.id)
                 .name(this.name)
-                .secondName(this.secondName)
+                .lastName(this.lastName)
                 .isDeleted(this.isDeleted != null ? this.isDeleted : false)
                 .employmentType(this.employmentType != null ? this.employmentType : EmploymentType.HALF)
                 .bonusPercent(this.bonusPercent)

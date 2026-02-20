@@ -11,7 +11,7 @@ export interface DigitInputProps {
   className?: string;
 }
 
-export function DigitInput ({ 
+export function DigitInput ({
   value,
   onChange,
   disabled = false,
@@ -21,7 +21,7 @@ export function DigitInput ({
   className = "",
  }: DigitInputProps) {
 
-  const [internalValue, setInternalValue] = useState<string>(() => 
+  const [internalValue, setInternalValue] = useState<string>(() =>
     value !== undefined && value !== null ? String(value) : ""
   );
 

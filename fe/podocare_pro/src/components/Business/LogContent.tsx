@@ -21,10 +21,6 @@ export function LogContent({ log }: LogContentProps) {
     });
   };
 
-  useEffect(() => {
-    console.log(log);
-  }, []);
-
   const parseValue = (value: string | null): Record<string, unknown> => {
     if (!value) return {};
     try {

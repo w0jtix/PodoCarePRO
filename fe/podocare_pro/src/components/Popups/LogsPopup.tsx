@@ -48,7 +48,6 @@ export function LogsPopup({
           setLogs((prev) => [...prev, ...data.content]);
         } else {
           setLogs(data.content);
-          console.log(data.content)
         }
         setPage(pageNum);
         setHasMore(!data.last);

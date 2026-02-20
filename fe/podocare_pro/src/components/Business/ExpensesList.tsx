@@ -66,6 +66,16 @@ export function ExpensesList({
     expense: CompanyExpense
   ): React.ReactNode => {
     switch (attr.name) {
+      case "":
+        return (
+          <img
+            src="src/assets/arrow_down.svg"
+            alt="arrow down"
+            className={`arrow-down ${
+              expandedExpenseIds.includes(expense.id) ? "rotated" : ""
+            }`}
+          />
+        );
 
       case " ":
         const categoryColor = expenseCategoryItems.find(
@@ -94,38 +104,38 @@ export function ExpensesList({
 
       case "Data":
         return (
-          <span className="qv-span ml-1">
+          <span className="qv-span ml-05">
             {formatDate(expense.expenseDate)}
           </span> 
         );
 
       case "Produkty":
-        return <span className="qv-span ml-1">{calculateExpenseItems(expense)}</span>;
+        return <span className="qv-span ml-05">{calculateExpenseItems(expense)}</span>;
 
       case "Netto":
         return (
-          <span className="order-values-lower-font-size ml-1">
+          <span className="order-values-lower-font-size ml-05">
             {expense.totalNet.toFixed(2)}
           </span>
         );
 
       case "VAT":
         return (
-          <span className="order-values-lower-font-size ml-1">
+          <span className="order-values-lower-font-size ml-05">
             {expense.totalVat.toFixed(2)}
           </span>
         );
 
       case "Brutto":
         return (
-          <span className="order-values-lower-font-size ml-1">
+          <span className="order-values-lower-font-size ml-05">
             {expense.totalValue.toFixed(2)}
           </span>
         );
 
       case "Opcje":
         return (
-          <div className="item-list-single-item-action-buttons flex ml-1">
+          <div className="item-list-single-item-action-buttons flex ml-05">
             <ActionButton
               src={"src/assets/edit.svg"}
               alt={"Edytuj Produkt"}

@@ -234,7 +234,7 @@ export function DropdownSelect<T extends DropdownItem>({
                   } ${isItemDisabled(item) ? "disabled" : "pointer"} ${className}`}
                   onClick={() => !isItemDisabled(item) && handleSelect(item)}
                 >
-                  <div className={`dropdown-left flex align-items-center g-05 ml-05 ${className}`}>
+                  <div className={`dropdown-left flex align-items-center g-05  ${className}`}>
                   {item.color && (
                     <span
                       className="color-symbol"

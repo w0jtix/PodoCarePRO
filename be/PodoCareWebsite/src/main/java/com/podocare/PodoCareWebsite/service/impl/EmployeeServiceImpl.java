@@ -49,7 +49,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             }
             Employee savedEmployee = employeeRepo.save(employee.toEntity());
             EmployeeDTO savedDTO = new EmployeeDTO(savedEmployee);
-            auditLogService.logCreate("Employee", savedDTO.getId(), savedDTO.getName() + savedDTO.getSecondName(), savedDTO);
+            auditLogService.logCreate("Employee", savedDTO.getId(), savedDTO.getName() + savedDTO.getLastName(), savedDTO);
             return savedDTO;
         } catch (Exception e) {
             throw new CreationException("Failed to create Employee. Reason: " + e.getMessage(), e);
@@ -64,7 +64,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
             employee.setId(id);
             EmployeeDTO savedDTO = new EmployeeDTO(employeeRepo.save(employee.toEntity()));
-            auditLogService.logUpdate("Employee", id, oldEmployeeSnapshot.getName() + oldEmployeeSnapshot.getSecondName(), oldEmployeeSnapshot, savedDTO);
+            auditLogService.logUpdate("Employee", id, oldEmployeeSnapshot.getName() + oldEmployeeSnapshot.getLastName(), oldEmployeeSnapshot, savedDTO);
             return savedDTO;
         } catch(Exception e) {
             throw new UpdateException("Failed to update Employee, Reason: " + e.getMessage(), e);
@@ -84,7 +84,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             EmployeeDTO employeeSnapshot = new EmployeeDTO(employee);
             employee.softDelete();
             employeeRepo.save(employee);
-            auditLogService.logDelete("Employee", id, employeeSnapshot.getName() + employeeSnapshot.getSecondName(), employeeSnapshot);
+            auditLogService.logDelete("Employee", id, employeeSnapshot.getName() + employeeSnapshot.getLastName(), employeeSnapshot);
         } catch (ResourceNotFoundException | DeletionException e) {
             throw e;
         } catch (Exception e) {

@@ -6,7 +6,7 @@ class OrderService {
   static async getOrderById(orderId: number | string): Promise<Order> {
     return await sendApiRequest<Order>(`orders/${orderId}`, {
       method: "get",
-      errorMessage: "Error fetching orders."
+      errorMessage: "Error fetching Order."
     })
   }
 

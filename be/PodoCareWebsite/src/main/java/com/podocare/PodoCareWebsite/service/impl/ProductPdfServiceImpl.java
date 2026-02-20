@@ -8,7 +8,7 @@ import com.lowagie.text.pdf.PdfPageEventHelper;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
-import com.podocare.PodoCareWebsite.DTO.EmployeeDTO;
+import com.podocare.PodoCareWebsite.DTO.EmployeeSummaryDTO;
 import com.podocare.PodoCareWebsite.DTO.ProductDTO;
 import com.podocare.PodoCareWebsite.DTO.request.ProductFilterDTO;
 import com.podocare.PodoCareWebsite.config.security.services.UserDetailsImpl;
@@ -205,7 +205,7 @@ public class ProductPdfServiceImpl implements ProductPdfService {
     private String getEmployeeName() {
         UserDetailsImpl userDetails = SessionUtils.getUserDetailsFromSession();
         if (userDetails != null && userDetails.getEmployee() != null) {
-            EmployeeDTO employee = userDetails.getEmployee();
+            EmployeeSummaryDTO employee = userDetails.getEmployee();
             return employee.getName();
         }
         return "Unknown";

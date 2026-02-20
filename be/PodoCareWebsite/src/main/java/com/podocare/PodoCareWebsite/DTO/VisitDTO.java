@@ -22,7 +22,7 @@ import static java.util.Objects.nonNull;
 public class VisitDTO {
     private Long id;
     private ClientDTO client;
-    private EmployeeDTO employee;
+    private EmployeeSummaryDTO employee;
     private List<VisitDiscountDTO> serviceDiscounts = new ArrayList<>();
     private Boolean isBoost;
     private Boolean isVip;
@@ -44,7 +44,7 @@ public class VisitDTO {
     public VisitDTO(Visit visit) {
         this.id = visit.getId();
         this.client = new ClientDTO(visit.getClient());
-        this.employee = new EmployeeDTO(visit.getEmployee());
+        this.employee = new EmployeeSummaryDTO(visit.getEmployee());
         this.isBoost = visit.getIsBoost();
         this.isVip = visit.getIsVip();
         this.delayTime = visit.getDelayTime();

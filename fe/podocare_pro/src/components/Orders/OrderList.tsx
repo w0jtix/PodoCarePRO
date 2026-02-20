@@ -114,16 +114,16 @@ export function OrderList({
           <div className="item-list-single-item-action-buttons flex ml-1">
             <ActionButton
               src={"src/assets/edit.svg"}
-              alt={"Edytuj Produkt"}
-              iconTitle={"Edytuj Produkt"}
+              alt={"Edytuj Zamówienie"}
+              iconTitle={"Edytuj Zamówienie"}
               text={"Edytuj"}
               onClick={(e) => handleOnClickEdit(e, order)}
               disableText={true}
             />
             <ActionButton
               src={"src/assets/cancel.svg"}
-              alt={"Usuń Produkt"}
-              iconTitle={"Usuń Produkt"}
+              alt={"Usuń Zamówienie"}
+              iconTitle={"Usuń Zamówienie"}
               text={"Usuń"}
               onClick={(e) => handleOnClickRemove(e, order)}
               disableText={true}

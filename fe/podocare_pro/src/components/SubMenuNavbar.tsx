@@ -1,25 +1,24 @@
 import React from "react";
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 import { ORDER_SUBMENU_ITEMS, getIconPath, getIconAlt, SubModuleType, SubMenuItem } from "../constants/modules";
 
 export interface SubMenuNavbarProps {
   setModuleVisible: (module: SubModuleType) => void;
   className?: string;
-  defaultSelected?: string;
+  activeModule?: SubModuleType;
   submenuItems: SubMenuItem[];
 }
 
-export function SubMenuNavbar ( { 
+export function SubMenuNavbar ( {
   setModuleVisible,
   className = "",
   submenuItems,
-  defaultSelected = submenuItems[0].name,
+  activeModule,
 }: SubMenuNavbarProps ) {
-  const [selectedItem, setSelectedItem] = useState<string>(defaultSelected);
+  const resolvedActive = activeModule || submenuItems[0].module;
 
   const handleItemClick = useCallback((item: SubMenuItem) => {
     setModuleVisible(item.module);
-    setSelectedItem(item.name);
   }, [setModuleVisible])
 
 
@@ -29,7 +28,7 @@ export function SubMenuNavbar ( {
         <div 
           key={menuItem.name} 
           className={`submenu-navbar-button-div relative width-fit-content ${
-            selectedItem === menuItem.name ? "selected" : ""
+            resolvedActive === menuItem.module ? "selected" : ""
         }`}>
           <button 
           className="submenu-navbar-menuItem-button relative height-max pointer border-none flex align-items-center justify-center"

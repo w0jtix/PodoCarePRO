@@ -1,6 +1,5 @@
 package com.podocare.PodoCareWebsite.controller;
 
-import com.podocare.PodoCareWebsite.DTO.EmployeeDTO;
 import com.podocare.PodoCareWebsite.DTO.request.auth.ChangePasswordRequest;
 import com.podocare.PodoCareWebsite.DTO.request.auth.ForceChangePasswordRequest;
 import com.podocare.PodoCareWebsite.DTO.request.auth.LoginRequest;
@@ -11,7 +10,6 @@ import com.podocare.PodoCareWebsite.config.security.jwt.JwtUtils;
 import com.podocare.PodoCareWebsite.config.security.services.UserDetailsImpl;
 import com.podocare.PodoCareWebsite.exceptions.CreationException;
 import com.podocare.PodoCareWebsite.exceptions.ResourceNotFoundException;
-import com.podocare.PodoCareWebsite.model.Employee;
 import com.podocare.PodoCareWebsite.model.Role;
 import com.podocare.PodoCareWebsite.model.User;
 import com.podocare.PodoCareWebsite.model.constants.RoleType;

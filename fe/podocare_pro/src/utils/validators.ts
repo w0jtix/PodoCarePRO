@@ -19,6 +19,7 @@ import { UsageRecordItem } from "../models/usage-record";
 import { CompanyExpense, CompanyExpenseItem, NewCompanyExpense, NewCompanyExpenseItem } from "../models/expense";
 import { NewStatSettings, StatSettings } from "../models/business_settings";
 import { RegisterRequest } from "../models/register";
+import { InventoryReportItem, NewInventoryReportItem } from "../models/inventory_report";
 
   export function validateLoginForm(
     username: string,
@@ -323,7 +324,6 @@ import { RegisterRequest } from "../models/register";
     )) {
       return "Brak pełnych informacji!";
     }
-    console.log(signupRequest)
     if(signupRequest.username.trim().length <= 3) {
       return "Nazwa Użytkownika za krótka! (3+)"
     }
@@ -709,19 +709,19 @@ import { RegisterRequest } from "../models/register";
     selectedEmployee: Employee | null | undefined,
     action: Action,
   ): string | null {
-    if(!employeeForm.name || !employeeForm.secondName) {
+    if(!employeeForm.name || !employeeForm.lastName) {
       return "Brak pełnych informacji!";
     }
     if(employeeForm.name && employeeForm.name.trim().length <= 2) {
       return "Imię za krótkie! (2+)"
     }
-    if(employeeForm.secondName && employeeForm.secondName.trim().length <= 2) {
+    if(employeeForm.lastName && employeeForm.lastName.trim().length <= 2) {
       return "Nazwisko za krótkie! (2+)"
     }
     if(action === Action.EDIT && selectedEmployee) {
       const noChangesDetected = 
       employeeForm.name === selectedEmployee.name && 
-      employeeForm.secondName === selectedEmployee.secondName &&
+      employeeForm.lastName === selectedEmployee.lastName &&
       employeeForm.employmentType === selectedEmployee.employmentType &&
       employeeForm.bonusPercent === selectedEmployee.bonusPercent &&
       employeeForm.saleBonusPercent === selectedEmployee.saleBonusPercent;
@@ -799,6 +799,39 @@ const areOrderProductsEqual = (opList1: OrderProduct[], opList2: NewOrderProduct
       );
     });
   };
+
+  export function validateInventoryReportForm(
+    inventoryReportItems: InventoryReportItem[] | NewInventoryReportItem[],
+    action: Action,
+    selectedItems: InventoryReportItem[] | null,
+  ): string | null {
+    if (inventoryReportItems.length === 0) {
+      return "Dodaj przynajmniej jeden produkt";
+    }
+    const hasUnchanged = inventoryReportItems.some(
+      (item) => item.supplyBefore === item.supplyAfter
+    );
+    if (hasUnchanged) {
+      return "Jeden z produktów ma te same wartosci przed i po!";
+    }
+    if (action === Action.EDIT && selectedItems) {
+      const hasChanges =
+        inventoryReportItems.length !== selectedItems.length ||
+        inventoryReportItems.some((item, index) => {
+          const selected = selectedItems[index];
+          if (!selected) return true;
+          return (
+            item.product.id !== selected.product.id ||
+            item.supplyBefore !== selected.supplyBefore ||
+            item.supplyAfter !== selected.supplyAfter
+          );
+        });
+      if (!hasChanges) {
+        return "Brak zmian!";
+      }
+    }
+    return null;
+  }
 
   export function validateUsageRecordsForm(
     usageRecordItems: UsageRecordItem[],

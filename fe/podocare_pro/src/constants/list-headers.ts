@@ -97,6 +97,22 @@ export const DEBTS_BY_VISIT_LIST_ATTRIBUTES: ListAttribute[] = [
   { name: "Wartość", width: "25%", justify: "center" },
 ]
 
+export const INVENTORY_REPORTS_LIST_ATTRIBUTES: ListAttribute[] = [
+  { name: "", width: "2%", justify: "end" },
+  { name: "Data", width: "8%", justify: "center" },
+  { name: "Użytkownik", width: "18%", justify: "center" },
+  { name: "  ", width: "54%", justify: "center" },
+  { name: "Zmiana", width: "10%", justify: "center" },
+  { name: "Opcje", width: "8%", justify: "center" },
+]
+
+export const INVENTORY_REPORTS_ITEM_LIST_ATTRIBUTES: ListAttribute[] = [
+  { name: " ", width: "4%", justify: "center" },
+  { name: "Produkt", width: "15%", justify: "start" },
+  { name: "Przed / Po", width: "71%", justify: "start" },
+  { name: "Zmiana", width: "10%", justify: "center" },
+]
+
 export const AUDIT_LOG_LIST_ATTRIBUTES: ListAttribute[] = [
   { name: "", width: "4%", justify: "center" },
   { name: " ", width: "5%", justify: "start" },
@@ -338,8 +354,9 @@ export const USAGE_RECORDS_LIST_ATTRIBUTES: ListAttribute[] = [
 ]
 
 export const EXPENSE_HISTORY_ATTRIBUTES: ListAttribute[] = [
-  { name: " ", width: "5%", justify: "center" },
-  { name: "Dostawca", width: "51%", justify: "flex-start" },
+  { name: "", width: "3%", justify: "center" },
+  { name: " ", width: "2%", justify: "start" },
+  { name: "Dostawca", width: "49%", justify: "flex-start" },
   { name: "Data", width: "16%", justify: "center" },
   { name: "Produkty", width: "8%", justify: "center" },
   { name: "Netto", width: "5%", justify: "center" },

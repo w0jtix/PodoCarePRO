@@ -19,7 +19,7 @@ public class UsageRecordDTO {
 
     private Long id;
     private ProductDTO product;
-    private EmployeeDTO employee;
+    private EmployeeSummaryDTO employee;
     private LocalDate usageDate;
     private Integer quantity;
     private UsageReason usageReason;
@@ -29,7 +29,7 @@ public class UsageRecordDTO {
             return;
         this.id = usageRecord.getId();
         this.product = new ProductDTO(usageRecord.getProduct());
-        this.employee = new EmployeeDTO(usageRecord.getEmployee());
+        this.employee = new EmployeeSummaryDTO(usageRecord.getEmployee());
         this.usageDate = usageRecord.getUsageDate();
         this.quantity = usageRecord.getQuantity();
         this.usageReason = usageRecord.getUsageReason();

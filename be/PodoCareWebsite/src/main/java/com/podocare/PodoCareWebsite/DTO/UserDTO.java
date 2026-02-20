@@ -22,7 +22,7 @@ public class UserDTO {
     private String username;
     private String avatar;
     private List<RoleDTO> roles = new ArrayList<>();
-    private EmployeeDTO employee;
+    private EmployeeSummaryDTO employee;
 
     public UserDTO(User user) {
         this.id = user.getId();
@@ -33,7 +33,7 @@ public class UserDTO {
                     .map(RoleDTO::new)
                     .collect(Collectors.toList());
         if(nonNull(user.getEmployee()))
-            this.employee = new EmployeeDTO(user.getEmployee());
+            this.employee = new EmployeeSummaryDTO(user.getEmployee());
     }
 
     public User toEntity() {

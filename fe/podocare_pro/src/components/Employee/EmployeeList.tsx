@@ -48,7 +48,7 @@ export function EmployeeList({
         return ` `;
 
       case "Imię Nazwisko":
-        return <span className="qv-span">{item.name + " " + item.secondName}</span>;
+        return <span className="qv-span">{item.name + " " + item.lastName}</span>;
 
         case "Użytkownik":
           const user = findUserByEmployeeId(item.id);
