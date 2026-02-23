@@ -66,7 +66,9 @@ public class EmployeeServiceImpl implements EmployeeService {
             EmployeeDTO savedDTO = new EmployeeDTO(employeeRepo.save(employee.toEntity()));
             auditLogService.logUpdate("Employee", id, oldEmployeeSnapshot.getName() + oldEmployeeSnapshot.getLastName(), oldEmployeeSnapshot, savedDTO);
             return savedDTO;
-        } catch(Exception e) {
+        } catch (ResourceNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
             throw new UpdateException("Failed to update Employee, Reason: " + e.getMessage(), e);
         }
     }

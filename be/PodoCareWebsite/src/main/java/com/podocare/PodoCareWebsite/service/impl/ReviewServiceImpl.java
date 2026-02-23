@@ -76,6 +76,8 @@ public class ReviewServiceImpl implements ReviewService {
             ReviewDTO savedDTO = new ReviewDTO(reviewRepo.save(review.toEntity()));
             auditLogService.logUpdate("Review", id,"Opinia Klienta: "+ oldReviewSnapshot.getClient().getFirstName() + oldReviewSnapshot.getClient().getLastName(), oldReviewSnapshot, savedDTO);
             return savedDTO;
+        } catch (ResourceNotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new UpdateException("Failed to update Review. Reason: " + e.getMessage(), e);
         }
@@ -87,6 +89,8 @@ public class ReviewServiceImpl implements ReviewService {
             ReviewDTO reviewSnapshot = getReviewById(id);
             reviewRepo.deleteById(id);
             auditLogService.logDelete("Review", id,"Opinia Klienta: "+ reviewSnapshot.getClient().getFirstName() + reviewSnapshot.getClient().getLastName(), reviewSnapshot);
+        } catch (ResourceNotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new DeletionException("Failed to delete Review. Reason: "+ e.getMessage(), e);
         }

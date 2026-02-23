@@ -86,6 +86,8 @@ public class ClientDebtServiceImpl implements ClientDebtService {
 
             auditLogService.logUpdate("ClientDebt", id,"Dług Klienta: " + oldDebtSnapshot.getClient().getFirstName() + oldDebtSnapshot.getClient().getLastName(), oldDebtSnapshot, savedDebt);
             return savedDebt;
+        } catch (ResourceNotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new UpdateException("Failed to update ClientDebt, Reason: " + e.getMessage(), e);
         }
@@ -98,6 +100,8 @@ public class ClientDebtServiceImpl implements ClientDebtService {
             ClientDebtDTO debtSnapshot = getDebtById(id);
             debtRepo.deleteById(id);
             auditLogService.logDelete("ClientDebt", id,"Dług Klienta: " + debtSnapshot.getClient().getFirstName() + debtSnapshot.getClient().getLastName(),  debtSnapshot);
+        } catch (ResourceNotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new DeletionException("Failed to delete ClientDebt, Reason: " + e.getMessage(), e);
         }

@@ -25,6 +25,8 @@ public class StatSettingsServiceImpl implements StatSettingsService {
 
             settings.setId(currentSettings.getId());
             return new StatSettingsDTO(settingsRepo.save(settings.toEntity()));
+        } catch (ResourceNotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new UpdateException("Failed to update Stat Settings. Reason: " + e.getMessage(), e);
         }

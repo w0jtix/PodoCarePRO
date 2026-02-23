@@ -136,6 +136,8 @@ public class VisitServiceImpl implements VisitService {
             VisitDTO savedDTO = new VisitDTO(updatedVisit);
             auditLogService.logCreate("Visit", savedDTO.getId(), "Wizyta Klienta: " + savedDTO.getClient().getFirstName() + savedDTO.getClient().getLastName(), savedDTO);
             return savedDTO;
+        } catch (ResourceNotFoundException | IllegalStateException e) {
+            throw e;
         } catch (Exception e) {
             throw new CreationException("Failed to create Visit. Reason: " + e.getMessage(), e);
         }
@@ -208,6 +210,8 @@ public class VisitServiceImpl implements VisitService {
             removePayments(existingVisit);
             visitRepo.deleteById(id);
             auditLogService.logDelete("Visit", id, "Wizyta Klienta: " + visitSnapshot.getClient().getFirstName() + visitSnapshot.getClient().getLastName(), visitSnapshot);
+        } catch (ResourceNotFoundException | IllegalStateException e) {
+            throw e;
         } catch (Exception e) {
             throw new DeletionException("Failed to delete Visit, Reason: " + e.getMessage(), e);
         }

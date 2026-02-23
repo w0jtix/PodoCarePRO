@@ -2,6 +2,7 @@ package com.podocare.PodoCareWebsite.service.impl;
 
 import com.podocare.PodoCareWebsite.DTO.BrandDTO;
 import com.podocare.PodoCareWebsite.DTO.SupplierDTO;
+import com.podocare.PodoCareWebsite.exceptions.ConflictException;
 import com.podocare.PodoCareWebsite.exceptions.CreationException;
 import com.podocare.PodoCareWebsite.exceptions.DeletionException;
 import com.podocare.PodoCareWebsite.exceptions.ResourceNotFoundException;
@@ -44,11 +45,13 @@ public class SupplierServiceImpl implements SupplierService {
     public SupplierDTO createSupplier(SupplierDTO supplier) {
         try{
             if (supplierAlreadyExists(supplier)) {
-                throw new CreationException("Supplier already exists: " + supplier.getName());
+                throw new ConflictException("Supplier already exists: " + supplier.getName());
             }
             SupplierDTO savedDTO = new SupplierDTO(supplierRepo.save(supplier.toEntity()));
             auditLogService.logCreate("Supplier", savedDTO.getId(), savedDTO.getName(), savedDTO);
             return savedDTO;
+        } catch (ConflictException e) {
+            throw e;
         } catch (Exception e) {
             throw new CreationException("Failed to create Supplier. Reason: " + e.getMessage(), e);
         }
@@ -65,6 +68,8 @@ public class SupplierServiceImpl implements SupplierService {
             SupplierDTO savedDTO = new SupplierDTO(supplierRepo.save(supplier.toEntity()));
             auditLogService.logUpdate("Supplier", id, oldSupplierSnapshot.getName(), oldSupplierSnapshot, savedDTO);
             return savedDTO;
+        } catch (ResourceNotFoundException | ConflictException e) {
+            throw e;
         } catch (Exception e) {
             throw new UpdateException("Failed to update Supplier, Reason: " + e.getMessage(), e);
         }
@@ -77,6 +82,8 @@ public class SupplierServiceImpl implements SupplierService {
             SupplierDTO supplierSnapshot = getSupplierById(id);
             supplierRepo.deleteById(id);
             auditLogService.logDelete("Supplier", id, supplierSnapshot.getName(), supplierSnapshot);
+        } catch (ResourceNotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new DeletionException("Failed to delete Supplier, Reason: " + e.getMessage(), e);
         }
@@ -92,7 +99,7 @@ public class SupplierServiceImpl implements SupplierService {
         );
 
         if (duplicate.isPresent() && !duplicate.get().getId().equals(currentId)) {
-            throw new UpdateException("Supplier with provided details already exists.");
+            throw new ConflictException("Supplier with provided details already exists.");
         }
     }
 }

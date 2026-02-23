@@ -36,6 +36,8 @@ public class AppSettingsServiceImpl implements AppSettingsService {
 
             auditLogService.logUpdate("AppSettings", savedSettings.getId(),null, oldSettings, savedSettings);
             return savedSettings;
+        } catch (ResourceNotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new UpdateException("Failed to update Settings. Reason: " + e.getMessage(), e);
         }

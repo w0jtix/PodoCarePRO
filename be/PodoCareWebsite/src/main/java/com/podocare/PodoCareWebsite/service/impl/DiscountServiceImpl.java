@@ -80,7 +80,9 @@ public class DiscountServiceImpl implements DiscountService {
             DiscountDTO savedDiscount = new DiscountDTO(updatedDiscount);
             auditLogService.logUpdate("Discount", id, "Zniżka: " + oldDiscountSnapshot.getName(), oldDiscountSnapshot, savedDiscount);
             return savedDiscount;
-        } catch(Exception e) {
+        } catch (ResourceNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
             throw new UpdateException("Failed to update Discount. Reason: " + e.getMessage(), e);
         }
     }
@@ -99,6 +101,8 @@ public class DiscountServiceImpl implements DiscountService {
             discountRepo.deleteById(id);
             logDiscountClientChanges(id, discountSnapshot.getName(), clientsWithDiscountId, null);
             auditLogService.logDelete("Discount", id, "Zniżka: " + discountSnapshot.getName(), discountSnapshot);
+        } catch (ResourceNotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new DeletionException("Failed to delete Discount, Reason: " + e.getMessage(), e);
         }

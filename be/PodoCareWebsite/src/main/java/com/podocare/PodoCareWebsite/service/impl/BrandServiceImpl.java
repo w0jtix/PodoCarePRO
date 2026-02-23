@@ -3,6 +3,7 @@ package com.podocare.PodoCareWebsite.service.impl;
 import com.podocare.PodoCareWebsite.DTO.BrandDTO;
 import com.podocare.PodoCareWebsite.DTO.ProductDTO;
 import com.podocare.PodoCareWebsite.DTO.request.KeywordFilterDTO;
+import com.podocare.PodoCareWebsite.exceptions.ConflictException;
 import com.podocare.PodoCareWebsite.exceptions.CreationException;
 import com.podocare.PodoCareWebsite.exceptions.DeletionException;
 import com.podocare.PodoCareWebsite.exceptions.ResourceNotFoundException;
@@ -51,11 +52,13 @@ public class BrandServiceImpl implements BrandService {
     public BrandDTO createBrand(BrandDTO brand) {
         try{
             if (brandAlreadyExists(brand)) {
-                throw new CreationException("Brand already exists: " + brand.getName());
+                throw new ConflictException("Brand already exists: " + brand.getName());
             }
             BrandDTO savedBrand = new BrandDTO(brandRepo.save(brand.toEntity()));
             auditLogService.logCreate("Brand", savedBrand.getId(), savedBrand.getName(), savedBrand);
             return savedBrand;
+        } catch (ConflictException e) {
+            throw e;
         } catch (Exception e) {
             throw new CreationException("Failed to create Brand. Reason: " + e.getMessage(), e);
         }
@@ -81,6 +84,8 @@ public class BrandServiceImpl implements BrandService {
 
             auditLogService.logUpdate("Brand", id, oldBrandSnapshot.getName(), oldBrandSnapshot, savedBrand);
             return savedBrand;
+        } catch (ResourceNotFoundException | ConflictException e) {
+            throw e;
         } catch (Exception e) {
             throw new UpdateException("Failed to update Brand, Reason: " + e.getMessage(), e);
         }
@@ -93,6 +98,8 @@ public class BrandServiceImpl implements BrandService {
             BrandDTO brandSnapshot = getBrandById(id);
             brandRepo.deleteById(id);
             auditLogService.logDelete("Brand", id, brandSnapshot.getName(), brandSnapshot);
+        } catch (ResourceNotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new DeletionException("Failed to delete Brand, Reason: " + e.getMessage(), e);
         }
@@ -108,7 +115,7 @@ public class BrandServiceImpl implements BrandService {
         );
 
         if (duplicate.isPresent() && !duplicate.get().getId().equals(currentId)) {
-            throw new UpdateException("Brand with provided details already exists.");
+            throw new ConflictException("Brand with provided details already exists.");
         }
     }
 }

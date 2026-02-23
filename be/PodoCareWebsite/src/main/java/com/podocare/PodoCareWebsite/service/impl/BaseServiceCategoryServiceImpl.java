@@ -1,6 +1,7 @@
 package com.podocare.PodoCareWebsite.service.impl;
 
 import com.podocare.PodoCareWebsite.DTO.BaseServiceCategoryDTO;
+import com.podocare.PodoCareWebsite.exceptions.ConflictException;
 import com.podocare.PodoCareWebsite.exceptions.CreationException;
 import com.podocare.PodoCareWebsite.exceptions.DeletionException;
 import com.podocare.PodoCareWebsite.exceptions.ResourceNotFoundException;
@@ -45,11 +46,13 @@ public class BaseServiceCategoryServiceImpl implements BaseServiceCategoryServic
     public BaseServiceCategoryDTO createCategory(BaseServiceCategoryDTO category) {
         try{
             if(serviceCategoryRepo.existsByName(category.getName())) {
-                throw new CreationException("Category already exists: " + category.getName());
+                throw new ConflictException("Category already exists: " + category.getName());
             }
             BaseServiceCategoryDTO savedCategory = new BaseServiceCategoryDTO(serviceCategoryRepo.save(category.toEntity()));
             auditLogService.logCreate("BaseServiceCategory", savedCategory.getId(), savedCategory.getName(), savedCategory);
             return savedCategory;
+        } catch (ConflictException e) {
+            throw e;
         } catch (Exception e) {
             throw new CreationException("Failed to create Category. Reason: " + e.getMessage(), e);
         }
@@ -67,6 +70,8 @@ public class BaseServiceCategoryServiceImpl implements BaseServiceCategoryServic
 
             auditLogService.logUpdate("BaseServiceCategory", id, oldCategorySnapshot.getName(), oldCategorySnapshot, savedCategory);
             return savedCategory;
+        } catch (ResourceNotFoundException | ConflictException e) {
+            throw e;
         } catch (Exception e) {
             throw new UpdateException("Failed to update Category, Reason: " + e.getMessage(), e);
         }
@@ -114,7 +119,7 @@ public class BaseServiceCategoryServiceImpl implements BaseServiceCategoryServic
         );
 
         if (duplicate.isPresent() && !duplicate.get().getId().equals(currentId)) {
-            throw new UpdateException("Category with provided details already exists.");
+            throw new ConflictException("Category with provided details already exists.");
         }
     }
 }

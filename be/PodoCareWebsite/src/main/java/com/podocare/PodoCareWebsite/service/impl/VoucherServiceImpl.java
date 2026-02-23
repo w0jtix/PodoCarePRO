@@ -87,6 +87,8 @@ public class VoucherServiceImpl  implements VoucherService {
             VoucherDTO savedDTO = new VoucherDTO(voucherRepo.save(voucher.toEntity()));
             auditLogService.logUpdate("Voucher", id, "Voucher Klienta: " + oldVoucherSnapshot.getClient().getFirstName() + oldVoucherSnapshot.getClient().getLastName(), oldVoucherSnapshot, savedDTO);
             return savedDTO;
+        } catch (ResourceNotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new UpdateException("Failed to update Voucher. Reason: " + e.getMessage(), e);
         }
@@ -98,6 +100,8 @@ public class VoucherServiceImpl  implements VoucherService {
             VoucherDTO voucherSnapshot = getVoucherById(id);
             voucherRepo.deleteById(id);
             auditLogService.logDelete("Voucher", id, "Voucher Klienta: " + voucherSnapshot.getClient().getFirstName() + voucherSnapshot.getClient().getLastName(), voucherSnapshot);
+        } catch (ResourceNotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new DeletionException("Failed to delete Voucher. Reason: "+ e.getMessage(), e);
         }

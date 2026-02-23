@@ -5,6 +5,7 @@ import com.podocare.PodoCareWebsite.DTO.BaseServiceDTO;
 import com.podocare.PodoCareWebsite.DTO.BaseServiceVariantDTO;
 import com.podocare.PodoCareWebsite.DTO.request.KeywordFilterDTO;
 import com.podocare.PodoCareWebsite.DTO.request.ServiceFilterDTO;
+import com.podocare.PodoCareWebsite.exceptions.ConflictException;
 import com.podocare.PodoCareWebsite.exceptions.CreationException;
 import com.podocare.PodoCareWebsite.exceptions.DeletionException;
 import com.podocare.PodoCareWebsite.exceptions.ResourceNotFoundException;
@@ -60,11 +61,13 @@ public class BaseServiceServiceImpl implements BaseServiceService {
     public BaseServiceDTO createBaseService(BaseServiceDTO service) {
         try{
             if(baseServiceRepo.existsByName(service.getName())) {
-                throw new CreationException("Service already exists: " + service.getName());
+                throw new ConflictException("Service already exists: " + service.getName());
             }
             BaseServiceDTO savedService = new BaseServiceDTO(baseServiceRepo.save(service.toEntity()));
             auditLogService.logCreate("BaseService", savedService.getId(), savedService.getName(), savedService);
             return savedService;
+        } catch (ConflictException e) {
+            throw e;
         } catch (Exception e) {
             throw new CreationException("Failed to create Service. Reason: " + e.getMessage(), e);
         }
@@ -149,7 +152,7 @@ public class BaseServiceServiceImpl implements BaseServiceService {
         Optional<BaseService> duplicate = baseServiceRepo.findByName(serviceDTO.getName());
 
         if(duplicate.isPresent() && !duplicate.get().getId().equals(currentId)) {
-            throw new UpdateException("Service with provided details already exsits.");
+            throw new ConflictException("Service with provided details already exists.");
         }
     }
 }

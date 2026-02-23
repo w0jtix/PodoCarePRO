@@ -3,11 +3,11 @@ package com.podocare.PodoCareWebsite.DTO;
 import com.podocare.PodoCareWebsite.model.Voucher;
 import com.podocare.PodoCareWebsite.model.constants.VoucherStatus;
 import lombok.AllArgsConstructor;
+
+import java.time.LocalDate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -28,7 +28,7 @@ public class VoucherDTO {
         this.issueDate = voucher.getIssueDate();
         this.expiryDate = voucher.getExpiryDate();
         this.client = new ClientDTO(voucher.getClient());
-        this.status = recalculateStatus(voucher);
+        this.status = voucher.getStatus();
     }
     public VoucherDTO(Voucher voucher, Long sourceId) {
         this.id = voucher.getId();
@@ -36,31 +36,11 @@ public class VoucherDTO {
         this.issueDate = voucher.getIssueDate();
         this.expiryDate = voucher.getExpiryDate();
         this.client = new ClientDTO(voucher.getClient());
-        this.status = recalculateStatus(voucher);
+        this.status = voucher.getStatus();
         this.purchaseVisitId = sourceId;
-    }
-    //for development -> prod  will use scheduler in service
-    private VoucherStatus recalculateStatus(Voucher voucher) {
-        if (voucher.getStatus() == VoucherStatus.USED) {
-            return VoucherStatus.USED;
-        }
-        if (voucher.getExpiryDate() != null && voucher.getExpiryDate().isBefore(LocalDate.now())) {
-            return VoucherStatus.EXPIRED;
-        }
-        return VoucherStatus.ACTIVE;
     }
 
     public Voucher toEntity() {
-
-        VoucherStatus finalStatus = this.status;
-
-        if (finalStatus != VoucherStatus.USED) {
-            if (this.expiryDate != null && this.expiryDate.isBefore(LocalDate.now())) {
-                finalStatus = VoucherStatus.EXPIRED;
-            } else {
-                finalStatus = VoucherStatus.ACTIVE;
-            }
-        }
 
         return Voucher.builder()
                 .id(this.id)
@@ -68,7 +48,7 @@ public class VoucherDTO {
                 .issueDate(this.issueDate)
                 .expiryDate(this.expiryDate)
                 .client(this.client != null ? this.client.toEntity() : null)
-                .status(finalStatus)
+                .status(this.status)
                 .build();
     }
 }

@@ -63,6 +63,8 @@ public class ClientNoteServiceImpl implements ClientNoteService {
             ClientNoteDTO savedNote = new ClientNoteDTO(clientNoteRepo.save(clientNoteDTO.toEntity()));
             auditLogService.logUpdate("ClientNote", id, oldNoteSnapshot.getClient().getFirstName() + oldNoteSnapshot.getClient().getLastName(), oldNoteSnapshot, savedNote);
             return savedNote;
+        } catch (ResourceNotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new UpdateException("Failed to update ClientNote. Reason: " + e.getMessage(), e);
         }
@@ -75,6 +77,8 @@ public class ClientNoteServiceImpl implements ClientNoteService {
             ClientNoteDTO noteSnapshot = getClientNoteById(id);
             clientNoteRepo.deleteById(id);
             auditLogService.logDelete("ClientNote", id, noteSnapshot.getClient().getFirstName() + noteSnapshot.getClient().getLastName(), noteSnapshot);
+        } catch (ResourceNotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new DeletionException("Failed to delete ClientNote. Reason: " + e.getMessage(), e);
         }

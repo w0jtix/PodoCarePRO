@@ -2,6 +2,7 @@ package com.podocare.PodoCareWebsite.service.impl;
 
 import com.podocare.PodoCareWebsite.DTO.ProductDTO;
 import com.podocare.PodoCareWebsite.DTO.request.ProductFilterDTO;
+import com.podocare.PodoCareWebsite.exceptions.ConflictException;
 import com.podocare.PodoCareWebsite.exceptions.CreationException;
 import com.podocare.PodoCareWebsite.exceptions.DeletionException;
 import com.podocare.PodoCareWebsite.exceptions.ResourceNotFoundException;
@@ -92,12 +93,14 @@ public class ProductServiceImpl implements ProductService {
                     auditLogService.logCreate("Product", restoredDTO.getId(), restoredDTO.getName(), restoredDTO);
                     return restoredDTO;
                 } else {
-                    throw new CreationException("Product already exists: " + product.getName());
+                    throw new ConflictException("Product already exists: " + product.getName());
                 }
             }
             ProductDTO savedDTO = new ProductDTO(productRepo.save(product.toEntity()));
             auditLogService.logCreate("Product", savedDTO.getId(), savedDTO.getName(), savedDTO);
             return savedDTO;
+        } catch (ConflictException e) {
+            throw e;
         } catch (Exception e) {
             throw new CreationException("Failed to create Product. Reason: " + e.getMessage(), e);
         }
@@ -122,6 +125,8 @@ public class ProductServiceImpl implements ProductService {
             ProductDTO savedDTO = new ProductDTO(productRepo.save(product.toEntity()));
             auditLogService.logUpdate("Product", id, oldProductSnapshot.getName(), oldProductSnapshot, savedDTO);
             return savedDTO;
+        } catch (ResourceNotFoundException | ConflictException e) {
+            throw e;
         } catch (Exception e) {
             throw new UpdateException("Failed to update Product, Reason: " + e.getMessage(), e);
         }
@@ -160,9 +165,9 @@ public class ProductServiceImpl implements ProductService {
 
         if (duplicate.isPresent() && !duplicate.get().getId().equals(currentId)) {
             if (duplicate.get().getIsDeleted()) {
-                throw new UpdateException("Product with provided details already exists and is SoftDeleted.");
+                throw new ConflictException("Product with provided details already exists and is SoftDeleted.");
             } else {
-                throw new UpdateException("Product with provided details already exists.");
+                throw new ConflictException("Product with provided details already exists.");
             }
         }
     }

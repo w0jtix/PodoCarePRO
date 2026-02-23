@@ -2,6 +2,7 @@ package com.podocare.PodoCareWebsite.service.impl;
 
 import com.podocare.PodoCareWebsite.DTO.BrandDTO;
 import com.podocare.PodoCareWebsite.DTO.ProductCategoryDTO;
+import com.podocare.PodoCareWebsite.exceptions.ConflictException;
 import com.podocare.PodoCareWebsite.exceptions.CreationException;
 import com.podocare.PodoCareWebsite.exceptions.DeletionException;
 import com.podocare.PodoCareWebsite.exceptions.ResourceNotFoundException;
@@ -44,11 +45,13 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     public ProductCategoryDTO createCategory(ProductCategoryDTO category) {
         try{
             if(categoryAlreadyExists(category)) {
-                throw new CreationException("Category already exists: " + category.getName());
+                throw new ConflictException("Category already exists: " + category.getName());
             }
             ProductCategoryDTO savedDTO = new ProductCategoryDTO(productCategoryRepo.save(category.toEntity()));
             auditLogService.logCreate("ProductCategory", savedDTO.getId(), savedDTO.getName(), savedDTO);
             return savedDTO;
+        } catch (ConflictException e) {
+            throw e;
         } catch (Exception e) {
             throw new CreationException("Failed to create Category. Reason: " + e.getMessage(), e);
         }
@@ -65,6 +68,8 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
             ProductCategoryDTO savedDTO = new ProductCategoryDTO(productCategoryRepo.save(category.toEntity()));
             auditLogService.logUpdate("ProductCategory", id, oldCategorySnapshot.getName(), oldCategorySnapshot, savedDTO);
             return savedDTO;
+        } catch (ResourceNotFoundException | ConflictException e) {
+            throw e;
         } catch (Exception e) {
             throw new UpdateException("Failed to update Category, Reason: " + e.getMessage(), e);
         }
@@ -77,6 +82,8 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
             ProductCategoryDTO categorySnapshot = getCategoryById(id);
             productCategoryRepo.deleteById(id);
             auditLogService.logDelete("ProductCategory", id, categorySnapshot.getName(), categorySnapshot);
+        } catch (ResourceNotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new DeletionException("Failed to delete Category, Reason: " + e.getMessage(), e);
         }
@@ -92,7 +99,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         );
 
         if (duplicate.isPresent() && !duplicate.get().getId().equals(currentId)) {
-            throw new UpdateException("Category with provided details already exists.");
+            throw new ConflictException("Category with provided details already exists.");
         }
     }
 }

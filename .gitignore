@@ -10,3 +10,6 @@
 /be/.idea/
 /be/logs/
 /be/PodoCareWebsite/logs/*.log
+
+# Claude Code
+CLAUDE.md

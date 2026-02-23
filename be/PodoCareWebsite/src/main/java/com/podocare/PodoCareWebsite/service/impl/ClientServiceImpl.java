@@ -75,6 +75,8 @@ public class ClientServiceImpl implements ClientService {
             Client saved = clientRepo.save(clientDTO.toEntity());
             auditLogService.logUpdate("Client", id, oldClientSnapshot.getFirstName() + oldClientSnapshot.getLastName(), oldClientSnapshot, new ClientDTO(saved));
             return new ClientDTO(saved);
+        } catch (ResourceNotFoundException e) {
+            throw e;
         } catch(Exception e) {
             throw new UpdateException("Failed to update Client. Reason: " + e.getMessage(), e);
         }
