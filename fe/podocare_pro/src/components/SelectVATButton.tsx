@@ -67,7 +67,7 @@ export function SelectVATButton({
   return (
     <div className="vat-select-container relative inline-block" ref={dropdownRef}>
       <button 
-        className={`vat-select-button flex align-items-center justify-center g-5px pointer transparent ${className}`} 
+        className={`vat-select-button flex align-items-center justify-center g-5px  transparent ${className} ${disabled ? "not-allowed" : "pointer"}`} 
         onClick={toggleDropdown}
         >
         <a className="vat-button-selection flex justify-center align-items-center">

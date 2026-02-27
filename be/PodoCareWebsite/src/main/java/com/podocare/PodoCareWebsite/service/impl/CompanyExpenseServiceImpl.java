@@ -3,15 +3,17 @@ package com.podocare.PodoCareWebsite.service.impl;
 import com.podocare.PodoCareWebsite.DTO.CompanyExpenseDTO;
 import com.podocare.PodoCareWebsite.DTO.CompanyExpenseItemDTO;
 import com.podocare.PodoCareWebsite.DTO.request.CompanyExpenseFilterDTO;
+import com.podocare.PodoCareWebsite.exceptions.ConflictException;
 import com.podocare.PodoCareWebsite.exceptions.CreationException;
 import com.podocare.PodoCareWebsite.exceptions.DeletionException;
 import com.podocare.PodoCareWebsite.exceptions.ResourceNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.UpdateException;
-import com.podocare.PodoCareWebsite.model.CompanyExpense;
-import com.podocare.PodoCareWebsite.model.CompanyExpenseItem;
+import com.podocare.PodoCareWebsite.model.*;
 import com.podocare.PodoCareWebsite.model.constants.ExpenseCategory;
+import com.podocare.PodoCareWebsite.model.constants.VatRate;
 import com.podocare.PodoCareWebsite.repo.CompanyExpenseItemRepo;
 import com.podocare.PodoCareWebsite.repo.CompanyExpenseRepo;
+import com.podocare.PodoCareWebsite.repo.OrderRepo;
 import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.CompanyExpenseService;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +36,7 @@ public class CompanyExpenseServiceImpl implements CompanyExpenseService {
 
     private final CompanyExpenseRepo companyExpenseRepo;
     private final CompanyExpenseItemRepo companyExpenseItemRepo;
+    private final OrderRepo orderRepo;
     private final AuditLogService auditLogService;
 
     @Override
@@ -104,15 +107,19 @@ public class CompanyExpenseServiceImpl implements CompanyExpenseService {
                     .category(expenseDTO.getCategory())
                     .build();
 
-            for (CompanyExpenseItemDTO itemDTO : expenseDTO.getExpenseItems()) {
-                CompanyExpenseItem item = CompanyExpenseItem.builder()
-                        .companyExpense(expense)
-                        .name(itemDTO.getName())
-                        .quantity(itemDTO.getQuantity())
-                        .vatRate(itemDTO.getVatRate())
-                        .price(itemDTO.getPrice())
-                        .build();
-                expense.addExpenseItem(item);
+            if (expenseDTO.getOrderId() != null) {
+                populateFromOrder(expense, expenseDTO.getOrderId());
+            } else {
+                for (CompanyExpenseItemDTO itemDTO : expenseDTO.getExpenseItems()) {
+                    CompanyExpenseItem item = CompanyExpenseItem.builder()
+                            .companyExpense(expense)
+                            .name(itemDTO.getName())
+                            .quantity(itemDTO.getQuantity())
+                            .vatRate(itemDTO.getVatRate())
+                            .price(itemDTO.getPrice())
+                            .build();
+                    expense.addExpenseItem(item);
+                }
             }
 
             expense.calculateTotals();
@@ -121,8 +128,48 @@ public class CompanyExpenseServiceImpl implements CompanyExpenseService {
             CompanyExpenseDTO savedExpenseDTO = new CompanyExpenseDTO(savedExpense);
             auditLogService.logCreate("CompanyExpense", savedExpenseDTO.getId(), "Koszt: " + savedExpenseDTO.getSource(), savedExpenseDTO);
             return savedExpenseDTO;
+        } catch (ResourceNotFoundException | ConflictException e) {
+            throw e;
         } catch (Exception e) {
             throw new CreationException("Failed to create company expense. Reason: " + e.getMessage(), e);
+        }
+    }
+
+    private void populateFromOrder(CompanyExpense expense, Long orderId) {
+        Order order = orderRepo.findOneByIdWithProducts(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + orderId));
+
+        boolean conflict = expense.getId() != null
+                ? companyExpenseRepo.existsByOrderIdAndIdNot(orderId, expense.getId())
+                : companyExpenseRepo.existsByOrderId(orderId);
+
+        if (conflict) {
+            throw new ConflictException("Order is already linked to a company expense.");
+        }
+
+        expense.setOrder(order);
+        expense.setSource(order.getSupplier().getName());
+
+        for (OrderProduct op : order.getOrderProducts()) {
+            CompanyExpenseItem item = CompanyExpenseItem.builder()
+                    .companyExpense(expense)
+                    .name(op.getName())
+                    .quantity(op.getQuantity())
+                    .vatRate(op.getVatRate())
+                    .price(op.getPrice())
+                    .build();
+            expense.addExpenseItem(item);
+        }
+
+        if (order.getShippingCost() != null && order.getShippingCost() > 0) {
+            CompanyExpenseItem shippingItem = CompanyExpenseItem.builder()
+                    .companyExpense(expense)
+                    .name("Wysyłka")
+                    .quantity(1)
+                    .vatRate(VatRate.VAT_23)
+                    .price(order.getShippingCost())
+                    .build();
+            expense.addExpenseItem(shippingItem);
         }
     }
 
@@ -137,20 +184,26 @@ public class CompanyExpenseServiceImpl implements CompanyExpenseService {
 
             existingExpense.getExpenseItems().clear();
 
-            existingExpense.setSource(expenseDTO.getSource());
             existingExpense.setExpenseDate(expenseDTO.getExpenseDate());
             existingExpense.setInvoiceNumber(expenseDTO.getInvoiceNumber());
             existingExpense.setCategory(expenseDTO.getCategory());
 
-            for (CompanyExpenseItemDTO itemDTO : expenseDTO.getExpenseItems()) {
-                CompanyExpenseItem newItem = CompanyExpenseItem.builder()
-                        .companyExpense(existingExpense)
-                        .name(itemDTO.getName())
-                        .quantity(itemDTO.getQuantity())
-                        .vatRate(itemDTO.getVatRate())
-                        .price(itemDTO.getPrice())
-                        .build();
-                existingExpense.addExpenseItem(newItem);
+            if (expenseDTO.getOrderId() != null) {
+                populateFromOrder(existingExpense, expenseDTO.getOrderId());
+            } else {
+                existingExpense.setOrder(null);
+                existingExpense.setSource(expenseDTO.getSource());
+
+                for (CompanyExpenseItemDTO itemDTO : expenseDTO.getExpenseItems()) {
+                    CompanyExpenseItem newItem = CompanyExpenseItem.builder()
+                            .companyExpense(existingExpense)
+                            .name(itemDTO.getName())
+                            .quantity(itemDTO.getQuantity())
+                            .vatRate(itemDTO.getVatRate())
+                            .price(itemDTO.getPrice())
+                            .build();
+                    existingExpense.addExpenseItem(newItem);
+                }
             }
 
             existingExpense.calculateTotals();
@@ -160,7 +213,7 @@ public class CompanyExpenseServiceImpl implements CompanyExpenseService {
 
             auditLogService.logUpdate("CompanyExpense", id, "Koszt: " + oldExpenseSnapshot.getSource(), oldExpenseSnapshot, savedExpenseDTO);
             return savedExpenseDTO;
-        } catch (ResourceNotFoundException e) {
+        } catch (ResourceNotFoundException | ConflictException e) {
             throw e;
         } catch (Exception e) {
             throw new UpdateException("Failed to update company expense. Reason: " + e.getMessage(), e);

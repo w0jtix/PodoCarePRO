@@ -48,6 +48,10 @@ public interface CompanyExpenseRepo extends JpaRepository<CompanyExpense, Long> 
     @EntityGraph(attributePaths = {"expenseItems"})
     Optional<CompanyExpense> findFirstByCategoryOrderByExpenseDateDesc(ExpenseCategory category);
 
+    boolean existsByOrderId(Long orderId);
+
+    boolean existsByOrderIdAndIdNot(Long orderId, Long expenseId);
+
     // ========== Company Stats Aggregation Queries ==========
 
     @Query("""

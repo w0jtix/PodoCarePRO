@@ -19,6 +19,8 @@ import ExpenseItemList from "./ExpenseItemList";
 import { EXPENSE_ITEM_ATTRIBUTES } from "../../constants/list-headers";
 import ExpenseService from "../../services/ExpenseService";
 import { AlertType } from "../../models/alert";
+import OrderHistoryPopup from "../Popups/OrderHistoryPopup";
+import { Order } from "../../models/order";
 
 export interface ExpenseFormProps {
   action: Action;
@@ -35,6 +37,8 @@ export function ExpenseForm({
 }: ExpenseFormProps) {
   const { showAlert } = useAlert();
   const [expensePreview, setExpensePreview] = useState<CompanyExpense | null>(null);
+  const [isOrderHistoryPopupOpen, setIsOrderHistoryPopupOpen] = useState<boolean>(false);
+  const [selectedOrderNumber, setSelectedOrderNumber] = useState<number | null>(null);
 
   const fetchExpensePreview = async (expenseDTO: NewCompanyExpense) => {
       ExpenseService.getExpensePreview(expenseDTO)
@@ -60,19 +64,27 @@ export function ExpenseForm({
         ? selected.id
         : null;
 
+      const resetProducts = (prev: NewCompanyExpense) =>
+        prev.category === ExpenseCategory.PRODUCTS
+          ? { orderId: null, source: "", expenseItems: [] }
+          : {};
+
       if (category) {
-        const template = action === Action.CREATE ? await getCategoryTemplate(category) : {};
+        const template = /* action === Action.CREATE ? */ await getCategoryTemplate(category) /* : {} */;
         setExpenseDTO((prev) => ({
           ...prev,
+          ...resetProducts(prev),
           category: category,
           ...template,
         }));
       } else {
         setExpenseDTO((prev) => ({
           ...prev,
+          ...resetProducts(prev),
           category: null,
         }));
       }
+      setSelectedOrderNumber(null);
     },
     [action]
   );
@@ -111,6 +123,45 @@ export function ExpenseForm({
     }));
   }, []);
 
+  const handleOrderSelect = useCallback((order: Order) => {
+    setExpenseDTO((prev) => {
+      if (prev.orderId === order.id) {
+        setSelectedOrderNumber(null);
+        return {
+          ...prev,
+          orderId: null,
+          source: "",
+          expenseItems: [],
+        };
+      }
+
+      const items: NewCompanyExpenseItem[] = order.orderProducts.map((op) => ({
+        name: op.name,
+        quantity: op.quantity,
+        vatRate: op.vatRate,
+        price: op.price,
+      }));
+
+      if (order.shippingCost > 0) {
+        items.push({
+          name: "Wysyłka",
+          quantity: 1,
+          vatRate: VatRate.VAT_23,
+          price: order.shippingCost,
+        });
+      }
+
+      setSelectedOrderNumber(order.orderNumber);
+      return {
+        ...prev,
+        orderId: order.id,
+        source: order.supplier.name,
+        expenseItems: items,
+      };
+    });
+    setIsOrderHistoryPopupOpen(false);
+  }, []);
+
   const setExpenseItems: React.Dispatch<React.SetStateAction<NewCompanyExpenseItem[]>> = useCallback(
     (action) => {
       setExpenseDTO((prev) => ({
@@ -123,6 +174,7 @@ export function ExpenseForm({
 
   useEffect(() => {
       fetchExpensePreview(expenseDTO);
+      setSelectedOrderNumber(expenseDTO.orderId ? expenseDTO.orderId : null);
     }, [expenseDTO])
 
   return (
@@ -152,6 +204,19 @@ export function ExpenseForm({
           className="expense-category"
         />
       </section>
+      {expenseDTO.category && expenseDTO.category === ExpenseCategory.PRODUCTS && (
+        <section className="flex width-max space-between align-items-center mb-1">
+        <a className="product-form-input-title">Zamówienie:</a>
+        <ActionButton
+          src={"src/assets/zamówienia.svg"}
+          alt={"Wbierz zamówienie"}
+          text={selectedOrderNumber ? `Zamówienie #${selectedOrderNumber}` : "Wybierz zamówienie"}
+          onClick={() => setIsOrderHistoryPopupOpen(true)}
+          className={selectedOrderNumber ? "selected-order" : ""}
+          />
+          
+      </section>
+      )}
       <section className="flex width-max space-between align-items-center mb-1">
         <a className="product-form-input-title">Data:</a>
         <DateInput
@@ -164,6 +229,7 @@ export function ExpenseForm({
         <TextInput
           dropdown={false}
           value={expenseDTO.source}
+          disabled={expenseDTO.category === ExpenseCategory.PRODUCTS}
           onSelect={(input) => {
             if (typeof input === "string") {
               handleSource(input);
@@ -191,12 +257,14 @@ export function ExpenseForm({
           alt={"Nowa pozycja"}
           text={"Nowa pozycja"}
           onClick={handleAddNewExpenseItem}
+          disabled={expenseDTO.category === ExpenseCategory.PRODUCTS}
         />
       </div>
       <ExpenseItemList
             expenseItems={expenseDTO.expenseItems}
             setExpenseItems={setExpenseItems}
             attributes={EXPENSE_ITEM_ATTRIBUTES}
+            disabled={expenseDTO.category === ExpenseCategory.PRODUCTS}
       />
       <div className="order-cost-summary relative flex space-between align-items-center justify-end mt-1">
             <a>Netto:</a>
@@ -208,6 +276,13 @@ export function ExpenseForm({
               {expensePreview?.totalValue ?? 0} zł
             </a>
           </div>
+      {isOrderHistoryPopupOpen && (
+        <OrderHistoryPopup
+          onClose={() => setIsOrderHistoryPopupOpen(false)}
+          onSelect={handleOrderSelect}
+          selectedOrderId={expenseDTO.orderId}
+        />
+      )}
     </div>
   );
 }

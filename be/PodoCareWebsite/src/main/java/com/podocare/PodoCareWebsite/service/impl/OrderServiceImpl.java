@@ -3,6 +3,7 @@ package com.podocare.PodoCareWebsite.service.impl;
 import com.podocare.PodoCareWebsite.DTO.OrderDTO;
 import com.podocare.PodoCareWebsite.DTO.OrderProductDTO;
 import com.podocare.PodoCareWebsite.DTO.request.OrderFilterDTO;
+import com.podocare.PodoCareWebsite.exceptions.ConflictException;
 import com.podocare.PodoCareWebsite.exceptions.CreationException;
 import com.podocare.PodoCareWebsite.exceptions.DeletionException;
 import com.podocare.PodoCareWebsite.exceptions.ResourceNotFoundException;
@@ -36,6 +37,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderProductRepo orderProductRepo;
     private final SupplierRepo supplierRepo;
     private final ProductRepo productRepo;
+    private final CompanyExpenseRepo companyExpenseRepo;
     private final ProductReferenceService productReferenceService;
     private final AuditLogService auditLogService;
 
@@ -196,6 +198,10 @@ public class OrderServiceImpl implements OrderService {
             Order existingOrder = orderRepo.findOneByIdWithProducts(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + id));
 
+            if (companyExpenseRepo.existsByOrderId(id)) {
+                throw new ConflictException("Unable to delete Order - already linked to the invoice (Company Expense).");
+            }
+
             OrderDTO orderSnapshot = new OrderDTO(existingOrder);
 
             Map<Long, Integer> inventoryAdjustments = new HashMap<>();
@@ -207,12 +213,14 @@ public class OrderServiceImpl implements OrderService {
             }
 
             applyInventoryAdjustments(inventoryAdjustments);
-            checkForProductDeletions(inventoryAdjustments, id);
 
             orderRepo.delete(existingOrder);
+            orderRepo.flush();
+
+            checkForProductDeletions(inventoryAdjustments, id);
 
             auditLogService.logDelete("Order", id, "Zamówienie od: " + orderSnapshot.getSupplier().getName(), orderSnapshot);
-        } catch (ResourceNotFoundException e) {
+        } catch (ResourceNotFoundException | ConflictException e) {
             throw e;
         } catch (Exception e) {
             throw new DeletionException("Failed to delete Order, Reason: " + e.getMessage(), e);

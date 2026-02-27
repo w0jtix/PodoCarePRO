@@ -37,6 +37,10 @@ public class CompanyExpense {
     @Column(nullable = false)
     private ExpenseCategory category;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", unique = true, nullable = true)
+    private Order order;
+
     @OneToMany(mappedBy = "companyExpense", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @ToString.Exclude
     @Builder.Default

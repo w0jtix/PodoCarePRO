@@ -22,6 +22,7 @@ public class CompanyExpenseDTO {
     private LocalDate expenseDate;
     private String invoiceNumber;
     private ExpenseCategory category;
+    private Long orderId;
     private List<CompanyExpenseItemDTO> expenseItems;
     private Double totalNet;
     private Double totalVat;
@@ -33,6 +34,7 @@ public class CompanyExpenseDTO {
         this.expenseDate = expense.getExpenseDate();
         this.invoiceNumber = expense.getInvoiceNumber();
         this.category = expense.getCategory();
+        this.orderId = expense.getOrder() != null ? expense.getOrder().getId() : null;
         this.expenseItems = expense.getExpenseItems().stream()
                 .map(CompanyExpenseItemDTO::new)
                 .collect(Collectors.toList());

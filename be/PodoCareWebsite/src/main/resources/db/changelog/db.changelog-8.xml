@@ -111,4 +111,22 @@
                 constraintName="uq_bps_employee_period"/>
     </changeSet>
 
+    <changeSet id="8.6-add-order-to-company-expense" author="Wojtek">
+        <addColumn tableName="company_expense">
+            <column name="order_id" type="BIGINT"/>
+        </addColumn>
+
+        <addForeignKeyConstraint
+                baseTableName="company_expense"
+                baseColumnNames="order_id"
+                constraintName="fk_company_expense_order"
+                referencedTableName="internal_order"
+                referencedColumnNames="id"/>
+
+        <addUniqueConstraint
+                tableName="company_expense"
+                columnNames="order_id"
+                constraintName="uq_company_expense_order"/>
+    </changeSet>
+
 </databaseChangeLog>

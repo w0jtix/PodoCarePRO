@@ -142,6 +142,13 @@ export const getCategoryTemplate = async (category: ExpenseCategory): Promise<Pa
         }],
       };
     }
+    case ExpenseCategory.PRODUCTS:
+      return {
+        source: "",
+        invoiceNumber: null,
+        orderId: null,
+        expenseItems: [],
+      };
     default:
       return {};
   }

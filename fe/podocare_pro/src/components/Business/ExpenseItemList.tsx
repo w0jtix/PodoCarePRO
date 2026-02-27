@@ -15,15 +15,17 @@ export interface ExpenseItemListProps {
   expenseItems: NewCompanyExpenseItem[];
   setExpenseItems: React.Dispatch<
     React.SetStateAction<NewCompanyExpenseItem[]>
-  >; 
+  >;
     attributes: ListAttribute[];
+    disabled?: boolean;
 }
 
-export function ExpenseItemList({ 
+export function ExpenseItemList({
     className = "",
     expenseItems,
     setExpenseItems,
-    attributes
+    attributes,
+    disabled = false,
 }: ExpenseItemListProps) {
 
     const handleExpenseItemRemove = useCallback((index: number) => {
@@ -65,6 +67,7 @@ export function ExpenseItemList({
             text="Usuń"
             onClick={() => handleExpenseItemRemove(index)}
             disableText={true}
+            disabled={disabled}
           />
         );
 
@@ -80,6 +83,7 @@ export function ExpenseItemList({
               handleExpenseItemName(index, input);
             }
           }}
+           disabled={disabled}
             />
           </div>
         );
@@ -96,6 +100,7 @@ export function ExpenseItemList({
               )
             }
             placeholder={"0.00"}
+            disabled={disabled}
           />
         );
 
@@ -112,6 +117,7 @@ export function ExpenseItemList({
                 parseInt(value ? value.toString() : "0") || 0
               )
             }
+            disabled={disabled}
           />
         );
 
@@ -130,6 +136,7 @@ export function ExpenseItemList({
               onSelect={(selectedVAT) =>
                 handleVatSelect(index, selectedVAT)
               }
+              disabled={disabled}
             />
           </div>
         );
@@ -154,12 +161,12 @@ export function ExpenseItemList({
 
 
   return (
-    <div className={`flex-column ${className}`}>
+    <div className={`flex-column ${className} ${disabled ? "disabled" : ""}`}>
       <ListHeader
         attributes={attributes}
         module={ListModule.ORDER}
       />
-      <div className={`order-item-list invoice flex-column mt-025 ${className}`}>
+      <div className={`order-item-list invoice flex-column mt-025 ${className} ${disabled ? "not-allowed" : ""}`}>
             {expenseItems.map((item, index) => (
         <div key={`order-item-${'new'}-${index}`} className="order-item flex">
           {attributes.map((attr) => (

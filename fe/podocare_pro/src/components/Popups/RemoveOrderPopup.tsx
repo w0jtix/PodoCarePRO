@@ -11,7 +11,7 @@ import { useAlert } from "../Alert/AlertProvider";
 
 export interface RemoveOrderPopupProps {
   onClose: () => void;
-  onSuccess: (message: string) => void;
+  onSuccess: () => void;
   orderId: number | string;
   className?: string;
 }
@@ -31,9 +31,9 @@ export function RemoveOrderPopup({
       .then((data) => {
         setFetchedOrder(data);
       })
-      .catch((error) => {
-        console.error("Error fetching order: ", error);
+      .catch((error) => {        
         showAlert("Błąd", AlertType.ERROR);
+        console.error("Error fetching order: ", error);
       })
   }
 
@@ -45,15 +45,16 @@ export function RemoveOrderPopup({
     if(fetchedOrder)
       OrderService.deleteOrder(fetchedOrder.id)
         .then((status) => {
-          onSuccess(
-            `Zamówienie #${fetchedOrder.orderNumber} usunięte pomyślnie`
-          );
+          showAlert(`Zamówienie #${fetchedOrder.orderNumber} usunięte pomyślnie`
+          , AlertType.SUCCESS);
+          onSuccess();
           setTimeout(() => {
             onClose();
           }, 600);
         })
         .catch((error) => {
-          console.error("Error removing Order", error);
+          const backendMessage = error?.response?.data;
+          console.error(backendMessage || "Error removing Order", error);
           showAlert("Błąd usuwania zamówienia.", AlertType.ERROR);
         });
   }, [

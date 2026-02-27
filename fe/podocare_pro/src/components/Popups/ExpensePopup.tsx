@@ -30,6 +30,7 @@ export function ExpensePopup({
     expenseDate: new Date().toISOString().split("T")[0],
     invoiceNumber: null,
     category: null,
+    orderId: null,
     expenseItems: [],
   });
   const { showAlert } = useAlert();

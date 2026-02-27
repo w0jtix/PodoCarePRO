@@ -49,9 +49,10 @@ export function HandyOrderProductList({
     async (filter: ProductFilterDTO) => {
       return AllProductService.getProducts(filter)
         .then((data) => {
+          const content = data?.content || [];
           order.orderProducts.forEach((orderProduct) => {
             const productId = orderProduct.product?.id;
-            const supplyData = data.content.find((d) => d.id === productId);
+            const supplyData = content.find((d) => d.id === productId);
             const activeCount = supplyData ? supplyData.supply : 0;
             const opQuantity = orderProduct.quantity;
             const shouldWarn = opQuantity > 0 && opQuantity > activeCount;
@@ -77,7 +78,8 @@ export function HandyOrderProductList({
       const productIds = Array.from(
         new Set(
           order.orderProducts
-            .map((orderProduct) => orderProduct.product?.id)
+            .filter((op) => op.product && !op.product.isDeleted)
+            .map((op) => op.product!.id)
             .filter((id): id is number => id != null)
         )
       );

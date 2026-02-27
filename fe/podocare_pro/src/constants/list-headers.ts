@@ -279,6 +279,15 @@ export const ORDER_HISTORY_ATTRIBUTES: ListAttribute[] = [
   { name: "Opcje", width: "7%", justify: "center" },
 ]
 
+export const ORDER_HISTORY_POPUP_ATTRIBUTES: ListAttribute[] = [
+  { name: " ", width: "3%", justify: "center" },
+  { name: "Numer", width: "10%", justify: "center" },
+  { name: "Sklep", width: "30%", justify: "center" },
+  { name: "Data Zamówienia", width: "32%", justify: "center" },
+  { name: "Produkty", width: "10%", justify: "center" },
+  { name: "Brutto", width: "15%", justify: "center" },
+]
+
 export const ORDER_HANDY_HISTORY_ATTRIBUTES: ListAttribute[] = [
   { name: "", width: "6%", justify: "center" },
   { name: "Nazwa", width: "64%", justify: "start" },

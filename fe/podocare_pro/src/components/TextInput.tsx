@@ -203,10 +203,10 @@ export function TextInput<T extends SuggestionItem = SuggestionItem> ({
   }
 
   return (
-        <div className={`input-container relative inline-block transparent ${className}`} ref={dropdownRef}>
+        <div className={`input-container relative inline-block transparent ${className} `} ref={dropdownRef}>
           <input
             type={password && !showPassword ? "password" : "text"}
-            className={`text-input flex align-items-center space-between g-10px pointer transparent category ${className}`}
+            className={`text-input flex align-items-center space-between g-10px pointer transparent category ${className} ${disabled ? "not-allowed" : ""}`}
             placeholder={placeholder}
             value={getInputValue()}
             onChange={handleInputChange}

@@ -4,7 +4,7 @@ import ActionButton from "../ActionButton";
 import OrderContent from "./OrderContent";
 import EditOrderPopup from "../Popups/EditOrderPopup";
 import RemoveOrderPopup from "../Popups/RemoveOrderPopup";
-import { ListAttribute } from "../../constants/list-headers";
+import { ListAttribute, ORDER_HISTORY_POPUP_ATTRIBUTES } from "../../constants/list-headers";
 import { Order } from "../../models/order";
 import { Action } from "../../models/action";
 import { calculateOrderItems } from "../../utils/orderUtils";
@@ -18,6 +18,8 @@ export interface OrderListProps {
   onScroll?: (e: React.UIEvent<HTMLDivElement>) => void;
   isLoading?: boolean;
   hasMore?: boolean;
+  onSelect?: (order: Order) => void;
+  selectedOrderId?: number | null;
 }
 
 export function OrderList({
@@ -28,9 +30,10 @@ export function OrderList({
   onScroll,
   isLoading = false,
   hasMore = true,
+  onSelect,
+  selectedOrderId,
 }: OrderListProps) {
   const [expandedOrderIds, setExpandedOrderIds] = useState<number[]>([]);
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [editOrderId, setEditOrderId] =
     useState<number | string | null>(null);
   const [removeOrderId, setRemoveOrderId] =
@@ -65,6 +68,9 @@ export function OrderList({
     order: Order
   ): React.ReactNode => {
     switch (attr.name) {
+      case " ":
+        return "";
+        
       case "":
         return (
           <img
@@ -138,19 +144,19 @@ export function OrderList({
 
   return (
     <div 
-      className={`item-list order width-93 grid p-0 mt-05 ${orders.length === 0 ? "border-none" : ""} ${className}`}
+      className={`item-list order width-93 grid p-0 mt-05 ${orders.length === 0 ? "border-none" : ""} ${className} ${attributes === ORDER_HISTORY_POPUP_ATTRIBUTES ? "oh-popup-list" : ""}`}
       onScroll={onScroll}
       >
       {orders.map((order) => (
-        <div key={order.id} className={`product-wrapper order ${className}`}>
+        <div key={order.id} className={`product-wrapper order ${className} ${attributes === ORDER_HISTORY_POPUP_ATTRIBUTES ? "oh-popup-list" : ""} ${selectedOrderId === order.id ? "selected" : ""}`}>
           <div
             className={`item order align-items-center flex-column ${
-              order.orderProducts.length > 0 ? "pointer" : ""
-            } ${className}`}
-            onClick={() => toggleOrders(order.id)}
+              order.orderProducts.length > 0 || onSelect ? "pointer" : ""
+            } ${className} ${attributes === ORDER_HISTORY_POPUP_ATTRIBUTES ? "oh-popup-list" : ""} ${selectedOrderId === order.id ? "selected" : ""}`}
+            onClick={() => onSelect ? onSelect(order) : toggleOrders(order.id)}
             onKeyDown={(e) => {
-              if (e.key === "Enter" && order.orderProducts.length > 0) {
-                toggleOrders(order.id);
+              if (e.key === "Enter") {
+                onSelect ? onSelect(order) : order.orderProducts.length > 0 && toggleOrders(order.id);
               }
             }}
           >

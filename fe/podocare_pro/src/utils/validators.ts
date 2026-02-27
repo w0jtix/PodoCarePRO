@@ -16,7 +16,7 @@ import { AppSettings, NewAppSettings } from "../models/app_settings";
 import { Discount, NewDiscount, NewVisit, Visit, VisitDiscountType } from "../models/visit";
 import { PaymentMethod } from "../models/payment";
 import { UsageRecordItem } from "../models/usage-record";
-import { CompanyExpense, CompanyExpenseItem, NewCompanyExpense, NewCompanyExpenseItem } from "../models/expense";
+import { CompanyExpense, CompanyExpenseItem, ExpenseCategory, NewCompanyExpense, NewCompanyExpenseItem } from "../models/expense";
 import { NewStatSettings, StatSettings } from "../models/business_settings";
 import { RegisterRequest } from "../models/register";
 import { InventoryReportItem, NewInventoryReportItem } from "../models/inventory_report";
@@ -42,11 +42,19 @@ import { InventoryReportItem, NewInventoryReportItem } from "../models/inventory
     selectedExpense: CompanyExpense | null,
     action: Action,
   ): string | null {
+    if (expenseForm.category === ExpenseCategory.PRODUCTS && !expenseForm.invoiceNumber?.trim()) {
+      return "Nr faktury jest wymagany dla kategorii Produkty!";
+    }
+
     if (Object.entries(expenseForm).some(([key, value]) => {
-      if (key === "invoiceNumber") return false;
+      if (expenseForm.category !== ExpenseCategory.PRODUCTS && (key === "invoiceNumber" || key === "orderId")) return false;
       return value === null || value === undefined;
     })) {
       return "Brak pełnych informacji!";
+    }
+
+    if (expenseForm.category === ExpenseCategory.PRODUCTS && !expenseForm.orderId) {
+      return "Zamówienie jest wymagane dla kategorii Produkty!";
     }
 
     if (expenseForm.source && expenseForm.source.trim().length <= 2) {

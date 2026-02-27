@@ -24,7 +24,7 @@ export function ActionButton(props: ActionButtonProps) {
           src={props.src}
           alt={props.alt}
           title ={props.iconTitle}
-          className={`product-action-button-icon ${props.text?.toLowerCase()} ${props.className? props.className : ""}`}
+          className={`product-action-button-icon ${props.text?.toLowerCase()} ${props.className? props.className : ""} ${props.disabled ? "not-allowed" : ""}`}
         ></img> }
         {!(props.disableText || false) && props.text && (
           <span className={`product-action-button-text nowrap ${props.className? props.className : ""}`}>{props.text}</span>

@@ -10,11 +10,21 @@ import SupplierService from "../../services/SupplierService.jsx";
 import { Order, OrderFilterDTO } from "../../models/order.js";
 import { Supplier } from "../../models/supplier.js";
 import { Alert, AlertType } from "../../models/alert.js";
-import { ORDER_HISTORY_ATTRIBUTES } from "../../constants/list-headers.js";
+import { ListAttribute, ORDER_HISTORY_ATTRIBUTES } from "../../constants/list-headers.js";
 import { useAlert } from "../Alert/AlertProvider.js";
 import { getYears, MONTHS } from "../../utils/dateUtils.js";
 
-export function OrderHistory() {
+export interface OrderHistoryProps {
+  attributes?: ListAttribute[];
+  onSelect?: (order: Order) => void;
+  selectedOrderId?: number | null;
+}
+
+export function OrderHistory({
+  attributes = ORDER_HISTORY_ATTRIBUTES,
+  onSelect,
+  selectedOrderId,
+}: OrderHistoryProps) {
   const { showAlert } = useAlert();
   const [orders, setOrders] = useState<Order[]>([]);
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
@@ -231,7 +241,7 @@ export function OrderHistory() {
           disableText={true}
         />
       </section>
-      <ListHeader attributes={ORDER_HISTORY_ATTRIBUTES} />
+      <ListHeader attributes={attributes} />
       {loading ? (
         <div className="list-loading-container relative flex align-items-center justify-center">
           <div className="loading-dot relative flex align-items-center height-max width-25"></div>
@@ -242,13 +252,15 @@ export function OrderHistory() {
       ) : (
         
           <OrderList
-            attributes={ORDER_HISTORY_ATTRIBUTES}
+            attributes={attributes}
             orders={orders}
             onSuccess={handleSuccess}
             className="products"
             onScroll={handleScroll}
             isLoading={loading}
             hasMore={hasMore}
+            onSelect={onSelect}
+            selectedOrderId={selectedOrderId}
           />
       )}
     </>
