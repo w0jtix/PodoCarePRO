@@ -75,4 +75,40 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="8.5-create-bonus-params-snapshot-table" author="Wojtek">
+        <createTable tableName="bonus_params_snapshot">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="employee_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="year" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="month" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bonus_percent" type="DOUBLE PRECISION"/>
+            <column name="sale_bonus_percent" type="DOUBLE PRECISION"/>
+            <column name="boost_net_rate" type="DOUBLE PRECISION"/>
+            <column name="bonus_threshold" type="DOUBLE PRECISION"/>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="bonus_params_snapshot"
+                baseColumnNames="employee_id"
+                constraintName="fk_bps_employee"
+                referencedTableName="employee"
+                referencedColumnNames="id"/>
+
+        <addUniqueConstraint
+                tableName="bonus_params_snapshot"
+                columnNames="employee_id, year, month"
+                constraintName="uq_bps_employee_period"/>
+    </changeSet>
+
 </databaseChangeLog>

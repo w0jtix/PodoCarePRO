@@ -4,6 +4,7 @@ import com.podocare.PodoCareWebsite.DTO.StatSettingsDTO;
 import com.podocare.PodoCareWebsite.exceptions.ResourceNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.UpdateException;
 import com.podocare.PodoCareWebsite.repo.StatSettingsRepo;
+import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.StatSettingsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 public class StatSettingsServiceImpl implements StatSettingsService {
 
     private final StatSettingsRepo settingsRepo;
+    private final AuditLogService auditLogService;
 
     @Override
     public StatSettingsDTO getSettings() {
@@ -22,10 +24,13 @@ public class StatSettingsServiceImpl implements StatSettingsService {
     @Override
     public StatSettingsDTO updateSettings(StatSettingsDTO settings) {
         try {
-            StatSettingsDTO currentSettings = getSettings();
+            StatSettingsDTO oldSettings = getSettings();
 
-            settings.setId(currentSettings.getId());
-            return new StatSettingsDTO(settingsRepo.save(settings.toEntity()));
+            settings.setId(oldSettings.getId());
+            StatSettingsDTO savedSettings = new StatSettingsDTO(settingsRepo.save(settings.toEntity()));
+
+            auditLogService.logUpdate("StatSettings", savedSettings.getId(), null, oldSettings, savedSettings);
+            return savedSettings;
         } catch (ResourceNotFoundException e) {
             throw e;
         } catch (Exception e) {

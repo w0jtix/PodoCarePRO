@@ -31,6 +31,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     private final UserRepo userRepo;
     private final StatSettingsRepo statSettingsRepo;
     private final AppSettingsRepo appSettingsRepo;
+    private final BonusParamsSnapshotRepo bonusParamsSnapshotRepo;
 
     @Override
     public EmployeeRevenueDTO getEmployeeRevenue(EmployeeRevenueFilterDTO filter) {
@@ -197,9 +198,30 @@ public class StatisticsServiceImpl implements StatisticsService {
             monthlyTotal += adjustedRevenue;
         }
 
-        // Boost cost
+        // Resolve bonus params - snapshot (historical) or current (fallback)
         AppSettings appSettings = appSettingsRepo.getSettings();
-        double boostNetRate = appSettings.getBoostNetRate() != null ? appSettings.getBoostNetRate() : 0.0;
+        Optional<BonusParamsSnapshot> snapshot = bonusParamsSnapshotRepo
+                .findByEmployeeIdAndYearAndMonth(employee.getId(), filter.getYear(), filter.getMonth());
+
+        double boostNetRate;
+        double bonusThreshold;
+        double bonusPercent;
+        double saleBonusPercent;
+
+        if (snapshot.isPresent()) {
+            BonusParamsSnapshot s = snapshot.get();
+            boostNetRate = s.getBoostNetRate() != null ? s.getBoostNetRate() : 0.0;
+            bonusThreshold = s.getBonusThreshold() != null ? s.getBonusThreshold() : 0.0;
+            bonusPercent = s.getBonusPercent() != null ? s.getBonusPercent() : 0.0;
+            saleBonusPercent = s.getSaleBonusPercent() != null ? s.getSaleBonusPercent() : 0.0;
+        } else {
+            boostNetRate = appSettings.getBoostNetRate() != null ? appSettings.getBoostNetRate() : 0.0;
+            bonusThreshold = statSettings.getBonusThreshold();
+            bonusPercent = employee.getBonusPercent() != null ? employee.getBonusPercent() : 0.0;
+            saleBonusPercent = employee.getSaleBonusPercent() != null ? employee.getSaleBonusPercent() : 0.0;
+        }
+
+        // Boost cost
         List<Visit> boostVisits = visitRepo.findBoostVisitsWithItems(filter.getEmployeeId(), from, to);
         double boostCost = 0.0;
         for (Visit boostVisit : boostVisits) {
@@ -209,22 +231,17 @@ public class StatisticsServiceImpl implements StatisticsService {
             boostCost += servicesGross * boostNetRate / 100 * 1.23;
         }
 
-        double bonusThreshold = statSettings.getBonusThreshold();
-        double bonusPercent = employee.getBonusPercent() != null ? employee.getBonusPercent() : 0.0;
         double adjustedTotal = monthlyTotal - boostCost;
         double bonusAmount = adjustedTotal >= bonusThreshold
                 ? round2((adjustedTotal - bonusThreshold) * bonusPercent / 100)
                 : 0.0;
 
-        // Monthly products revenue
         Double productsRevenueRaw = visitRepo.sumProductsRevenue(filter.getEmployeeId(), from, to);
         double monthlyProductsRevenue = productsRevenueRaw != null ? productsRevenueRaw : 0.0;
 
-        // Product sales bonus — current month
-        double saleBonusPercent = employee.getSaleBonusPercent() != null ? employee.getSaleBonusPercent() : 0.0;
         ProductBonusResult currentProductBonus = calculateProductBonus(visits, saleBonusPercent, to);
 
-        // Quarterly product bonus — previous months based on quarter position
+        // Quarterly product bonus - previous months based on quarter position
         int quarterPosition = getQuarterPosition(filter.getMonth(), statSettings.getSaleBonusPayoutMonths());
 
         Double prevMonthSaleBonus = null;

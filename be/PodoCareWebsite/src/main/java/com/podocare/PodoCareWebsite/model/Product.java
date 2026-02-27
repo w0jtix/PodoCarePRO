@@ -32,7 +32,7 @@ public class Product {
     @Column(nullable = false)
     @Builder.Default
     private Integer supply = 0;
-
+    /*Only use as reference  (value might change in the future)*/
     @Column(nullable = true)
     private Double sellingPrice;
 
