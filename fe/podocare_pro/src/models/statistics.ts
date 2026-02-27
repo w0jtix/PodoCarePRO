@@ -72,6 +72,7 @@ export interface EmployeeStats {
 
 export interface CompanyFinancialSummary {
     currentRevenue: number;
+    currentOffTheBookRevenue: number;
     currentExpenses: number;
     currentIncome: number;
 

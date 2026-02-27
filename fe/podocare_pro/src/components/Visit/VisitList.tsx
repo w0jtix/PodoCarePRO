@@ -194,13 +194,6 @@ export function VisitList({
               onClick={(e) => handleOnClickPreview(e, visit)}
               disableText={true}
             />
-            {/* <ActionButton
-              src={"src/assets/edit.svg"}
-              alt={"Edytuj Wizytę"}
-              text={"Edytuj"}
-              onClick={(e) => handleOnClickEdit(e, visit)}
-              disableText={true}
-            /> */}
             <ActionButton
               src={"src/assets/cancel.svg"}
               alt={"Usuń Wizytę"}
@@ -285,13 +278,6 @@ export function VisitList({
           visitId={previewVisitId}
         />
       )}
-      {/* {isEditVisitPopupOpen && (
-        <EditVisitPopup
-          onClose={() => setIsEditVisitPopupOpen(false)}
-          onSuccess={onSuccess}
-          selectedVisit={selectedVisit as Order}
-        />
-      )} */}
       {removeVisitId != null && (
         <RemoveVisitPopup
           onClose={() => setRemoveVisitId(null)}

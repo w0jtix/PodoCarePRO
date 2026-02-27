@@ -2,6 +2,7 @@ package com.podocare.PodoCareWebsite.service.impl;
 
 import com.podocare.PodoCareWebsite.DTO.AppSettingsDTO;
 import com.podocare.PodoCareWebsite.DTO.DiscountSettingsDTO;
+import com.podocare.PodoCareWebsite.exceptions.ResourceNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.UpdateException;
 import com.podocare.PodoCareWebsite.repo.AppSettingsRepo;
 import com.podocare.PodoCareWebsite.service.AppSettingsService;

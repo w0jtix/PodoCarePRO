@@ -101,27 +101,40 @@ export function CompanyStatistics() {
 
   const waterfallData = useMemo(() => {
     if (!companySummary) return [];
+    const offTheBookPercent = companySummary.currentRevenue > 0
+      ? +((companySummary.currentOffTheBookRevenue / companySummary.currentRevenue) * 100).toFixed(2)
+      : 0;
     return [
       {
         name: "Przychód",
         base: 0,
         value: companySummary.currentRevenue,
         gradient: "url(#revenueGrad)",
+        percent: "100%",
+      },
+      {
+        name: "Wpływy",
+        base: 0,
+        value: companySummary.currentOffTheBookRevenue,
+        gradient: "url(#offTheBookRevenueGrad)",
+        percent: `${offTheBookPercent}%`,
       },
       {
         name: "Koszty",
         base: companySummary.currentExpenses > 0 ? companySummary.currentIncome : 0,
         value: companySummary.currentExpenses > 0 ? companySummary.currentExpenses : 0,
         gradient: "url(#expenseGrad)",
+        percent: `${companyStats?.costShareInRevenue ?? 0}%`,
       },
       {
         name: "Dochód",
         base: 0,
         value: companySummary.currentIncome,
         gradient: "url(#incomeGrad)",
+        percent: `${companyStats?.profitabilityPercent ?? 0}%`,
       },
     ];
-  }, [companySummary]);
+  }, [companySummary, companyStats]);
 
   const expensesBarData = useMemo(() => {
     return expenseCategoryItems.map((category) => {
@@ -582,6 +595,10 @@ export function CompanyStatistics() {
                       <stop offset="0%" stopColor="#2563eb" />
                       <stop offset="100%" stopColor="#53a0ff" />
                     </linearGradient>
+                    <linearGradient id="offTheBookRevenueGrad" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stopColor="#bdc0bd" />
+                      <stop offset="100%" stopColor="#5c5e5d" />
+                    </linearGradient>
                     <linearGradient id="expenseGrad" x1="0" y1="0" x2="1" y2="0">
                       <stop offset="0%" stopColor="#ff0000" />
                       <stop offset="100%" stopColor="#8f0404" />
@@ -609,13 +626,9 @@ export function CompanyStatistics() {
                         const isIncomeNegative = companySummary && companySummary.currentIncome < 0;
                         const colors: Record<string, string> = {
                           Przychód: "#53a0ff",
+                          "Wpływy": "#9ca3af",
                           Koszty: "#ff0000",
                           Dochód: isIncomeNegative ? "#d1d5db" : "#00fe00",
-                        };
-                        const percentages: Record<string, string> = {
-                          Przychód: "100%",
-                          Koszty: `${companyStats?.costShareInRevenue ?? 0}%`,
-                          Dochód: `${companyStats?.profitabilityPercent ?? 0}%`,
                         };
                         const getValueColor = (name: string) => {
                           if (name === "Dochód") return isIncomeNegative ? "#ff0000" : "#00fe00";
@@ -634,7 +647,7 @@ export function CompanyStatistics() {
                               className="pie-tooltip-value"
                               style={{ color: getValueColor(data.name) }}
                             >
-                              {percentages[data.name]}
+                              {data.percent}
                             </span>
                             <span
                               className="pie-tooltip-amount"
@@ -686,6 +699,20 @@ export function CompanyStatistics() {
                       ? statUnit === "%"
                         ? "100%"
                         : `${Math.round(companySummary.currentRevenue).toLocaleString("pl-PL")} zł`
+                      : "---"}
+                  </span>
+                </div>
+                <div className="pie-legend-item flex align-items-center g-05">
+                  <span
+                    className="pie-legend-color"
+                    style={{ backgroundColor: "#9ca3af" }}
+                  />
+                  <span className="pie-legend-label">Wpływy</span>
+                  <span className="pie-legend-value">
+                    {companySummary
+                      ? statUnit === "%"
+                        ? waterfallData.find(d => d.name === "Wpływy")?.percent ?? "0%"
+                        : `${Math.round(companySummary.currentOffTheBookRevenue).toLocaleString("pl-PL")} zł`
                       : "---"}
                   </span>
                 </div>

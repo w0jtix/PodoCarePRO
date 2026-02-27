@@ -89,7 +89,7 @@ export function ProductForm({
   const handleVolume = useCallback((newVolume: number | null) => {
     setProductDTO((prev) => ({
       ...prev,
-      volume: newVolume ?? 0,
+      volume: newVolume === 0 ? null : newVolume ?? 0,
     }));
   }, []);
   const handleVatSelect = useCallback((selectedVat: VatRate) => {

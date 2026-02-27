@@ -12,6 +12,7 @@ public class CompanyFinancialSummaryDTO {
     private Double currentRevenue;
     private Double currentExpenses;
     private Double currentIncome;
+    private Double currentOffTheBookRevenue;
 
     private Double previousPeriodRevenue;
     private Double previousPeriodExpenses;

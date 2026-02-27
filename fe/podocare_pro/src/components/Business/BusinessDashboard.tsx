@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import ExpenseHistory from "./ExpenseHistory";
 import EmployeesStats from "./EmployeesStats";
+import EmployeeBonusPage from "./EmployeeBonusPage";
 import BusinessSettings from "./BusinessSettings";
 import { CompanyStatistics } from "./CompanyStatistics";
 
@@ -14,7 +15,7 @@ export function BusinessDashboard() {
 
     useEffect(() => {
       const stateModule = (location.state as { module?: string })?.module;
-      if (stateModule === "Expenses" || stateModule === "Employees" || stateModule === "Statistics" || stateModule === "CompanySettings") {
+      if (stateModule === "Expenses" || stateModule === "Employees" || stateModule === "EmployeeBonus" || stateModule === "Statistics" || stateModule === "CompanySettings") {
         setModuleVisible(stateModule);
       }
     }, [location.state]);
@@ -29,6 +30,7 @@ export function BusinessDashboard() {
         />
         {moduleVisible === "Expenses" && <ExpenseHistory/>}
         {moduleVisible === "Employees" && <EmployeesStats/>}
+        {moduleVisible === "EmployeeBonus" && <EmployeeBonusPage/>}
         {moduleVisible === "Statistics" && <CompanyStatistics />}
         {moduleVisible === "CompanySettings" && <BusinessSettings />}
         </div>

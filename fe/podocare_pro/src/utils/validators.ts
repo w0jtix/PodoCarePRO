@@ -115,10 +115,10 @@ import { InventoryReportItem, NewInventoryReportItem } from "../models/inventory
     if (productForm.category && productForm.category.name === "Produkty" && (productForm.sellingPrice == null || productForm.sellingPrice === 0)) {
       return "Uzupełnij cenę sprzedaży Produktu!"
     }
-    if (productForm.category && productForm.category.name === "Produkty" && (productForm.volume == null || productForm.volume === 0)) {
+    if (productForm.category && productForm.category.name === "Produkty" && (productForm.unit !== null && (productForm.volume == null || productForm.volume === 0))) {
       return "Uzupełnij objętość Produktu!"
     }
-    if (productForm.category && productForm.category.name === "Produkty" && productForm.unit == null) {
+    if (productForm.category && productForm.category.name === "Produkty" && (productForm.volume !== null && productForm.unit == null)) {
       return "Uzupełnij jednostkę Produktu!"
     }
     if (action === Action.EDIT && selectedProduct) {
@@ -345,6 +345,9 @@ import { InventoryReportItem, NewInventoryReportItem } from "../models/inventory
   ): string | null {
     if(visitForm.employee == null || visitForm.client == null || visitForm.date === null ){
       return "Brak pełnych informacji!";
+    }
+    if(new Date(visitForm.date) > new Date()) {
+      return "Data wizyty nie może być późniejsza niż dzisiaj! Dodaj wizyty, które już się odbyły.";
     }
     if(visitForm.items.length === 0 && (visitForm.sale == null || visitForm.sale.items.length === 0) && visitForm.debtRedemptions.length === 0) {
       return "Nie można utworzyć pustej Wizyty!";

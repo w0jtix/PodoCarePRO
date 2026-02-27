@@ -12,6 +12,7 @@ export interface QuickVisitProps {
     className?: string;
     enableHeader?: boolean;
     onClose?: () => void;
+    compact?: boolean;
 }
 
 export function QuickVisit({
@@ -23,7 +24,8 @@ export function QuickVisit({
     setQuickVisitTotal,
     className= "",
     enableHeader= true,
-    onClose
+    onClose,
+    compact = false,
 }: QuickVisitProps) {
     return (
     <>
@@ -43,6 +45,7 @@ export function QuickVisit({
                 setSelectedProduct={setSelectedProduct}
                 setQuickVisitTotal={setQuickVisitTotal}
                 onClose={onClose}
+                compact={compact}
             />
           </div>
     </>

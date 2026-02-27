@@ -1,14 +1,10 @@
 package com.podocare.PodoCareWebsite.service.impl;
 
-import com.podocare.PodoCareWebsite.DTO.EmployeeRevenueDTO;
-import com.podocare.PodoCareWebsite.DTO.EmployeeRevenueSeriesDTO;
-import com.podocare.PodoCareWebsite.DTO.EmployeeStatsDTO;
-import com.podocare.PodoCareWebsite.DTO.StatSettingsDTO;
+import com.podocare.PodoCareWebsite.DTO.*;
+import com.podocare.PodoCareWebsite.DTO.request.EmployeeBonusFilterDTO;
 import com.podocare.PodoCareWebsite.DTO.request.EmployeeRevenueFilterDTO;
-import com.podocare.PodoCareWebsite.model.Employee;
-import com.podocare.PodoCareWebsite.model.OrderProduct;
-import com.podocare.PodoCareWebsite.model.SaleItem;
-import com.podocare.PodoCareWebsite.model.StatSettings;
+import com.podocare.PodoCareWebsite.exceptions.ResourceNotFoundException;
+import com.podocare.PodoCareWebsite.model.*;
 import com.podocare.PodoCareWebsite.model.constants.ChartMode;
 import com.podocare.PodoCareWebsite.model.constants.VatRate;
 import com.podocare.PodoCareWebsite.repo.*;
@@ -34,6 +30,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     private final OrderProductRepo orderProductRepo;
     private final UserRepo userRepo;
     private final StatSettingsRepo statSettingsRepo;
+    private final AppSettingsRepo appSettingsRepo;
 
     @Override
     public EmployeeRevenueDTO getEmployeeRevenue(EmployeeRevenueFilterDTO filter) {
@@ -146,6 +143,233 @@ public class StatisticsServiceImpl implements StatisticsService {
                 .map(emp -> buildEmployeeStats(emp, statSettings, startDate, endDate, prevStartDate, prevEndDate, filter.getYear(), filter.getMonth(), isYearlyMode))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public EmployeeBonusDTO getEmployeeBonus(EmployeeBonusFilterDTO filter) {
+        Employee employee = employeeRepo.findOneById(filter.getEmployeeId())
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: " + filter.getEmployeeId()));
+
+        StatSettings statSettings = statSettingsRepo.getSettings();
+
+        LocalDate from = LocalDate.of(filter.getYear(), filter.getMonth(), 1);
+        LocalDate to = from.withDayOfMonth(from.lengthOfMonth());
+
+        // Two queries to avoid MultipleBagFetchException (payments + sale.items are both List)
+        List<Visit> visits = visitRepo.findVisitsForBonusWithPayments(filter.getEmployeeId(), from, to);
+        visitRepo.findVisitsForBonusWithSaleItems(filter.getEmployeeId(), from, to);
+
+        List<BonusVisitDTO> bonusVisits = new ArrayList<>();
+        double monthlyTotal = 0.0;
+
+        for (Visit visit : visits) {
+            double paymentsSum = visit.getPayments().stream()
+                    .mapToDouble(p -> p.getAmount() != null ? p.getAmount() : 0.0)
+                    .sum();
+
+            double voucherPaymentsSum = visit.getPayments().stream()
+                    .filter(p -> p.getMethod() == com.podocare.PodoCareWebsite.model.constants.PaymentMethod.VOUCHER)
+                    .mapToDouble(p -> p.getAmount() != null ? p.getAmount() : 0.0)
+                    .sum();
+
+            double productsValue = 0.0;
+
+            if (visit.getSale() != null && visit.getSale().getItems() != null) {
+                for (SaleItem item : visit.getSale().getItems()) {
+                    double price = item.getPrice() != null ? item.getPrice() : 0.0;
+                    if (item.getProduct() != null) {
+                        productsValue += price;
+                    }
+                }
+            }
+
+            double adjustedRevenue = paymentsSum - productsValue - voucherPaymentsSum;
+
+            bonusVisits.add(BonusVisitDTO.builder()
+                    .visitId(visit.getId())
+                    .clientName(visit.getClient().getFirstName() + " " + visit.getClient().getLastName())
+                    .date(visit.getDate())
+                    .paymentsSum(round2(paymentsSum))
+                    .voucherPaymentsSum(round2(voucherPaymentsSum))
+                    .productsValue(round2(productsValue))
+                    .adjustedRevenue(round2(adjustedRevenue))
+                    .build());
+
+            monthlyTotal += adjustedRevenue;
+        }
+
+        // Boost cost
+        AppSettings appSettings = appSettingsRepo.getSettings();
+        double boostNetRate = appSettings.getBoostNetRate() != null ? appSettings.getBoostNetRate() : 0.0;
+        List<Visit> boostVisits = visitRepo.findBoostVisitsWithItems(filter.getEmployeeId(), from, to);
+        double boostCost = 0.0;
+        for (Visit boostVisit : boostVisits) {
+            double servicesGross = boostVisit.getItems().stream()
+                    .mapToDouble(item -> item.getFinalPrice() != null ? item.getFinalPrice() : 0.0)
+                    .sum();
+            boostCost += servicesGross * boostNetRate / 100 * 1.23;
+        }
+
+        double bonusThreshold = statSettings.getBonusThreshold();
+        double bonusPercent = employee.getBonusPercent() != null ? employee.getBonusPercent() : 0.0;
+        double adjustedTotal = monthlyTotal - boostCost;
+        double bonusAmount = adjustedTotal >= bonusThreshold
+                ? round2((adjustedTotal - bonusThreshold) * bonusPercent / 100)
+                : 0.0;
+
+        // Monthly products revenue
+        Double productsRevenueRaw = visitRepo.sumProductsRevenue(filter.getEmployeeId(), from, to);
+        double monthlyProductsRevenue = productsRevenueRaw != null ? productsRevenueRaw : 0.0;
+
+        // Product sales bonus — current month
+        double saleBonusPercent = employee.getSaleBonusPercent() != null ? employee.getSaleBonusPercent() : 0.0;
+        ProductBonusResult currentProductBonus = calculateProductBonus(visits, saleBonusPercent, to);
+
+        // Quarterly product bonus — previous months based on quarter position
+        int quarterPosition = getQuarterPosition(filter.getMonth(), statSettings.getSaleBonusPayoutMonths());
+
+        Double prevMonthSaleBonus = null;
+        Double twoMonthPrevSaleBonus = null;
+
+        if (quarterPosition >= 2) {
+            LocalDate prevFrom = from.minusMonths(1);
+            LocalDate prevTo = prevFrom.withDayOfMonth(prevFrom.lengthOfMonth());
+            List<Visit> prevVisits = visitRepo.findVisitsForBonusWithSaleItems(filter.getEmployeeId(), prevFrom, prevTo);
+            prevMonthSaleBonus = calculateProductBonusAmount(prevVisits, saleBonusPercent, prevTo);
+        }
+
+        if (quarterPosition >= 3) {
+            LocalDate twoMonthPrevFrom = from.minusMonths(2);
+            LocalDate twoMonthPrevTo = twoMonthPrevFrom.withDayOfMonth(twoMonthPrevFrom.lengthOfMonth());
+            List<Visit> twoMonthPrevVisits = visitRepo.findVisitsForBonusWithSaleItems(filter.getEmployeeId(), twoMonthPrevFrom, twoMonthPrevTo);
+            twoMonthPrevSaleBonus = calculateProductBonusAmount(twoMonthPrevVisits, saleBonusPercent, twoMonthPrevTo);
+        }
+
+        return EmployeeBonusDTO.builder()
+                .employeeId(employee.getId())
+                .employeeName(employee.getName())
+                .visits(bonusVisits)
+                .monthlyServicesRevenue(round2(monthlyTotal))
+                .bonusThreshold(bonusThreshold)
+                .bonusPercent(bonusPercent)
+                .bonusAmount(round2(bonusAmount))
+                .products(currentProductBonus.products)
+                .monthlyProductsRevenue(round2(monthlyProductsRevenue))
+                .saleBonusPercent(saleBonusPercent)
+                .productBonusAmount(round2(currentProductBonus.totalAmount))
+                .prevMonthSaleBonus(round2(prevMonthSaleBonus))
+                .twoMonthPrevSaleBonus(round2(twoMonthPrevSaleBonus))
+                .boostCost(round2(boostCost))
+                .build();
+    }
+
+    private int getQuarterPosition(int month, Set<Integer> payoutMonths) {
+        if (payoutMonths.contains(month)) return 3;
+        int nextMonth = month == 12 ? 1 : month + 1;
+        if (payoutMonths.contains(nextMonth)) return 2;
+        return 1;
+    }
+
+    private double calculateProductBonusAmount(List<Visit> visits, double saleBonusPercent, LocalDate orderBeforeDate) {
+        return calculateProductBonus(visits, saleBonusPercent, orderBeforeDate).totalAmount;
+    }
+
+    private ProductBonusResult calculateProductBonus(List<Visit> visits, double saleBonusPercent, LocalDate orderBeforeDate) {
+        Map<Long, List<BonusProductItemDTO>> productItemsMap = new LinkedHashMap<>();
+        Map<Long, String> productNames = new HashMap<>();
+        Map<Long, String> brandNames = new HashMap<>();
+        Map<Long, Boolean> noPurchaseHistoryMap = new HashMap<>();
+
+        for (Visit visit : visits) {
+            if (visit.getSale() == null || visit.getSale().getItems() == null) continue;
+
+            for (SaleItem saleItem : visit.getSale().getItems()) {
+                if (saleItem.getProduct() == null) continue;
+
+                Product product = saleItem.getProduct();
+                Long productId = product.getId();
+
+                productItemsMap.computeIfAbsent(productId, k -> new ArrayList<>());
+                productNames.putIfAbsent(productId, product.getName());
+                brandNames.putIfAbsent(productId, product.getBrand() != null ? product.getBrand().getName() : "");
+
+                List<OrderProduct> latestOrders = orderProductRepo.findLatestByProductIdBeforeDate(productId, orderBeforeDate, PageRequest.of(0, 3));
+
+                double saleNetPrice = saleItem.getNetValue() != null ? saleItem.getNetValue() : 0.0;
+                double saleGrossPrice = saleItem.getPrice() != null ? saleItem.getPrice() : 0.0;
+
+                if (latestOrders.isEmpty()) {
+                    noPurchaseHistoryMap.put(productId, true);
+                    productItemsMap.get(productId).add(BonusProductItemDTO.builder()
+                            .saleDate(visit.getDate())
+                            .avgPurchaseNetPrice(0.0)
+                            .avgPurchaseGrossPrice(0.0)
+                            .saleNetPrice(round2(saleNetPrice))
+                            .saleGrossPrice(round2(saleGrossPrice))
+                            .margin(0.0)
+                            .bonusPerUnit(0.0)
+                            .build());
+                    continue;
+                }
+
+                noPurchaseHistoryMap.putIfAbsent(productId, false);
+
+                double avgPurchaseGrossPrice = latestOrders.stream()
+                        .mapToDouble(op -> op.getPrice() != null ? op.getPrice() : 0.0)
+                        .average()
+                        .orElse(0.0);
+
+                double avgPurchaseNetPrice = latestOrders.stream()
+                        .mapToDouble(op -> {
+                            double grossPrice = op.getPrice() != null ? op.getPrice() : 0.0;
+                            double vatRate = op.getVatRate() != null ? op.getVatRate().getRate() : VatRate.VAT_23.getRate();
+                            return grossPrice * 100 / (100 + vatRate);
+                        })
+                        .average()
+                        .orElse(0.0);
+
+                double margin = saleNetPrice - avgPurchaseNetPrice;
+                double bonusPerUnit = margin > 0 ? round2(margin * saleBonusPercent / 100) : 0.0;
+
+                productItemsMap.get(productId).add(BonusProductItemDTO.builder()
+                        .saleDate(visit.getDate())
+                        .avgPurchaseNetPrice(round2(avgPurchaseNetPrice))
+                        .avgPurchaseGrossPrice(round2(avgPurchaseGrossPrice))
+                        .saleNetPrice(round2(saleNetPrice))
+                        .saleGrossPrice(round2(saleGrossPrice))
+                        .margin(round2(margin))
+                        .bonusPerUnit(bonusPerUnit)
+                        .build());
+            }
+        }
+
+        double productBonusAmount = 0.0;
+        List<BonusProductDTO> products = new ArrayList<>();
+
+        for (Map.Entry<Long, List<BonusProductItemDTO>> entry : productItemsMap.entrySet()) {
+            Long productId = entry.getKey();
+            List<BonusProductItemDTO> items = entry.getValue();
+
+            double totalBonus = items.stream()
+                    .mapToDouble(BonusProductItemDTO::getBonusPerUnit)
+                    .sum();
+
+            products.add(BonusProductDTO.builder()
+                    .productId(productId)
+                    .productName(productNames.get(productId))
+                    .brandName(brandNames.get(productId))
+                    .quantitySold(items.size())
+                    .totalBonus(round2(totalBonus))
+                    .noPurchaseHistory(noPurchaseHistoryMap.getOrDefault(productId, false))
+                    .items(items)
+                    .build());
+
+            productBonusAmount += totalBonus;
+        }
+
+        return new ProductBonusResult(products, productBonusAmount);
+    }
+
+    private record ProductBonusResult(List<BonusProductDTO> products, double totalAmount) {}
 
     private EmployeeStatsDTO buildEmployeeStats(Employee employee, StatSettings statSettings, LocalDate startDate, LocalDate endDate,
                                                  LocalDate prevStartDate, LocalDate prevEndDate, Integer year, Integer month, boolean isYearlyMode) {
@@ -272,7 +496,7 @@ public class StatisticsServiceImpl implements StatisticsService {
             if (saleItem.getProduct() == null) continue;
 
             Long productId = saleItem.getProduct().getId();
-            List<OrderProduct> latestOrders = orderProductRepo.findLatestByProductId(productId, PageRequest.of(0, 2));
+            List<OrderProduct> latestOrders = orderProductRepo.findLatestByProductId(productId, PageRequest.of(0, 3));
 
             if (latestOrders.isEmpty()) continue;
 
@@ -295,6 +519,8 @@ public class StatisticsServiceImpl implements StatisticsService {
         double saleBonusPercent = employee.getSaleBonusPercent() != null ? employee.getSaleBonusPercent() : 0.0;
         return round2(totalMargin * saleBonusPercent / 100);
     }
+
+
 
     private Double round2(Double value) {
         if (value == null) return 0.0;

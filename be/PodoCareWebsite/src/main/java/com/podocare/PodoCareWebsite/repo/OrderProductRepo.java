@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,4 +41,7 @@ public interface OrderProductRepo extends JpaRepository<OrderProduct, Long>, Pro
 
     @Query("SELECT op FROM OrderProduct op WHERE op.product.id = :productId ORDER BY op.order.orderDate DESC")
     List<OrderProduct> findLatestByProductId(@Param("productId") Long productId, Pageable pageable);
+
+    @Query("SELECT op FROM OrderProduct op WHERE op.product.id = :productId AND op.order.orderDate <= :beforeDate ORDER BY op.order.orderDate DESC")
+    List<OrderProduct> findLatestByProductIdBeforeDate(@Param("productId") Long productId, @Param("beforeDate") LocalDate beforeDate, Pageable pageable);
 }

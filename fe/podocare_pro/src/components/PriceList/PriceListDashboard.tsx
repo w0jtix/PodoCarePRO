@@ -203,6 +203,7 @@ export function PriceListDashboard() {
             selectedProduct={selectedProduct}
             setSelectedProduct={setSelectedProduct}
             setQuickVisitTotal={setQuickVisitTotal}
+            compact={true}
           />
         </div>
 

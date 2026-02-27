@@ -45,4 +45,10 @@ public class GlobalExceptionHandler {
         log.error("Audit failed: {}", ex.getMessage());
         return new ResponseEntity<>("Operation failed due to audit logging error.", HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGenericException(Exception ex) {
+        log.error("Unexpected error: ", ex);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

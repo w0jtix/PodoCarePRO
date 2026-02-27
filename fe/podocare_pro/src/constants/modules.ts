@@ -29,6 +29,7 @@ export const MENU_ITEMS: MenuItem[] = [
   { name: "Firma", href: '/my-company', icon: 'firma', permissions: ['ROLE_ADMIN'], subItems: [
     { name: "Faktury Kosztowe", module: 'Expenses' },
     { name: "Pracownicy", module: 'Employees' },
+    { name: "Premie", module: 'EmployeeBonus' },
     { name: "Statystyki", module: 'Statistics' },
     { name: "Ustawienia firmowe", module: 'CompanySettings' },
   ]},
@@ -43,7 +44,7 @@ export const getIconAlt = (iconName: string): string => {
   return `${iconName}-icon`;
 };
 
-export type SubModuleType = 'Create' | 'History' | 'Expenses' | 'Statistics' | 'Employees' | 'CompanySettings' | 'Products' | 'InventoryReport';
+export type SubModuleType = 'Create' | 'History' | 'Expenses' | 'Statistics' | 'Employees' | 'EmployeeBonus' | 'CompanySettings' | 'Products' | 'InventoryReport';
 
 export interface SubMenuItem {
   name: string;
@@ -94,6 +95,12 @@ export const BUSINESS_SUBMENU_ITEMS: SubMenuItem[] = [
     module: 'Employees', 
     icon: 'employees',
     alt: 'submenu-calcs'
+  },
+  { 
+    name: "Premie", 
+    module: 'EmployeeBonus', 
+    icon: 'bonus',
+    alt: 'submenu-bonus'
   },
   { 
     name: "Statystyki", 

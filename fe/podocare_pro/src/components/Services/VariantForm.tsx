@@ -35,7 +35,7 @@ export function VariantForm({
         .toString()
         .toLowerCase()} ${className}`}
     >
-        <div className="variant-form-label-input-wrapper width-90 flex-column g-05 align-self-center mt-05 mb-05 mr-0 ml-0">
+        <div className="variant-form-label-input-wrapper width-90 flex-column g-5px align-self-center mt-05 mb-05 mr-0 ml-0">
       <section className="form-row flex width-max align-items-center space-between">
         <span className={`input-label ${className}`}>Nazwa:</span>
         <TextInput

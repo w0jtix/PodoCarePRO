@@ -110,6 +110,10 @@ public class VisitServiceImpl implements VisitService {
     @Transactional
     public VisitDTO createVisit(VisitDTO visit) {
         try{
+            if (visit.getDate() != null && visit.getDate().isAfter(LocalDate.now())) {
+                throw new CreationException("Visit date cannot be in the future.");
+            }
+
             Client client = clientRepo.findOneById(visit.getClient().getId())
                     .orElseThrow(() -> new ResourceNotFoundException("Client not found with given id: " + visit.getClient().getId()));
 
@@ -136,7 +140,7 @@ public class VisitServiceImpl implements VisitService {
             VisitDTO savedDTO = new VisitDTO(updatedVisit);
             auditLogService.logCreate("Visit", savedDTO.getId(), "Wizyta Klienta: " + savedDTO.getClient().getFirstName() + savedDTO.getClient().getLastName(), savedDTO);
             return savedDTO;
-        } catch (ResourceNotFoundException | IllegalStateException e) {
+        } catch (ResourceNotFoundException | IllegalStateException | CreationException e) {
             throw e;
         } catch (Exception e) {
             throw new CreationException("Failed to create Visit. Reason: " + e.getMessage(), e);

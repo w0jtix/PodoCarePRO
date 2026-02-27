@@ -49,7 +49,6 @@ export function StockAdjustmentReportPopup({
       .then((data) => {
         setInventoryReportItems(data.items);
         setFetchedItems(data.items);
-        console.log(data);
       })
       .catch((error) => {
         console.error("Error fetching Inventory Report!", error);

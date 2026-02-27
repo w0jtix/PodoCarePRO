@@ -1,6 +1,7 @@
 package com.podocare.PodoCareWebsite.controller;
 
 import com.podocare.PodoCareWebsite.DTO.*;
+import com.podocare.PodoCareWebsite.DTO.request.EmployeeBonusFilterDTO;
 import com.podocare.PodoCareWebsite.DTO.request.EmployeeRevenueFilterDTO;
 import com.podocare.PodoCareWebsite.service.CompanyStatsService;
 import com.podocare.PodoCareWebsite.service.StatisticsService;
@@ -38,6 +39,15 @@ public class StatisticsController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @PostMapping("/employee-services-bonus")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<EmployeeBonusDTO> getEmployeeBonus(
+            @RequestBody EmployeeBonusFilterDTO filter
+    ) {
+        EmployeeBonusDTO result = statisticsService.getEmployeeBonus(filter);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @PostMapping("/company-summary")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CompanyFinancialSummaryDTO> getCompanyFinancialSummary(
@@ -64,4 +74,6 @@ public class StatisticsController {
         CompanyRevenueDTO result = companyStatsService.getCompanyRevenueChart(filter);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+
 }

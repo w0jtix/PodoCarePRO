@@ -84,11 +84,11 @@ export function DropdownSelect<T extends DropdownItem>({
   /* const filteredItems = items.filter((item) =>
     item.name.toLowerCase().startsWith(searchValue.toLowerCase())
   ); */
-  const filteredItems = items.filter((item) =>
-  (getItemLabel ? getItemLabel(item) : item.name!)
-    .toLowerCase()
-    .startsWith(searchValue.toLowerCase())
-);
+  const filteredItems = items.filter((item) => {
+    const label = (getItemLabel ? getItemLabel(item) : item.name!).toLowerCase();
+    const search = searchValue.toLowerCase();
+    return label.split(" ").some((word) => word.startsWith(search));
+  });
 
   const handleSelect = useCallback(
     (item: T) => {

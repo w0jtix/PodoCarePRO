@@ -38,7 +38,7 @@ export function ClientPopup({
   const [clientDTO, setClientDTO] = useState<NewClient>({
     firstName: "",
     lastName: "",
-    signedRegulations: false,
+    signedRegulations: true,
     boostClient: false,
     redFlag: false,
     phoneNumber: null,

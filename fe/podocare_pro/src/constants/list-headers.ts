@@ -391,3 +391,31 @@ export const EXPENSE_POPUP_HISTORY_ATTRIBUTES: ListAttribute[] = [
   { name: "VAT", width: "6%", justify: "center" },
   { name: "Cena [szt]", width: "6%", justify: "center" },
 ]
+
+export const BONUS_VISIT_HISTORY_ATTRIBUTES: ListAttribute[] = [
+  { name: "", width: "5%", justify: "center" },
+  { name: "Opcje", width: "5%", justify: "center" },
+  { name: "Klient", width: "30%", justify: "flex-start" },
+  { name: "Płatność", width: "15%", justify: "center" },
+  { name: "Płatność Voucherem", width: "15%", justify: "center" },
+  { name: "Produkty", width: "15%", justify: "center" },
+  { name: "Wartość", width: "20%", justify: "center" },
+]
+
+export const BONUS_PRODUCT_LIST_ATTRIBUTES: ListAttribute[] = [
+  { name: "", width: "5%", justify: "center" },
+  { name: "Nazwa", width: "75%", justify: "flex-start" },
+  { name: "Ilość", width: "5%", justify: "center" },
+  { name: "Bonus", width: "15%", justify: "center" },
+]
+
+export const BONUS_PRODUCT_CONTENT_LIST_ATTRIBUTES: ListAttribute[] = [
+  { name: "", width: "2%", justify: "center" },
+  { name: "Data", width: "14%", justify: "center" },
+  { name: "Z Net", width: "14%", justify: "center" },
+  { name: "Z Brut", width: "14%", justify: "center" },
+  { name: "S Net", width: "14%", justify: "center" },
+  { name: "S Brut", width: "14%", justify: "center" },
+  { name: "Marża", width: "14%", justify: "center" },
+  { name: "Premia", width: "14%", justify: "center" },
+]

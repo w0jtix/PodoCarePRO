@@ -53,6 +53,7 @@ public class CompanyStatsServiceImpl implements CompanyStatsService {
         }
 
         Double currentRevenue = calculateAdjustedRevenue(currentStart, currentEnd);
+        Double currentOffTheBookRevenue = nullToZero(visitRepo.sumOffTheBookRevenue(currentStart, currentEnd));
         Double currentExpenses = nullToZero(companyExpenseRepo.sumTotalExpenses(currentStart, currentEnd));
         Double currentIncome = currentRevenue - currentExpenses;
 
@@ -74,6 +75,7 @@ public class CompanyStatsServiceImpl implements CompanyStatsService {
                 .currentRevenue(round2(currentRevenue))
                 .currentExpenses(round2(currentExpenses))
                 .currentIncome(round2(currentIncome))
+                .currentOffTheBookRevenue(round2(currentOffTheBookRevenue))
                 .previousPeriodRevenue(round2(prevPeriodRevenue))
                 .previousPeriodExpenses(round2(prevPeriodExpenses))
                 .previousPeriodIncome(round2(prevPeriodIncome))

@@ -1,4 +1,5 @@
 import { sendApiRequest } from "../components/send-api-request/SendApiRequest";
+import { EmployeeBonusFilterDTO, EmployeeBonus } from "../models/employee";
 import { EmployeeRevenueFilter, EmployeeRevenue, EmployeeStats, CompanyFinancialSummary, CompanyStats, CompanyRevenue } from "../models/statistics";
 
 class StatisticsService {
@@ -16,6 +17,14 @@ class StatisticsService {
             body: filter,
             errorMessage: "Error fetching Employee Stats.",
         });
+    }
+
+    static async getEmployeeBonus(filter: EmployeeBonusFilterDTO): Promise<EmployeeBonus> {
+        return await sendApiRequest<EmployeeBonus>(`statistics/employee-services-bonus`, {
+            method: "post",
+            body: filter,
+            errorMessage: "Error fetching Employee Services Bonus.",
+        })
     }
 
     static async getCompanyFinancialSummary(filter: EmployeeRevenueFilter): Promise<CompanyFinancialSummary> {

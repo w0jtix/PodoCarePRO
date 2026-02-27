@@ -268,7 +268,7 @@ export function OrderNewProductsPopup({
           category: item.category,
           brand: brand,
           supply: item.supply || 0,
-          volume: item.volume || 0,
+          volume: item.unit === null ? null : item.volume,
           unit: item.unit ,
           sellingPrice: item.sellingPrice,
         };

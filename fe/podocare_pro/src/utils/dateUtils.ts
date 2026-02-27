@@ -115,3 +115,67 @@
   export const generateMonthlyLabels = (): string[] => {
     return [...MONTH_LABELS_SHORT];
   };
+
+  export function getMonday(date: Date): Date {
+    const d = new Date(date);
+    const day = d.getDay();
+    const diff = day === 0 ? -6 : 1 - day;
+    d.setDate(d.getDate() + diff);
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }
+
+  export function getSunday(monday: Date): Date {
+    const d = new Date(monday);
+    d.setDate(d.getDate() + 6);
+    return d;
+  }
+
+  export function getMondayKey(date: Date): string {
+    return getMonday(date).toISOString().slice(0, 10);
+  }
+
+  export interface WeekRange {
+    weekNumber: number;
+    start: Date;
+    end: Date;
+  }
+
+  export function getWeeksOfMonth(year: number, month: number): WeekRange[] {
+    const weeks: WeekRange[] = [];
+    const firstDay = new Date(year, month - 1, 1);
+    const lastDay = new Date(year, month, 0);
+
+    let weekStart = new Date(firstDay);
+    let weekNumber = 1;
+
+    while (weekStart <= lastDay) {
+      const dayOfWeek = weekStart.getDay();
+      let weekEnd: Date;
+
+      if (weekNumber === 1 && dayOfWeek !== 1) {
+        const daysUntilSunday = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
+        weekEnd = new Date(weekStart);
+        weekEnd.setDate(weekEnd.getDate() + daysUntilSunday);
+      } else {
+        weekEnd = getSunday(weekStart);
+      }
+
+      if (weekEnd > lastDay) {
+        weekEnd = new Date(lastDay);
+      }
+
+      weeks.push({
+        weekNumber,
+        start: new Date(weekStart),
+        end: new Date(weekEnd),
+      });
+
+      weekNumber++;
+      const nextDay = new Date(weekEnd);
+      nextDay.setDate(nextDay.getDate() + 1);
+      weekStart = nextDay;
+    }
+
+    return weeks;
+  }

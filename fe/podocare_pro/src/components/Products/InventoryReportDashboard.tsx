@@ -64,7 +64,6 @@ export function InventoryReportDashboard({
       InventoryReportService.getInventoryReports(filter, pageNum, 30)
         .then((data) => {
           const content = data?.content || [];
-          console.log(content);
           if (append) {
             setInventoryReports((prev) => [...prev, ...content]);
           } else {

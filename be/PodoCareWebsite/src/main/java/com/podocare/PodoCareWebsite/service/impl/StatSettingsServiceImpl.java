@@ -1,6 +1,7 @@
 package com.podocare.PodoCareWebsite.service.impl;
 
 import com.podocare.PodoCareWebsite.DTO.StatSettingsDTO;
+import com.podocare.PodoCareWebsite.exceptions.ResourceNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.UpdateException;
 import com.podocare.PodoCareWebsite.repo.StatSettingsRepo;
 import com.podocare.PodoCareWebsite.service.StatSettingsService;

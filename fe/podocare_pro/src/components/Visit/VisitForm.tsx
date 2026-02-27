@@ -56,6 +56,7 @@ export interface VisitFormProps {
   setSelectedProduct?: (product: Product | null) => void;
   setQuickVisitTotal?: (total: number) => void;
   onClose?: () => void;
+  compact?: boolean;
 }
 
 export function VisitForm({
@@ -66,6 +67,7 @@ export function VisitForm({
   setSelectedProduct,
   setQuickVisitTotal,
   onClose,
+  compact = false,
 }: VisitFormProps) {
   const { user } = useUser();
   const [discountSettings, setDiscountSettings] = useState<DiscountSettings | null>(null);
@@ -566,6 +568,28 @@ export function VisitForm({
       return { ...prev, payments };
     });
   };
+  const getPaymentFillInfo = (index: number) => {
+    const total = visitPreview?.totalValue ?? 0;
+    const otherSum = visitDTO.payments.reduce(
+      (sum, p, i) => (i !== index ? sum + (p.amount ?? 0) : sum), 0
+    );
+    const remainder = Math.round((total - otherSum) * 100) / 100;
+    const isRemainder = visitDTO.payments.length > 1 && otherSum > 0;
+    return { total, remainder, isRemainder, fillValue: isRemainder ? remainder : total };
+  };
+
+  const handlePaymentFill = (index: number) => {
+    const { isRemainder, fillValue } = getPaymentFillInfo(index);
+    if (isRemainder) {
+      handlePaymentAmount(index, fillValue);
+    } else {
+      setVisitDTO((prev) => {
+        const current = prev.payments[index];
+        return { ...prev, payments: [{ ...current, amount: fillValue }] };
+      });
+    }
+  };
+
   const addPayment = useCallback(() => {
     setVisitDTO((prev) => ({
       ...prev,
@@ -1048,6 +1072,7 @@ export function VisitForm({
                         alt={"Voucher"}
                         text={"Voucher"}
                         onClick={addVoucherToSaleItems}
+                        disabled ={visitDTO.absence}
                         className="pricelist qv"
                       />
                     )}
@@ -1277,26 +1302,48 @@ export function VisitForm({
                     key={index}
                     className="payment-item flex space-between align-items-center"
                   >
-                    <DropdownSelect<DropdownItem>
-                      items={paymentItems}
-                      value={
-                        visitDTO.payments[index].method
-                          ? {
-                              id: visitDTO.payments[index].method,
-                              name: translatePaymentMethod(
-                                visitDTO.payments[index].method
-                              ),
+                    {compact ? (
+                      <DropdownSelect<DropdownItem>
+                        items={paymentItems.filter((item) => !visitDTO.payments.some((p, i) => i !== index && p.method === item.id))}
+                        value={
+                          visitDTO.payments[index].method
+                            ? {
+                                id: visitDTO.payments[index].method,
+                                name: translatePaymentMethod(
+                                  visitDTO.payments[index].method
+                                ),
+                              }
+                            : null
+                        }
+                        onChange={(val) => handlePaymentMethodChange(index, val)}
+                        placeholder="Wybierz"
+                        searchable={false}
+                        multiple={false}
+                        allowNew={false}
+                        reversed={true}
+                        className="quick-visit"
+                      />
+                    ) : (
+                      <div className="flex g-05 align-items-center ml-1">
+                      {paymentItems.map((item) => {
+                        const usedElsewhere = visitDTO.payments.some(
+                          (p, i) => i !== index && p.method === item.id
+                        );
+                        return (
+                          <ActionButton
+                            key={item.id}
+                            text={item.name}
+                            disableImg={true}
+                            disabled={usedElsewhere}
+                            className={`quick-visit pm ${visitDTO.payments[index].method === item.id ? " selected" : ""}`}
+                            onClick={() =>
+                              handlePaymentMethodChange(index, visitDTO.payments[index].method === item.id ? null : item)
                             }
-                          : null
-                      }
-                      onChange={(val) => handlePaymentMethodChange(index, val)}
-                      placeholder="Wybierz"
-                      searchable={false}
-                      multiple={false}
-                      allowNew={false}
-                      reversed={true}
-                      className="quick-visit"
-                    />
+                          />
+                        );
+                      })}
+                      </div>
+                    )}
                     {visitDTO.payments[index].method ===
                       PaymentMethod.VOUCHER && (
                       <ActionButton
@@ -1319,6 +1366,17 @@ export function VisitForm({
                       />
                     )}
                     <div className="flex g-5px align-items-center mr-05">
+                      <ActionButton
+                          text={(() => {
+                            const { isRemainder, fillValue } = getPaymentFillInfo(index);
+                            if (!isRemainder) return "Całość";
+                            return visitDTO.payments[index].amount === fillValue ? "Płatność dzielona" : "Reszta";
+                          })()}
+                          disableImg={true}
+                          disabled={visitDTO.payments[index].method === PaymentMethod.VOUCHER}
+                          className={`quick-visit pm tv-fill${visitDTO.payments[index].amount === getPaymentFillInfo(index).fillValue && visitDTO.payments[index].amount != 0 ? " selected" : ""}`}
+                          onClick={() => handlePaymentFill(index)}
+                        />
                       <CostInput
                         onChange={(value) => handlePaymentAmount(index, value)}
                         className="visit-form"

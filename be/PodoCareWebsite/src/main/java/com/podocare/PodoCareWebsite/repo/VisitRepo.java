@@ -507,6 +507,19 @@ public interface VisitRepo extends JpaRepository<Visit, Long>, JpaSpecificationE
     );
 
     @Query("""
+        SELECT COALESCE(SUM(p.amount), 0)
+        FROM Visit v
+        JOIN v.payments p
+        WHERE v.absence = false
+          AND v.receipt = false
+          AND v.date BETWEEN :from AND :to
+    """)
+    Double sumOffTheBookRevenue(
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+
+    @Query("""
         SELECT COALESCE(SUM(vi.finalPrice), 0)
         FROM Visit v
         JOIN v.items vi
@@ -606,6 +619,48 @@ public interface VisitRepo extends JpaRepository<Visit, Long>, JpaSpecificationE
           AND v.date BETWEEN :from AND :to
     """)
     Double sumCompanyPartialVisitsPayments(
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+
+    @Query("""
+        SELECT DISTINCT v FROM Visit v
+        LEFT JOIN FETCH v.payments
+        JOIN FETCH v.client
+        WHERE v.employee.id = :empId
+          AND v.date BETWEEN :from AND :to
+        ORDER BY v.date ASC
+    """)
+    List<Visit> findVisitsForBonusWithPayments(
+            @Param("empId") Long empId,
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+
+    @Query("""
+        SELECT DISTINCT v FROM Visit v
+        LEFT JOIN FETCH v.sale s
+        LEFT JOIN FETCH s.items si
+        LEFT JOIN FETCH si.product p
+        LEFT JOIN FETCH p.brand
+        WHERE v.employee.id = :empId
+          AND v.date BETWEEN :from AND :to
+    """)
+    List<Visit> findVisitsForBonusWithSaleItems(
+            @Param("empId") Long empId,
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+
+    @Query("""
+        SELECT DISTINCT v FROM Visit v
+        LEFT JOIN FETCH v.items
+        WHERE v.employee.id = :empId
+          AND v.isBoost = true
+          AND v.date BETWEEN :from AND :to
+    """)
+    List<Visit> findBoostVisitsWithItems(
+            @Param("empId") Long empId,
             @Param("from") LocalDate from,
             @Param("to") LocalDate to
     );
