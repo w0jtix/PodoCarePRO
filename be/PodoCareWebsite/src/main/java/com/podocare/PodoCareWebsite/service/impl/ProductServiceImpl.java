@@ -8,10 +8,12 @@ import com.podocare.PodoCareWebsite.exceptions.DeletionException;
 import com.podocare.PodoCareWebsite.exceptions.ResourceNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.UpdateException;
 import com.podocare.PodoCareWebsite.model.Product;
+import com.podocare.PodoCareWebsite.model.constants.RoleType;
 import com.podocare.PodoCareWebsite.repo.ProductRepo;
 import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.ProductReferenceService;
 import com.podocare.PodoCareWebsite.service.ProductService;
+import com.podocare.PodoCareWebsite.utils.SessionUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -80,6 +82,11 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public ProductDTO createProduct(ProductDTO product) {
         try{
+            if (!SessionUtils.hasUserRole(RoleType.ROLE_ADMIN)) {
+                product.setFallbackNetPurchasePrice(null);
+                product.setFallbackVatRate(null);
+            }
+
             Optional<Product> existingProduct  = productRepo
                     .findByName(
                             product.getName()
@@ -119,6 +126,11 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO updateProduct(Long id, ProductDTO product) {
         try {
             ProductDTO oldProductSnapshot = getProductById(id);
+
+            if (!SessionUtils.hasUserRole(RoleType.ROLE_ADMIN)) {
+                product.setFallbackNetPurchasePrice(oldProductSnapshot.getFallbackNetPurchasePrice());
+                product.setFallbackVatRate(oldProductSnapshot.getFallbackVatRate());
+            }
 
             checkForDuplicatesExcludingCurrent(product, id);
             product.setId(id);

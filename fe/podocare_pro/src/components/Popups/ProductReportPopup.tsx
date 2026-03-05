@@ -28,7 +28,7 @@ export function ProductReportPopup({
     categoryIds: null,
     brandIds: null,
     keyword: "",
-    includeZero: false,
+    includeZero: true,
     isDeleted: false,
   });
   const [categories, setCategories] = useState<ProductCategory[]>([]);

@@ -49,6 +49,7 @@ export interface BonusProduct {
     quantitySold: number;
     totalBonus: number;
     noPurchaseHistory: boolean;
+    fallbackPurchasePriceUsed: boolean;
     items: BonusProductItem[]
 }
 

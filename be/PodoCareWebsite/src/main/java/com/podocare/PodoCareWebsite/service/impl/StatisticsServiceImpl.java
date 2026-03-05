@@ -295,6 +295,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         Map<Long, String> productNames = new HashMap<>();
         Map<Long, String> brandNames = new HashMap<>();
         Map<Long, Boolean> noPurchaseHistoryMap = new HashMap<>();
+        Map<Long, Boolean> fallbackUsedMap = new HashMap<>();
 
         for (Visit visit : visits) {
             if (visit.getSale() == null || visit.getSale().getItems() == null) continue;
@@ -315,20 +316,41 @@ public class StatisticsServiceImpl implements StatisticsService {
                 double saleGrossPrice = saleItem.getPrice() != null ? saleItem.getPrice() : 0.0;
 
                 if (latestOrders.isEmpty()) {
+                    Double fallbackNet = product.getFallbackNetPurchasePrice();
+                    VatRate fallbackVat = product.getFallbackVatRate();
                     noPurchaseHistoryMap.put(productId, true);
-                    productItemsMap.get(productId).add(BonusProductItemDTO.builder()
-                            .saleDate(visit.getDate())
-                            .avgPurchaseNetPrice(0.0)
-                            .avgPurchaseGrossPrice(0.0)
-                            .saleNetPrice(round2(saleNetPrice))
-                            .saleGrossPrice(round2(saleGrossPrice))
-                            .margin(0.0)
-                            .bonusPerUnit(0.0)
-                            .build());
+
+                    if (fallbackNet != null && fallbackVat != null) {
+                        fallbackUsedMap.put(productId, true);
+                        double fallbackGross = fallbackNet * (1 + fallbackVat.getRate() / 100.0);
+                        double margin = saleNetPrice - fallbackNet;
+                        double bonusPerUnit = margin > 0 ? round2(margin * saleBonusPercent / 100) : 0.0;
+                        productItemsMap.get(productId).add(BonusProductItemDTO.builder()
+                                .saleDate(visit.getDate())
+                                .avgPurchaseNetPrice(round2(fallbackNet))
+                                .avgPurchaseGrossPrice(round2(fallbackGross))
+                                .saleNetPrice(round2(saleNetPrice))
+                                .saleGrossPrice(round2(saleGrossPrice))
+                                .margin(round2(margin))
+                                .bonusPerUnit(bonusPerUnit)
+                                .build());
+                    } else {
+                        fallbackUsedMap.putIfAbsent(productId, false);
+                        productItemsMap.get(productId).add(BonusProductItemDTO.builder()
+                                .saleDate(visit.getDate())
+                                .avgPurchaseNetPrice(0.0)
+                                .avgPurchaseGrossPrice(0.0)
+                                .saleNetPrice(round2(saleNetPrice))
+                                .saleGrossPrice(round2(saleGrossPrice))
+                                .margin(0.0)
+                                .bonusPerUnit(0.0)
+                                .build());
+                    }
                     continue;
                 }
 
                 noPurchaseHistoryMap.putIfAbsent(productId, false);
+                fallbackUsedMap.putIfAbsent(productId, false);
 
                 double avgPurchaseGrossPrice = latestOrders.stream()
                         .mapToDouble(op -> op.getPrice() != null ? op.getPrice() : 0.0)
@@ -377,6 +399,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                     .quantitySold(items.size())
                     .totalBonus(round2(totalBonus))
                     .noPurchaseHistory(noPurchaseHistoryMap.getOrDefault(productId, false))
+                    .fallbackPurchasePriceUsed(fallbackUsedMap.getOrDefault(productId, false))
                     .items(items)
                     .build());
 

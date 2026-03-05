@@ -51,6 +51,13 @@ public class Product {
     @Column(name = "unit", nullable = true)
     private Unit unit;
 
+    @Column(name = "fallback_net_purchase_price", nullable = true)
+    private Double fallbackNetPurchasePrice;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "fallback_vat_rate", nullable = true)
+    private VatRate fallbackVatRate;
+
     @Column(nullable = false)
     @Builder.Default
     private Boolean isDeleted = false;

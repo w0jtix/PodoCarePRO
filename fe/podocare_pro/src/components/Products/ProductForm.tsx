@@ -15,6 +15,8 @@ import { VatRate } from "../../models/vatrate";
 import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
 import ActionButton from "../ActionButton";
+import { useUser } from "../User/UserProvider";
+import { RoleType } from "../../models/login";
 
 export interface ProductFormProps {
   action: Action;
@@ -35,6 +37,8 @@ export function ProductForm({
 }: ProductFormProps) {
   const [categories, setCategories] = useState<ProductCategory[]>([]);
   const { showAlert } = useAlert();
+  const { user } = useUser();
+  const isAdmin = user?.roles.includes(RoleType.ROLE_ADMIN) ?? false;
   const [brandSuggestions, setBrandSuggestions] = useState<Brand[]>([]);
 
   const fetchCategories = async (): Promise<void> => {
@@ -65,6 +69,8 @@ export function ProductForm({
         volume: isProductCategory ? prev.volume : null,
         unit: isProductCategory ? prev.unit : null,
         vatRate: isProductCategory ? prev.vatRate : VatRate.VAT_23,
+        fallbackNetPurchasePrice: isProductCategory ? prev.fallbackNetPurchasePrice : null,
+        fallbackVatRate: isProductCategory ? prev.fallbackVatRate : null,
       };
     });
   }, []);
@@ -98,6 +104,18 @@ export function ProductForm({
       vatRate: selectedVat ?? VatRate.VAT_23,
     }))
   },[])
+  const handleVatPurchaseSelect = useCallback((selectedVat: VatRate) => {
+    setProductDTO((prev) => ({
+      ...prev,
+      fallbackVatRate: selectedVat ?? VatRate.VAT_23,
+    }))
+  },[])
+  const handleNetPurchasePrice = useCallback((val: number) => {
+    setProductDTO((prev) => ({
+      ...prev,
+      fallbackNetPurchasePrice: val === 0 ? null : val,
+    }));
+  }, []);
   const handleDescription = useCallback((newDesc: string) => {
     setProductDTO((prev) => ({
       ...prev,
@@ -244,13 +262,32 @@ export function ProductForm({
                   />
                 </div>
               </li>
+              {isAdmin && (
+                <>
+                <li className="popup-common-section-row flex align-items-center space-between g-10px mt-15 ">
+                  <a className="product-form-input-title">Cena zakupu Netto:</a>
+                  <CostInput
+                    onChange={handleNetPurchasePrice}
+                    selectedCost={productDTO.fallbackNetPurchasePrice ?? undefined}
+                  />
+                </li>
+                <li className="popup-common-section-row flex align-items-center space-between g-10px mt-15 ">
+                  <a className="product-form-input-title">VAT zakupu:</a>
+                  <SelectVATButton
+                    selectedVat={productDTO.fallbackVatRate ?? VatRate.VAT_23}
+                    onSelect={handleVatPurchaseSelect}
+                    className="product-form"
+                  />
+                </li>
+                </>
+              )}
               </>
             )}
           <li className="popup-common-section-row space-between g-10px description flex-column align-items-start mt-15">
             <a className="product-form-input-title">Dodatkowe informacje:</a>
             <TextInput
               value={productDTO.description ?? ""}
-              rows={8}
+              rows={4}
               multiline={true}
               onSelect={(newDesc) => {
                 if (typeof newDesc === "string") {

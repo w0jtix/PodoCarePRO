@@ -37,6 +37,8 @@ export function AddEditProductPopup ({
     volume: null,
     unit: null,
     description: "",
+    fallbackNetPurchasePrice: null,
+    fallbackVatRate: VatRate.VAT_23,
     isDeleted: false,
   });
   const [brandToCreate, setBrandToCreate] = useState<NewBrand | null>(null);

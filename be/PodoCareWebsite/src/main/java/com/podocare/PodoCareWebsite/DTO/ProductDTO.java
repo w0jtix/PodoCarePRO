@@ -24,6 +24,8 @@ public class ProductDTO {
     private Integer volume;
     private Unit unit;
     private Boolean isDeleted;
+    private Double fallbackNetPurchasePrice;
+    private VatRate fallbackVatRate;
 
     public ProductDTO(Product product) {
         if(isNull(product))
@@ -39,6 +41,8 @@ public class ProductDTO {
         this.volume = product.getVolume();
         this.unit = product.getUnit();
         this.isDeleted = product.getIsDeleted();
+        this.fallbackNetPurchasePrice = product.getFallbackNetPurchasePrice();
+        this.fallbackVatRate = product.getFallbackVatRate();
     }
 
     public Product toEntity() {
@@ -54,6 +58,8 @@ public class ProductDTO {
                 .volume(this.volume)
                 .unit(this.unit)
                 .isDeleted(this.isDeleted != null ? this.isDeleted : false)
+                .fallbackNetPurchasePrice(this.fallbackNetPurchasePrice)
+                .fallbackVatRate(this.fallbackVatRate)
                 .build();
     }
 }

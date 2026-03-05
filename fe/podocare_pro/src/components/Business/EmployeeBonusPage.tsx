@@ -148,6 +148,7 @@ const EmployeeBonusPage = () => {
       .catch(() => console.error("Failed to fetch StatSettings"));
   }, []);
   useEffect(() => {
+    console.log(employeeBonus)
     fetchUser();
   }, [employeeBonus]);
   useEffect(() => {
@@ -252,7 +253,7 @@ const EmployeeBonusPage = () => {
                   <span className="qv-span visit-preview">Przychód:</span>
 
                   <span className="qv-span visit-preview profit w">
-                    + {employeeBonus?.monthlyServicesRevenue} zł
+                    + {employeeBonus?.monthlyServicesRevenue.toFixed(2)} zł
                   </span>
                 </div>
                 {employeeBonus && employeeBonus.boostCost > 0 && (
@@ -269,7 +270,7 @@ const EmployeeBonusPage = () => {
                       </span>
                     </div>
                     <span className="qv-span visit-preview sb-threshold">
-                      - {employeeBonus?.boostCost} zł
+                      - {employeeBonus?.boostCost.toFixed(2)} zł
                     </span>
                   </div>
                 )}
@@ -277,7 +278,7 @@ const EmployeeBonusPage = () => {
                   <span className="qv-span visit-preview">Próg:</span>
 
                   <span className="qv-span visit-preview sb-threshold">
-                    - {employeeBonus?.bonusThreshold} zł
+                    - {employeeBonus?.bonusThreshold.toFixed(2)} zł
                   </span>
                 </div>
                 <div className="width-max flex space-between">
@@ -290,7 +291,7 @@ const EmployeeBonusPage = () => {
                 <div className="sb-title flex align-items-center g-1 align-self-center">
                   <h2 className="sb-header">Premia utarg:</h2>
                   <h2 className="sb-header bonus-value">
-                    {"+ " + employeeBonus?.bonusAmount + " zł"}
+                    {"+ " + employeeBonus?.bonusAmount.toFixed(2) + " zł"}
                   </h2>
                 </div>
               </div>
@@ -310,14 +311,14 @@ const EmployeeBonusPage = () => {
                   </span>
 
                   <span className="qv-span visit-preview profit w">
-                    + {employeeBonus?.monthlyProductsRevenue} zł
+                    + {employeeBonus?.monthlyProductsRevenue.toFixed(2)} zł
                   </span>
                 </div>
                 <div className="width-max flex space-between">
                   <span className="qv-span visit-preview">Premia suma:</span>
 
                   <span className="qv-span visit-preview profit w">
-                    + {employeeBonus?.productBonusAmount} zł
+                    + {employeeBonus?.productBonusAmount.toFixed(2)} zł
                   </span>
                 </div>
                 <div className="width-max flex space-between">
@@ -350,7 +351,7 @@ const EmployeeBonusPage = () => {
                           <div
                             className={`sb-quarter-segment width-max flex align-items-center justify-center${i < quarterData.filledCount ? " filled" : ""}${i === 2 ? " payout" : ""}`}
                           >
-                            {value != null ? `${value} zł` : "-"}
+                            {value != null ? `${value.toFixed(2)} zł` : "-"}
                           </div>
                         </div>
                       );
@@ -365,7 +366,7 @@ const EmployeeBonusPage = () => {
                     {"+ " +
                       ((employeeBonus?.productBonusAmount ?? 0) +
                         (employeeBonus?.prevMonthSaleBonus ?? 0) +
-                        (employeeBonus?.twoMonthPrevSaleBonus ?? 0)) +
+                        (employeeBonus?.twoMonthPrevSaleBonus ?? 0)).toFixed(2) +
                       " zł"}
                   </h2>
                 </div>

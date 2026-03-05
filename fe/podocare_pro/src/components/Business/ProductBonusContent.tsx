@@ -19,6 +19,7 @@ export function ProductBonusContent ({
     attr: ListAttribute,
     product: BonusProductItem,
     noPurchaseHistory: boolean,
+    fallbackPurchasePriceUsed: boolean,
     index: number
   ): React.ReactNode => {
     switch (attr.name) {
@@ -34,29 +35,41 @@ export function ProductBonusContent ({
         );
 
         case "Z Net":
-        return noPurchaseHistory ? (
-          <img
-            title="Brak historii zakupów tego produktu. Brak możliwości naliczenia marży i premii."
-            src="src/assets/alert.svg"
-            alt="alert"
-            className="sb-alert"
-          />
-        ) : (
-          <span title="Średnia cena zakupu netto." className="order-values-lower-font-size pointer">
+        if (noPurchaseHistory && !fallbackPurchasePriceUsed) {
+          return (
+            <img
+              title="Brak historii zakupów tego produktu. Brak możliwości naliczenia marży i premii."
+              src="src/assets/alert.svg"
+              alt="alert"
+              className="sb-alert pointer"
+            />
+          );
+        }
+        return (
+          <span
+            title={fallbackPurchasePriceUsed ? "Awaryjna cena zakupu Netto przypisana do produktu." : "Średnia cena zakupu netto."}
+            className={`order-values-lower-font-size pointer${fallbackPurchasePriceUsed ? " fallback" : ""}`}
+          >
             {product.avgPurchaseNetPrice}
           </span>
         );
 
         case "Z Brut":
-        return noPurchaseHistory ? (
-          <img
-            title="Brak historii zakupów tego produktu. Brak możliwości naliczenia marży i premii."
-            src="src/assets/alert.svg"
-            alt="alert"
-            className="sb-alert"
-          />
-        ) : (
-          <span title="Średnia cena zakupu brutto." className="order-values-lower-font-size pointer">
+        if (noPurchaseHistory && !fallbackPurchasePriceUsed) {
+          return (
+            <img
+              title="Brak historii zakupów tego produktu. Brak możliwości naliczenia marży i premii."
+              src="src/assets/alert.svg"
+              alt="alert"
+              className="sb-alert pointer"
+            />
+          );
+        }
+        return (
+          <span
+            title={fallbackPurchasePriceUsed ? "Awaryjna cena zakupu Brutto przypisana do produktu." : "Średnia cena zakupu brutto."}
+            className={`order-values-lower-font-size pointer${fallbackPurchasePriceUsed ? " fallback" : ""}`}
+          >
             {product.avgPurchaseGrossPrice}
           </span>
         );
@@ -120,7 +133,7 @@ export function ProductBonusContent ({
                   justifyContent: attr.justify,
                 }}
               >
-                {renderAttributeContent(attr, item, product.noPurchaseHistory, index)}
+                {renderAttributeContent(attr, item, product.noPurchaseHistory, product.fallbackPurchasePriceUsed, index)}
               </div>
             ))}
           </div>

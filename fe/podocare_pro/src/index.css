@@ -4507,13 +4507,16 @@ background-color: rgba(0, 218, 0, 0.35);
   padding-bottom: 10px;
 }
 .item.sb-rev.prod {
-  background-color: rgb(91, 64, 7, 0.6);
+  background-color: rgba(168, 116, 3, 0.509);
   border-radius: 5px;
   height: 30px;
   cursor: pointer;
 }
 .item.sb-rev.prod.alert {
   background-color: rgba(119, 6, 6, 0.7);
+}
+.item.sb-rev.prod.notify {
+  background-color: rgba(62, 12, 244, 0.641)
 }
 .item.sb-rev.prod:first-child {
   margin-top: 5px;
@@ -4711,6 +4714,10 @@ background-color: rgba(0, 218, 0, 0.35);
 .order-values-lower-font-size.opening-amt {
   color: var(--yellow-podocare);
   font-weight: 500;
+}
+.order-values-lower-font-size.fallback {
+  font-size: 500;
+  color:rgb(12, 244, 240);
 }
 .span-cl.popup.closing-amt,
 .order-values-lower-font-size.closing-amt,

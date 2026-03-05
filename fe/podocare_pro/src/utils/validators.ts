@@ -160,7 +160,7 @@ import { CashLedger } from "../models/cash_ledger";
     action: Action,
   ): string | null {
     if (Object.entries(productForm).some(([key, value]) => {
-      if(key === "description") return false;
+      if(key === "description" || key === "fallbackNetPurchasePrice" || key === "fallbackVatRate") return false;
       return "Brak pełnych informacji o produkcie!";
     }))
 
@@ -176,6 +176,9 @@ import { CashLedger } from "../models/cash_ledger";
     if (productForm.category && productForm.category.name === "Produkty" && (productForm.volume !== null && productForm.unit == null)) {
       return "Uzupełnij jednostkę Produktu!"
     }
+    if (productForm.category && productForm.category.name === "Produkty" && (productForm.fallbackNetPurchasePrice === 0)) {
+      return "Cena zakupu Netto nie może być 0!"
+    }
     if (action === Action.EDIT && selectedProduct) {
       const noChangesDetected =
       productForm.name === selectedProduct?.name &&
@@ -186,8 +189,9 @@ import { CashLedger } from "../models/cash_ledger";
       productForm.sellingPrice === selectedProduct?.sellingPrice &&
       productForm.volume === selectedProduct?.volume &&
       productForm.unit === selectedProduct?.unit &&
-      productForm.vatRate === selectedProduct?.vatRate;
-
+      productForm.vatRate === selectedProduct?.vatRate &&
+      productForm.fallbackNetPurchasePrice === selectedProduct.fallbackNetPurchasePrice &&
+      productForm.fallbackVatRate === selectedProduct.fallbackVatRate;
 
       if (noChangesDetected) {
       return "Brak zmian!";

@@ -18,6 +18,8 @@ export interface Product {
     volume?: number | null;
     unit?: Unit | null;
     description: string;
+    fallbackNetPurchasePrice?: number | null;
+    fallbackVatRate?: VatRate | null;
     isDeleted: boolean;
 }
 
@@ -30,7 +32,9 @@ export interface NewProduct {
     vatRate?: VatRate | null;
     volume?: number | null;
     unit?: Unit | null;
-    description?: string;
+    description?: string;   
+    fallbackNetPurchasePrice?: number | null;
+    fallbackVatRate?: VatRate | null;
     isDeleted?: boolean;
 }
 

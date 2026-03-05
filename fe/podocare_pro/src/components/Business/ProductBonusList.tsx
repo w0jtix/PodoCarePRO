@@ -59,11 +59,15 @@ export function ProductBonusList ({
           </span>
           {item.noPurchaseHistory && (
             <img
-            title="Brak historii zakupów tego produktu. Brak możliwości naliczenia marży i premii."
-            src="src/assets/alert.svg"
-            alt="arrow down"
-            className="sb-alert"
-          />
+              title={
+                item.fallbackPurchasePriceUsed
+                  ? "Brak historii zakupów — użyto awaryjnej ceny zakupu Netto przypisanej do produktu. Marża i premia mogą być niedokładne."
+                  : "Brak historii zakupów tego produktu. Brak możliwości naliczenia marży i premii."
+              }
+              src="src/assets/alert.svg"
+              alt="alert"
+              className="sb-alert"
+            />
           )}
           </div>);
 
@@ -97,7 +101,7 @@ export function ProductBonusList ({
       {items.map((item, index) => (
         <div key={index} className={`product-wrapper ${className}`}>
           <div
-            className={`item flex ${className} ${item.noPurchaseHistory ? "alert" : ""} pointer`}
+            className={`item flex ${className} ${item.noPurchaseHistory ? (item.fallbackPurchasePriceUsed ? "notify" : "alert") : ""} pointer`}
             onClick={() => toggleExpand(item.productId)}
           >
             {attributes.map((attr) => (

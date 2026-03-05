@@ -16,5 +16,6 @@ public class BonusProductDTO {
     private Integer quantitySold;
     private Double totalBonus;
     private Boolean noPurchaseHistory;
+    private Boolean fallbackPurchasePriceUsed;
     private List<BonusProductItemDTO> items;
 }
