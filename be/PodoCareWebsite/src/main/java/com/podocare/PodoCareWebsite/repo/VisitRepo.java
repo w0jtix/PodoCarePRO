@@ -665,4 +665,12 @@ public interface VisitRepo extends JpaRepository<Visit, Long>, JpaSpecificationE
             @Param("to") LocalDate to
     );
 
+    @Query("""
+        SELECT DISTINCT v FROM Visit v
+        JOIN v.payments p
+        WHERE v.date = :date
+          AND p.method = com.podocare.PodoCareWebsite.model.constants.PaymentMethod.CASH
+    """)
+    List<Visit> findAllByDateWithCashPayment(@Param("date") LocalDate date);
+
 }

@@ -39,14 +39,19 @@ const CostInput = ({
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
     const inputValue = e.target.value;
 
-    if (inputValue ==="") {
+    if (inputValue === "") {
       setCost(0);
+      return;
+    }
+
+    const dotIndex = inputValue.indexOf(".");
+    if (dotIndex !== -1 && inputValue.length - dotIndex > 3) {
       return;
     }
 
     const newCost = parseFloat(inputValue);
 
-    if(!isNaN(newCost)) {
+    if (!isNaN(newCost)) {
       let constrainedCost = newCost;
       if (min !== undefined && constrainedCost < min) {
         constrainedCost = min;
@@ -56,7 +61,7 @@ const CostInput = ({
       }
       setCost(constrainedCost);
     }
-  },[min, max, setCost]);
+  }, [min, max, setCost]);
 
   const handleBlur = useCallback((): void => {
     const roundedCost = Math.round(cost *100) / 100;

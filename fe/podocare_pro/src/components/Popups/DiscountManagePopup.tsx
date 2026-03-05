@@ -100,8 +100,8 @@ export function DiscountManagePopup({
         <section className="flex width-90 space-between mb-1 g-2">
           <ActionButton
             src={"src/assets/addNew.svg"}
-            alt={"Nowa Rabat"}
-            text={"Nowa Rabat"}
+            alt={"Nowy Rabat"}
+            text={"Nowy Rabat"}
             onClick={() => setIsAddNewDiscountPopupOpen(true)}
           />
         </section>

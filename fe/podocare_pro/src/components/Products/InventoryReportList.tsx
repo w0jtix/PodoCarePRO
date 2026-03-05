@@ -240,7 +240,7 @@ export function InventoryReportList({
       {approveReportId != null && (
         <RemovePopup
           onClose={() => setApproveReportId(null)}
-          warningText={"Zanim Zatwierdzisz sprawdź Raport - zatwierdzenia nie można cofnąć!\n\nRaportu nie będzie można edytować/ usunąć!"}
+          warningText={"Zanim Zatwierdzisz sprawdź Raport!\n\nRaportu nie będzie można edytować/ usunąć!"}
           handleRemove={() => handleApproveReport(approveReportId)}
         />
       )}
@@ -255,7 +255,7 @@ export function InventoryReportList({
         <RemovePopup
           onClose={() => setRemoveInventoryReportId(null)}
           handleRemove={() => deleteInventoryReport(removeInventoryReportId)}
-          warningText={"Ilość Produktów zostanie przywrócona do stanu sprzed Raportu.\n\nPo zatwierdzeniu operacji nie będzie można cofnąć!"}
+          warningText={"Ilość Produktów zostanie przywrócona do stanu sprzed Raportu."}
         />
       )}
       {isLoading &&  (

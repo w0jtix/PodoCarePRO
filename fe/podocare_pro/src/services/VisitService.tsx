@@ -94,6 +94,14 @@ class VisitService {
     })
   }
 
+  static async getVisitsWithCashPaymentByDate(date: string): Promise<Visit[]> {
+    const dateOnly = date.split("T")[0];
+    return await sendApiRequest<Visit[]>(`visits/search/cash?date=${dateOnly}`, {
+      method: "get",
+      errorMessage: `Error fetching Cash Payment Visits for ${dateOnly}`,
+    })
+  }
+
 
 }
 

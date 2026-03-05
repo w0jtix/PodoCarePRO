@@ -17,6 +17,7 @@ export interface VisitListProps {
   isLoading?: boolean;
   hasMore?: boolean;
   handleResetFiltersAndData?: () => void;
+  disableExpand?: boolean;
 }
 
 export function VisitList({
@@ -27,6 +28,7 @@ export function VisitList({
   isLoading = false,
   hasMore = true,
   handleResetFiltersAndData,
+  disableExpand = false,
 }: VisitListProps) {
   const [expandedVisitIds, setExpandedVisitIds] = useState<number[]>([]);
   const [previewVisitId, setPreviewVisitId] =
@@ -205,6 +207,30 @@ export function VisitList({
           </div>
         );
 
+        case "Podgląd":
+        return (
+          <div className="item-list-single-item-action-buttons flex">
+            <ActionButton
+              src={"src/assets/preview.svg"}
+              alt={"Podgląd Wizyty"}
+              iconTitle={"Podgląd Wizyty"}
+              text={"Podgląd"}
+              onClick={(e) => handleOnClickPreview(e, visit)}
+              disableText={true}
+            />
+          </div>
+        );
+
+        case "Wpływ":
+        return (
+          <span className="order-values-lower-font-size ml-1 income">
+            + {visit.payments
+              .filter((p) => p.method === "CASH")
+              .reduce((sum, p) => sum + p.amount, 0)
+              .toFixed(2)} zł
+          </span>
+        );
+
       default:
         return <span>{"-"}</span>;
     }
@@ -222,7 +248,7 @@ export function VisitList({
           index === 0 || visits[index - 1].date !== visit.date;
         return (
           <div key={visit.id}>
-            {showDateSeparator && (
+            {showDateSeparator && !disableExpand && (
               <div className="day-separator width-fit-content mb-05">
                 {
                   <span className="qv-span f12">
@@ -236,9 +262,9 @@ export function VisitList({
               className={`product-wrapper order ${className}`}
             >
               <div
-                className={`item order align-items-center flex-column pointer ${className}`}
-                onClick={() => toggleVisits(visit.id)}
-                onKeyDown={(e) => {
+                className={`item order align-items-center flex-column ${disableExpand ? "" : "pointer"} ${className}`}
+                onClick={disableExpand ? undefined : () => toggleVisits(visit.id)}
+                onKeyDown={disableExpand ? undefined : (e) => {
                   if (e.key === "Enter") {
                     toggleVisits(visit.id);
                   }
@@ -264,7 +290,7 @@ export function VisitList({
                     </div>
                   ))}
                 </div>
-                {expandedVisitIds.includes(visit.id) && (
+                {!disableExpand && expandedVisitIds.includes(visit.id) && (
                   <VisitContent visit={visit} />
                 )}
               </div>

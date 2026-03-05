@@ -18,6 +18,7 @@ export const MENU_ITEMS: MenuItem[] = [
     { name: "Produkty", module: 'Products' },
     { name: "Raporty Stanu Mag.", module: 'InventoryReport' },
   ]},
+  { name: "Kasetka", href: '/cash-ledger', icon: 'cash_register' },
   { name: "Zamówienia", href: '/orders', icon: 'zamówienia', subItems: [
     { name: "Kreator", module: 'Create' },
     { name: "Historia", module: 'History' },

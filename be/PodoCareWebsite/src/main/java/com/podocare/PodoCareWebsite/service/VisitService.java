@@ -4,6 +4,7 @@ import com.podocare.PodoCareWebsite.DTO.VisitDTO;
 import com.podocare.PodoCareWebsite.DTO.request.VisitFilterDTO;
 import org.springframework.data.domain.Page;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface VisitService {
@@ -29,5 +30,7 @@ public interface VisitService {
     VisitDTO findByReviewId(Long reviewId);
 
     long countVisitsByClientId(Long clientId);
+
+    List<VisitDTO> findAllByDateWithCashPayment(LocalDate date);
 
 }

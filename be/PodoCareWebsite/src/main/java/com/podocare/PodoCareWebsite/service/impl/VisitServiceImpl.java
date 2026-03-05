@@ -250,6 +250,14 @@ public class VisitServiceImpl implements VisitService {
         return visitRepo.countVisitsByClientId(clientId);
     }
 
+    @Override
+    public List<VisitDTO> findAllByDateWithCashPayment(LocalDate date) {
+        return visitRepo.findAllByDateWithCashPayment(date)
+                .stream()
+                .map(VisitDTO::new)
+                .collect(Collectors.toList());
+    }
+
 
     private void checkSaleItemVouchers(Visit visit) {
         if(!visit.getSale().getItems().isEmpty()) {

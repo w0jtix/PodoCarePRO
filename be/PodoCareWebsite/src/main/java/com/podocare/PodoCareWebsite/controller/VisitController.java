@@ -6,10 +6,14 @@ import com.podocare.PodoCareWebsite.service.VisitService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -97,5 +101,14 @@ public class VisitController {
     public ResponseEntity<Long> countVisitsByClientId(@PathVariable(value = "clientId") Long clientId) {
         long count = visitService.countVisitsByClientId(clientId);
         return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+
+    @GetMapping("/search/cash")
+    @PreAuthorize(("hasRole('USER')"))
+    public ResponseEntity<List<VisitDTO>> getVisitsWithCashPaymentByDate(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+    ) {
+        List<VisitDTO> visits = visitService.findAllByDateWithCashPayment(date);
+        return new ResponseEntity<>(visits, visits.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 }

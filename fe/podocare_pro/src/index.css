@@ -1411,6 +1411,7 @@ input[type="number"]::-webkit-inner-spin-button {
 .edit-order-popup-content,
 .remove-order-popup-content,
 .remove-product-popup-content,
+.confirm-cash-ledger-popup-content,
 .remove-visit-popup-content,
 .force-change-pw-content,
 .service-popup-content,
@@ -1421,6 +1422,7 @@ input[type="number"]::-webkit-inner-spin-button {
 .logs-popup-content,
 .voucher-select-popup-content,
 .discount-popup-content,
+.cash-ledger-history-popup-content,
 .employee-popup-content,
 .manage-clients-popup-content,
 .manage-order-history-popup-content,
@@ -1498,6 +1500,11 @@ input[type="number"]::-webkit-inner-spin-button {
   min-height: 30%;
   max-height: 80%;
 }
+.cash-ledger-history-popup-content {
+  width: 60%;
+  min-height: 50%;
+  max-height: 70%;
+}
 .manage-clients-popup-content,
 .remove-visit-popup-content {
   width: 30%;
@@ -1541,6 +1548,9 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 .remove-product-popup-content{
   width: 30%;
+}
+.confirm-cash-ledger-popup-content {
+  width: 20%;
 }
 .category-popup-content {
   padding: 2rem 0;
@@ -1894,14 +1904,6 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 .popup-footer-container {
   flex-grow: 1;
-}
-.footer-cancel-button .product-action-button {
-  border: 1px solid rgba(255, 0, 0, 0.8);
-  opacity:100%;
-}
-.footer-confirm-button .product-action-button {
-  border: 1px solid rgb(1, 245, 1, 0.8);
-  opacity:100%;
 }
 .footer-cancel-button .product-action-button-icon {
   width: 11px;
@@ -2536,7 +2538,6 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 .item-list.services.inv-rep {
   overflow-y: auto;
-  margin-top: 0;
   max-height: 565px;
 }
 .item-list.services.emp {
@@ -4611,4 +4612,129 @@ background-color: rgba(0, 218, 0, 0.35);
 .order-item-list.invoice.not-allowed  {
   min-height: 16rem;
   max-height: 16rem;
+}
+.cl-header {
+  font-size: 30px;
+}
+.cl-header.amt {
+  color:var(--yellow-podocare);
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+}
+.cl-header.amt.final {
+  color:rgb(0, 230, 0);
+  text-decoration: underline;
+}
+.product-action-button.cashout {
+  height: 40px;
+}
+.product-action-button-text.cashout {
+  font-size: 16px;
+}
+.product-action-button-text.lock {
+  font-size: 13px;
+}
+.product-action-button.cashout.selected,
+.product-action-button.lock:hover,
+.footer-popup-action-buttons .product-action-button:hover {
+  border: 1px solid rgb(248, 0, 0);
+  background: rgba(248, 0, 0, 0.2);
+}
+.product-action-button.cl:hover,
+.product-action-button.cl.open,
+.product-action-button.cl-note.selected,
+.footer-confirm-button .product-action-button:hover {
+  border: 1px solid rgb(0, 230, 0);
+  background: rgba(0, 230, 0, 0.2);
+}
+.product-action-button.lock {
+  height: 40px;
+}
+.product-action-button.clear {
+  border: none;
+}
+.qv-span.amt-info {
+  color: var(--yellow-podocare);
+  opacity: 80%;
+  font-size: 11px;
+}
+.span-cl {
+  font-size: 16px;
+}
+.span-cl.status {
+  font-size: 13px;
+}
+.span-cl.status.date,
+.span-cl.popup {
+  font-size: 14px;
+}
+.span-cl.status.open,
+.order-values-lower-font-size.income {
+  color:rgb(0, 230, 0);
+}
+.span-cl.status.closed,
+.span-cl.status.old {
+  color: rgb(248, 0, 0);
+}
+.span-cl.status.info {
+  color:var(--yellow-podocare);
+}
+.cost-input.cash-ledger {
+  width: 60px;
+}
+.today-visits {
+  height: 31.2rem;
+}
+.item.order.products.cash-pm {
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+.cash-out-container {
+  border: var(--border-dashboard-inner);
+  border-radius: 10px;
+  height: 40px;
+  padding: 0.25rem 1rem;
+}
+.status-icon {
+  height: 14px;
+  width:14px;
+}
+.span-cl.depo {
+  opacity: 80%;
+  font-size: 12px;
+}
+.span-cl.depo.amt {
+  opacity: 90%;
+  color: var(--yellow-podocare);
+}
+.span-cl.popup.val,
+.order-values-lower-font-size.opening-amt {
+  color: var(--yellow-podocare);
+  font-weight: 500;
+}
+.span-cl.popup.closing-amt,
+.order-values-lower-font-size.closing-amt,
+.order-values-lower-font-size.note {
+  color:rgb(0, 230, 0);
+  font-weight: 500;
+}
+.span-cl.popup.cashout-amt,
+.order-values-lower-font-size.cashout-amt,
+.order-values-lower-font-size.no-note {
+  color: rgb(248, 0, 0);
+  font-weight: 500;
+}
+.span-cl.popup.note {
+  opacity: 70%;
+  font-size: 12px;
+}
+.order-values-lower-font-size.note:hover {
+  text-decoration: underline;
+}
+.item-list.products.cl-list {
+  max-height: 420px;
+}
+.product-action-button.clear.cl-history {
+  padding: 0;
+  height: 18px;
 }

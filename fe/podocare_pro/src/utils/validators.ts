@@ -20,6 +20,7 @@ import { CompanyExpense, CompanyExpenseItem, ExpenseCategory, NewCompanyExpense,
 import { NewStatSettings, StatSettings } from "../models/business_settings";
 import { RegisterRequest } from "../models/register";
 import { InventoryReportItem, NewInventoryReportItem } from "../models/inventory_report";
+import { CashLedger } from "../models/cash_ledger";
 
   export function validateLoginForm(
     username: string,
@@ -36,6 +37,52 @@ import { InventoryReportItem, NewInventoryReportItem } from "../models/inventory
     }
     return null;
   };
+
+  export function validateOpenCashLedgerForm(
+    cashLedgerForm: CashLedger
+  ): string | null {
+    const today = new Date().toISOString().slice(0, 10);
+
+    if(!cashLedgerForm.date || cashLedgerForm.date.slice(0, 10) !== today) {
+      return "Niepoprawna data!";
+    }
+
+    if(cashLedgerForm.openingAmount == null) {
+      return "Niepoprawny Stan początkowy!"
+    }
+
+    return null;
+  }
+
+  export function validateCashLedgerForm(
+    cashLedgerForm: CashLedger,
+    selectedCashLedger: CashLedger| null,
+    action: Action,
+  ): string | null {
+
+    if(cashLedgerForm.closingAmount == null) {
+      return "Uzupełnij Saldo Końcowe!";
+    }
+
+    if(action === Action.EDIT && selectedCashLedger) {
+      const noChangesDetected = 
+      cashLedgerForm.createdBy === selectedCashLedger.createdBy &&
+      cashLedgerForm.date == selectedCashLedger.date &&
+      cashLedgerForm.openingAmount === selectedCashLedger.openingAmount &&
+      cashLedgerForm.deposit === selectedCashLedger.deposit &&
+      cashLedgerForm.cashOutAmount == selectedCashLedger.cashOutAmount &&
+      cashLedgerForm.note === selectedCashLedger.note &&
+      cashLedgerForm.closingAmount === selectedCashLedger.closingAmount &&
+      cashLedgerForm.closedBy === selectedCashLedger.closedBy &&
+      cashLedgerForm.isClosed === selectedCashLedger.isClosed;
+
+        if(noChangesDetected) {
+          return "Brak zmian!";
+        }
+    }
+
+    return null;
+  }
 
   export function validateExpenseForm(
     expenseForm: CompanyExpense | NewCompanyExpense,

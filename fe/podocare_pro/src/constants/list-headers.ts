@@ -411,6 +411,25 @@ export const BONUS_VISIT_HISTORY_ATTRIBUTES: ListAttribute[] = [
   { name: "Wartość", width: "20%", justify: "center" },
 ]
 
+export const CASH_VISITS_ATTRIBUTES: ListAttribute[] = [
+  { name: "Podgląd", width: "10%", justify: "center" },
+  { name: "Pracownik", width: "15%", justify: "flex-start" },
+  { name: "Klient", width: "55%", justify: "flex-start" },
+  { name: "Wpływ", width: "20%", justify: "center" },
+]
+
+export const CASH_LEDGER_HISTORY_ATTRIBUTES: ListAttribute[] = [
+  { name: "Data", width: "12%", justify: "center" },
+  { name: "Otworzył", width: "12%", justify: "center" },
+  { name: "Otwarcie", width: "13%", justify: "center" },
+  { name: "W tym depozyt", width: "13%", justify: "center" },
+  { name: "Zamknął", width: "12%", justify: "center" },
+  { name: "Wypłacono", width: "13%", justify: "center" },
+  { name: "Saldo Końcowe", width: "13%", justify: "center" },
+  { name: "Notatka", width: "7%", justify: "center" },
+  { name: "Opcje", width: "5%", justify: "center" },
+]
+
 export const BONUS_PRODUCT_LIST_ATTRIBUTES: ListAttribute[] = [
   { name: "", width: "5%", justify: "center" },
   { name: "Nazwa", width: "75%", justify: "flex-start" },

@@ -15,6 +15,7 @@ import Visits from "./pages/Visits";
 import Business from "./pages/Business";
 import AccessDenied from "./pages/AccessDenied";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import CashRegistry from "./pages/CashRegistry";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
             <Route path="/visits" element={<Visits />}/>
             <Route path="/services" element={<Services />}/>
             <Route path="/clients" element={<Clients />}/>
+            <Route path="/cash-ledger" element={<CashRegistry />} />
             <Route path="/my-company" element={<ProtectedRoute permissions={['ROLE_ADMIN']}><Business /></ProtectedRoute>}/>
             <Route path="/settings" element={<ProtectedRoute permissions={['ROLE_ADMIN']}><Settings /></ProtectedRoute>}/>
             <Route path="/no-access" element={<AccessDenied />}/>
