@@ -11,6 +11,7 @@ import com.podocare.PodoCareWebsite.model.constants.*;
 import com.podocare.PodoCareWebsite.repo.*;
 import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.VisitService;
+import com.podocare.PodoCareWebsite.utils.SessionUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -47,6 +48,7 @@ public class VisitServiceImpl implements VisitService {
     private final BaseServiceVariantRepo baseServiceVariantRepo;
     private final SaleItemRepo saleItemRepo;
     private final AuditLogService auditLogService;
+    private final OwnershipService ownershipService;
 
 
     @Override
@@ -133,7 +135,9 @@ public class VisitServiceImpl implements VisitService {
             calculateVisitTotals(visit, appSettings, false);
 
 
-            Visit updatedVisit = visitRepo.save(visit.toEntity());
+            Visit entityToUpdate = visit.toEntity();
+            entityToUpdate.setCreatedByUserId(savedVisit.getCreatedByUserId());
+            Visit updatedVisit = visitRepo.save(entityToUpdate);
 
             processPaymentStatus(savedVisit, appSettings);
 
@@ -200,6 +204,7 @@ public class VisitServiceImpl implements VisitService {
             Visit existingVisit = visitRepo.findOneById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Visit not found with given id: " + id));
 
+            ownershipService.checkOwnershipOrAdmin(existingVisit.getCreatedByUserId());
             VisitDTO visitSnapshot = new VisitDTO(existingVisit);
 
             undoSale(existingVisit);
@@ -575,7 +580,9 @@ public class VisitServiceImpl implements VisitService {
                     voucher.setExpiryDate(
                             voucher.getIssueDate().plusMonths(settings.getVoucherExpiryTime())
                     );
-                    Voucher savedVoucher = voucherRepo.save(voucher.toEntity());
+                    Voucher voucherEntity = voucher.toEntity();
+                    voucherEntity.setCreatedByUserId(SessionUtils.getUserIdFromSession());
+                    Voucher savedVoucher = voucherRepo.save(voucherEntity);
                     voucher.setId(savedVoucher.getId());
                     if (item.getName() == null) item.setName("Voucher");
                 }
@@ -622,6 +629,7 @@ public class VisitServiceImpl implements VisitService {
                     .type(DebtType.PARTIAL_PAYMENT)
                     .value(roundPrice(visitTotalValue - clientPaid))
                     .createdAt(LocalDate.from(visit.getDate()))
+                    .createdByUserId(SessionUtils.getUserIdFromSession())
                     .build();
 
             clientDebtRepo.save(clientDebt);
@@ -638,6 +646,7 @@ public class VisitServiceImpl implements VisitService {
 
                                     : visitTotalValue)
                     .createdAt(LocalDate.from(visit.getDate()))
+                    .createdByUserId(SessionUtils.getUserIdFromSession())
                     .build();
 
             clientDebtRepo.save(clientDebt);
@@ -765,6 +774,7 @@ public class VisitServiceImpl implements VisitService {
                 .items(new ArrayList<>())
                 .debtRedemptions(new ArrayList<>())
                 .payments(new ArrayList<>())
+                .createdByUserId(SessionUtils.getUserIdFromSession())
                 .build();
     }
     private void previewPaymentStatus(VisitDTO visit) {

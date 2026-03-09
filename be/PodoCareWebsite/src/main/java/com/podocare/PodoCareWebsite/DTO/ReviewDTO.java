@@ -19,6 +19,7 @@ public class ReviewDTO {
     private Boolean isUsed;
     private ReviewSource source;
     private LocalDate issueDate;
+    private Long createdBy; // user id
 
     public ReviewDTO (Review review){
         this.id = review.getId();
@@ -26,6 +27,7 @@ public class ReviewDTO {
         this.isUsed = review.getIsUsed();
         this.source = review.getSource();
         this.issueDate = review.getIssueDate();
+        this.createdBy = review.getCreatedByUserId();
     }
 
     public Review toEntity() {
@@ -35,6 +37,7 @@ public class ReviewDTO {
                 .isUsed(this.isUsed != null ? this.isUsed : false)
                 .source(this.source)
                 .issueDate(this.issueDate)
+                .createdByUserId(this.createdBy)
                 .build();
     }
 }

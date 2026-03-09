@@ -98,6 +98,7 @@ export interface Visit {
     totalNet: number;
     totalVat: number;
     totalValue: number;
+    createdBy: number | null;
 }
 
 export interface NewVisit {

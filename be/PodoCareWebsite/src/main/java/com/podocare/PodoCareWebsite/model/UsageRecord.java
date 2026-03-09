@@ -37,4 +37,7 @@ public class UsageRecord {
     @Enumerated(EnumType.STRING)
     @Column(name = "usage_reason", nullable = false)
     private UsageReason usageReason;
+
+    @Column(name = "created_by_user_id")
+    private Long createdByUserId;
 }

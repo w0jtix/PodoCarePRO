@@ -16,6 +16,7 @@ import com.podocare.PodoCareWebsite.repo.VisitRepo;
 import com.podocare.PodoCareWebsite.repo.VoucherRepo;
 import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.VoucherService;
+import com.podocare.PodoCareWebsite.utils.SessionUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,7 @@ public class VoucherServiceImpl  implements VoucherService {
     private final AppSettingsRepo settingsRepo;
     private final VisitRepo visitRepo;
     private final AuditLogService auditLogService;
+    private final OwnershipService ownershipService;
 
     @Override
     public VoucherDTO getVoucherById(Long id) {
@@ -66,11 +68,14 @@ public class VoucherServiceImpl  implements VoucherService {
     public VoucherDTO createVoucher(VoucherDTO voucher) {
         try{
             AppSettings settings = settingsRepo.getSettings();
+            voucher.setStatus(VoucherStatus.ACTIVE);
             if(voucher.getExpiryDate() == null && voucher.getIssueDate() !=null) {
                 LocalDate expiryDate = voucher.getIssueDate().plusMonths(settings.getVoucherExpiryTime());
                 voucher.setExpiryDate(expiryDate);
             }
-            VoucherDTO savedDTO = new VoucherDTO(voucherRepo.save(voucher.toEntity()));
+            Voucher voucherEntity = voucher.toEntity();
+            voucherEntity.setCreatedByUserId(SessionUtils.getUserIdFromSession());
+            VoucherDTO savedDTO = new VoucherDTO(voucherRepo.save(voucherEntity));
             auditLogService.logCreate("Voucher", savedDTO.getId(), "Voucher Klienta: " + savedDTO.getClient().getFirstName() + savedDTO.getClient().getLastName(), savedDTO);
             return savedDTO;
         } catch (Exception e) {
@@ -82,9 +87,14 @@ public class VoucherServiceImpl  implements VoucherService {
     @Transactional
     public VoucherDTO updateVoucher(Long id, VoucherDTO voucher) {
         try{
-            VoucherDTO oldVoucherSnapshot = getVoucherById(id);
+            Voucher oldVoucher = voucherRepo.findOneById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Voucher not found with given id: " + id));
+            ownershipService.checkOwnershipOrAdmin(oldVoucher.getCreatedByUserId());
+            VoucherDTO oldVoucherSnapshot = new VoucherDTO(oldVoucher);
             voucher.setId(id);
-            VoucherDTO savedDTO = new VoucherDTO(voucherRepo.save(voucher.toEntity()));
+            Voucher entityToSave = voucher.toEntity();
+            entityToSave.setCreatedByUserId(oldVoucher.getCreatedByUserId());
+            VoucherDTO savedDTO = new VoucherDTO(voucherRepo.save(entityToSave));
             auditLogService.logUpdate("Voucher", id, "Voucher Klienta: " + oldVoucherSnapshot.getClient().getFirstName() + oldVoucherSnapshot.getClient().getLastName(), oldVoucherSnapshot, savedDTO);
             return savedDTO;
         } catch (ResourceNotFoundException e) {
@@ -97,7 +107,10 @@ public class VoucherServiceImpl  implements VoucherService {
     @Override
     public void deleteVoucherById(Long id) {
         try{
-            VoucherDTO voucherSnapshot = getVoucherById(id);
+            Voucher existingVoucher = voucherRepo.findOneById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Voucher not found with given id: " + id));
+            ownershipService.checkOwnershipOrAdmin(existingVoucher.getCreatedByUserId());
+            VoucherDTO voucherSnapshot = new VoucherDTO(existingVoucher);
             voucherRepo.deleteById(id);
             auditLogService.logDelete("Voucher", id, "Voucher Klienta: " + voucherSnapshot.getClient().getFirstName() + voucherSnapshot.getClient().getLastName(), voucherSnapshot);
         } catch (ResourceNotFoundException e) {

@@ -13,6 +13,7 @@ import { formatDate } from "../../utils/dateUtils";
 import UserService from "../../services/UserService";
 import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
+import { RoleType } from "../../models/login";
 
 export interface ClientFormProps {
   clientDTO: NewClient | Client;
@@ -303,7 +304,8 @@ export function ClientForm({
                           {formatDate(note.createdAt)}
                         </span>
                       </div>
-                      <button className="popup-close-button transparent border-none flex align-items-center justify-center pointer"
+                      {(note.createdByUserId === user?.id || user?.roles.includes(RoleType.ROLE_ADMIN)) && (
+                        <button className="popup-close-button transparent border-none flex align-items-center justify-center pointer"
                       onClick={handleExistingNotRemove(note.id)}
                       >
                         <img
@@ -312,6 +314,7 @@ export function ClientForm({
                           className="popup-close-icon note"
                         />
                       </button>
+                      )}
                       </div>
                       
                     </div>

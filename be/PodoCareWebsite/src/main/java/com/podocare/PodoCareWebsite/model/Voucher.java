@@ -35,4 +35,7 @@ public class Voucher {
     @Column(nullable = false)
     @Builder.Default
     private VoucherStatus status = VoucherStatus.ACTIVE;
+
+    @Column(name = "created_by_user_id")
+    private Long createdByUserId;
 }

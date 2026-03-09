@@ -530,7 +530,7 @@ import { CashLedger } from "../models/cash_ledger";
     selectedClient: Client | null | undefined,
   ): string | null {
     if(Object.entries(clientForm).some(([key, value]) => {
-      if(key === "phoneNumber") return false;
+      if(key === "phoneNumber" || key=== "discount") return false;
       return value === null || value === undefined;
     })) {
       return "Brak pełnych informacji!";

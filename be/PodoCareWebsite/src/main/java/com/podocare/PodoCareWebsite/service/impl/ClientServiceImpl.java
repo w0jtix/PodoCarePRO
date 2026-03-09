@@ -12,6 +12,7 @@ import com.podocare.PodoCareWebsite.model.Sale;
 import com.podocare.PodoCareWebsite.repo.*;
 import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.ClientService;
+import com.podocare.PodoCareWebsite.utils.SessionUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,7 @@ public class ClientServiceImpl implements ClientService {
     private final VoucherRepo voucherRepo;
     private final ReviewRepo reviewRepo;
     private final AuditLogService auditLogService;
+    private final OwnershipService ownershipService;
 
     @Override
     public ClientDTO getClientById(Long id) {
@@ -54,7 +56,9 @@ public class ClientServiceImpl implements ClientService {
     @Transactional
     public ClientDTO createClient(ClientDTO clientDTO) {
         try{
-            Client saved = clientRepo.save(clientDTO.toEntity());
+            Client clientEntity = clientDTO.toEntity();
+            clientEntity.setCreatedByUserId(SessionUtils.getUserIdFromSession());
+            Client saved = clientRepo.save(clientEntity);
             auditLogService.logCreate("Client", saved.getId(), saved.getFirstName() + saved.getLastName(), saved);
             return new ClientDTO(saved);
         } catch(Exception e) {
@@ -72,7 +76,9 @@ public class ClientServiceImpl implements ClientService {
             ClientDTO oldClientSnapshot = new ClientDTO(oldClient);
 
             clientDTO.setId(id);
-            Client saved = clientRepo.save(clientDTO.toEntity());
+            Client entityToSave = clientDTO.toEntity();
+            entityToSave.setCreatedByUserId(oldClient.getCreatedByUserId());
+            Client saved = clientRepo.save(entityToSave);
             auditLogService.logUpdate("Client", id, oldClientSnapshot.getFirstName() + oldClientSnapshot.getLastName(), oldClientSnapshot, new ClientDTO(saved));
             return new ClientDTO(saved);
         } catch (ResourceNotFoundException e) {
@@ -89,6 +95,7 @@ public class ClientServiceImpl implements ClientService {
             Client client = clientRepo.findOneById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Client not found with id: " + id));
 
+            ownershipService.checkOwnershipOrAdmin(client.getCreatedByUserId());
             if (client.getIsDeleted()) {
                 throw new DeletionException("Client is already soft-deleted.");
             }

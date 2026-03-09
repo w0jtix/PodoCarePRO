@@ -5,6 +5,8 @@ import { ClientDebt, DebtType } from "../../models/debt";
 import { PaymentStatus } from "../../models/payment";
 import VisitPopup from "../Popups/VisitPopup";
 import { DEBTS_BY_VISIT_LIST_ATTRIBUTES } from "../../constants/list-headers";
+import { useUser } from "../User/UserProvider";
+import { RoleType } from "../../models/login";
 
 export interface DebtsListProps {
   attributes: ListAttribute[];
@@ -28,6 +30,8 @@ export function DebtsList({
 }: DebtsListProps) {
   const [selectedClientDebtIdForVisit, setSelectedClientDebtIdForVisit] =useState<number | string | null>(null);
   const [selectedSourceVisitIdForVisit, setSelectedSourceVisitIdForVisit] =useState<number | string | null>(null);
+  const { user } = useUser();
+
   const handleOnClickEdit = useCallback(
     (e: React.MouseEvent, item: ClientDebt) => {
       e.stopPropagation();
@@ -108,7 +112,7 @@ export function DebtsList({
       case "Opcje":
         return (
           <div className="item-list-single-item-action-buttons flex">
-            {item.sourceVisit === null && (
+            {item.sourceVisit === null && (item.createdBy === user?.id || user?.roles.includes(RoleType.ROLE_ADMIN)) && (
               <>
                 <ActionButton
                   src="src/assets/edit.svg"

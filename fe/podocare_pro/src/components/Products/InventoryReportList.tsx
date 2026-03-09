@@ -124,23 +124,27 @@ export function InventoryReportList({
 
       case "  ":
         return (
-          isAdmin && !inventoryReport.approved && (
-            <div className="flex g-2 align-items-center">
+      <>
+        {isAdmin && !inventoryReport.approved && (
+          <div className="flex g-2 align-items-center">
             <span className="qv-span info">Sprawdź i zatwierdź Raport </span>
-             <ActionButton
-                text="Zatwierdź"
-                src={"src/assets/tick.svg"}
-                alt={"Zatwierdź"}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setApproveReportId(inventoryReport.id);
-                }}
-                className="ir"
-              />
-             </div>
-          ))
-          
-          ;
+            <ActionButton
+              text="Zatwierdź"
+              src={"src/assets/tick.svg"}
+              alt={"Zatwierdź"}
+              onClick={(e) => {
+                e.stopPropagation();
+                setApproveReportId(inventoryReport.id);
+              }}
+              className="ir"
+            />
+          </div>
+        )}
+        {!isAdmin && !inventoryReport.approved && (
+          <span className="qv-span awaits italic">Oczekuje na zatwierdzenie</span>
+        )}
+      </>
+    );
 
 
     case "Zmiana" : {

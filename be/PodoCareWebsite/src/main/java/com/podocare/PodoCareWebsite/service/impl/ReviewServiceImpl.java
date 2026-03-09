@@ -13,6 +13,7 @@ import com.podocare.PodoCareWebsite.model.constants.ReviewSource;
 import com.podocare.PodoCareWebsite.repo.ReviewRepo;
 import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.ReviewService;
+import com.podocare.PodoCareWebsite.utils.SessionUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepo reviewRepo;
     private final AuditLogService auditLogService;
+    private final OwnershipService ownershipService;
 
     @Override
     public ReviewDTO getReviewById(Long id) {
@@ -59,7 +61,9 @@ public class ReviewServiceImpl implements ReviewService {
                 markOtherReviewsAsUsed(review.getClient().getId());
             }
 
-            ReviewDTO savedDTO = new ReviewDTO(reviewRepo.save(review.toEntity()));
+            Review reviewEntity = review.toEntity();
+            reviewEntity.setCreatedByUserId(SessionUtils.getUserIdFromSession());
+            ReviewDTO savedDTO = new ReviewDTO(reviewRepo.save(reviewEntity));
             auditLogService.logCreate("Review", savedDTO.getId(),"Opinia Klienta: "+ savedDTO.getClient().getFirstName() + savedDTO.getClient().getLastName(), savedDTO);
             return savedDTO;
         } catch (Exception e) {
@@ -71,9 +75,14 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public ReviewDTO updateReview(Long id, ReviewDTO review) {
         try{
-            ReviewDTO oldReviewSnapshot = getReviewById(id);
+            Review oldReview = reviewRepo.findOneById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Review not found with given id: " + id));
+            ownershipService.checkOwnershipOrAdmin(oldReview.getCreatedByUserId());
+            ReviewDTO oldReviewSnapshot = new ReviewDTO(oldReview);
             review.setId(id);
-            ReviewDTO savedDTO = new ReviewDTO(reviewRepo.save(review.toEntity()));
+            Review entityToSave = review.toEntity();
+            entityToSave.setCreatedByUserId(oldReview.getCreatedByUserId());
+            ReviewDTO savedDTO = new ReviewDTO(reviewRepo.save(entityToSave));
             auditLogService.logUpdate("Review", id,"Opinia Klienta: "+ oldReviewSnapshot.getClient().getFirstName() + oldReviewSnapshot.getClient().getLastName(), oldReviewSnapshot, savedDTO);
             return savedDTO;
         } catch (ResourceNotFoundException e) {
@@ -86,7 +95,10 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public void deleteReviewById(Long id) {
         try{
-            ReviewDTO reviewSnapshot = getReviewById(id);
+            Review existingReview = reviewRepo.findOneById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Review not found with given id: " + id));
+            ownershipService.checkOwnershipOrAdmin(existingReview.getCreatedByUserId());
+            ReviewDTO reviewSnapshot = new ReviewDTO(existingReview);
             reviewRepo.deleteById(id);
             auditLogService.logDelete("Review", id,"Opinia Klienta: "+ reviewSnapshot.getClient().getFirstName() + reviewSnapshot.getClient().getLastName(), reviewSnapshot);
         } catch (ResourceNotFoundException e) {

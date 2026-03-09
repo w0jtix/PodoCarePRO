@@ -3,6 +3,8 @@ import { ListAttribute } from "../../constants/list-headers";
 import ActionButton from "../ActionButton";
 import { useCallback } from "react";
 import { formatDate } from "../../utils/dateUtils";
+import { useUser } from "../User/UserProvider";
+import { RoleType } from "../../models/login";
 
 export interface UsageRecordsListProps {
   attributes: ListAttribute[];
@@ -24,6 +26,7 @@ export function UsageRecordsList({
   hasMore = true,
   className = "",
 }: UsageRecordsListProps) {
+  const { user } = useUser();
   const handleOnClickRemove = useCallback(
     (e: React.MouseEvent, item: UsageRecord) => {
       e.stopPropagation();
@@ -71,6 +74,7 @@ export function UsageRecordsList({
       case "Opcje":
         return (
           <div className="item-list-single-item-action-buttons flex ml-1">
+            {(item.createdBy === user?.id || user?.roles.includes(RoleType.ROLE_ADMIN)) && (
             <ActionButton
               src="src/assets/cancel.svg"
               alt="Usuń Zużycie Produktut"
@@ -79,6 +83,7 @@ export function UsageRecordsList({
               onClick={(e) => handleOnClickRemove(e, item)}
               disableText={true}
             />
+            )}
           </div>
         );
       default:

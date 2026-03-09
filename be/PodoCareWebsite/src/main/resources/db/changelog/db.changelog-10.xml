@@ -12,4 +12,46 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="10.2-add-created-by-user-id-to-visit" author="Wojtek">
+        <addColumn tableName="visit">
+            <column name="created_by_user_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="10.3-add-created-by-user-id-to-client" author="Wojtek">
+        <addColumn tableName="client">
+            <column name="created_by_user_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="10.4-add-created-by-user-id-to-review" author="Wojtek">
+        <addColumn tableName="review">
+            <column name="created_by_user_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="10.5-add-created-by-user-id-to-voucher" author="Wojtek">
+        <addColumn tableName="voucher">
+            <column name="created_by_user_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="10.6-add-created-by-user-id-to-client-debt" author="Wojtek">
+        <addColumn tableName="client_debt">
+            <column name="created_by_user_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="10.7-add-created-by-user-id-to-usage-record" author="Wojtek">
+        <addColumn tableName="usage_record">
+            <column name="created_by_user_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="10.8-add-created-by-user-id-to-client-note" author="Wojtek">
+        <addColumn tableName="client_note">
+            <column name="created_by_user_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

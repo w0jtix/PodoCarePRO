@@ -40,6 +40,7 @@ public class VisitDTO {
     private Double totalValue;
     private String notes;
     private Boolean receipt;
+    private Long createdBy; // user id
 
     public VisitDTO(Visit visit) {
         this.id = visit.getId();
@@ -77,6 +78,7 @@ public class VisitDTO {
         this.totalValue = visit.getTotalValue();
         this.notes = visit.getNotes();
         this.receipt = visit.getReceipt();
+        this.createdBy = visit.getCreatedByUserId();
     }
 
     public Visit toEntity() {
@@ -99,6 +101,7 @@ public class VisitDTO {
                 .totalValue(this.totalValue)
                 .notes(this.notes)
                 .receipt(this.receipt != null ? this.receipt : true)
+                .createdByUserId(this.createdBy)
                 .build();
 
         if(nonNull(this.serviceDiscounts)){

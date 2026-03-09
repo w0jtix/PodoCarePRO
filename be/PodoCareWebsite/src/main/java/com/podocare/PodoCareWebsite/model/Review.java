@@ -33,4 +33,7 @@ public class Review {
 
     @Column(nullable = false)
     private LocalDate issueDate;
+
+    @Column(name = "created_by_user_id")
+    private Long createdByUserId;
 }

@@ -13,6 +13,7 @@ import com.podocare.PodoCareWebsite.repo.ClientRepo;
 import com.podocare.PodoCareWebsite.repo.EmployeeRepo;
 import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.ClientNoteService;
+import com.podocare.PodoCareWebsite.utils.SessionUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,7 @@ public class ClientNoteServiceImpl implements ClientNoteService {
     private final ClientRepo clientRepo;
     private final EmployeeRepo employeeRepo;
     private final AuditLogService auditLogService;
+    private final OwnershipService ownershipService;
 
     @Override
     public ClientNoteDTO getClientNoteById(Long id) {
@@ -45,7 +47,9 @@ public class ClientNoteServiceImpl implements ClientNoteService {
     @Transactional
     public ClientNoteDTO createClientNote(ClientNoteDTO clientNoteDTO) {
         try {
-            ClientNoteDTO savedNote = new ClientNoteDTO(clientNoteRepo.save(clientNoteDTO.toEntity()));
+            ClientNote noteEntity = clientNoteDTO.toEntity();
+            noteEntity.setCreatedByUserId(SessionUtils.getUserIdFromSession());
+            ClientNoteDTO savedNote = new ClientNoteDTO(clientNoteRepo.save(noteEntity));
             auditLogService.logCreate("ClientNote", savedNote.getId(), savedNote.getClient().getFirstName() + savedNote.getClient().getLastName(), savedNote);
             return savedNote;
         } catch (Exception e) {
@@ -57,10 +61,15 @@ public class ClientNoteServiceImpl implements ClientNoteService {
     @Transactional
     public ClientNoteDTO updateClientNote(Long id, ClientNoteDTO clientNoteDTO) {
         try {
-            ClientNoteDTO oldNoteSnapshot = getClientNoteById(id);
+            ClientNote oldNote = clientNoteRepo.findOneById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("ClientNote not found with given id: " + id));
+            ownershipService.checkOwnershipOrAdmin(oldNote.getCreatedByUserId());
+            ClientNoteDTO oldNoteSnapshot = new ClientNoteDTO(oldNote);
             clientNoteDTO.setId(id);
 
-            ClientNoteDTO savedNote = new ClientNoteDTO(clientNoteRepo.save(clientNoteDTO.toEntity()));
+            ClientNote entityToSave = clientNoteDTO.toEntity();
+            entityToSave.setCreatedByUserId(oldNote.getCreatedByUserId());
+            ClientNoteDTO savedNote = new ClientNoteDTO(clientNoteRepo.save(entityToSave));
             auditLogService.logUpdate("ClientNote", id, oldNoteSnapshot.getClient().getFirstName() + oldNoteSnapshot.getClient().getLastName(), oldNoteSnapshot, savedNote);
             return savedNote;
         } catch (ResourceNotFoundException e) {
@@ -74,7 +83,10 @@ public class ClientNoteServiceImpl implements ClientNoteService {
     @Transactional
     public void deleteClientNoteById(Long id) {
         try {
-            ClientNoteDTO noteSnapshot = getClientNoteById(id);
+            ClientNote existingNote = clientNoteRepo.findOneById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("ClientNote not found with given id: " + id));
+            ownershipService.checkOwnershipOrAdmin(existingNote.getCreatedByUserId());
+            ClientNoteDTO noteSnapshot = new ClientNoteDTO(existingNote);
             clientNoteRepo.deleteById(id);
             auditLogService.logDelete("ClientNote", id, noteSnapshot.getClient().getFirstName() + noteSnapshot.getClient().getLastName(), noteSnapshot);
         } catch (ResourceNotFoundException e) {

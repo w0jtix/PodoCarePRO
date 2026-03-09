@@ -13,6 +13,7 @@ export interface UsageRecord {
     usageDate: string;
     quantity: number;
     usageReason: UsageReason;
+    createdBy: number | null;
 }
 
 export interface NewUsageRecord {

@@ -23,6 +23,7 @@ public class ClientDebtDTO {
     private Double value;
     private PaymentStatus paymentStatus;
     private LocalDate createdAt;
+    private Long createdBy; // user id
 
 
     public ClientDebtDTO(ClientDebt clientDebt) {
@@ -33,6 +34,7 @@ public class ClientDebtDTO {
         this.value = clientDebt.getValue();
         this.paymentStatus = clientDebt.getPaymentStatus();
         this.createdAt = clientDebt.getCreatedAt();
+        this.createdBy = clientDebt.getCreatedByUserId();
     }
 
     public ClientDebt toEntity() {
@@ -44,6 +46,7 @@ public class ClientDebtDTO {
                 .value(this.value)
                 .paymentStatus(this.paymentStatus != null ? this.paymentStatus : PaymentStatus.UNPAID)
                 .createdAt(this.createdAt)
+                .createdByUserId(this.createdBy)
                 .build();
     }
 
@@ -55,6 +58,7 @@ public class ClientDebtDTO {
                 .type(this.type)
                 .value(this.value)
                 .paymentStatus(this.paymentStatus)
+                .createdByUserId(this.createdBy)
                 .build();
     }
 }

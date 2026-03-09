@@ -7,6 +7,7 @@ export interface ClientNote {
     content: string;
     createdAt: string;
     createdBy: Employee;
+    createdByUserId: number | null;
 }
 
 export interface NewClientNote {
@@ -32,6 +33,7 @@ export interface Client {
     hasGoogleReview?: boolean;
     hasBooksyReview?: boolean;
     hasActiveGoogleReview?: boolean;
+    createdBy: number | null;
 }
 
 export interface NewClient {

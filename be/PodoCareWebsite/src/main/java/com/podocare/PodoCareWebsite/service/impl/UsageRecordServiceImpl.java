@@ -13,6 +13,7 @@ import com.podocare.PodoCareWebsite.repo.ProductRepo;
 import com.podocare.PodoCareWebsite.repo.UsageRecordRepo;
 import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.UsageRecordService;
+import com.podocare.PodoCareWebsite.utils.SessionUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,6 +35,7 @@ public class UsageRecordServiceImpl implements UsageRecordService {
     private final ProductRepo productRepo;
     private final EmployeeRepo employeeRepo;
     private final AuditLogService auditLogService;
+    private final OwnershipService ownershipService;
 
     @Override
     public UsageRecordDTO getUsageRecordById(Long id) {
@@ -82,6 +84,7 @@ public class UsageRecordServiceImpl implements UsageRecordService {
                     .usageDate(usageRecordDTO.getUsageDate())
                     .quantity(usageRecordDTO.getQuantity())
                     .usageReason(usageRecordDTO.getUsageReason())
+                    .createdByUserId(SessionUtils.getUserIdFromSession())
                     .build();
 
             UsageRecordDTO savedDTO = new UsageRecordDTO(usageRecordRepo.save(usageRecord));
@@ -109,6 +112,7 @@ public class UsageRecordServiceImpl implements UsageRecordService {
             UsageRecord usageRecord = usageRecordRepo.findOneById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("UsageRecord not found with id: " + id));
 
+            ownershipService.checkOwnershipOrAdmin(usageRecord.getCreatedByUserId());
             UsageRecordDTO usageRecordSnapshot = new UsageRecordDTO(usageRecord);
 
             Product product = usageRecord.getProduct();

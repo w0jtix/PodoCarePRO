@@ -3,6 +3,8 @@ import ActionButton from "../ActionButton";
 import { ListAttribute } from "../../constants/list-headers";
 import { Review, ReviewSource } from "../../models/review";
 import VisitPopup from "../Popups/VisitPopup";
+import { useUser } from "../User/UserProvider";
+import { RoleType } from "../../models/login";
 
 export interface ReviewsListProps {
   attributes: ListAttribute[];
@@ -22,6 +24,7 @@ export function ReviewsList({
   onClick,
 }: ReviewsListProps) {
   const [selectedReviewIdForVisit, setSelectedReviewIdForVisit] = useState<string | number | null>(null);
+  const { user } = useUser();
 
   const handleOnClickEdit = useCallback(
     (e: React.MouseEvent, item: Review) => {
@@ -87,7 +90,7 @@ export function ReviewsList({
       case "Opcje":
         return (
           <div className="item-list-single-item-action-buttons flex">
-            {item.isUsed === false && (
+            {item.isUsed === false && (item.createdBy === user?.id || user?.roles.includes(RoleType.ROLE_ADMIN)) && (
               <>
             <ActionButton
               src="src/assets/edit.svg"

@@ -43,4 +43,7 @@ public class ClientDebt {
 
     @Column(nullable = true)
     private LocalDate createdAt;
+
+    @Column(name = "created_by_user_id")
+    private Long createdByUserId;
 }

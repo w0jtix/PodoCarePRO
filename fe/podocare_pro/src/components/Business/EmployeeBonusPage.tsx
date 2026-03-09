@@ -148,7 +148,6 @@ const EmployeeBonusPage = () => {
       .catch(() => console.error("Failed to fetch StatSettings"));
   }, []);
   useEffect(() => {
-    console.log(employeeBonus)
     fetchUser();
   }, [employeeBonus]);
   useEffect(() => {

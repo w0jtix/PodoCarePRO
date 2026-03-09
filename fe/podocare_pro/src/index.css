@@ -4702,7 +4702,8 @@ background-color: rgba(0, 218, 0, 0.35);
   height: 14px;
   width:14px;
 }
-.span-cl.depo {
+.span-cl.depo,
+.qv-span.awaits {
   opacity: 80%;
   font-size: 12px;
 }

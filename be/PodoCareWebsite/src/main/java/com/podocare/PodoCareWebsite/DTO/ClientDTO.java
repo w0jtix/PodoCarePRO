@@ -32,6 +32,7 @@ public class ClientDTO {
     private Boolean hasBooksyReview;
     private Boolean hasGoogleReview;
     private Boolean hasActiveGoogleReview;
+    private Long createdBy; // user id
 
     public ClientDTO(Client client) {
         this.id = client.getId();
@@ -43,6 +44,7 @@ public class ClientDTO {
         this.redFlag = client.getRedFlag();
         this.discount = client.getDiscount() != null ? new DiscountDTO(client.getDiscount()) : null;
         this.isDeleted = client.getIsDeleted();
+        this.createdBy = client.getCreatedByUserId();
     }
     public ClientDTO(Client client,
                      Boolean hasDebts,
@@ -66,6 +68,7 @@ public class ClientDTO {
         this.hasBooksyReview = hasBooksyReview;
         this.hasGoogleReview = hasGoogleReview;
         this.hasActiveGoogleReview = hasActiveGoogleReview;
+        this.createdBy = client.getCreatedByUserId();
     }
 
     public Client toEntity() {
@@ -79,6 +82,7 @@ public class ClientDTO {
                 .redFlag(this.redFlag != null ? this.redFlag : false)
                 .discount(this.discount != null ? this.discount.toEntity() : null)
                 .isDeleted(this.isDeleted != null ? this.isDeleted : false)
+                .createdByUserId(this.createdBy)
                 .build();
     }
 

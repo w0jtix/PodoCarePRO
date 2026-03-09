@@ -14,6 +14,7 @@ export interface Voucher {
     client: Client;
     status: VoucherStatus;
     purchaseVisitId?: number;
+    createdBy: number | null;
 }
 
 export interface NewVoucher {

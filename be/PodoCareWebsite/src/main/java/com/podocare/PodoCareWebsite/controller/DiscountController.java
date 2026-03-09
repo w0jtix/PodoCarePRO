@@ -46,7 +46,7 @@ public class DiscountController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize(("hasRole('USER')"))
+    @PreAuthorize(("hasRole('ADMIN')"))
     public ResponseEntity<Void> deleteDiscount(@PathVariable(value = "id") Long id) {
         discountService.deleteDiscountById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

@@ -143,9 +143,6 @@ export function CashLedgerDashboard() {
   useEffect(() => {
     fetchLastOpenCashLedger();
   }, []);
-  useEffect(() => {
-    console.log(cashLedger);
-  }, [cashLedger]);
 
   /* OPENING NEW CASH LEDGER */
   const handleOpeningAmountChange = useCallback(

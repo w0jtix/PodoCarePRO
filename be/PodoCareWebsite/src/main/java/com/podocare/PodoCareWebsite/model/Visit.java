@@ -89,4 +89,7 @@ public class Visit {
     @Builder.Default
     private Double totalValue = 0.0;
 
+    @Column(name = "created_by_user_id")
+    private Long createdByUserId;
+
 }

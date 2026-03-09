@@ -7,11 +7,13 @@ import com.podocare.PodoCareWebsite.exceptions.CreationException;
 import com.podocare.PodoCareWebsite.exceptions.DeletionException;
 import com.podocare.PodoCareWebsite.exceptions.ResourceNotFoundException;
 import com.podocare.PodoCareWebsite.exceptions.UpdateException;
+import com.podocare.PodoCareWebsite.model.ClientDebt;
 import com.podocare.PodoCareWebsite.model.constants.DebtType;
 import com.podocare.PodoCareWebsite.model.constants.PaymentStatus;
 import com.podocare.PodoCareWebsite.repo.ClientDebtRepo;
 import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.ClientDebtService;
+import com.podocare.PodoCareWebsite.utils.SessionUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,7 @@ public class ClientDebtServiceImpl implements ClientDebtService {
 
     private final ClientDebtRepo debtRepo;
     private final AuditLogService auditLogService;
+    private final OwnershipService ownershipService;
 
     @Override
     public ClientDebtDTO getDebtById(Long id) {
@@ -67,7 +70,9 @@ public class ClientDebtServiceImpl implements ClientDebtService {
     @Transactional
     public ClientDebtDTO createDebt(ClientDebtDTO debt) {
         try{
-            ClientDebtDTO savedDebt = new ClientDebtDTO(debtRepo.save(debt.toEntity()));
+            ClientDebt debtEntity = debt.toEntity();
+            debtEntity.setCreatedByUserId(SessionUtils.getUserIdFromSession());
+            ClientDebtDTO savedDebt = new ClientDebtDTO(debtRepo.save(debtEntity));
             auditLogService.logCreate("ClientDebt", savedDebt.getId(), "Dług Klienta: " + savedDebt.getClient().getFirstName() + savedDebt.getClient().getLastName(), savedDebt);
             return savedDebt;
         } catch (Exception e) {
@@ -79,10 +84,15 @@ public class ClientDebtServiceImpl implements ClientDebtService {
     @Transactional
     public ClientDebtDTO updateDebt(Long id, ClientDebtDTO debt) {
         try{
-            ClientDebtDTO oldDebtSnapshot = getDebtById(id);
+            ClientDebt oldDebt = debtRepo.findOneById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Debt not found with given id: " + id));
+            ownershipService.checkOwnershipOrAdmin(oldDebt.getCreatedByUserId());
+            ClientDebtDTO oldDebtSnapshot = new ClientDebtDTO(oldDebt);
 
             debt.setId(id);
-            ClientDebtDTO savedDebt = new ClientDebtDTO(debtRepo.save(debt.toEntity()));
+            ClientDebt entityToSave = debt.toEntity();
+            entityToSave.setCreatedByUserId(oldDebt.getCreatedByUserId());
+            ClientDebtDTO savedDebt = new ClientDebtDTO(debtRepo.save(entityToSave));
 
             auditLogService.logUpdate("ClientDebt", id,"Dług Klienta: " + oldDebtSnapshot.getClient().getFirstName() + oldDebtSnapshot.getClient().getLastName(), oldDebtSnapshot, savedDebt);
             return savedDebt;
@@ -97,7 +107,10 @@ public class ClientDebtServiceImpl implements ClientDebtService {
     @Transactional
     public void deleteDebtById(Long id) {
         try{
-            ClientDebtDTO debtSnapshot = getDebtById(id);
+            ClientDebt existingDebt = debtRepo.findOneById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Debt not found with given id: " + id));
+            ownershipService.checkOwnershipOrAdmin(existingDebt.getCreatedByUserId());
+            ClientDebtDTO debtSnapshot = new ClientDebtDTO(existingDebt);
             debtRepo.deleteById(id);
             auditLogService.logDelete("ClientDebt", id,"Dług Klienta: " + debtSnapshot.getClient().getFirstName() + debtSnapshot.getClient().getLastName(),  debtSnapshot);
         } catch (ResourceNotFoundException e) {

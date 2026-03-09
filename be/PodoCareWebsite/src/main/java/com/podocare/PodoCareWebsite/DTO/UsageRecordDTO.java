@@ -23,6 +23,7 @@ public class UsageRecordDTO {
     private LocalDate usageDate;
     private Integer quantity;
     private UsageReason usageReason;
+    private Long createdBy; // user id
 
     public UsageRecordDTO(UsageRecord usageRecord) {
         if (isNull(usageRecord))
@@ -33,6 +34,7 @@ public class UsageRecordDTO {
         this.usageDate = usageRecord.getUsageDate();
         this.quantity = usageRecord.getQuantity();
         this.usageReason = usageRecord.getUsageReason();
+        this.createdBy = usageRecord.getCreatedByUserId();
     }
 
     public UsageRecord toEntity() {
@@ -43,6 +45,7 @@ public class UsageRecordDTO {
                 .usageDate(this.usageDate)
                 .quantity(this.quantity)
                 .usageReason(this.usageReason)
+                .createdByUserId(this.createdBy)
                 .build();
     }
 }

@@ -18,6 +18,7 @@ public class ClientNoteDTO {
     private LocalDate createdAt;
     private EmployeeSummaryDTO createdBy;
     private ClientDTO client;
+    private Long createdByUserId; // user id
 
     public ClientNoteDTO(ClientNote clientNote) {
         this.id = clientNote.getId();
@@ -25,6 +26,7 @@ public class ClientNoteDTO {
         this.createdAt = clientNote.getCreatedAt();
         this.createdBy = new EmployeeSummaryDTO(clientNote.getCreatedBy());
         this.client = new ClientDTO(clientNote.getClient());
+        this.createdByUserId = clientNote.getCreatedByUserId();
     }
 
     public ClientNote toEntity() {
@@ -34,6 +36,7 @@ public class ClientNoteDTO {
                 .createdAt(this.createdAt)
                 .createdBy(this.createdBy != null ? this.createdBy.toEntity() : null)
                 .client(this.client != null ? this.client.toEntity() : null)
+                .createdByUserId(this.createdByUserId)
                 .build();
     }
 }

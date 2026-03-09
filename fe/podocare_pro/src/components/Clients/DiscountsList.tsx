@@ -2,6 +2,8 @@ import React, { useCallback } from "react";
 import ActionButton from "../ActionButton";
 import { ListAttribute} from "../../constants/list-headers";
 import { Discount } from "../../models/visit";
+import { useUser } from "../User/UserProvider";
+import { RoleType } from "../../models/login";
 
 export interface DiscountsListProps {
   attributes: ListAttribute[];
@@ -20,6 +22,7 @@ export function DiscountsList({
   className = "",
   onClick,
 }: DiscountsListProps) {
+  const { user } = useUser();
 
   const handleOnClickEdit = useCallback(
     (e: React.MouseEvent, item: Discount) => {
@@ -65,7 +68,8 @@ export function DiscountsList({
               onClick={(e) => handleOnClickEdit(e, item)}
               disableText={true}
             />
-            <ActionButton
+            {user?.roles.includes(RoleType.ROLE_ADMIN) && (
+              <ActionButton
               src="src/assets/cancel.svg"
               alt="Usuń Rabat"
               iconTitle={"Usuń Rabat"}
@@ -73,6 +77,7 @@ export function DiscountsList({
               onClick={(e) => handleOnClickRemove(e, item)}
               disableText={true}
             />
+            )}
           </div>   
         );
     }

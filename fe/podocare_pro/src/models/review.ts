@@ -11,6 +11,7 @@ export interface Review {
     isUsed: boolean,
     source: ReviewSource,
     issueDate: string,
+    createdBy: number | null;
 }
 
 export interface NewReview {

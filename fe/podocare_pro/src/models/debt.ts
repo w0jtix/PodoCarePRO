@@ -25,6 +25,7 @@ export interface ClientDebt {
     value: number;
     paymentStatus: PaymentStatus;
     createdAt: string | null;
+    createdBy: number | null;
 }
 
 export interface NewClientDebt {

@@ -3,6 +3,8 @@ import ActionButton from "../ActionButton";
 import { ListAttribute } from "../../constants/list-headers";
 import { Voucher, VoucherStatus } from "../../models/voucher";
 import VisitPopup from "../Popups/VisitPopup";
+import { useUser } from "../User/UserProvider";
+import { RoleType } from "../../models/login";
 
 export interface VouchersListProps {
   attributes: ListAttribute[];
@@ -27,6 +29,7 @@ export function VouchersList({
   className = "",
   onClick,
 }: VouchersListProps) {
+  const { user } = useUser();
   const [selectedVoucherIdForVisit,setSelectedVoucherIdForVisit] = useState<string | number| null>(null);
   const [previewVisitId, setPreviewVisitId] = useState<string | number | null>(null);
 
@@ -103,7 +106,7 @@ export function VouchersList({
       case "Opcje":
         return (
           <div className="item-list-single-item-action-buttons flex">
-            {!item.purchaseVisitId && item.status !== VoucherStatus.USED  && (
+            {!item.purchaseVisitId && item.status !== VoucherStatus.USED && (item.createdBy === user?.id || user?.roles.includes(RoleType.ROLE_ADMIN)) && (
               <>
               <ActionButton
               src="src/assets/edit.svg"

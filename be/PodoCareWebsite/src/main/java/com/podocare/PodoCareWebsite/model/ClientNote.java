@@ -31,4 +31,7 @@ public class ClientNote {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
+
+    @Column(name = "created_by_user_id")
+    private Long createdByUserId;
 }

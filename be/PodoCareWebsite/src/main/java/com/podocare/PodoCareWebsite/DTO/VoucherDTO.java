@@ -21,6 +21,7 @@ public class VoucherDTO {
     private ClientDTO client;
     private VoucherStatus status;
     private Long purchaseVisitId;
+    private Long createdBy; // user id
 
     public VoucherDTO(Voucher voucher) {
         this.id = voucher.getId();
@@ -29,6 +30,7 @@ public class VoucherDTO {
         this.expiryDate = voucher.getExpiryDate();
         this.client = new ClientDTO(voucher.getClient());
         this.status = voucher.getStatus();
+        this.createdBy = voucher.getCreatedByUserId();
     }
     public VoucherDTO(Voucher voucher, Long sourceId) {
         this.id = voucher.getId();
@@ -38,6 +40,7 @@ public class VoucherDTO {
         this.client = new ClientDTO(voucher.getClient());
         this.status = voucher.getStatus();
         this.purchaseVisitId = sourceId;
+        this.createdBy = voucher.getCreatedByUserId();
     }
 
     public Voucher toEntity() {
@@ -49,6 +52,7 @@ public class VoucherDTO {
                 .expiryDate(this.expiryDate)
                 .client(this.client != null ? this.client.toEntity() : null)
                 .status(this.status)
+                .createdByUserId(this.createdBy)
                 .build();
     }
 }

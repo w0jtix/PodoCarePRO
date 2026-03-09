@@ -3,6 +3,8 @@ import ActionButton from "../ActionButton";
 import { ListAttribute} from "../../constants/list-headers";
 import { Client } from "../../models/client";
 import { Action } from "../../models/action";
+import { useUser } from "../User/UserProvider";
+import { RoleType } from "../../models/login";
 
 export interface ClientsListProps {
   attributes: ListAttribute[];
@@ -25,6 +27,7 @@ export function ClientsList({
   action,
   selectedClients,
 }: ClientsListProps) {
+  const { user } = useUser();
 
   const handleOnClickEdit = useCallback(
     (e: React.MouseEvent, item: Client) => {
@@ -63,6 +66,14 @@ export function ClientsList({
           <div
           className="flex g-10px align-items-center"
           >
+            {item.redFlag && (
+            <img
+              src="src/assets/redflag.svg"
+              alt="RedFlag"
+              title="Klient RedFlag"
+              className="client-form-icon"
+            />
+          )}
           {item.boostClient && (
             <img
               src="src/assets/boost.svg"
@@ -149,7 +160,8 @@ export function ClientsList({
               onClick={(e) => handleOnClickEdit(e, item)}
               disableText={true}
             />
-            <ActionButton
+            {(item.createdBy === user?.id || user?.roles.includes(RoleType.ROLE_ADMIN)) && (
+              <ActionButton
               src="src/assets/cancel.svg"
               alt="Usuń Klienta"
               iconTitle={"Usuń Klienta"}
@@ -157,6 +169,7 @@ export function ClientsList({
               onClick={(e) => handleOnClickRemove(e, item)}
               disableText={true}
             />
+            )}
           </div>
         );
       default:

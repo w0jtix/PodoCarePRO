@@ -8,6 +8,8 @@ import { translatePaymentStatus } from "../../utils/paymentUtils";
 import VisitContent from "./VisitContent";
 import RemoveVisitPopup from "../Popups/RemoveVisitPopup";
 import VisitPopup from "../Popups/VisitPopup";
+import { useUser } from "../User/UserProvider";
+import { RoleType } from "../../models/login";
 
 export interface VisitListProps {
   attributes: ListAttribute[];
@@ -37,6 +39,7 @@ export function VisitList({
     useState<number | string | null>(null);
   const [removeVisitId, setRemoveVisitId] =
     useState<number | string | null>(null);
+  const { user } = useUser();
 
   const handleOnClickPreview = useCallback(
     (e: React.MouseEvent, visit: Visit) => {
@@ -46,13 +49,13 @@ export function VisitList({
     [setPreviewVisitId]
   );
 
-  const handleOnClickEdit = useCallback(
+  /* const handleOnClickEdit = useCallback(
     (e: React.MouseEvent, visit: Visit) => {
       e.stopPropagation();
       setEditVisitId(visit.id);
     },
     [setEditVisitId]
-  );
+  ); */
 
   const handleOnClickRemove = useCallback(
     (e: React.MouseEvent, visit: Visit) => {
@@ -187,7 +190,8 @@ export function VisitList({
 
       case "Opcje":
         return (
-          <div className="item-list-single-item-action-buttons flex ml-1">
+          
+            <div className="item-list-single-item-action-buttons flex ml-1">
             <ActionButton
               src={"src/assets/preview.svg"}
               alt={"Podgląd Wizyty"}
@@ -196,6 +200,7 @@ export function VisitList({
               onClick={(e) => handleOnClickPreview(e, visit)}
               disableText={true}
             />
+            {(visit.createdBy === user?.id || user?.roles.includes(RoleType.ROLE_ADMIN)) && (
             <ActionButton
               src={"src/assets/cancel.svg"}
               alt={"Usuń Wizytę"}
@@ -204,7 +209,9 @@ export function VisitList({
               onClick={(e) => handleOnClickRemove(e, visit)}
               disableText={true}
             />
+            )}
           </div>
+          
         );
 
         case "Podgląd":

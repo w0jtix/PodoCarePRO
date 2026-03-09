@@ -42,6 +42,7 @@ export function InventoryReportForm({
     categoryIds: null,
     keyword: "",
     includeZero: true,
+    isDeleted: false,
   });
   const [page, setPage] = useState<number>(0);
   const [hasMore, setHasMore] = useState<boolean>(true);
@@ -49,10 +50,11 @@ export function InventoryReportForm({
   const { showAlert } = useAlert();
 
   const fetchProducts = async (pageNum: number = 0, append: boolean = false): Promise<void> => {
+    console.log(productFilter)
     AllProductService.getProducts(productFilter, pageNum, 30)
       .then((data) => {
         const content = data?.content || [];
-
+        console.log(content)
         if (append) {
           setProducts((prev) => [...prev, ...content]);
         } else {

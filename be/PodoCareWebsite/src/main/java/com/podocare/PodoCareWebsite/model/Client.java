@@ -45,6 +45,9 @@ public class Client {
     @Builder.Default
     private Boolean isDeleted = false;
 
+    @Column(name = "created_by_user_id")
+    private Long createdByUserId;
+
     public void softDelete() {
         this.isDeleted = true;
     }
