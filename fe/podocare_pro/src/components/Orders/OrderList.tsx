@@ -144,11 +144,11 @@ export function OrderList({
 
   return (
     <div 
-      className={`item-list order width-93 grid p-0 mt-05 ${orders.length === 0 ? "border-none" : ""} ${className} ${attributes === ORDER_HISTORY_POPUP_ATTRIBUTES ? "oh-popup-list" : ""}`}
+      className={`item-list order width-93 p-0 mt-05 ${orders.length === 0 ? "border-none" : ""} ${className} ${attributes === ORDER_HISTORY_POPUP_ATTRIBUTES ? "oh-popup-list" : ""}`}
       onScroll={onScroll}
       >
       {orders.map((order) => (
-        <div key={order.id} className={`product-wrapper order ${className} ${attributes === ORDER_HISTORY_POPUP_ATTRIBUTES ? "oh-popup-list" : ""} ${selectedOrderId === order.id ? "selected" : ""}`}>
+        <div key={order.id} className={`product-wrapper width-max order ${className} ${attributes === ORDER_HISTORY_POPUP_ATTRIBUTES ? "oh-popup-list" : ""} ${selectedOrderId === order.id ? "selected" : ""}`}>
           <div
             className={`item order align-items-center flex-column ${
               order.orderProducts.length > 0 || onSelect ? "pointer" : ""

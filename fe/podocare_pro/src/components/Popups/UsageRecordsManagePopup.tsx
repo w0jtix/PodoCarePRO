@@ -225,7 +225,6 @@ export function UsageRecordsManagePopup({
   return ReactDOM.createPortal(
     <div
       className={`add-popup-overlay flex justify-center align-items-start ${className}`}
-      onClick={onClose}
     >
       <div
         className="manage-usage-records-popup-content flex-column align-items-center relative"
@@ -309,6 +308,7 @@ export function UsageRecordsManagePopup({
             
           </div>
         </section>
+        <div className="flex-column width-max f-1 align-items-center min-height-0 mb-1">
         <UsageRecordsList
           attributes={USAGE_RECORDS_LIST_ATTRIBUTES}
           items={usageRecords}
@@ -319,6 +319,7 @@ export function UsageRecordsManagePopup({
           hasMore={hasMore}
           className={"products usage"}
         />
+        </div>
       </div>
       {isAddNewUsageRecordPopupOpen && (
         <UsageRecordPopup

@@ -16,8 +16,28 @@ import Business from "./pages/Business";
 import AccessDenied from "./pages/AccessDenied";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import CashRegistry from "./pages/CashRegistry";
+import { useState, useEffect } from "react";
 
 function App() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1280);
+
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < 1280);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
+
+  if (isMobile) {
+    return (
+      <div className="display flex justify-center align-items-center height-max width-max">
+        <div className="flex-column align-items-center g-1">
+          <h1 className="access-denied-title">Desktop only</h1>
+          <p className="access-denied-text">Please open this app on a desktop device.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <AlertProvider>
       <UserProvider>
@@ -35,6 +55,7 @@ function App() {
             <Route path="/my-company" element={<ProtectedRoute permissions={['ROLE_ADMIN']}><Business /></ProtectedRoute>}/>
             <Route path="/settings" element={<ProtectedRoute permissions={['ROLE_ADMIN']}><Settings /></ProtectedRoute>}/>
             <Route path="/no-access" element={<AccessDenied />}/>
+            <Route path="*" element={<AccessDenied />}/>
           </Route>
           <Route path="/login" element={<Login />} />
         </Routes>

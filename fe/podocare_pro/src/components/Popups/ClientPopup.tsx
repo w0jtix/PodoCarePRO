@@ -183,7 +183,7 @@ export function ClientPopup({
   return ReactDOM.createPortal(
     <div
       className={`add-popup-overlay flex justify-center align-items-start ${className}`}
-      onClick={onClose}
+      
     >
       <div
         className="client-popup-content flex-column align-items-center relative"
@@ -206,7 +206,7 @@ export function ClientPopup({
             />
           </button>
         </section>
-        <section className="custom-form-section width-90 mb-15">
+        <section className="custom-form-section flex-column f-1 min-height-0 width-90 mb-15">
           <ClientForm
             setClientDTO={setClientDTO}
             clientDTO={clientDTO}

@@ -2,7 +2,6 @@ import { useEffect, useState, useCallback } from "react";
 import { useAlert } from "../Alert/AlertProvider";
 import ActionButton from "../ActionButton";
 import ReactDOM from "react-dom";
-import ListHeader from "../ListHeader";
 import { AlertType } from "../../models/alert";
 import { EMPLOYEES_LIST_ATTRIBUTES } from "../../constants/list-headers";
 import { Employee } from "../../models/employee";
@@ -72,7 +71,7 @@ export function EmployeeManagePopup({
   return ReactDOM.createPortal(
     <div
       className={`add-popup-overlay flex justify-center align-items-start ${className}`}
-      onClick={onClose}
+     
     >
       <div
         className="employee-popup-content flex-column align-items-center relative"
@@ -99,6 +98,7 @@ export function EmployeeManagePopup({
             onClick={() => setIsAddNewEmployeePopupOpen(true)}
           />
         </section>
+        <div className="flex-column width-max f-1 align-items-center min-height-0 mb-1">
         <EmployeeList
             items={employees}
             users={users}
@@ -106,6 +106,7 @@ export function EmployeeManagePopup({
             setEditEmployeeId={setEditEmployeeId}
             className="services emp"
         />
+        </div>
         <a className="popup-category-description flex justify-center width-max italic">
               W celu przypisania Pracownika do Użytkownika skorzystaj z zakładki Profil/ Wszyscy Użytkownicy.
             </a>

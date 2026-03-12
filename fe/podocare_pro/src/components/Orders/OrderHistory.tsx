@@ -241,6 +241,7 @@ export function OrderHistory({
           disableText={true}
         />
       </section>
+      <div className="min-height-0 width-max f-1 flex-column align-items-center align-self-center justify-center mb-2">
       <ListHeader attributes={attributes} />
       {loading ? (
         <div className="list-loading-container relative flex align-items-center justify-center">
@@ -263,6 +264,7 @@ export function OrderHistory({
             selectedOrderId={selectedOrderId}
           />
       )}
+      </div>
     </>
   );
 }

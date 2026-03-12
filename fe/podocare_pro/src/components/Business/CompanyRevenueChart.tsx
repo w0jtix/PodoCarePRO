@@ -48,11 +48,22 @@ export function CompanyRevenueChart({
   const years = useMemo(() => getYears(), []);
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth() + 1;
+  const [chartHeight, setChartHeight] = useState(() =>
+    Math.round(Math.min(300, window.innerHeight / 3))
+  );
 
   const disabledMonthIds = useMemo(() => {
     if (statRequest.year !== currentYear) return [];
     return MONTHS.filter((m) => m.id > currentMonth).map((m) => m.id);
   }, [statRequest.year, currentYear, currentMonth]);
+
+  useEffect(() => {
+    const handler = () => setChartHeight(
+      Math.round(Math.min(300, window.innerHeight / 3))
+    );
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
 
   const processCompanyRevenueData = useCallback(
     (data: CompanyRevenue): ChartDataPoint[] => {
@@ -284,12 +295,12 @@ export function CompanyRevenueChart({
         {loading ? (
           <div
             className="chart-loading flex justify-center align-items-center"
-            style={{ height: 300 }}
+            style={{ height: chartHeight }}
           >
             Ładowanie...
           </div>
         ) : (
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={chartHeight}>
             {chartType === "line" ? (
               <LineChart
                 data={displayChartData}

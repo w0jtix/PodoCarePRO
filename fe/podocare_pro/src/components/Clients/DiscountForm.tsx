@@ -107,10 +107,12 @@ export function DiscountForm({
           placeholder={"0"}
         />
       </section>
+      <div className="flex-column width-max f-1 align-items-center min-height-0">
       <DisplayClientsList
         clients={discountDTO.clients ?? []}
         onClientsChange={handleClientsChange}
       />
+      </div>
       <span className="popup-category-description flex justify-center width-max flex-grow align-items-end">
         UWAGA: Klient może mieć przypisaną maksymalnie 1 zniżkę. Przypisanie
         Klienta do nowej zniżki zastąpi poprzednią.

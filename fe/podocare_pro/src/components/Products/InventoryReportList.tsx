@@ -199,11 +199,11 @@ export function InventoryReportList({
 
   return (
     <div 
-      className={`item-list order width-93 grid p-0 mt-05 ${inventoryReports.length === 0 ? "border-none" : ""} ${className}`}
+      className={`item-list order width-93 flex-column p-0 mt-05 ${inventoryReports.length === 0 ? "border-none" : ""} ${className}`}
       onScroll={onScroll}
       >
       {inventoryReports.map((inventoryReport) => (
-        <div key={inventoryReport.id} className={`product-wrapper order ${className}`}>
+        <div key={inventoryReport.id} className={`product-wrapper width-max order ${className}`}>
           <div
             className={`item order align-items-center flex-column ${
               inventoryReport.items.length > 0 ? "pointer" : ""

@@ -105,7 +105,7 @@ export function BusinessSettings() {
         onClick={() => setLogsPopupOpen(true)}
       />
       </div>
-     
+     <div className="flex-column width-max f-1 align-items-center min-height-0 mb-2">
       <div className="settings-grid grid g-2 width-90 mt-1">
         
         <div className="setting-container flex width-max align-items-center justify-center">
@@ -184,6 +184,7 @@ export function BusinessSettings() {
           onClick={handleSaveStatSettings}
           className="yellow"
         />
+      </div>
       </div>
       {logsPopupOpen && (
         <LogsPopup

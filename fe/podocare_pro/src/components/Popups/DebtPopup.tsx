@@ -88,9 +88,9 @@ export function DebtPopup({
     return null;
   }
 return ReactDOM.createPortal(
-    <div className={`add-popup-overlay flex justify-center align-items-start ${className}`} onClick={onClose}>
+    <div className={`add-popup-overlay flex justify-center align-items-start ${className}`}>
       <div
-        className="client-popup-content flex-column align-items-center relative"
+        className="debt-edit-popup-content flex-column align-items-center relative"
         onClick={(e) => e.stopPropagation()}
       >
         <section className="product-popup-header flex mb-2">
@@ -105,7 +105,7 @@ return ReactDOM.createPortal(
             />
           </button>
         </section>
-        <section className="custom-form-section width-90 mb-15">
+        <section className="flex-column width-90 f-1 align-items-center min-height-0 mb-1">
           <DebtForm
             setDebtDTO={setDebtDTO}
             debtDTO={debtDTO}
@@ -114,7 +114,6 @@ return ReactDOM.createPortal(
             action={action}
           />
         </section>
-
         <ActionButton
           src={"src/assets/tick.svg"}
           alt={"Zapisz"}

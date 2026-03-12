@@ -161,12 +161,12 @@ export function ExpenseItemList({
 
 
   return (
-    <div className={`flex-column ${className} ${disabled ? "disabled" : ""}`}>
+    <div className={`flex-column width-max f-1 align-items-center min-height-0 ${className} ${disabled ? "disabled" : ""}`}>
       <ListHeader
         attributes={attributes}
         module={ListModule.ORDER}
       />
-      <div className={`order-item-list invoice flex-column mt-025 ${className} ${disabled ? "not-allowed" : ""}`}>
+      <div className={`order-item-list f-1 width-max invoice flex-column mt-025 ${className} ${disabled ? "not-allowed" : ""}`}>
             {expenseItems.map((item, index) => (
         <div key={`order-item-${'new'}-${index}`} className="order-item flex">
           {attributes.map((attr) => (

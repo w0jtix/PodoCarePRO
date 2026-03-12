@@ -82,7 +82,7 @@ export function LogsList({
 
       case "Data":
         return (
-          <span className="order-values-lower-font-size ml-1">
+          <span className="order-values-lower-font-size">
             {formatTimestamp(log.timestamp)}
           </span>
         );
@@ -97,14 +97,14 @@ export function LogsList({
 
       case "ID":
         return (
-          <span className="order-values-lower-font-size ml-05">
+          <span className="order-values-lower-font-size ml-05 logs">
              {log.entityId} 
           </span>
         );
 
       case "   ":
         return (
-          <span className="order-values-lower-font-size ml-1 entity-key-trait">
+          <span className="order-values-lower-font-size entity-key-trait">
             {log.entityKeyTrait === null ? "" : log.entityKeyTrait}
           </span>
         );
@@ -133,17 +133,17 @@ export function LogsList({
 
   return (
     <div
-      className={`item-list order width-93 grid p-0 mt-05 ${
+      className={`item-list order width-93 flex-column p-0 mt-05 ${
         logs.length === 0 ? "border-none" : ""
       } ${className}`}
       onScroll={onScroll}
     >
       {logs.map((log, index) => {
         return (
-          <div key={log.id}>
+          <div className="flex-column width-max align-items-center" key={log.id}>
             <div
               key={log.id}
-              className={`product-wrapper order ${className} `}
+              className={`product-wrapper width-max order ${className} `}
             >
               <div
                 className={`item order align-items-center flex-column pointer ${className} ${(log.action === AuditAction.CREATE && log.entityType === "User-Login") ? "info" : log.action === AuditAction.CREATE ? "create" :  log.action === AuditAction.UPDATE ? "edit" : "delete"}`}

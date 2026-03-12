@@ -94,7 +94,7 @@ export function DiscountPopup({
   return ReactDOM.createPortal(
     <div
       className={`add-popup-overlay flex justify-center align-items-start ${className}`}
-      onClick={onClose}
+      
     >
       <div
         className="discount-popup-content flex-column align-items-center relative"

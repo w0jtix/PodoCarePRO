@@ -213,6 +213,7 @@ export function ExpenseHistory() {
       disableText={true}
     />
   </section>
+  <div className="flex-column width-max f-1 align-items-center min-height-0 mb-2">
   <ListHeader attributes={EXPENSE_HISTORY_ATTRIBUTES} />
   <ExpensesList
       attributes={EXPENSE_HISTORY_ATTRIBUTES}
@@ -224,6 +225,7 @@ export function ExpenseHistory() {
       setRemoveExpenseId={setRemoveExpenseId}      
       className="products expenses"
   />
+  </div>
   {isAddNewExpensePopupOpen && (
         <ExpensePopup
           onClose={() => setIsAddNewExpensePopupOpen(false)}

@@ -1,5 +1,5 @@
-import React from "react";
-import { ListAttribute } from "../constants/list-headers";
+import React, { useEffect, useState } from "react";
+import { ListAttribute, SM_BREAKPOINT } from "../constants/list-headers";
 
 export enum ListModule {
   POPUP = "popup",
@@ -14,22 +14,30 @@ export interface ListHeaderProps {
 }
 
 export function ListHeader ({
-  attributes, 
+  attributes,
   module,
   className = ""
 }: ListHeaderProps) {
+  const [isSmall, setIsSmall] = useState(window.innerWidth < SM_BREAKPOINT);
+
+  useEffect(() => {
+    const handler = () => setIsSmall(window.innerWidth < SM_BREAKPOINT);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
+
   return (
     <div className={`list-header flex width-93 ${module?.toString()} ${className}`}>
       {attributes.map((attr, index) => (
         <h2
-        key={index}
-        className={`attribute-item flex ${module?.toString()}`}
-        style={{
-          width: attr.width,
-          justifyContent: attr.justify,
-          ...(attr.size && { fontSize: attr.size }),
-        }}
-      >
+          key={index}
+          className={`attribute-item flex ${module?.toString()}`}
+          style={{
+            width: (isSmall && attr.widthSm) ? attr.widthSm : attr.width,
+            justifyContent: attr.justify,
+            ...(attr.size && { fontSize: attr.size }),
+          }}
+        >
           {attr.name}
         </h2>
       ))}

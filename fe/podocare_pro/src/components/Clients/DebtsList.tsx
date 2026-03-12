@@ -141,14 +141,14 @@ export function DebtsList({
 
   return (
     <div
-      className={`item-list width-93 grid p-0 ${
+      className={`item-list width-93 flex-column p-0 ${
         items.length === 0 ? "border-none" : ""
       } ${className}`}
     >
       {items.map((item, index) => (
         <div
           key={item.id}
-          className={`product-wrapper ${className} ${
+          className={`product-wrapper width-max ${className} ${
             selectedIds?.includes(item.id) ? "selected" : ""
           }`}
         >

@@ -210,6 +210,7 @@ export function ClientsDashboard() {
           />
         </div>
       </section>
+      <div className="flex-column width-max f-1 align-items-center min-height-0 mb-2">
       <ListHeader attributes={CLIENTS_LIST_ATTRIBUTES} />
       <ClientsList
         attributes={CLIENTS_LIST_ATTRIBUTES}
@@ -218,6 +219,7 @@ export function ClientsDashboard() {
         setSelectedClientId={setSelectedClientId}
         className="services client-dashboard"
       />
+      </div>
       {isAddNewClientPopupOpen && (
         <ClientPopup
           onClose={() => {

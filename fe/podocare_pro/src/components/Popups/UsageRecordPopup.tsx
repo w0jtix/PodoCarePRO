@@ -66,7 +66,6 @@ export function UsageRecordPopup({
   return ReactDOM.createPortal(
     <div
       className={`add-popup-overlay flex justify-center align-items-start short-version category ${className}`}
-      onClick={onClose}
     >
       <div
         className="usage-record-popup-content flex-column align-items-center relative"
@@ -85,7 +84,7 @@ export function UsageRecordPopup({
             />
           </button>
         </section>
-        <section className="create-usage-popup width-max flex justify-center">
+        <section className="create-usage-popup width-max flex-column f-1 min-height-0 justify-center">
           <UsageRecordForm
             usageRecordItems={usageRecordItems}
             setUsageRecordItems={setUsageRecordItems}
@@ -100,7 +99,7 @@ export function UsageRecordPopup({
           alt={"Zapisz"}
           text={"Zapisz"}
           onClick={handleCreateUsageRecord}
-          className="f-1"
+          className=""
         />
       </div>
     </div>,

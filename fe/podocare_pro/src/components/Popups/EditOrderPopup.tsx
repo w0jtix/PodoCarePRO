@@ -65,7 +65,7 @@ export function EditOrderPopup({
   return ReactDOM.createPortal(
     <div
       className={`add-popup-overlay flex justify-center align-items-start edit-order ${className}`}
-      onClick={onClose}
+    
     >
       <div
         className="edit-order-popup-content flex-column align-items-center relative"
@@ -81,7 +81,7 @@ export function EditOrderPopup({
             />
           </button>
         </section>
-        <section className="order-popup-interior width-90 mb-1">
+        <section className="order-popup-interior flex-column width-90 mb-1 f-1 min-height-0">
           <OrderCreator
             selectedOrder={fetchedOrder}
             onSuccess={onSuccess}

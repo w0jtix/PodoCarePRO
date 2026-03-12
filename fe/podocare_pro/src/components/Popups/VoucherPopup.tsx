@@ -103,7 +103,6 @@ export function VoucherPopup({
   return ReactDOM.createPortal(
     <div
       className={`add-popup-overlay flex justify-center align-items-start ${className}`}
-      onClick={onClose}
     >
       <div
         className="voucher-popup-content flex-column align-items-center relative"

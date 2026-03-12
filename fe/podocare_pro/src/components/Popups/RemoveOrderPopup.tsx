@@ -80,7 +80,7 @@ export function RemoveOrderPopup({
   return ReactDOM.createPortal(
     <div
       className={`add-popup-overlay flex justify-center align-items-start remove-order ${className}`}
-      onClick={onClose}
+    
     >
       <div
         className="remove-order-popup-content flex-column align-items-center relative"
@@ -96,17 +96,17 @@ export function RemoveOrderPopup({
             />
           </button>
         </section>
-        <section className="remove-product-popup-interior width-90 mb-1">
+        <section className="remove-product-popup-interior flex-column min-height-0 f-1 width-90 mb-1">
           {!hasProducts ? (
             <section>
-              <a className="remove-popup-warning-a flex justify-center">
+              <a className="remove-popup-warning-a flex justify-center text-align-center">
                 ❗❗❗ Zatwierdzenie spowoduje usunięcie Zamówienia.
               </a>
             </section>
           ) : (
             <>
               <section>
-                <a className="remove-popup-warning-a flex justify-center">
+                <a className="remove-popup-warning-a flex justify-center text-align-center">
                   ❗❗❗ Zatwierdzenie spowoduje usunięcie informacji o
                   Zamówieniu oraz Produktów z Magazynu:
                 </a>
@@ -117,6 +117,7 @@ export function RemoveOrderPopup({
                   action={Action.HISTORY}
                   mode={Mode.POPUP}
                   setHasWarning={setHasWarning}
+                  optionalClassName="flex-column width-max f-1 align-items-center min-height-0"
                 />
               {hasWarning && (
                 <div className="popup-warning-explanation-display flex justify-center">

@@ -249,9 +249,9 @@ export function UsageRecordForm({
   }, []);
 
   return (
-    <div className="form-container align-self-center width-90">
-      <div className="width-max flex space-between">
-        <div className="flex-column width-half align-items-center">
+    <div className="form-container flex-column f-1 min-height-0 align-self-center width-90">
+      <div className="width-max flex space-between min-height-0">
+        <div className="flex-column width-60 align-items-center">
           <div className="flex space-between width-max align-items-center">
             <div className="popup-common-section-row flex align-items-center space-between g-10px name">
               <a className="product-form-input-title">Pracownik:</a>
@@ -274,7 +274,7 @@ export function UsageRecordForm({
               />
             </div>
           </div>
-          <div className="selected-usage-product-list flex-column height-fit-content width-max align-items-center mt-1 g-05">
+          <div className="selected-usage-product-list report flex-column f-1 width-max align-items-center g-05 mt-05">
             {usageRecordItems.map((item) => (
               <div
                 key={item.product.id}
@@ -348,7 +348,7 @@ export function UsageRecordForm({
             ))}
           </div>
         </div>
-        <div className={`list-container width-35 height-max `}>
+        <div className={`list-container width-30 flex-column min-height-0 report`}>
           <div className="filters-container flex-column g-1 width-max align-items-center justify-center usage">
             <h2 className="list-container-header">Wybierz z listy:</h2>
             <SearchBar

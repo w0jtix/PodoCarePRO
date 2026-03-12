@@ -162,13 +162,13 @@ export function ExpensesList({
 
   return (
     <div
-      className={`item-list order width-93 grid p-0 mt-05 ${
+      className={`item-list order width-93 flex-column p-0 mt-05 ${
         expenses.length === 0 ? "border-none" : ""
       } ${className}`}
       onScroll={onScroll}
     >
       {expenses.map((expense) => (
-        <div key={expense.id} className={`product-wrapper order ${className}`}>
+        <div key={expense.id} className={`product-wrapper width-max order ${className}`}>
           <div
             className={`item order align-items-center flex-column ${
               expense.expenseItems.length > 0 ? "pointer" : ""

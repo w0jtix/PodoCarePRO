@@ -58,7 +58,7 @@ export function ChooseClientsPopup({
   return ReactDOM.createPortal(
     <div
       className={`add-popup-overlay flex justify-center align-items-start ${className}`}
-      onClick={onClose}
+     
     >
       <div
         className="manage-clients-popup-content flex-column align-items-center relative"
@@ -78,6 +78,7 @@ export function ChooseClientsPopup({
           </button>
         </section>
         <SearchBar onKeywordChange={setKeyword} className="mb-1" />
+        <div className="flex-column width-max f-1 align-items-center min-height-0">
             <ListHeader attributes={CLIENTS_DISCOUNT_LIST_ATTRIBUTES} />
             <ClientsList
               attributes={CLIENTS_DISCOUNT_LIST_ATTRIBUTES}
@@ -87,6 +88,7 @@ export function ChooseClientsPopup({
               onClick={handleSelectClients}
               selectedClients={selectedClients}
             />
+            </div>
             <div className="flex width-max mt-1 align-items-center justify-center">
             <ActionButton
                 src={"src/assets/tick.svg"}

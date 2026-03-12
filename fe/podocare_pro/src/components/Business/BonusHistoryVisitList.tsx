@@ -133,7 +133,7 @@ export function BonusHistoryVisitList({
 
   return (
     <div
-      className={`item-list width-93 grid p-0 mt-05 ${
+      className={`item-list width-93 flex-column p-0 mt-05 ${
         visits.length === 0 ? "border-none" : ""
       } ${className}`}
     >
@@ -145,7 +145,7 @@ export function BonusHistoryVisitList({
         const endStr = formatDate(week.end.toISOString());
 
         return (
-          <div key={`week-${week.weekNumber}`} className="flex-column width-95 align-items-center justify-self-center">
+          <div key={`week-${week.weekNumber}`} className="flex-column width-95 align-self-center align-items-center justify-self-center">
             <div
               className="week-separator flex width-max space-between align-items-center pointer"
               onClick={() => toggleWeek(week.weekNumber)}

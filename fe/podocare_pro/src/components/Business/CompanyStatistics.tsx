@@ -41,6 +41,9 @@ export function CompanyStatistics() {
   const [companySummary, setCompanySummary] =
     useState<CompanyFinancialSummary | null>(null);
   const [statUnit, setStatUnit] = useState<"zł" | "%">("%");
+  const [chartScale, setChartScale] = useState(() =>
+    Math.max(0.7, Math.min(1.0, window.innerWidth / 1920))
+  );
 
   const fetchCompanyStats = useCallback(async () => {
     StatisticsService.getCompanyStats(statRequest)
@@ -63,6 +66,12 @@ export function CompanyStatistics() {
         console.error("Error fetching Company Financial Summary: ", error);
       });
   }, [statRequest, showAlert]);
+
+  useEffect(() => {
+    const handler = () => setChartScale(Math.max(0.7, Math.min(1.0, window.innerWidth / 1920)));
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
 
   const handleToggleUnit = useCallback((val: boolean) => {
     setStatUnit(val ? "%" : "zł");
@@ -263,7 +272,7 @@ export function CompanyStatistics() {
         <div className="scoreboard-card profitability flex align-items-center">
           <div className="scoreboard-main f-1 align-items-center flex-column">
             <div className="gauge-container">
-              <svg width="120" height="63" viewBox="0 0 120 63">
+              <svg width={Math.round(120 * chartScale)} height={Math.round(63 * chartScale)} viewBox="0 0 120 63">
                 <defs>
                   <linearGradient id="gaugeGradient" gradientUnits="userSpaceOnUse" x1="12" y1="58" x2="108" y2="58">
                     <stop offset="0%" stopColor="#ff0000" />
@@ -365,9 +374,9 @@ export function CompanyStatistics() {
           </div>
         ) : (
         <div className="data-table-frame flex align-items-center space-between">
-          <section className="cmp-data-section width-33 flex align-items-center justify-center height-max">
+          <section className="cmp-data-section width-27 flex align-items-center justify-center height-max">
             <div className="revenue-pie-chart flex align-items-center g-1">
-              <ResponsiveContainer width={130} height={130}>
+              <ResponsiveContainer width={Math.round(150 * chartScale)} height={Math.round(150 * chartScale)}>
                 <PieChart>
                   <defs>
                     <linearGradient id="navyGrad" x1="0" y1="0" x2="0" y2="1">
@@ -398,8 +407,8 @@ export function CompanyStatistics() {
                     data={revenueShareData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={36}
-                    outerRadius={56}
+                    innerRadius={Math.round(36 * chartScale)}
+                    outerRadius={Math.round(56 * chartScale)}
                     paddingAngle={3}
                     dataKey="value"
                     stroke="rgba(255,255,255,0.15)"
@@ -475,7 +484,7 @@ export function CompanyStatistics() {
           </section>
           <section className="cmp-data-section expenses width-40 flex align-items-center justify-center height-max">
             <div className="expenses-bar-chart flex align-items-center g-1">
-              <ResponsiveContainer width={240} height={140}>
+              <ResponsiveContainer width={Math.round(240 * chartScale)} height={Math.round(140 * chartScale)}>
                 <BarChart
                   data={expensesBarData}
                   margin={{ top: 10, right: 10, left: -10, bottom: 5 }}
@@ -583,7 +592,7 @@ export function CompanyStatistics() {
           </section>
           <section className="cmp-data-section width-33 flex align-items-center justify-center height-max">
             <div className="waterfall-chart flex align-items-center g-1">
-              <ResponsiveContainer width={160} height={115}>
+              <ResponsiveContainer width={Math.round(160 * chartScale)} height={Math.round(115 * chartScale)}>
                 <BarChart
                   data={waterfallData}
                   layout="vertical"

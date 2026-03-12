@@ -12,6 +12,7 @@ export interface OrderContentProps {
   action: Action;
   mode?: Mode;
   setHasWarning?: (val: boolean) => void;
+  optionalClassName?: string;
 }
 
 export function OrderContent ({
@@ -20,6 +21,7 @@ export function OrderContent ({
   action,
   mode = Mode.NORMAL,
   setHasWarning,
+  optionalClassName= "",
 }: OrderContentProps) {
   const getAttributes = () => {
     if (action === Action.HISTORY) {
@@ -34,7 +36,7 @@ export function OrderContent ({
   
 
   return (
-    <div className={`order-content width-max mt-025 mb-1 ${Action[action].toLowerCase()}`}>
+    <div className={`order-content width-max mt-025 mb-1 ${Action[action].toLowerCase()} ${optionalClassName}`}>
       <ListHeader
         attributes={attributes}
         module={ListModule.HANDY}

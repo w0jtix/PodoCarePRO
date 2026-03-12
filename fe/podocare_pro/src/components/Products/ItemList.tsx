@@ -1,7 +1,6 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ActionButton from "../ActionButton";
-import { useState } from "react";
-import { ListAttribute} from "../../constants/list-headers";
+import { ListAttribute, SM_BREAKPOINT } from "../../constants/list-headers";
 import { Product, Unit } from "../../models/product";
 import { Action } from "../../models/action";
 import CostInput from "../CostInput";
@@ -35,6 +34,13 @@ export function ItemList ({
   isLoading = false,
   hasMore = true,
 }: ItemListProps) {
+  const [isSmall, setIsSmall] = useState(window.innerWidth < SM_BREAKPOINT);
+
+  useEffect(() => {
+    const handler = () => setIsSmall(window.innerWidth < SM_BREAKPOINT);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
 
   const handleOnClickEdit = useCallback((e: React.MouseEvent, item: Product) => {
     e.stopPropagation();
@@ -88,23 +94,23 @@ export function ItemList ({
         ) : (<span className={`qv-span ${className}`}>{item.name}</span>);
       
       case "Marka":
-        return(<span className={`list-span ml-1 ${className}`}>{item.brand.name}</span>);
+        return(<span className={`list-span ml-05 ${className}`}>{item.brand.name}</span>);
 
       case "Stan Magazynowy":
-        return(<span className={`list-span ml-1 ${className}`}>{item.supply}</span>);
+        return(<span className={`list-span ml-05 ${className}`}>{item.supply}</span>);
 
       case "Cena":
         if (item.category.name != "Produkty" || !item.sellingPrice) {
           return "";
         }
-        return(<span className={`list-span ml-1 ${className}`}>{item.sellingPrice} zł</span>);
+        return(<span className={`list-span ml-05 ${className}`}>{item.sellingPrice} zł</span>);
 
       case "empty": 
         return "";
 
       case "Opcje":
         return (
-          <div className="item-list-single-item-action-buttons flex ml-1">
+          <div className="item-list-single-item-action-buttons flex ml-05">
             <ActionButton
               src="src/assets/edit.svg"
               alt="Edytuj Produkt"
@@ -132,11 +138,11 @@ export function ItemList ({
 
   return (
     <div 
-    className={`item-list width-max grid p-0 ${items.length === 0 ? "border-none" : ""} ${className}`} 
+    className={`item-list width-max height-max flex-column p-0 ${items.length === 0 ? "border-none" : ""} ${className}`} 
     onScroll={onScroll}
     >
       {items.map((item, index) => (
-        <div key={item.id} className={`product-wrapper ${className}`}>
+        <div key={item.id} className={`product-wrapper width-max min-height-req-25 ${className}`}>
           <div
             className={`item flex ${!item.isDeleted ? "pointer" : ""} ${className}`}
             onClick={() => !item.isDeleted && toggleProducts(item)}
@@ -153,7 +159,7 @@ export function ItemList ({
                   attr.name === "" ? "category-column" : "align-self-center"
                 } ${className}`}
                 style={{
-                  width: attr.width,
+                  width: (isSmall && attr.widthSm) ? attr.widthSm : attr.width,
                   justifyContent: attr.justify,
                 }}
               >

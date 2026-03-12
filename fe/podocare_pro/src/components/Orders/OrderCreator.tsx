@@ -282,16 +282,16 @@ export function OrderCreator({
 
   return (
     <div
-      className={`order-display-container align-self-center relative ${
-        action === Action.EDIT ? "popup" : ""
+      className={`order-display-container min-height-0 height-max align-self-center relative ${
+        action === Action.EDIT ? "popup f-1" : ""
       } ${className}`}
     >
       <div
-        className={`order-display-interior grid g-10px relative ${
+        className={`order-display-interior f-1 min-height-0 flex-column g-10px relative ${
           action === Action.EDIT ? "popup" : ""
         }`}
       >
-        {action === Action.CREATE && <h1>Nowe zamówienie</h1>}
+        {action === Action.CREATE && <h1 className="orders-list-by-supplier-container-title flex align-items-center mb-05 mt-05">Nowe zamówienie</h1>}
         <section className="order-supplier-date-addProduct-section flex space-evenly relative align-center">
           <DropdownSelect<Supplier>
             items={suppliers}

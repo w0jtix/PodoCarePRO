@@ -70,7 +70,7 @@ export function HandyOrderList({
   };
 
   return (
-    <div className={`handy-order-list-container flex-column ${className}`}>
+    <div className={`handy-order-list-container f-1 flex-column ${className}`}>
       {[...orders]
         .sort((a, b) => b.orderNumber - a.orderNumber)
         .map((order, index) => (

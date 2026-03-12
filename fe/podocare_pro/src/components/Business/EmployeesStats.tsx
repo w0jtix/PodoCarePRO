@@ -53,7 +53,7 @@ export function EmployeesStats() {
 
   return (
     <>
-      <section className="chart-employees width-90 flex-column align-items-center mt-2">
+      <section className="chart-employees width-90 flex-column align-items-center mt-2 mb-1">
         <EmployeeRevenueChart 
           selectedEmployeeIds={selectedEmployeeIds.length > 0 ? selectedEmployeeIds : undefined} 
           statRequest={statRequest}
@@ -61,8 +61,8 @@ export function EmployeesStats() {
         />
       </section>
       <section
-        className={`employee-stat-section width-90 flex ${
-          employeeStats.length == 1 ? "justify-center" : "space-between"
+        className={`employee-stat-section f-1 min-height-0 height-max mb-1 width-90 flex ${
+          employeeStats.length == 1 ? "justify-center" : "space-around"
         } mt-1`}
       >
         {employeeStats.map((employee, index) => {
@@ -71,13 +71,7 @@ export function EmployeesStats() {
           const backgroundColor = CARD_BACKGROUND_COLORS[(employee.id -1) % CARD_BACKGROUND_COLORS.length];
           return (
           <div
-            className={`employee-stat-card flex-column width-${
-              employeeStats.length == 2
-                ? 45
-                : employeeStats.length == 3
-                ? 30
-                : 90
-            } ${isSelected ? "selected" : ""}`}
+            className={`employee-stat-card min-height-0 flex-column  ${isSelected ? "selected" : ""}`}
             key={employee.id}
             style={isSelected ? {
               borderColor: chartColor,
@@ -107,11 +101,7 @@ export function EmployeesStats() {
               </div>
               <span className="card-date mr-1 mt-05">{getCardDateDisplay()}</span>
             </div>
-            <div
-              ref={(el) => (scrollContainerRefs.current[employee.id] = el)}
-              className="emp-card-scroll-container f-1"
-            >
-              <div className="empl-stat-card-body first width-90 flex-column align-items-center justify-self-center g-1 mt-05 ">
+              <div className="empl-stat-card-body f-1 min-height-0 width-90 flex-column align-items-center justify-self-center g-1 mt-05 mb-1 align-self-center">
                 <section className="width-max flex-column g-075 align-items-center default">
                   <div className="width-90 flex">
                     <div className="flex width-max space-between">
@@ -180,29 +170,7 @@ export function EmployeesStats() {
                     />
                   </div>
                 </section>
-              </div>
 
-              <div ref={(el) => (scrollButtonRefs.current[employee.id] = el)}>
-                <ActionButton
-                  src="src/assets/arrow_down.svg"
-                  alt={visibleView[employee.id] === 'second' ? "Scroll Up" : "Scroll Down"}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    const container = scrollContainerRefs.current[employee.id];
-                    const button = scrollButtonRefs.current[employee.id];
-                    const isSecond = visibleView[employee.id] === 'second';
-                    container?.scrollTo({
-                      top: isSecond ? 0 : button?.offsetTop || 0,
-                      behavior: 'smooth'
-                    });
-                    setVisibleView(prev => ({ ...prev, [employee.id]: isSecond ? 'first' : 'second' }));
-                  }}
-                  disableText={true}
-                  className={`emp-stats-scroll ${visibleView[employee.id] === 'second' ? 'up' : 'down'}`}
-                />
-              </div>
-
-              <div className="empl-stat-card-body last width-90 flex-column align-items-center justify-self-center g-15  ">
                 <section className="width-max flex-column g-1 align-items-center default">
                   <div className="width-90 flex">
                     <div className="flex width-max space-between">
@@ -288,9 +256,9 @@ export function EmployeesStats() {
                     </div>
                   </div>
                 </section>
-
               </div>
-            </div>
+
+
           </div>
         )})}
       </section>

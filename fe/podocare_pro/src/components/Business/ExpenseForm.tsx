@@ -179,7 +179,7 @@ export function ExpenseForm({
 
   return (
     <div
-      className={`product-form-container flex-column ${action
+      className={`product-form-container flex-column f-1 min-height-0 ${action
         .toString()
         .toLowerCase()} ${className}`}
     >
@@ -235,7 +235,7 @@ export function ExpenseForm({
               handleSource(input);
             }
           }}
-          className="invoice"
+          className="wide"
         />
       </section>
       <section className="flex width-max space-between align-items-center mb-1">
@@ -248,7 +248,7 @@ export function ExpenseForm({
               handleInvoiceNumber(input);
             }
           }}
-          className="invoice"
+          className="wide"
         />
       </section>
       <div className="addons-list-header invoice flex justify-end align-items-center">

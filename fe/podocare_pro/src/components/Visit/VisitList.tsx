@@ -245,7 +245,7 @@ export function VisitList({
 
   return (
     <div
-      className={`item-list order width-93 grid p-0 mt-05 ${
+      className={`item-list flex-column order width-93 p-0 mt-05 ${
         visits.length === 0 ? "border-none" : ""
       } ${className}`}
       onScroll={onScroll}
@@ -254,7 +254,7 @@ export function VisitList({
         const showDateSeparator =
           index === 0 || visits[index - 1].date !== visit.date;
         return (
-          <div key={visit.id}>
+          <div className="width-max align-items-center" key={visit.id}>
             {showDateSeparator && !disableExpand && (
               <div className="day-separator width-fit-content mb-05">
                 {

@@ -132,7 +132,7 @@ export function ServiceForm({
 
   return (
     <div
-      className={`custom-form-container flex-column width-max g-05 ${action
+      className={`custom-form-container flex-column f-1 min-height-0 width-max g-05 ${action
         .toString()
         .toLowerCase()} ${className}`}
     >
@@ -146,7 +146,7 @@ export function ServiceForm({
               handleNameChange(inputName);
             }
           }}
-          className="name"
+          className="name serv"
         />
       </section>
       <section className="form-row flex width-max align-items-center space-between">
@@ -179,7 +179,7 @@ export function ServiceForm({
           className={"service"}
         />
       </section>
-      <section className="service-variants-container">
+      <section className="service-variants-container flex-column f-1 min-height-0">
         <ActionButton
           src={"src/assets/addNew.svg"}
           alt={"Dodaj Wariant"}
@@ -187,10 +187,11 @@ export function ServiceForm({
           onClick={() => handleAddVariant()}
           className=""
         />
-        <div className="variants-list flex-column mt-1 mb-1 g-05">
+        <div className="flex-column width-max f-1 align-items-center min-height-0 mb-1">
+        <div className="variants-list width-max flex-column f-1 mt-1 mb-1 g-05 min-height-0">
           {serviceDTO.variants.length > 0 &&
             serviceDTO.variants.map((variant, index) => (
-              <div key={index} className="variant-wrapper">
+              <div key={index} className="variant-wrapper width-max">
                 <div
                   className={`variant-header pointer flex width-max space-between align-items-center ${
                     expandedVariantIndex === index ? "expanded" : ""
@@ -240,6 +241,7 @@ export function ServiceForm({
                 )}
               </div>
             ))}
+        </div>
         </div>
       </section>
       

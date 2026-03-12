@@ -147,7 +147,7 @@ export function StockAdjustmentReportPopup({
           </div>
         ) : (
           <>
-            <section className="create-usage-popup width-max flex justify-center">
+            <section className="create-usage-popup width-max flex-column f-1 min-height-0 justify-center">
               <InventoryReportForm
                 inventoryReportItems={inventoryReportItems}
                 setInventoryReportItems={setInventoryReportItems}
@@ -159,7 +159,7 @@ export function StockAdjustmentReportPopup({
               alt={"Zapisz"}
               text={"Zapisz"}
               onClick={handleInventoryReportAction}
-              className="f-1 bottom-push"
+              className=""
             />
           </>
         )}

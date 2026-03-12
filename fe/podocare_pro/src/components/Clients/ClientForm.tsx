@@ -142,7 +142,7 @@ export function ClientForm({
 
   return (
     <div
-      className={`custom-form-container flex-column width-max g-05 ${action
+      className={`custom-form-container f-1 min-height-0 flex-column width-max g-05 ${action
         .toString()
         .toLowerCase()} ${className}`}
     >
@@ -218,17 +218,17 @@ export function ClientForm({
       </section>
       
       {action === Action.EDIT && (
-        <>
+        <div className="flex-column width-max min-height-0 f-1">
         <ActionButton
             src={"src/assets/addNew.svg"}
             alt={"Dodaj notatkę"}
             text={"Dodaj notatkę"}
             onClick={addNote}
           />
-        <section className="client-notes-section flex-column width-max height-fit-content align-items-start">
+        <section className="flex-column width-max f-1 align-items-center min-height-0">
           
           {newClientNotesDTO.length > 0 && (
-            <div className="client-notes-list flex-column align-items-center width-max g-05 mt-05 mb-05">
+            <div className="client-notes-list f-1 min-height-0 flex-column align-items-center width-max g-05 mt-05">
               {newClientNotesDTO.map((note, index) => (
                 <div
                   key={index}
@@ -280,7 +280,7 @@ export function ClientForm({
             </div>
           )}
           {existingClientNotes.length > 0 && (
-            <div className="client-notes-list flex-column align-items-center width-max g-05 mt-05 mb-05">
+            <div className="client-notes-list f-1 min-height-0 flex-column align-items-center width-max g-05 mt-05 mb-05">
               {existingClientNotes.map((note, index) => {
                 const noteUser = employeeUsersMap.get(note.createdBy.id);
                 return (
@@ -327,7 +327,7 @@ export function ClientForm({
             </div>
           )}
         </section>
-        </>
+        </div>
       )}
     </div>
   );

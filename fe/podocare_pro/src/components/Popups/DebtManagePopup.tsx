@@ -101,7 +101,7 @@ export function DebtManagePopup({
   return ReactDOM.createPortal(
     <div
       className={`add-popup-overlay flex justify-center align-items-start ${className}`}
-      onClick={onClose}
+    
     >
       <div
         className="debt-popup-content flex-column align-items-center relative"
@@ -138,6 +138,7 @@ export function DebtManagePopup({
             onClick={() => setIsAddNewDebtPopupOpen(true)}
           />
         </section>
+        <div className="flex-column width-max f-1 align-items-center min-height-0 mb-1">
         <ListHeader attributes={DEBTS_LIST_ATTRIBUTES} />
         <DebtsList
           attributes={DEBTS_LIST_ATTRIBUTES}
@@ -146,6 +147,7 @@ export function DebtManagePopup({
           setEditDebtId={setEditDebtId}
           setRemoveDebtId={setRemoveDebtId}
         />
+        </div>
         <span className="popup-category-description flex justify-center width-max flex-grow align-items-end">
           Dług powstały podczas Wizyty może być usunięty tylko z Wizytą!
         </span>

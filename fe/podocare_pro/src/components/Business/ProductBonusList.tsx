@@ -96,10 +96,10 @@ export function ProductBonusList ({
 
   return (
     <div
-    className={`item-list width-93 p-0 mt-05 g-5px ${className}`}
+    className={`item-list flex-column width-93 p-0 mt-05 g-5px ${className}`}
     >
       {items.map((item, index) => (
-        <div key={index} className={`product-wrapper ${className}`}>
+        <div key={index} className={`product-wrapper width-max ${className}`}>
           <div
             className={`item flex ${className} ${item.noPurchaseHistory ? (item.fallbackPurchasePriceUsed ? "notify" : "alert") : ""} pointer`}
             onClick={() => toggleExpand(item.productId)}

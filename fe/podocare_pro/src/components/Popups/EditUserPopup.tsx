@@ -166,7 +166,7 @@ export function EditUserPopup({
   }
 
   return ReactDOM.createPortal(
-    <div className={`add-popup-overlay flex justify-center align-items-start ${className}`} onClick={onClose}>
+    <div className={`add-popup-overlay flex justify-center align-items-start ${className}`}>
       <div
         className="force-change-pw-content flex-column align-items-center relative g-15"
         onClick={(e) => e.stopPropagation()}
@@ -186,7 +186,7 @@ export function EditUserPopup({
             />
           </button>
         </div>
-        <div className="user-roles-container flex-column g-05 align-items-center popup">
+        <div className="user-roles-container width-90 mt-1 border-none align-self-start space-between flex align-items-center">
           <h2 className="pw-header text-align-center m-0">Role Użytkownika:</h2>
           <div className="user-roles-popup flex g-1">
             {availableRoles.map((role) => (
@@ -205,7 +205,7 @@ export function EditUserPopup({
             ))}
           </div>
         </div>
-        <div className="asign-employee-container flex align-self-start align-items-center width-60 mt-1 space-between">
+        <div className="asign-employee-container flex align-self-start align-items-center width-90 mt-1 space-between">
           <h2 className="pw-header text-align-center m-0">Pracownik:</h2>
           <DropdownSelect
             items={employees}
@@ -235,7 +235,7 @@ export function EditUserPopup({
         />
         {showForceChangePw && (
           <>
-            <div className="popup-pw-inputs width-60 mt-1 mb-1 ml-0 mr-0 flex-column g-1">
+            <div className="popup-pw-inputs width-70 mt-1 mb-1 ml-0 mr-0 flex-column g-1">
               <div className="pw-input-group flex space-between align-items-center">
                 <p className="pw-label">Nowe Hasło:</p>
                 <input

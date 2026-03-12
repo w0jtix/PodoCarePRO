@@ -96,7 +96,7 @@ export function ProductReportPopup({
       categoryIds: null,
       brandIds: null,
       keyword: "",
-      includeZero: false,
+      includeZero: true,
       isDeleted: false,
     });
     setResetTriggered((prev) => !prev);
@@ -208,7 +208,7 @@ export function ProductReportPopup({
   return ReactDOM.createPortal(
     <div
       className={`add-popup-overlay flex justify-center align-items-start ${className}`}
-      onClick={onClose}
+    
     >
       <div
         className="product-report-popup-content flex-column align-items-center relative"
@@ -227,8 +227,8 @@ export function ProductReportPopup({
             />
           </button>
         </section>
-        <div className="flex-column g-1 width-max align-items-center">
-          <section className="flex width-80 align-items-center space-between">
+        <div className="flex-column g-1 f-1 min-height-0 width-max align-items-center">
+          <section className="prp-cat flex width-80 align-items-center space-between">
             <a className="order-history-action-buttons-a align-center">
               Kategorie:
             </a>
@@ -240,7 +240,7 @@ export function ProductReportPopup({
               mode={CategoryButtonMode.MULTISELECT}
             />
           </section>
-          <section className="flex width-80 align-items-center space-between g-1">
+          <section className="prp-cat  flex width-80 align-items-center space-between">
             <ActionButton
               disableImg={true}
               text={`Zerowy Stan Magazynowy: ${
@@ -268,7 +268,7 @@ export function ProductReportPopup({
                     disableText={true}
                   />
           </section>
-          <section className="products-list-section width-90 flex align-items-center justify-center mt-05">
+          <section className="flex-column width-90 f-1 align-items-center min-height-0 mb-1">
             <ItemList
               attributes={PRODUCT_POPUP_LIST_ATTRIBUTES}
               items={items}
@@ -285,7 +285,7 @@ export function ProductReportPopup({
           alt={"Utwórz PDF"}
           text={"Utwórz PDF"}
           onClick={handlePreviewPDF}
-          className="f-1 product-report"
+          className="product-report"
         />
       </div>
     </div>,

@@ -65,9 +65,9 @@ export function OrdersListBySupplier({
   };
 
   return (
-    <div className={`order-display-container align-self-center relative ${className}`}>
-      <div className="order-display-interior grid g-10px relative ">
-        <h1 className="orders-list-by-supplier-container-title flex align-items-center">
+    <div className={`order-display-container lbs height-max align-self-center relative ${className}`}>
+      <div className="order-display-interior f-1 flex-column g-10px relative ">
+        <h1 className="orders-list-by-supplier-container-title flex align-items-center mb-05 mt-05">
           {getTitle()}
         </h1>
         <ListHeader
@@ -81,7 +81,7 @@ export function OrdersListBySupplier({
           expandedOrderIds={expandedOrderIds}
           setExpandedOrderIds={setExpandedOrderIds}
         />
-        <section className="orders-list-by-supplier-orders-count flex justify-center align-items-center">
+        <section className="mb-05 flex justify-center align-items-center">
           {selectedSupplier ? (
             <span className="orders-list-by-supplier-orders-count-span">
               Razem: {getOrderCountText()}

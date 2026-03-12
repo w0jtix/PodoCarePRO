@@ -50,7 +50,7 @@ export function UserPopup ({
   }
 
   return ReactDOM.createPortal(
-    <div className={`add-popup-overlay flex justify-center align-items-start ${className}`} onClick={onClose}>
+    <div className={`add-popup-overlay flex justify-center align-items-start ${className}`}>
       <div
         className="add-user-popup-content flex-column align-items-center relative"
         onClick={(e) => e.stopPropagation()}

@@ -100,7 +100,7 @@ export function ExpensePopup({
   return ReactDOM.createPortal(
     <div
       className={`add-popup-overlay flex justify-center align-items-start ${className}`}
-      onClick={onClose}
+      
     >
       <div
         className="expense-popup-content flex-column align-items-center relative"
@@ -121,7 +121,7 @@ export function ExpensePopup({
             />
           </button>
         </section>
-        <section className="product-popup-interior width-90 mb-1">
+        <section className="product-popup-interior flex-column f-1 min-height-0 width-90 mb-1">
           <ExpenseForm
             action={action}
             expenseDTO={expenseDTO}

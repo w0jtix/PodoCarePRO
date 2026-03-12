@@ -113,7 +113,7 @@ export function ReviewManagePopup({
   return ReactDOM.createPortal(
     <div
       className={`add-popup-overlay flex justify-center align-items-start ${className}`}
-      onClick={onClose}
+      
     >
       <div
         className="debt-popup-content flex-column align-items-center relative"
@@ -174,6 +174,7 @@ export function ReviewManagePopup({
             onClick={() => setIsAddNewReviewPopupOpen(true)}
           />
         </section>
+        <div className="flex-column width-max f-1 align-items-center min-height-0 mb-1">
         <ListHeader attributes={REVIEWS_LIST_ATTRIBUTES} />
         <ReviewsList
           attributes={REVIEWS_LIST_ATTRIBUTES}
@@ -182,6 +183,7 @@ export function ReviewManagePopup({
           setEditReviewId={setEditReviewId}
           setRemoveReviewId={setRemoveReviewId}
         />
+        </div>
       </div>
 
       {isAddNewReviewPopupOpen && (

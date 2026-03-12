@@ -30,7 +30,7 @@ export function VisitContent({ visit, className = "", mode, showHeaders = false 
     onClick={(e) => e.stopPropagation()}>
       {visit.items.length > 0 && (
         
-        <div className={`${mode === Mode.POPUP ? "width-max flex-column align-items-center" : "width-half"}`}>
+        <div className={`${mode === Mode.POPUP ? "width-max flex-column align-items-center" : "width-40"}`}>
           {showHeaders && (
           <h2 className="f16  mb-05">Usługi</h2>
         )}
@@ -54,7 +54,7 @@ export function VisitContent({ visit, className = "", mode, showHeaders = false 
       </div>
       )}
       {visit.debtRedemptions.length > 0 && (
-        <div className={`${mode === Mode.POPUP ? "width-max flex-column align-items-center" : "width-20"}`}>
+        <div className={`${mode === Mode.POPUP ? "width-max flex-column align-items-center" : "width-30"}`}>
           {showHeaders && (
           <h2 className="f16  mb-05">Spłaty zadłużenia</h2>
         )}

@@ -309,7 +309,7 @@ export function VisitCartItemList({
         return (
           <div
             key={`${id}-${index}`}
-            className={`product-wrapper ${className}`}
+            className={`product-wrapper width-max ${className}`}
           >
             <div
               className={`item align-items-center pointer flex ${className}`}

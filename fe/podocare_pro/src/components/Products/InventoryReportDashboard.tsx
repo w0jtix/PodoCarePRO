@@ -172,7 +172,7 @@ export function InventoryReportDashboard({
       />
 
       <section className="products-action-buttons width-90 flex align-self-center space-between mt-1 mb-1">
-        <div className="flex g-25">
+        <div className="pab-left flex g-25">
           <div className="flex g-1 align-items-center">
             <a className="product-form-input-title">Pracownik:</a>
             <DropdownSelect<Employee>
@@ -220,7 +220,7 @@ export function InventoryReportDashboard({
             disabledItemIds={disabledMonthIds}
           />
         </div>
-        <div className="flex g-25 justify-end">
+        <div className="pab-right flex g-25 justify-end">
           <ActionButton
             src={"src/assets/pdf.svg"}
             alt={"Wygeneruj PDF"}
@@ -235,6 +235,7 @@ export function InventoryReportDashboard({
           />
         </div>
       </section>
+      <div className="flex-column width-max f-1 align-items-center min-height-0 mb-2">
       <ListHeader attributes={INVENTORY_REPORTS_LIST_ATTRIBUTES} />
       <InventoryReportList
         inventoryReports={inventoryReports}
@@ -243,6 +244,7 @@ export function InventoryReportDashboard({
         onSuccess={() => fetchInventoryReports(0, false)}
         className="services inv-rep"
       />
+      </div>
       {isCurrentInventoryPopupOpen && (
         <ProductReportPopup
           onClose={() => setIsCurrentInventoryPopupOpen(false)}

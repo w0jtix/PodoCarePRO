@@ -107,7 +107,6 @@ export function VoucherManagePopup({
   return ReactDOM.createPortal(
     <div
       className={`add-popup-overlay flex justify-center align-items-start ${className}`}
-      onClick={onClose}
     >
       <div
         className="debt-popup-content flex-column align-items-center relative"
@@ -160,6 +159,7 @@ export function VoucherManagePopup({
             onClick={() => setIsAddNewVoucherPopupOpen(true)}
           />
         </section>
+        <div className="flex-column width-max f-1 align-items-center min-height-0 mb-1">
         <ListHeader attributes={VOUCHERS_LIST_ATTRIBUTES} />
         <VouchersList
           attributes={VOUCHERS_LIST_ATTRIBUTES}
@@ -168,7 +168,8 @@ export function VoucherManagePopup({
           setEditVoucherId={setEditVoucherId}
           setRemoveVoucherId={setRemoveVoucherId}
         />
-        <span className="popup-category-description flex justify-center width-max flex-grow align-items-end">
+        </div>
+        <span className="popup-category-description flex justify-center width-max align-items-end">
           Voucher zakupiony podczas Wizyty może być usunięty tylko z Wizytą!
         </span>
       </div>

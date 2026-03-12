@@ -92,13 +92,13 @@ export function UsageRecordsList({
   };
   return (
     <div
-      className={`item-list width-max grid p-0 mb-2 ${
+      className={`item-list width-max flex-column p-0 mb-2 ${
         items.length === 0 ? "border-none" : ""
       } ${className}`}
       onScroll={onScroll}
     >
       {items.map((item, index) => (
-        <div key={item.id} className={`product-wrapper ${className} `}>
+        <div key={item.id} className={`product-wrapper width-max ${className} `}>
           <div className={`item flex ${className} `}>
             {attributes.map((attr) => (
               <div

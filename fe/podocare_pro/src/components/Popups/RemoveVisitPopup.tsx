@@ -48,6 +48,8 @@ export function RemoveVisitPopup({
     saleItemVouchers.length > 0 &&
     saleItemVouchers.some((v) => v.voucher?.status === VoucherStatus.USED);
 
+  const hasContent = visitWithDebtRedempted != null || saleItemProducts.length > 0 || saleItemVouchers.length > 0 || paidClientDebts.length > 0 || vouchersAsPayment.length > 0;
+
 
   const fetchVisitById = async(visitId: number | string) => {
     VisitService.getVisitById(visitId)
@@ -141,7 +143,7 @@ export function RemoveVisitPopup({
   return ReactDOM.createPortal(
     <div
       className={`add-popup-overlay flex justify-center align-items-start short-version ${className}`}
-      onClick={onClose}
+      
     >
       <div
         className="remove-product-popup-content flex-column align-items-center relative"
@@ -165,7 +167,7 @@ export function RemoveVisitPopup({
           ❗❗❗ Zatwierdzenie spowoduje usunięcie Wizyty.
         </span>
 
-        <div className="rv-sections flex-column width-max align-items-center height-fit-content">
+        <div className={`rv-sections flex-column width-max align-items-center f-1 min-height-0 g-05 ${hasContent ? "mt-1 mb-2" : ""}`}>
           {visitWithDebtRedempted && (
             <div className="flex width-fit-content g-5px mb-2">
               <img
@@ -185,7 +187,7 @@ export function RemoveVisitPopup({
           </div>
           )}
           {saleItemProducts.length > 0 && (
-            <div className="width-80 flex-column g-1 mb-1">
+            <div className="width-90 flex-column g-2 mb-1">
               <span className="qv-span text-align-center">
                 Poniższe produkty zostaną przywrócone do Magazynu:
               </span>
@@ -197,7 +199,7 @@ export function RemoveVisitPopup({
             </div>
           )}
           {saleItemVouchers.length > 0 && (
-            <div className="width-80 flex-column g-1 mb-1">
+            <div className="width-90 flex-column g-2 mb-1">
               <span className="qv-span text-align-center">
                 Poniższe vouchery zostaną usunięte:
               </span>
@@ -207,7 +209,7 @@ export function RemoveVisitPopup({
                 className="services pricelist qv content popup"
               />
               {voucherConflict && (
-                <div className="width-80 flex g-05 mt-05 mb-05 align-items-center align-self-center">
+                <div className="width-90 flex g-05 mt-05 mb-05 justify-center align-items-center align-self-center">
                   <img
                     src={"src/assets/warning.svg"}
                     alt="Warning"
@@ -223,7 +225,7 @@ export function RemoveVisitPopup({
             </div>
           )}
           {paidClientDebts.length > 0 && (
-            <div className="width-80 flex-column g-1 mb-1">
+            <div className="width-90 flex-column g-2 mb-1">
               <span className="qv-span text-align-center">
                 Poniższe spłaty długów zostaną cofnięte:
               </span>
@@ -235,7 +237,7 @@ export function RemoveVisitPopup({
             </div>
           )}
           {vouchersAsPayment.length > 0 && (
-            <div className="width-80 flex-column g-1 mb-1">
+            <div className="width-90 flex-column g-1 mb-1">
               <span className="qv-span text-align-center">
                 Wizyta opłacona przez Voucher. <br/> Status Vouchera zostanie przywrócony zgodnie z datą ważności.
               </span>

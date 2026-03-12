@@ -196,7 +196,7 @@ export function ServicesDashboard() {
         />
       </NavigationBar>
       <section className="action-buttons-section width-93 flex space-around align-items-center">
-        <section className="products-action-buttons services-list width-80 flex align-self-center justify-end g-25 mt-1 mb-1">
+        <section className="products-action-buttons services-list width-80 flex align-self-center justify-end g-25 mt-1 mb-05">
         {user?.roles.includes(RoleType.ROLE_ADMIN) && (  
           <>
           <ActionButton
@@ -215,13 +215,13 @@ export function ServicesDashboard() {
         )}
         </section>
       </section>
-      <div className="services-list-section width-90 flex align-items-center justify-center">
+      <div className="flex-column width-90 f-1 align-items-center min-height-0 mb-2">
         <ServiceList
           attributes={user?.roles.includes(RoleType.ROLE_ADMIN) ? SERVICES_LIST_ATTRIBUTES : USER_SERVICES_LIST_ATTRIBUTES}
           items={services}
           setRemoveServiceId={setRemoveServiceId}
           setEditServiceId={setEditServiceId}
-          className="services list"
+          className="services list min-height-req-28"
         />
       </div>
       {isAddNewServicePopupOpen && (

@@ -19,6 +19,8 @@ import BaseServiceCategoryService from "../../services/BaseServiceCategoryServic
 import DropdownSelect from "../DropdownSelect";
 import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
+import SubMenuNavbar from "../SubMenuNavbar";
+import { SubModuleType, PRICELIST_SUBMENU_ITEMS } from "../../constants/modules";
 
 export function PriceListDashboard() {
   
@@ -46,7 +48,15 @@ export function PriceListDashboard() {
   const [quickVisitSummaryVisible, setQuickVisitSummaryVisible] =
     useState<boolean>(false);
   const [quickVisitTotal, setQuickVisitTotal] = useState<number>(0);
+  const [activeTab, setActiveTab] = useState<SubModuleType>('PriceListServices');
+  const [isSmall, setIsSmall] = useState(window.innerWidth < 1650);
   const { showAlert } = useAlert();
+
+  useEffect(() => {
+    const handler = () => setIsSmall(window.innerWidth < 1650);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
 
 
   const fetchProducts = async (pageNum: number = 0, append: boolean = false): Promise<void> => {
@@ -191,9 +201,9 @@ export function PriceListDashboard() {
           </div>
         </div>
       </section>
-      <div className="lists-container flex width-93 space-between height-fit-content">
+      <div className="lists-container f-1 flex width-93 space-between mb-2">
         <div
-          className="width-37"
+          className={`${isSmall ? "width-half" :"width-37"}`}
           style={{ display: quickVisitSummaryVisible ? "flex" : "none" }}
         >
           <QuickVisit
@@ -207,73 +217,147 @@ export function PriceListDashboard() {
           />
         </div>
 
-        <div
-          className={`list-container ${
-            quickVisitSummaryVisible ? "width-27" : "width-42"
-          }`}
-        >
-          <h2 className="text-align-center">Usługi</h2>
-          <div className={`filters-container ${
-            quickVisitSummaryVisible ? "flex-column g-05" : "flex g-25"} width-max align-items-center justify-center `}>
-            <SearchBar
-              onKeywordChange={handleServiceKeywordChange}
-              resetTriggered={false}
-              placeholder="Szukaj usługi..."
-              className={`pricelist`}
-            />
-            <DropdownSelect
-              items={categories}
-              value={selectedCategories}
-              onChange={handleFilterByCategory}
-              placeholder="Wybierz kategorie"
-              searchable={false}
-              allowNew={false}
-              className={`categories`}
-              multiple={true}
-            />
+        {isSmall && quickVisitSummaryVisible ? (
+          <div className="list-container width-40">
+            <div className="sp-lists-modules flex justify-center width-max">
+              <SubMenuNavbar
+                submenuItems={PRICELIST_SUBMENU_ITEMS}
+                setModuleVisible={setActiveTab}
+                activeModule={activeTab}
+              />
+            </div>
+
+            {activeTab === 'PriceListServices' && (
+              <>
+                <div className="filters-container flex-column g-05 width-max align-items-center justify-center">
+                  <SearchBar
+                    onKeywordChange={handleServiceKeywordChange}
+                    resetTriggered={false}
+                    placeholder="Szukaj usługi..."
+                    className="pricelist"
+                  />
+                  <DropdownSelect
+                    items={categories}
+                    value={selectedCategories}
+                    onChange={handleFilterByCategory}
+                    placeholder="Wybierz kategorie"
+                    searchable={false}
+                    allowNew={false}
+                    className="categories"
+                    multiple={true}
+                  />
+                </div>
+                <ServiceList
+                  attributes={SERVICES_PRICE_LIST_ATTRIBUTES}
+                  items={services}
+                  onClick={(serv) => {
+                    setSelectedService(serv);
+                    setQuickVisitSummaryVisible(true);
+                    setActiveTab('PriceListServices');
+                  }}
+                  className="services pricelist cropped thinner"
+                />
+              </>
+            )}
+
+            {activeTab === 'PriceListProducts' && (
+              <>
+                <div className="filters-container flex width-max align-items-center justify-center">
+                  <SearchBar
+                    onKeywordChange={handleProductKeywordChange}
+                    resetTriggered={false}
+                    placeholder="Szukaj produktu..."
+                    className="pricelist"
+                  />
+                </div>
+                <ItemList
+                  attributes={PRODUCT_PRICE_LIST_ATTRIBUTES}
+                  items={products}
+                  action={Action.DISPLAY}
+                  onClick={(prod) => {
+                    setSelectedProduct(prod);
+                    setQuickVisitSummaryVisible(true);
+                    setActiveTab('PriceListProducts');
+                  }}
+                  className="products pricelist normal-size thinner"
+                  onScroll={handleScroll}
+                  isLoading={loading}
+                  hasMore={hasMore}
+                />
+              </>
+            )}
           </div>
-          <ServiceList
-            attributes={SERVICES_PRICE_LIST_ATTRIBUTES}
-            items={services}
-            onClick={(serv) => {
-              setSelectedService(serv);
-              setQuickVisitSummaryVisible(true);
-            }}
-            className={`services pricelist ${quickVisitSummaryVisible ? "cropped" : ""}`}
-          />
-        </div>
-        <div
-          className={`list-container ${
-            quickVisitSummaryVisible ? "width-20" : "width-42"
-          }`}
-        >
-          <h2 className="text-align-center">Dostępne Produkty</h2>
-          <div className="filters-container flex width-max align-items-center justify-center">
-            <SearchBar
-              onKeywordChange={handleProductKeywordChange}
-              resetTriggered={false}
-              placeholder="Szukaj produktu..."
-              className="pricelist"
-            />
-          </div>
-          <ItemList
-            attributes={
-              quickVisitSummaryVisible
-                ? PRODUCT_PRICE_LIST_ATTRIBUTES
-                : PRODUCT_PRICE_LIST_WIDE_ATTRIBUTES
-            }
-            items={products}
-            action={Action.DISPLAY}
-            onClick={(prod) => {
-              setSelectedProduct(prod);
-              setQuickVisitSummaryVisible(true);
-            }}
-            className="products pricelist normal-size"
-            onScroll={handleScroll}
-            isLoading={loading}
-            hasMore={hasMore}
-          />
-        </div>
+        ) : (
+          <>
+            <div
+              className={`list-container ${
+                quickVisitSummaryVisible ? "width-27" : "width-42"
+              }`}
+            >
+              <h2 className="text-align-center">Usługi</h2>
+              <div className={`filters-container ${
+                quickVisitSummaryVisible ? "flex-column g-05" : "flex g-25"} width-max align-items-center justify-center`}>
+                <SearchBar
+                  onKeywordChange={handleServiceKeywordChange}
+                  resetTriggered={false}
+                  placeholder="Szukaj usługi..."
+                  className="pricelist"
+                />
+                <DropdownSelect
+                  items={categories}
+                  value={selectedCategories}
+                  onChange={handleFilterByCategory}
+                  placeholder="Wybierz kategorie"
+                  searchable={false}
+                  allowNew={false}
+                  className="categories"
+                  multiple={true}
+                />
+              </div>
+              <ServiceList
+                attributes={SERVICES_PRICE_LIST_ATTRIBUTES}
+                items={services}
+                onClick={(serv) => {
+                  setSelectedService(serv);
+                  setQuickVisitSummaryVisible(true);
+                }}
+                className={`services pricelist ${quickVisitSummaryVisible ? "cropped" : ""} thinner`}
+              />
+            </div>
+            <div
+              className={`list-container ${
+                quickVisitSummaryVisible ? "width-20" : "width-42"
+              }`}
+            >
+              <h2 className="text-align-center">Dostępne Produkty</h2>
+              <div className="filters-container flex width-max align-items-center justify-center">
+                <SearchBar
+                  onKeywordChange={handleProductKeywordChange}
+                  resetTriggered={false}
+                  placeholder="Szukaj produktu..."
+                  className="pricelist"
+                />
+              </div>
+              <ItemList
+                attributes={
+                  quickVisitSummaryVisible
+                    ? PRODUCT_PRICE_LIST_ATTRIBUTES
+                    : PRODUCT_PRICE_LIST_WIDE_ATTRIBUTES
+                }
+                items={products}
+                action={Action.DISPLAY}
+                onClick={(prod) => {
+                  setSelectedProduct(prod);
+                  setQuickVisitSummaryVisible(true);
+                }}
+                className="products pricelist normal-size thinner"
+                onScroll={handleScroll}
+                isLoading={loading}
+                hasMore={hasMore}
+              />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

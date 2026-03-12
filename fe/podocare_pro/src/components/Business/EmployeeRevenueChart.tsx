@@ -46,7 +46,18 @@ export function EmployeeRevenueChart({
   const [chartType, setChartType] = useState<ChartType>("line");
   const [isCumulative, setIsCumulative] = useState(true);
   const [loading, setLoading] = useState(false);
-  
+  const [chartHeight, setChartHeight] = useState(() =>
+    Math.round(Math.min(300, window.innerHeight / 3))
+  );
+
+  useEffect(() => {
+    const handler = () => setChartHeight(
+      Math.round(Math.min(300, window.innerHeight / 3))
+    );
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+
   const [isManageEmployeesPopupOpen, setIsManageEmployeesPopupOpen] = useState<boolean>(false);
 
   const { showAlert } = useAlert();
@@ -280,11 +291,11 @@ export function EmployeeRevenueChart({
       <div className="chart-container">
         
         {loading ? (
-          <div className="chart-loading flex justify-center align-items-center" style={{ height: 300 }}>
+          <div className="chart-loading flex justify-center align-items-center" style={{ height: chartHeight }}>
             Ładowanie...
           </div>
         ) : (
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={chartHeight}>
             {chartType === "line" ? (
               <LineChart
                 data={displayChartData}
@@ -296,13 +307,13 @@ export function EmployeeRevenueChart({
                 />
                 <XAxis
                   dataKey="label"
-                  tick={{ fill: "#9ca3af", fontSize: 13 }}
+                  tick={{ fill: "#9ca3af", fontSize: "0.8125rem" }}
                   axisLine={{ stroke: "rgba(255,255,255,0.2)" }}
                   tickLine={false}
                   tickMargin={5}
                 />
                 <YAxis
-                  tick={{ fill: "#9ca3af", fontSize: 10 }}
+                  tick={{ fill: "#9ca3af", fontSize: "0.625rem" }}
                   axisLine={{ stroke: "rgba(255,255,255,0.2)" }}
                   tickLine={false}
                   tickFormatter={(value) => `${value.toLocaleString("pl-PL")} zł`}

@@ -84,7 +84,7 @@ export function SelectVATButton({
           {vatValues.map((item) => (
             <li
               key={item}
-              className={`vat-select-item flex justify-center align-items-center pointer p-7px ${
+              className={`vat-select-item flex justify-center align-items-center pointer ${
                 selectedItem === item ? "selected" : ""
               }`}
               onClick={() => handleSelect(item)}

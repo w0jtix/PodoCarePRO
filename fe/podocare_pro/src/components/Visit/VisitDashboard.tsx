@@ -290,7 +290,7 @@ export function VisitDashboard() {
           onClick={() => setIsAddNewVisitPopupOpen(true)}
         />
       </NavigationBar>
-      <section className="products-action-buttons visits width-80 flex align-self-center space-between mt-1 mb-1">
+      <section className="products-action-buttons visits width-90 flex align-self-center space-between mt-1 mb-1">
         <div className="flex-column g-05 align-items-center">
           <span className="qv-span visit-list text-align-center">Pracownik:</span>
           <DropdownSelect<Employee>
@@ -475,6 +475,7 @@ export function VisitDashboard() {
           className={`${filter.hasSale ? "active-pink" : ""}`}
         />
       </section>
+      <div className="flex-column width-max f-1 align-items-center min-height-0 mb-2">
       <ListHeader attributes={VISIT_LIST_ATTRIBUTES} />
       <VisitList
         attributes={VISIT_LIST_ATTRIBUTES}
@@ -485,6 +486,7 @@ export function VisitDashboard() {
         hasMore={hasMore}
         handleResetFiltersAndData={handleResetFiltersAndData}
       />
+      </div>
       {isAddNewVisitPopupOpen && (
         <VisitPopup
           onClose={() => {

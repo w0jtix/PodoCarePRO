@@ -38,7 +38,7 @@ export function CashLedgerPopup ({
   }
 
   return ReactDOM.createPortal(
-    <div className={`add-popup-overlay flex justify-center align-items-start short-version ${className}`} onClick={onClose}>
+    <div className={`add-popup-overlay flex justify-center align-items-start short-version ${className}`} >
       <div
         className="confirm-cash-ledger-popup-content flex-column align-items-center relative"
         onClick={(e) => e.stopPropagation()}
@@ -65,7 +65,7 @@ export function CashLedgerPopup ({
 
 
         </section>
-            <section className="footer-popup-action-buttons width-60 flex space-between mt-05 mb-05">
+            <section className="cl-f-btns footer-popup-action-buttons width-60 flex space-between mt-05 mb-05">
               <div className="footer-cancel-button">
                 <ActionButton
                   src={"src/assets/cancel.svg"}

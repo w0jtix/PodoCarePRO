@@ -66,18 +66,18 @@ export function CategoryButtons({
   if (isPreviewMode) {
     return {
       ...baseStyle,
-      minWidth: "105px",
+      minWidth: "6.5625rem",
       width: "fit-content",
       maxWidth: "100%",
-      height: "35px",
-      padding: "0 12px",
+      height: "2.1875rem",
+      padding: "0 0.75rem",
     };
   }
 
   return {
     ...baseStyle,
-    width: isSingleRow ? "75px" : "75px",
-    height: isSingleRow ? "28px" : "25px",
+    width: isSingleRow ? "4.6875rem" : "4.6875rem",
+    height: isSingleRow ? "1.75rem" : "1.75rem",
   };
 };
 
@@ -124,9 +124,9 @@ export function CategoryButtons({
               style={{
                 fontFamily: "var(--font-h2-outfit)",
                 fontSize: isPreviewMode
-                  ? "16px"
+                  ? "1rem"
                   : isSingleRow
-                  ? "var(--font-size-mid-button)"
+                  ? "var(--font-size-small-button)"
                   : "var(--font-size-small-button)",
                 fontWeight: "var(--font-weight-button)",
                 letterSpacing: "0.85px",

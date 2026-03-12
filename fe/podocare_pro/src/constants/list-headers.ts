@@ -1,6 +1,9 @@
+export const SM_BREAKPOINT = 1810;
+
 export interface ListAttribute {
   name: string;
   width?: string | number;
+  widthSm?: string | number;
   justify?: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'space-evenly' | 'start' | 'end';
   size?: string | number;
 }
@@ -45,19 +48,19 @@ export const EMPLOYEES_LIST_ATTRIBUTES: ListAttribute[] = [
 ]
 
 export const REVIEWS_LIST_ATTRIBUTES: ListAttribute[] = [
-  { name: "Źródło", width: "10%", justify: "center" },
-  { name: "Status", width: "12%", justify: "center" },
+  { name: "Źródło", width: "8%", justify: "center" },
+  { name: "Status", width: "14%", justify: "center" },
   { name: "Klient", width: "48%", justify: "start" },
   { name: "Dodano", width: "20%", justify: "center" },
   { name: "Opcje", width: "10%", justify: "center" },
 ]
 
 export const VOUCHERS_LIST_ATTRIBUTES: ListAttribute[] = [
-  { name: "Status", width: "10%", justify: "center" },
+  { name: "Status", width: "15%", justify: "center" },
   { name: "Klient", width: "20%", justify: "center" },
   { name: "Wartość", width: "20%", justify: "center" },
-  { name: "Ważny od", width: "20%", justify: "center" },
-  { name: "Ważny do", width: "20%", justify: "center" },
+  { name: "Ważny od", width: "15.5%", justify: "center" },
+  { name: "Ważny do", width: "17.5%", justify: "center" },
   { name: "Opcje", width: "10%", justify: "center" },
 ]
 
@@ -99,9 +102,9 @@ export const DEBTS_BY_VISIT_LIST_ATTRIBUTES: ListAttribute[] = [
 
 export const INVENTORY_REPORTS_LIST_ATTRIBUTES: ListAttribute[] = [
   { name: "", width: "2%", justify: "end" },
-  { name: "Data", width: "8%", justify: "center" },
+  { name: "Data", width: "10%", justify: "center" },
   { name: "Użytkownik", width: "18%", justify: "center" },
-  { name: "  ", width: "54%", justify: "center" },
+  { name: "  ", width: "52%", justify: "center" },
   { name: "Zmiana", width: "10%", justify: "center" },
   { name: "Opcje", width: "8%", justify: "center" },
 ]
@@ -149,14 +152,14 @@ export const SERVICES_PRICE_LIST_ATTRIBUTES: ListAttribute[] = [
 ]
 export const SERVICES_VISIT_CONTENT_ATTRIBUTES: ListAttribute[] = [
   { name: "", width: "4%", justify: "start" },
-  { name: "Nazwa", width: "86%", justify: "start" },
-  { name: "Koszt", width: "10%", justify: "center" },
+  { name: "Nazwa", width: "81%", justify: "start" },
+  { name: "Koszt", width: "15%", justify: "center" },
 ]
 export const SERVICES_BOOST_VISIT_CONTENT_ATTRIBUTES: ListAttribute[] = [
   { name: "", width: "4%", justify: "start" },
   { name: "Boost", width: "10%", justify: "center" },
-  { name: "Nazwa", width: "76%", justify: "start" },
-  { name: "Koszt", width: "10%", justify: "center" },
+  { name: "Nazwa", width: "71%", justify: "start" },
+  { name: "Koszt", width: "15%", justify: "center" },
 ]
 export const SERVICES_BOOST_VISIT_ATTRIBUTES: ListAttribute[] = [
   { name: "", width: "4%", justify: "start" },
@@ -188,14 +191,14 @@ export const SERVICES_DISCOUNTED_VISIT_ATTRIBUTES: ListAttribute[] = [
 ]
 export const PRODUCT_VISIT_LIST_CONTENT_ATTRIBUTES: ListAttribute[] = [
   { name: "", width: "3%", justify: "center" },
-  { name: "Nazwa", width: "87%", justify: "flex-start" },
-  { name: "Koszt", width: "10%", justify: "center" },
+  { name: "Nazwa", width: "82%", justify: "flex-start" },
+  { name: "Koszt", width: "15%", justify: "center" },
 ]
 export const VOUCHER_VISIT_LIST_CONTENT_ATTRIBUTES: ListAttribute[] = [
   { name: "", width: "3%", justify: "center" },
   { name: "Nazwa", width: "35%", justify: "flex-start" },
-  { name: "Warning", width: "62%", justify: "flex-start" },
-  { name: "Koszt", width: "10%", justify: "center" },
+  { name: "Warning", width: "57%", justify: "flex-start" },
+  { name: "Koszt", width: "15%", justify: "center" },
 ]
 export const PRODUCT_VISIT_LIST_ATTRIBUTES: ListAttribute[] = [
   { name: "", width: "4%", justify: "start" },
@@ -207,9 +210,9 @@ export const PRODUCT_VISIT_LIST_ATTRIBUTES: ListAttribute[] = [
 export const PRODUCT_LIST_ATTRIBUTES: ListAttribute[] = [
     { name: "", width: "2%", justify: "end" },
     { name: "#", width: "3%", justify: "center" },
-    { name: "Nazwa", width: "66%", justify: "flex-start" },
+    { name: "Nazwa", widthSm: "60%" , width: "66%", justify: "flex-start" },
     { name: "Marka", width: "12%", justify: "center" },
-    { name: "Stan Magazynowy", width: "9%", justify: "center" },
+    { name: "Stan Magazynowy", widthSm: "15%" , width: "9%", justify: "center" },
     { name: "Opcje", width: "8%", justify: "center" },
 ];
 
@@ -223,10 +226,10 @@ export const PRODUCT_POPUP_LIST_ATTRIBUTES: ListAttribute[] = [
 export const PRODUCT_VOLUME_LIST_ATTRIBUTES: ListAttribute[] = [
     { name: "", width: "2%", justify: "end" },
     { name: "#", width: "3%", justify: "center" },
-    { name: "Nazwa", width: "61%", justify: "flex-start" }, 
-    { name: "Cena", width: "5%", justify: "center" },
+    { name: "Nazwa", widthSm: "50%", width: "61%", justify: "flex-start" }, 
+    { name: "Cena", widthSm: "10%", width: "5%", justify: "center" },
     { name: "Marka", width: "12%", justify: "center" },
-    { name: "Stan Magazynowy", width: "9%", justify: "center" },
+    { name: "Stan Magazynowy", widthSm: "15%", width: "9%", justify: "center" },
     { name: "Opcje", width: "8%", justify: "center" },
 ];
 
@@ -241,9 +244,9 @@ export const PRODUCT_PRICE_LIST_ATTRIBUTES: ListAttribute[] = [
 export const PRODUCT_PRICE_LIST_WIDE_ATTRIBUTES: ListAttribute[] = [
     { name: "empty", width: "2%", justify: "start" },
     { name: "", width: "6%", justify: "start" },
-    { name: "Nazwa", width: "72%", justify: "flex-start" },
-    { name: "Cena", width: "12%", justify: "center" },
-    { name: "Stan Magazynowy", width: "10%", justify: "center" },
+    { name: "Nazwa", widthSm: "62%", width: "72%", justify: "flex-start" },
+    { name: "Cena", widthSm: "18%", width: "12%", justify: "center" },
+    { name: "Stan Magazynowy", widthSm: "14%", width: "10%", justify: "center" },
 ];
 
 export const PRODUCT_SELECT_LIST_ATTRIBUTES: ListAttribute[] = [
@@ -299,11 +302,11 @@ export const ORDER_HANDY_HISTORY_ATTRIBUTES: ListAttribute[] = [
 
 export const ORDER_POPUP_HISTORY_ATTRIBUTES: ListAttribute[] = [
   { name: "", width: "6%", justify: "center" },
-  { name: "Nazwa", width: "61%", justify: "start" },
+  { name: "Nazwa", width: "57%", justify: "start" },
   { name: "Ilość", width: "9%", justify: "center" },
-  { name: "Netto [szt]", width: "8%", justify: "center" },
+  { name: "Netto [szt]", width: "10%", justify: "center" },
   { name: "VAT", width: "8%", justify: "center" },
-  { name: "Cena [szt]", width: "8%", justify: "center" },
+  { name: "Cena [szt]", width: "10%", justify: "center" },
 ]
 
 export const ORDERS_BY_SUPPLIER_ATTRIBUTES: ListAttribute[] = [
@@ -316,40 +319,40 @@ export const ORDERS_BY_SUPPLIER_ATTRIBUTES: ListAttribute[] = [
 
 export const ORDER_ITEM_LIST_ATTRIBUTES: ListAttribute[] = [
   { name: "", width: "6%", justify: "center" },
-  { name: "Nazwa", width: "42%", justify: "flex-start" },
-  { name: "Cena jedn.", width: "13%", justify: "center" },
+  { name: "Nazwa", widthSm:"32%", width: "42%", justify: "flex-start" },
+  { name: "Cena jedn.", widthSm:"20%",  width: "13%", justify: "center" },
   { name: "Ilość", width: "13%", justify: "center" },
-  { name: "VAT", width: "13%", justify: "center" },
+  { name: "VAT", width: "16%", justify: "center" },
   { name: "Cena", width: "13%", justify: "center" },
 ]
 
 export const ORDER_ITEM_WITH_BRAND_LIST_ATTRIBUTES: ListAttribute[] = [
   { name: "", width: "6%", justify: "center" },
-  { name: "Nazwa", width: "25%", justify: "flex-start" },
-  { name: "Marka", width: "17%", justify: "center" },
-  { name: "Cena jedn.", width: "13%", justify: "center" },
+  { name: "Nazwa", widthSm:"20%",  width: "25%", justify: "flex-start" },
+  { name: "Marka", widthSm:"16%", width: "17%", justify: "center" },
+  { name: "Cena jedn.", widthSm:"17%", width: "13%", justify: "center" },
   { name: "Ilość", width: "13%", justify: "center" },
-  { name: "VAT", width: "13%", justify: "center" },
+  { name: "VAT", widthSm:"15%", width: "13%", justify: "center" },
   { name: "Cena", width: "13%", justify: "center" },
 ]
 
 export const ORDER_NEW_PRODUCTS_POPUP_ATTRIBUTES: ListAttribute[] =[
   { name: "", width: "2%", justify: "flex-start" },
-  { name: "Nazwa", width: "70%", justify: "flex-start" },
+  { name: "Nazwa", width: "65%", justify: "flex-start" },
   { name: "Marka", width: "25%", justify: "center" },
-  { name: "Kategoria", width: "25%", justify: "center" },
+  { name: "Kategoria", width: "30%", justify: "center" },
   { name: "", width: "3%", justify: "flex-start" },
 ]
 
 export const ORDER_NEW_PRODUCTS_POPUP_ATTRIBUTES_WITH_SELLING_PRICE: ListAttribute[] =[
   { name: "", width: "2%", justify: "flex-start" },
   { name: "Nazwa", width: "22%", justify: "flex-start" },
-  { name: "Obj.", width: "12%", justify: "center" },
-  { name: "Cena Sell", width: "9%", justify: "center" },
-  { name: "VAT Sell", width: "12%", justify: "center" },
-  { name: "Marka", width: "20%", justify: "center" },
-  { name: "Kategoria", width: "20%", justify: "center" },
-  { name: "", width: "2%", justify: "flex-start" },
+  { name: "Obj.", width: "14%", justify: "center" },
+  { name: "Cena Sell", width: "14%", justify: "center" },
+  { name: "VAT Sell", width: "14%", justify: "center" },
+  { name: "Marka", width: "25%", justify: "center" },
+  { name: "Kategoria", width: "30%", justify: "center" },
+  { name: "", width: "3%", justify: "flex-start" },
 ] 
 
 export const USAGE_RECORDS_LIST_ATTRIBUTES: ListAttribute[] = [

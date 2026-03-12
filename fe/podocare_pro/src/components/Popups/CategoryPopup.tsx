@@ -36,7 +36,6 @@ export function CategoryPopup({
   return ReactDOM.createPortal(
     <div
       className={`add-popup-overlay flex justify-center align-items-start short-version category ${className}`}
-      onClick={onClose}
     >
       <div
         className="category-popup-content flex-column align-items-center relative"

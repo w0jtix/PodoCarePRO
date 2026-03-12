@@ -88,7 +88,7 @@ export function AvailableVouchersPopup({
   return ReactDOM.createPortal(
     <div
       className={`add-popup-overlay flex justify-center align-items-start ${className}`}
-      onClick={onClose}
+      
     >
       <div
         className="voucher-select-popup-content flex-column align-items-center relative"
@@ -107,7 +107,7 @@ export function AvailableVouchersPopup({
             />
           </button>
         </section>
-
+        <div className="flex-column width-max f-1 align-items-center min-height-0">
         <ListHeader attributes={VOUCHERS_VISIT_LIST_ATTRIBUTES} />
         <VouchersList
           attributes={VOUCHERS_VISIT_LIST_ATTRIBUTES}
@@ -117,7 +117,7 @@ export function AvailableVouchersPopup({
           setSelectedVoucher={(selected) => handleVoucherSelection(selected)}
           selectedVoucher={selectedVoucher}
         />
-
+</div>
         <div className="mt-1 flex width-max align-items-end justify-center f-1 ">
           <ActionButton
             src={"src/assets/tick.svg"}

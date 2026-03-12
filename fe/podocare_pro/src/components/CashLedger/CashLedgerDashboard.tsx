@@ -282,6 +282,7 @@ export function CashLedgerDashboard() {
                     <CostInput
                       selectedCost={baseOpeningAmount}
                       onChange={handleOpeningAmountChange}
+                      className="cl-opening-amt"
                     />
                   )}
                   {showFillInfo && (
@@ -338,7 +339,7 @@ export function CashLedgerDashboard() {
     }
 
     return (
-      <section className="width-90 flex-column">
+      <section className="width-90 flex-column f-1">
         <div className="flex g-4 align-items-center mt-2 mb-2">
           <h2 className="cl-header">Stan początkowy kasetki:</h2>
           <h2 className="cl-header amt italic">
@@ -354,8 +355,8 @@ export function CashLedgerDashboard() {
             </div>
           )}
         </div>
-        <section className="flex width-max space-between align-items-center">
-          <div className="flex-column today-visits width-45 justify-center">
+        <section className="cl-core-section min-height-0 f-1 flex width-max space-between align-items-center mb-2">
+          <div className="flex-column today-visits height-max width-45 justify-center">
             <h2 className="v-header mt-1 align-self-center">
               {!isLedgerToday
                 ? `Płatności gotówką z dnia ${formatDate(cashLedger.date)}`
@@ -377,7 +378,7 @@ export function CashLedgerDashboard() {
               </div>
             </div>
           </div>
-          <div className="flex-column today-visits width-45  align-items-center">
+          <div className="flex-column today-visits height-max width-45  align-items-center">
             <div className="flex g-4 align-items-center mt-2 mb-2">
               <h2 className="cl-header">Saldo:</h2>
               <h2 className="cl-header amt italic">
@@ -409,7 +410,7 @@ export function CashLedgerDashboard() {
                 </div>
               )}
             </div>
-            <div className={`flex-column width-max align-self-start mt-2`}>
+            <div className={`flex-column width-max align-self-start mt-2 f-1 min-height-0`}>
               <ActionButton
                 src={"src/assets/addNew.svg"}
                 alt={"Dodaj notatkę"}
@@ -424,11 +425,11 @@ export function CashLedgerDashboard() {
                 className={`cl-note ${showNote ? "selected" : ""}`}
               />
               {showNote && (
-                <div className="mt-2 width-max">
+                <div className="mt-2 width-max flex-column f-1 mb-1">
                   <TextInput
                     placeholder="Notatka stanu kasetki..."
                     multiline={true}
-                    rows={7}
+                    className="f-1"
                     onSelect={(value) =>
                       setCashLedger((prev) => ({
                         ...prev,

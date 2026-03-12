@@ -26,7 +26,7 @@ export function OrderProductList ({
 };
 
   return (
-    <div className={`order-product-list flex-column g-5px ${className}`}>
+    <div className={`order-product-list f-1 flex-column g-5px ${className}`}>
       <ListHeader 
         attributes={hasAnyProductAssigned() ? ORDER_ITEM_WITH_BRAND_LIST_ATTRIBUTES : ORDER_ITEM_LIST_ATTRIBUTES} 
         module={ListModule.ORDER} 

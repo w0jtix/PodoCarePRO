@@ -96,7 +96,7 @@ export function SupplyList ({
     }, [hasMore, loading, page, filter]);
 
   return (
-    <>
+    <div className="min-height-0 width-max f-1 flex-column align-items-center align-self-center justify-center mb-2">
       <ListHeader attributes={productInfo ? PRODUCT_VOLUME_LIST_ATTRIBUTES : PRODUCT_LIST_ATTRIBUTES} />
       {loading ? (
         <div className="list-loading-container relative flex align-items-center justify-center">
@@ -106,7 +106,7 @@ export function SupplyList ({
           <div className="loading-dot relative flex align-items-center height-max width-25"></div>
         </div>
       ) : (
-        <section className="products-list-section width-95 flex align-items-center justify-center mt-05">
+        <section className="products-list-section f-1 min-height-0 width-95 flex align-items-center justify-center mt-05">
           <ItemList
             attributes={productInfo ? PRODUCT_VOLUME_LIST_ATTRIBUTES : PRODUCT_LIST_ATTRIBUTES}
             items={items}
@@ -121,7 +121,7 @@ export function SupplyList ({
           />
         </section>
       )}
-    </>
+    </div>
   );
 };
 

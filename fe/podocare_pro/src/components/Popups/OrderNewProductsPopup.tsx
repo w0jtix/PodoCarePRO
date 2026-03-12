@@ -322,7 +322,7 @@ export function OrderNewProductsPopup({
   }
 
   return ReactDOM.createPortal(
-    <div className="add-popup-overlay flex justify-center align-items-start" onClick={onClose}>
+    <div className="add-popup-overlay flex justify-center align-items-start">
       <div
         className="order-new-products-popup-content flex-column align-items-center relative"
         onClick={(e) => e.stopPropagation()}
@@ -340,7 +340,7 @@ export function OrderNewProductsPopup({
           </button>
         </section>
         <section className="order-new-products-popup-action-keys-section flex space-between align-items-center g-2 mt-2 mb-15">
-          <a className="order-new-products-popup-action-keys-title text-align-center">
+          <a className="order-new-products-popup-action-keys-title text-align-center nowrap">
             Przypisz dla wszystkich:
           </a>
             <CategoryButtons
@@ -358,17 +358,20 @@ export function OrderNewProductsPopup({
               disableText={true}
             />
         </section>
+        <div className="flex-column width-max f-1 align-items-center min-height-0">
         <ListHeader
           attributes={hasProductCategory ? ORDER_NEW_PRODUCTS_POPUP_ATTRIBUTES_WITH_SELLING_PRICE : ORDER_NEW_PRODUCTS_POPUP_ATTRIBUTES}
           module={ListModule.POPUP}
         />
-        <ul className="order-new-products-popup-list m-0 mb-2 p-0 width-max">
+        <ul className="order-new-products-popup-list flex-column f-1 min-height-0 m-0 mb-2 p-0 width-max">
           {productsToCreate.map((item, index) => (
             <li
               key={`product-${index}-${item.name}`}
-              className="order-new-products-popup-list-item flex space-between align-items-center"
+              className={`order-new-products-popup-list-item flex space-between align-items-center `}
             >
-              {item.name}
+              <span className={`qv-span ${item.category && item.category.name === "Produkty" ? "thin" : "normal"}`}>
+                {item.name}
+                </span>
               <section className="order-new-products-popup-input-section flex g-5px">
                 {item.category && item.category.name === "Produkty" && (
                   <>
@@ -406,6 +409,7 @@ export function OrderNewProductsPopup({
                   onSelect={(selected) =>
                     handleBrandChange(index, selected)
                   }
+                  className="brandName"
                 />
                 <DropdownSelect<ProductCategory>
                   items={categories}
@@ -426,6 +430,7 @@ export function OrderNewProductsPopup({
             </li>
           ))}
         </ul>
+        </div>
         <div className="popup-footer-container flex-column justify-end">
           <ActionButton
             src={"src/assets/tick.svg"}

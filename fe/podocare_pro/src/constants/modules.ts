@@ -45,7 +45,7 @@ export const getIconAlt = (iconName: string): string => {
   return `${iconName}-icon`;
 };
 
-export type SubModuleType = 'Create' | 'History' | 'Expenses' | 'Statistics' | 'Employees' | 'EmployeeBonus' | 'CompanySettings' | 'Products' | 'InventoryReport';
+export type SubModuleType = 'Create' | 'History' | 'Expenses' | 'Statistics' | 'Employees' | 'EmployeeBonus' | 'CompanySettings' | 'Products' | 'InventoryReport' | 'PriceListServices' | 'PriceListProducts';
 
 export interface SubMenuItem {
   name: string;
@@ -82,6 +82,11 @@ export const WAREHOUSE_SUBMENU_ITEMS: SubMenuItem[] = [
     icon: 'check_list',
     alt: 'submenu-inventory-report'
   },
+];
+
+export const PRICELIST_SUBMENU_ITEMS: SubMenuItem[] = [
+  { name: "Usługi", module: 'PriceListServices', icon: 'uslugi', alt: 'submenu-services' },
+  { name: "Produkty", module: 'PriceListProducts', icon: 'products', alt: 'submenu-products' },
 ];
 
 export const BUSINESS_SUBMENU_ITEMS: SubMenuItem[] = [

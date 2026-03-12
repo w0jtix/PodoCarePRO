@@ -99,7 +99,7 @@ export function ServicePopup({
   }
 
   return ReactDOM.createPortal(
-    <div className={`add-popup-overlay flex justify-center align-items-start ${className}`} onClick={onClose}>
+    <div className={`add-popup-overlay flex justify-center align-items-start ${className}`}>
       <div
         className="service-popup-content flex-column align-items-center relative"
         onClick={(e) => e.stopPropagation()}
@@ -116,7 +116,7 @@ export function ServicePopup({
             />
           </button>
         </section>
-        <section className="custom-form-section width-90">
+        <section className="custom-form-section width-90 flex-column f-1 min-height-0">
           <ServiceForm
             setServiceDTO={setServiceDTO}
             serviceDTO={serviceDTO}

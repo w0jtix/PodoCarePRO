@@ -93,7 +93,7 @@ export function EmployeePopup ({
   }
 
   return ReactDOM.createPortal(
-    <div className={`add-popup-overlay flex justify-center align-items-start ${className}`} onClick={onClose}>
+    <div className={`add-popup-overlay flex justify-center align-items-start ${className}`}>
       <div
         className="add-employee-popup-content flex-column align-items-center relative"
         onClick={(e) => e.stopPropagation()}

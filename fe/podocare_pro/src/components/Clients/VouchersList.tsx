@@ -144,14 +144,14 @@ export function VouchersList({
   };
   return (
     <div
-      className={`item-list width-93 grid p-0 mt-05 ${
+      className={`item-list width-93 flex-column p-0 mt-05 ${
         items.length === 0 ? "border-none" : ""
       } ${className} `}
     >
       {items.map((item, index) => (
         <div
           key={item.id}
-          className={`product-wrapper ${className} ${
+          className={`product-wrapper width-max ${className} ${
             selectedVoucher?.id === item.id ? "selected" : ""
           }`}
           onClick={() => setSelectedVoucher?.(item)}
@@ -179,7 +179,7 @@ export function VouchersList({
       {expiredVouchers && expiredVouchers.map((item, index) => (
         <div
           key={item.id}
-          className={`product-wrapper ${className} disabled expired-voucher`}          
+          className={`product-wrapper width-max ${className} disabled expired-voucher`}          
         >
           <div
             className={`item align-items-center flex ${className} disabled expired-voucher`}

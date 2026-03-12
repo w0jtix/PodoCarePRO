@@ -111,13 +111,13 @@ export function ServiceList({
 
   return (
     <div
-      className={`item-list width-max grid p-0 ${
+      className={`item-list width-max flex-column p-0 ${
         items.length === 0 ? "border-none" : ""
       } ${className}`}
       
     >
       {items.map((item, index) => (
-        <div key={`${item.id}-${index}`} className={`product-wrapper ${className}`}>
+        <div key={`${item.id}-${index}`} className={`product-wrapper width-max ${className}`}>
           <div
             className={`item align-items-center ${className === "services list" ? "default" : "pointer"} flex ${className}`}
             onClick={() => toggleServices(item.id, item)}

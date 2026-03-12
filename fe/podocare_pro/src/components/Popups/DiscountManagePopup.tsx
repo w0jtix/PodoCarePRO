@@ -78,7 +78,7 @@ export function DiscountManagePopup({
   return ReactDOM.createPortal(
     <div
       className={`add-popup-overlay flex justify-center align-items-start ${className}`}
-      onClick={onClose}
+      
     >
       <div
         className="discount-popup-content flex-column align-items-center relative"
@@ -105,6 +105,7 @@ export function DiscountManagePopup({
             onClick={() => setIsAddNewDiscountPopupOpen(true)}
           />
         </section>
+        <div className="flex-column width-max f-1 align-items-center min-height-0 mb-1">
         <ListHeader attributes={DISCOUNTS_LIST_ATTRIBUTES} />
         <DiscountsList
           attributes={DISCOUNTS_LIST_ATTRIBUTES}
@@ -113,6 +114,7 @@ export function DiscountManagePopup({
           setEditDiscountId={setEditDiscountId}
           setRemoveDiscountId={setRemoveDiscountId}
         />
+        </div>
       </div>
 
       {isAddNewDiscountPopupOpen && (

@@ -165,7 +165,7 @@ export function LogsPopup({
   return ReactDOM.createPortal(
     <div
       className={`add-popup-overlay flex justify-center align-items-start ${className}`}
-      onClick={onClose}
+      
     >
       <div
         className="logs-popup-content flex-column align-items-center relative"
@@ -184,7 +184,7 @@ export function LogsPopup({
             />
           </button>
         </section>
-        <section className="flex width-90 space-between mb-1 g-2">
+        <section className="flex width-95 space-between mb-1 g-2">
           <ActionButton
             src={"src/assets/filter_icon.svg"}
             alt={"Akcja"}
@@ -238,6 +238,7 @@ export function LogsPopup({
             disableText={true}
           />
         </section>
+        <div className="flex-column width-max f-1 align-items-center min-height-0 mb-1">
         <ListHeader attributes={AUDIT_LOG_LIST_ATTRIBUTES} />
         <LogsList
         attributes={AUDIT_LOG_LIST_ATTRIBUTES} 
@@ -247,6 +248,7 @@ export function LogsPopup({
         hasMore={hasMore}
         className="products logs"
         />
+        </div>
       </div>
     </div>,
     portalRoot

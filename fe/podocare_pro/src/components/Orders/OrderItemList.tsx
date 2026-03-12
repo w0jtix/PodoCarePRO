@@ -6,13 +6,14 @@ import ActionButton from "../ActionButton";
 import CostInput from "../CostInput";
 import DigitInput from "../DigitInput";
 import TextInput from "../TextInput";
-import { ListAttribute } from "../../constants/list-headers";
+import { ListAttribute, SM_BREAKPOINT } from "../../constants/list-headers";
 import { Action } from "../../models/action";
 import { Product, ProductFilterDTO } from "../../models/product";
 import { VatRate } from "../../models/vatrate";
 import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
 import { NewOrderProduct } from "../../models/order-product";
+import { ORDER_ITEM_WITH_BRAND_LIST_ATTRIBUTES } from "../../constants/list-headers";
 
 export interface OrderItemListProps {
   attributes: ListAttribute[];
@@ -34,6 +35,13 @@ export function OrderItemList({
 
 }: OrderItemListProps) {
   const { showAlert } = useAlert();
+  const [isSmall, setIsSmall] = useState(window.innerWidth < SM_BREAKPOINT);
+
+  useEffect(() => {
+    const handler = () => setIsSmall(window.innerWidth < SM_BREAKPOINT);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
   const [productSuggestions, setProductSuggestions] = useState<Map<number, Product[]>>(new Map());
   const [supplyPreview, setSupplyPreview] = useState<Map<number, number>>(new Map()); // productId -> supply after edits
   const initialSupplyRef = useRef<Map<number, number>>(new Map()); // initial warehouse supply snapshot
@@ -307,6 +315,7 @@ export function OrderItemList({
               onSelect={(selected) => {
                 handleOrderProductNameChange(index, selected);
               }}
+              className={`${attributes === ORDER_ITEM_WITH_BRAND_LIST_ATTRIBUTES ? "op-small" : ""} ${action === Action.EDIT ? "popup" : ""}`}
             />
             {item.product?.id && productWarnings.get(item.product.id) && (
               <img
@@ -393,7 +402,7 @@ export function OrderItemList({
   };
 
   return (
-    <div className={`order-item-list ${className}`}>
+    <div className={`order-item-list f-1 flex-column ${className}`}>
       {orderProducts.map((item, index) => (
         <div key={`order-item-${item.product?.id || 'new'}-${index}`} className="order-item flex">
           {attributes.map((attr) => (
@@ -403,7 +412,7 @@ export function OrderItemList({
                 attr.name === "" ? "order-category-column" : ""
               }`}
               style={{
-                width: attr.width,
+                width: (isSmall && attr.widthSm) ? attr.widthSm : attr.width,
                 justifyItems: attr.justify,
               }}
             >

@@ -156,7 +156,7 @@ export function CashLedgerManage({
   return ReactDOM.createPortal(
     <div
       className={`add-popup-overlay flex justify-center align-items-start ${className}`}
-      onClick={onClose}
+      
     >
       <div
         className="cash-ledger-history-popup-content flex-column align-items-center relative"
@@ -211,6 +211,7 @@ export function CashLedgerManage({
             />
           </section>
         </section>
+        <div className="flex-column width-max f-1 align-items-center min-height-0 mb-1">
         <ListHeader attributes={CASH_LEDGER_HISTORY_ATTRIBUTES} />
         <CashLedgersList
           items={cashLedgers}
@@ -221,6 +222,7 @@ export function CashLedgerManage({
           hasMore={hasMore}
           className="products cl-list"
         />
+        </div>
       </div>
 
       {selectedCashLedger != null && (

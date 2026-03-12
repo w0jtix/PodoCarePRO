@@ -30,7 +30,7 @@ export function OrderHistoryPopup({
   return ReactDOM.createPortal(
     <div
       className={`add-popup-overlay flex justify-center align-items-start ${className}`}
-      onClick={onClose}
+      
     >
       <div
         className="manage-order-history-popup-content flex-column align-items-center relative"

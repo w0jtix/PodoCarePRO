@@ -46,13 +46,13 @@ export function VariantsList({
 
   return (
     <div
-      className={`item-list width-max grid p-0 ${
+      className={`item-list width-max flex-column p-0 ${
         items.length === 0 ? "border-none" : ""
       } ${className}`}
       
     >
       {items.map((item, index) => (
-        <div key={`${item.id}-${index}`} className={`product-wrapper ${className} ${item.id === selectedVariant?.id ? "selected" : ""}`}>
+        <div key={`${item.id}-${index}`} className={`product-wrapper width-max min-height-req-25 ${className} ${item.id === selectedVariant?.id ? "selected" : ""}`}>
           <div
             className={`item align-items-center pointer flex ${className} ${item.id === selectedVariant?.id ? "selected" : ""}`}
             onClick={() => setSelectedVariant?.(item)}

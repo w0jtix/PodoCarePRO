@@ -224,8 +224,8 @@ const EmployeeBonusPage = () => {
         />
       </section>
 
-      <section className="flex-column width-95 align-items-center">
-        <div className="flex width-max align-items-center g-1 justify-center mb-1">
+      <section className="flex-column width-95 f-1 min-height-0 align-items-center mb-3">
+        <div className="flex width-max align-items-center g-1 justify-center mb-05">
           <div className="profile-avatar sb-rev flex align-items-center justify-center">
             <img
               src={`src/assets/avatars/${user?.avatar}`}
@@ -237,9 +237,10 @@ const EmployeeBonusPage = () => {
             {employees.find((e) => e.id === filter.employeeId)?.name}
           </span>
         </div>
-        <section className="flex width-max align-items-center space-between">
-          <section className="services-bonus width-45 flex-column">
-            <div className="sb-content width-max flex-column align-items-center space-between height-fit-content ">
+        <section className="flex-column f-1 min-height-0 width-max">
+          <div className="flex width-max f-1 min-height-0 space-between">
+          <section className="services-bonus min-height-0 width-45 flex-column f-1">
+            <div className="flex-column width-max f-1 align-items-center min-height-0">
               <BonusHistoryVisitList
                 visits={employeeBonus?.visits ?? []}
                 attributes={BONUS_VISIT_HISTORY_ATTRIBUTES}
@@ -296,8 +297,8 @@ const EmployeeBonusPage = () => {
               </div>
             </div>
           </section>
-          <section className="services-bonus width-45 flex-column">
-            <div className="sb-content width-max flex-column align-items-center space-between height-fit-content ">
+          <section className="services-bonus min-height-0 width-45 flex-column f-1">
+            <div className="flex-column width-max f-1 align-items-center min-height-0">
               <ProductBonusList
                 items={employeeBonus?.products ?? []}
                 attributes={BONUS_PRODUCT_LIST_ATTRIBUTES}
@@ -372,6 +373,7 @@ const EmployeeBonusPage = () => {
               </div>
             </div>
           </section>
+          </div>
         </section>
       </section>
     </>

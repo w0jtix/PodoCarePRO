@@ -112,6 +112,7 @@ export function SettingsDashboard() {
   return (
     <div className="dashboard-panel width-85 height-max flex-column align-items-center">
       <NavigationBar showSearchbar={false} />
+      <div className="flex-column width-max f-1 align-items-center min-height-0 mb-2">
       <div className="settings-grid grid g-2 width-90 mt-3">
         
         <div className="setting-container flex width-max align-items-center justify-center">
@@ -209,6 +210,7 @@ export function SettingsDashboard() {
           onClick={handleSaveSettings}
           className="yellow"
         />
+      </div>
       </div>
     </div>
   );

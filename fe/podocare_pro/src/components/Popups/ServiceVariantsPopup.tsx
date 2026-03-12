@@ -49,7 +49,7 @@ export function ServiceVariantsPopup({
   return ReactDOM.createPortal(
     <div
       className={`add-popup-overlay flex justify-center align-items-start ${className}`}
-      onClick={onClose}
+      
     >
       <div
         className="variants-popup-content flex-column align-items-center relative"
@@ -69,7 +69,7 @@ export function ServiceVariantsPopup({
           </button>
         </section>
 
-        <section className="variants-addons-lists flex width-90 space-between mb-2 g-05">
+        <section className="variants-addons-lists flex-column width-max f-1 align-items-center min-height-0 width-90 mb-2 g-05">
           <VariantsList
             attributes={SERVICE_VARIANTS_ATTRIBUTES}
             items={allVariants}

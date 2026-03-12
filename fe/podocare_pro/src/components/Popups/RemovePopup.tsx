@@ -5,7 +5,6 @@ import { AlertType } from "../../models/alert";
 
 export interface RemovePopupProps {
   onClose: () => void;
-  /* selectedItem?: Product | BaseService | Client | null; */
   warningText?: string;
   footerText?: React.ReactNode;
   handleRemove:() => void;
@@ -14,7 +13,6 @@ export interface RemovePopupProps {
 
 export function RemovePopup ({
   onClose,
-  /* selectedItem, */
   warningText="",
   footerText,
   handleRemove,
@@ -31,7 +29,7 @@ export function RemovePopup ({
   }
 
   return ReactDOM.createPortal(
-    <div className={`add-popup-overlay flex justify-center align-items-start short-version ${className}`} onClick={onClose}>
+    <div className={`add-popup-overlay flex justify-center align-items-start short-version ${className}`} >
       <div
         className="remove-product-popup-content flex-column align-items-center relative"
         onClick={(e) => e.stopPropagation()}

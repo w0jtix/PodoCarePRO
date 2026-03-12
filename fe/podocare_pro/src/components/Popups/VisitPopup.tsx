@@ -60,6 +60,7 @@ export function VisitPopup({
 }: VisitPopupProps) {
   const [discountSettings, setDiscountSettings] = useState<DiscountSettings | null>(null);
   const [visit, setVisit] = useState<Visit | null>(null);
+  const [isCompact, setIsCompact] = useState(window.innerWidth < 1440);
   const [user, setUser] = useState<User | null>(null);
   const [debtFromThisVisit, setDebtFromThisVisit] = useState<ClientDebt | null>(
     null
@@ -282,6 +283,12 @@ export function VisitPopup({
   }, [productFilter]);
 
   useEffect(() => {
+    const handler = () => setIsCompact(window.innerWidth < 1440);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
+
+  useEffect(() => {
     fetchDiscountSettings();
     if (action === Action.DISPLAY) {
       if (
@@ -327,7 +334,6 @@ export function VisitPopup({
   return ReactDOM.createPortal(
     <div
       className={`add-popup-overlay flex justify-center align-items-start ${className}`}
-      onClick={onClose}
     >
       <div
         className={`visit-popup-content flex-column align-items-center relative ${
@@ -351,9 +357,6 @@ export function VisitPopup({
                 </span>
 
                 <span className="qv-span visit-preview header">-</span>
-                {/* <span className="qv-span visit-preview header text-align-center">
-                  {visit.client.firstName + " " + visit.client.lastName}
-                </span> */}
                 <div
                   className={`flex g-5px ${
                     visit.client.isDeleted ? "pointer" : ""
@@ -581,7 +584,7 @@ export function VisitPopup({
               }`}
             >
               {debtFromThisVisit != null && (
-                <div className="width-45 flex-column align-items-center g-5px mb-05 mt-05">
+                <div className="width-half flex-column align-items-center g-5px mb-05 mt-05">
                   <span className="qv-span warning">Powstało zadłużenie:</span>
                   <DebtsList
                     attributes={DEBTS_BY_VISIT_LIST_ATTRIBUTES}
@@ -617,7 +620,7 @@ export function VisitPopup({
           </>
         )}
         {action === Action.CREATE && (
-          <div className="flex width-max space-between f-1">
+          <div className="flex width-max space-between height-max min-height-0">
             <div className="flex width-60">
               <QuickVisit
                 products={products}
@@ -626,13 +629,14 @@ export function VisitPopup({
                 selectedProduct={selectedProduct}
                 setSelectedProduct={setSelectedProduct}
                 enableHeader={false}
+                compact={isCompact}
                 className="popup"
                 onClose={onClose}
               />
             </div>
 
-            <div className="flex-column width-35 height-max g-1 align-self-center">
-              <div className={`list-container height-half`}>
+            <div className="flex-column width-35 height-max min-height-0 g-1 align-self-center">
+              <div className={`list-container flex-column f-1 min-height-0 max-height-half`}>
                 <div className="filters-container flex width-max align-items-center justify-center">
                   <SearchBar
                     onKeywordChange={handleServiceKeywordChange}
@@ -645,11 +649,11 @@ export function VisitPopup({
                   attributes={SERVICES_PRICE_LIST_ATTRIBUTES}
                   items={services}
                   onClick={(serv) => setSelectedService(serv)}
-                  className="services pricelist popup"
+                  className="services pricelist popup visit-popup min-height-req-25"
                 />
               </div>
 
-              <div className={`list-container height-half`}>
+              <div className={`list-container flex-column f-1 min-height-0 max-height-half`}>
                 <div className="filters-container flex width-max align-items-center justify-center">
                   <SearchBar
                     onKeywordChange={handleProductKeywordChange}
