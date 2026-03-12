@@ -1,0 +1,57 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="10.1-add-fallback-purchase-price-to-product" author="Wojtek">
+        <addColumn tableName="product">
+            <column name="fallback_net_purchase_price" type="DOUBLE PRECISION"/>
+            <column name="fallback_vat_rate" type="VARCHAR(20)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="10.2-add-created-by-user-id-to-visit" author="Wojtek">
+        <addColumn tableName="visit">
+            <column name="created_by_user_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="10.3-add-created-by-user-id-to-client" author="Wojtek">
+        <addColumn tableName="client">
+            <column name="created_by_user_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="10.4-add-created-by-user-id-to-review" author="Wojtek">
+        <addColumn tableName="review">
+            <column name="created_by_user_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="10.5-add-created-by-user-id-to-voucher" author="Wojtek">
+        <addColumn tableName="voucher">
+            <column name="created_by_user_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="10.6-add-created-by-user-id-to-client-debt" author="Wojtek">
+        <addColumn tableName="client_debt">
+            <column name="created_by_user_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="10.7-add-created-by-user-id-to-usage-record" author="Wojtek">
+        <addColumn tableName="usage_record">
+            <column name="created_by_user_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="10.8-add-created-by-user-id-to-client-note" author="Wojtek">
+        <addColumn tableName="client_note">
+            <column name="created_by_user_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>
