@@ -59,6 +59,7 @@ export function EmployeeRevenueChart({
   }, []);
 
   const [isManageEmployeesPopupOpen, setIsManageEmployeesPopupOpen] = useState<boolean>(false);
+  const [isChartExpanded, setIsChartExpanded] = useState(false);
 
   const { showAlert } = useAlert();
   const years = useMemo(() => getYears(), []);
@@ -205,7 +206,16 @@ export function EmployeeRevenueChart({
   return (
     <div className="employee-revenue-chart width-max flex-column align-items-center">
 
-      <div className="chart-filters flex width-90 align-items-center mt-1 space-between">
+      <div className={`flex width-max align-items-center mt-1 justify-start ${!isChartExpanded ? "mb-1" : ""}`}>
+        <div className="flex justify-center align-items-center width-05">
+          <img
+            src="src/assets/arrow_down.svg"
+            alt={isChartExpanded ? "Zwiń" : "Rozwiń"}
+            onClick={() => setIsChartExpanded((prev) => !prev)}
+            className={`arrow-down ${isChartExpanded ? "rotated" : ""} chart pointer`}
+          />
+        </div>
+        <div className="chart-filters flex width-90 align-items-center space-between">
         <div className="flex g-1 align-items-center">
           <DropdownSelect
             items={chartModeItems}
@@ -272,7 +282,11 @@ export function EmployeeRevenueChart({
             <ActionButton
               disableImg={true}
               text="Narastający"
-              onClick={() => setIsCumulative((prev) => !prev)}
+              onClick={() => {
+                setIsCumulative((prev) => !prev);
+                setIsChartExpanded(true);
+              }
+            }
               className={isCumulative ? "chart-selected" : ""}
             />
           )}
@@ -281,14 +295,18 @@ export function EmployeeRevenueChart({
             alt={chartType === "line" ? "Wykres Słupkowy" : "Wykres Liniowy"}
             iconTitle={chartType === "line" ? "Wykres Słupkowy" : "Wykres Liniowy"}
             text={chartType === "line" ? "Słupkowy" : "Liniowy"}
-            onClick={() => setChartType((prev) => (prev === "line" ? "bar" : "line"))}
+            onClick={() => {
+              setChartType((prev) => (prev === "line" ? "bar" : "line"));
+              setIsChartExpanded(true);
+            }}
           />         
         </div>
 
 
       </div>
+      </div>
 
-      <div className="chart-container">
+      <div className={`chart-container chart-container-collapsible ${isChartExpanded ? "expanded" : "collapsed"}`}>
         
         {loading ? (
           <div className="chart-loading flex justify-center align-items-center" style={{ height: chartHeight }}>

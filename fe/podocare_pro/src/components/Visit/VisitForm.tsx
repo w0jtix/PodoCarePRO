@@ -1149,7 +1149,7 @@ export function VisitForm({
                     items={clientDebts}
                     selectedIds={selectedDebtIds}
                     onSelect={handleDebtRedemption}
-                    className="products popup-list quick-visit"
+                    className="products popup-list quick-visit debt"
                   />
                 </div>
               )}
@@ -1370,7 +1370,7 @@ export function VisitForm({
                           text={(() => {
                             const { isRemainder, fillValue } = getPaymentFillInfo(index);
                             if (!isRemainder) return "Całość";
-                            return visitDTO.payments[index].amount === fillValue ? "Płatność dzielona" : "Reszta";
+                            return visitDTO.payments[index].amount === fillValue ? "Płatność dzielona" : "Przelicz";
                           })()}
                           disableImg={true}
                           disabled={visitDTO.payments[index].method === PaymentMethod.VOUCHER}

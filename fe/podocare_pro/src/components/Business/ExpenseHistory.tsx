@@ -214,7 +214,7 @@ export function ExpenseHistory() {
     />
   </section>
   <div className="flex-column width-max f-1 align-items-center min-height-0 mb-2">
-  <ListHeader attributes={EXPENSE_HISTORY_ATTRIBUTES} />
+  <ListHeader attributes={EXPENSE_HISTORY_ATTRIBUTES} customWidth="width-93"/>
   <ExpensesList
       attributes={EXPENSE_HISTORY_ATTRIBUTES}
       expenses={expenses}

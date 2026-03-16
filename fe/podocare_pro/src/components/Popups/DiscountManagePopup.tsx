@@ -106,7 +106,7 @@ export function DiscountManagePopup({
           />
         </section>
         <div className="flex-column width-max f-1 align-items-center min-height-0 mb-1">
-        <ListHeader attributes={DISCOUNTS_LIST_ATTRIBUTES} />
+        <ListHeader attributes={DISCOUNTS_LIST_ATTRIBUTES}customWidth="width-93"/>
         <DiscountsList
           attributes={DISCOUNTS_LIST_ATTRIBUTES}
           items={discounts}

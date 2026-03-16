@@ -11,12 +11,14 @@ export interface ListHeaderProps {
   attributes: ListAttribute[];
   module?: ListModule;
   className?: string;
+  customWidth?: string;
 }
 
 export function ListHeader ({
   attributes,
   module,
-  className = ""
+  className = "",
+  customWidth = "",
 }: ListHeaderProps) {
   const [isSmall, setIsSmall] = useState(window.innerWidth < SM_BREAKPOINT);
 
@@ -27,7 +29,7 @@ export function ListHeader ({
   }, []);
 
   return (
-    <div className={`list-header flex width-93 ${module?.toString()} ${className}`}>
+    <div className={`list-header flex ${customWidth.length >0 ? customWidth : "width-max"} ${module?.toString()} ${className}`}>
       {attributes.map((attr, index) => (
         <h2
           key={index}

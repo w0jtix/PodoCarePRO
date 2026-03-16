@@ -667,7 +667,7 @@ export function VisitPopup({
                   items={products}
                   action={Action.DISPLAY}
                   onClick={(prod) => setSelectedProduct(prod)}
-                  className="products pricelist popup"
+                  className="products pricelist popup align-self-center"
                   onScroll={handleScroll}
                   isLoading={loading}
                   hasMore={hasMore}

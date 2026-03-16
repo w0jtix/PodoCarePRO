@@ -50,26 +50,36 @@ export function ProductBonusList ({
 
       case "Nazwa":
         return (
-            <div className="flex g-1">
-        <span className="order-values-lower-font-size">
-            {item.productName}
-          </span>
-          <span className="order-brand-span flex text-align-center italic">
-            {item.brandName}
-          </span>
-          {item.noPurchaseHistory && (
-            <img
-              title={
-                item.fallbackPurchasePriceUsed
-                  ? "Brak historii zakupów — użyto awaryjnej ceny zakupu Netto przypisanej do produktu. Marża i premia mogą być niedokładne."
-                  : "Brak historii zakupów tego produktu. Brak możliwości naliczenia marży i premii."
-              }
-              src="src/assets/alert.svg"
-              alt="alert"
-              className="sb-alert"
-            />
-          )}
-          </div>);
+          <div className="flex g-1">
+            <span className="order-values-lower-font-size">{item.productName}</span>
+            <span className="order-brand-span flex text-align-center italic">{item.brandName}</span>
+            {item.noPurchaseHistory && item.fallbackPurchasePriceUsed && (
+              
+                <img
+                  title="Brak historii zakupów — użyto awaryjnej ceny zakupu Netto przypisanej do produktu. Marża i premia mogą być niedokładne."
+                  src="src/assets/alert.svg"
+                  alt="alert"
+                  className="sb-alert"
+                />
+            )}
+            {item.noPurchaseHistory && !item.fallbackPurchasePriceUsed && (
+              <>
+                <img
+                  title="Brak historii zakupów tego produktu. Brak możliwości naliczenia marży i premii."
+                  src="src/assets/alert.svg"
+                  alt="alert"
+                  className="sb-alert"
+                />
+              <img
+                title="Brak historii zakupów tego produktu. Brak możliwości naliczenia marży i premii."
+                src="src/assets/alert.svg"
+                alt="alert"
+                className="sb-alert"
+              />
+              </>
+            )}
+          </div>
+        );
 
       case "Ilość":
         return(<span className="order-values-lower-font-size">
@@ -77,7 +87,7 @@ export function ProductBonusList ({
           </span>);
 
       case "Bonus":
-        return(<span className="order-values-lower-font-size add bold">
+        return(<span className={`order-values-lower-font-size add bold ${(item.noPurchaseHistory && item.fallbackPurchasePriceUsed) ?  "notify" : (item.noPurchaseHistory && !item.fallbackPurchasePriceUsed) ? "alert" : ""}`}>
             + {item.totalBonus}zł
           </span>);
 

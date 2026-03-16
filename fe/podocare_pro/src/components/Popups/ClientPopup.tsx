@@ -23,6 +23,7 @@ import { Alert } from "react-bootstrap";
 export interface ClientPopupProps {
   onClose: () => void;
   onReset: () => void;
+  onNotesSaved?: () => void;
   selectedClientId?: number | null;
   className: string;
   onSelectClient?: (client: Client) => void;
@@ -31,6 +32,7 @@ export interface ClientPopupProps {
 export function ClientPopup({
   onClose,
   onReset,
+  onNotesSaved,
   selectedClientId,
   className = "",
   onSelectClient,
@@ -127,6 +129,7 @@ export function ClientPopup({
             fetchedClient.id,
             clientDTO as NewClient
           );
+          onClose();
         }
 
         if (hasNewNotes) {
@@ -139,8 +142,14 @@ export function ClientPopup({
           `Klient ${clientDTO.firstName + " " + clientDTO.lastName} zaktualizowany!`,
           AlertType.SUCCESS
         );
-        onReset?.();
-        onClose();
+        if (hasClientChanges) {
+          onReset?.();
+        } else {
+          onNotesSaved?.();
+          setExistingClientNotesIdsToRemove([]);
+          setNewClientNotesDTO([]);
+          fetchClientNotes(selectedClientId!);
+        }
       }
     } catch (error) {
       console.error(
@@ -150,7 +159,7 @@ export function ClientPopup({
       const errorMessage = extractClientErrorMessage(error, action);
       showAlert(errorMessage, AlertType.ERROR);
     }
-  }, [clientDTO, action, selectedClientId, newClientNotesDTO, existingClientNotesIdsToRemove, onReset, onClose, showAlert, onSelectClient]);
+  }, [clientDTO, action, selectedClientId, newClientNotesDTO, existingClientNotesIdsToRemove, onReset, onNotesSaved, onClose, showAlert, onSelectClient]);
 
 
   const fetchClientNotes = async (clientId: number) => {

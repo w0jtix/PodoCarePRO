@@ -97,7 +97,7 @@ export function ProductBonusContent ({
 
         case "Premia":
         return (
-          <span title="Premia za sprzedaż." className="order-values-lower-font-size add pointer">
+          <span title="Premia za sprzedaż." className={`order-values-lower-font-size add pointer ${(noPurchaseHistory && fallbackPurchasePriceUsed) ?  "notify" : (noPurchaseHistory && !fallbackPurchasePriceUsed) ? "alert" : ""}`}>
             +{product.bonusPerUnit}zł
           </span>
         );

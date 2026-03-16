@@ -17,6 +17,7 @@ export interface CashLedger {
 
 
 export interface CashLedgerFilterDTO {
+    isClosed: boolean;
     year: number | null;
     month: number | null;
 }

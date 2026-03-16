@@ -239,7 +239,7 @@ export function LogsPopup({
           />
         </section>
         <div className="flex-column width-max f-1 align-items-center min-height-0 mb-1">
-        <ListHeader attributes={AUDIT_LOG_LIST_ATTRIBUTES} />
+        <ListHeader attributes={AUDIT_LOG_LIST_ATTRIBUTES} customWidth="width-93"/>
         <LogsList
         attributes={AUDIT_LOG_LIST_ATTRIBUTES} 
         logs={logs}

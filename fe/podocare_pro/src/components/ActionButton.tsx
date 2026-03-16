@@ -15,7 +15,8 @@ export interface ActionButtonProps {
 
 export function ActionButton(props: ActionButtonProps) {
   return (
-    <div className={`product-action-button-container ${props.className? props.className : ""} flex align-items-center height-auto transparent`}>
+    <div className={`product-action-button-container ${props.className? props.className : ""} flex align-items-center height-auto transparent`}
+    title ={props.iconTitle}>
       <button className={`product-action-button ${props.className? props.className : ""} ${props.disabled ? "not-allowed" : props.default ? "default" : ""}  transparent flex width-fit-content align-items-center justify-center g-5px pointer`} 
         onClick={props.onClick} 
         disabled={props.disabled || false}

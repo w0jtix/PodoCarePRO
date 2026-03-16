@@ -237,8 +237,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private OrderProduct createOrderProductAndUpdateInventory(OrderProductDTO orderProductDTO, Order order) {
-        Product product = productRepo.findById(orderProductDTO.getProduct().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + orderProductDTO.getProduct().getId()));
+        Product product = getOrRestoreProduct(orderProductDTO.getProduct().getId());
 
         product.setSupply(product.getSupply() + orderProductDTO.getQuantity());
         productRepo.save(product);

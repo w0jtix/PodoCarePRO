@@ -20,7 +20,7 @@ export function MenuItem ({ name, href, src, alt, subItems, isOpen = false, onTo
 
   if (!subItems || subItems.length === 0) {
     return (
-      <button className="menu-button width-max flex g-15px p-10px border-none justify-start align-items-center ">
+      <button className="menu-button width-max flex g-15px p-0625 border-none justify-start align-items-center ">
         <img className="menuItem-icon" src={src} alt={alt}/>
         <a href={href} className="menu-a">
           {name}
@@ -37,7 +37,7 @@ export function MenuItem ({ name, href, src, alt, subItems, isOpen = false, onTo
   return (
     <div className="menu-item-with-sub">
       <button
-        className="menu-button width-max flex g-15px p-10px border-none justify-start align-items-center pointer"
+        className="menu-button width-max flex g-15px p-0625 border-none justify-start align-items-center pointer"
         onClick={() => onToggle?.()}
       >
         <img className="menuItem-icon" src={src} alt={alt}/>

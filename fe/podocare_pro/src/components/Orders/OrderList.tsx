@@ -117,7 +117,7 @@ export function OrderList({
 
       case "Opcje":
         return (
-          <div className="item-list-single-item-action-buttons flex ml-1">
+          <div className="item-list-single-item-action-buttons flex  ml-1">
             <ActionButton
               src={"src/assets/edit.svg"}
               alt={"Edytuj Zamówienie"}

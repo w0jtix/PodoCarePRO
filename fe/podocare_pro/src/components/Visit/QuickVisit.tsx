@@ -29,7 +29,7 @@ export function QuickVisit({
 }: QuickVisitProps) {
     return (
     <>
-          <div className={`qv-summary-container width-max flex-column ${className}`}>
+          <div className={`qv-summary-container width-max f-1 min-width-0 min-height-0 flex-column ${className}`}>
             {enableHeader && (
               <section className="qv-summary-header-section width-max">
               <h2 className="text-align-center mb-1 ml-1">

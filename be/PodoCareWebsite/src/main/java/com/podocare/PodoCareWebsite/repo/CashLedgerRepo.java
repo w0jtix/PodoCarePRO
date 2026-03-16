@@ -34,10 +34,12 @@ public interface CashLedgerRepo extends JpaRepository<CashLedger, Long> {
 
     @Query("SELECT cl FROM CashLedger cl " +
             "WHERE cl.date BETWEEN :dateFrom AND :dateTo " +
-            "AND (:employeeId IS NULL OR cl.createdBy.id = :employeeId)")
+            "AND (:employeeId IS NULL OR cl.createdBy.id = :employeeId) " +
+            "AND (:isClosed IS NULL OR cl.isClosed = :isClosed)")
     Page<CashLedger> findAllWithFilters(
             @Param("employeeId") Long employeeId,
             @Param("dateFrom") LocalDate dateFrom,
             @Param("dateTo") LocalDate dateTo,
+            @Param("isClosed") Boolean isClosed,
             Pageable pageable);
 }

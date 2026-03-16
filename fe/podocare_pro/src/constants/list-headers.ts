@@ -235,8 +235,8 @@ export const PRODUCT_VOLUME_LIST_ATTRIBUTES: ListAttribute[] = [
 
 export const PRODUCT_PRICE_LIST_ATTRIBUTES: ListAttribute[] = [
     { name: "empty", width: "2%", justify: "start" },
-    { name: "", width: "10%", justify: "start" },
-    { name: "Nazwa", width: "50%", justify: "flex-start" },
+    { name: "", width: "6%", justify: "start" },
+    { name: "Nazwa", width: "54%", justify: "flex-start" },
     { name: "Cena", width: "22%", justify: "center" },
     { name: "Stan Magazynowy", width: "16%", justify: "center" },
 ];
@@ -359,10 +359,10 @@ export const USAGE_RECORDS_LIST_ATTRIBUTES: ListAttribute[] = [
   { name: "", width: "4%", justify: "flex-start" },
   { name: "Produkt", width: "25%", justify: "flex-start" },
   { name: "Pracownik", width: "18%", justify: "flex-start" },
-  { name: "Data", width: "23%", justify: "flex-start" },
-  { name: "Ilość", width: "5%", justify: "flex-start" }, 
-  { name: "Powód", width: "20%", justify: "center" },
-  { name: "Opcje", width: "10%", justify: "center" },
+  { name: "Data", width: "40%", justify: "flex-start" },
+  { name: "Ilość", width: "3%", justify: "flex-start" }, 
+  { name: "Powód", width: "10%", justify: "center" },
+  { name: "Opcje", width: "5%", justify: "center" },
 ]
 
 export const EXPENSE_HISTORY_ATTRIBUTES: ListAttribute[] = [
@@ -422,15 +422,15 @@ export const CASH_VISITS_ATTRIBUTES: ListAttribute[] = [
 ]
 
 export const CASH_LEDGER_HISTORY_ATTRIBUTES: ListAttribute[] = [
-  { name: "Data", width: "12%", justify: "center" },
-  { name: "Otworzył", width: "12%", justify: "center" },
+  { name: "Data", width: "10%", justify: "center" },
+  { name: "Otworzył", width: "10%", justify: "center" },
   { name: "Otwarcie", width: "13%", justify: "center" },
   { name: "W tym depozyt", width: "13%", justify: "center" },
-  { name: "Zamknął", width: "12%", justify: "center" },
+  { name: "Zamknął", width: "10%", justify: "center" },
   { name: "Wypłacono", width: "13%", justify: "center" },
   { name: "Saldo Końcowe", width: "13%", justify: "center" },
-  { name: "Notatka", width: "7%", justify: "center" },
-  { name: "Opcje", width: "5%", justify: "center" },
+  { name: "Notatka", width: "9%", justify: "center" },
+  { name: "Opcje", width: "9%", justify: "center" },
 ]
 
 export const BONUS_PRODUCT_LIST_ATTRIBUTES: ListAttribute[] = [

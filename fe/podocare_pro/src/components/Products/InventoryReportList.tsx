@@ -1,12 +1,8 @@
 import React from "react";
 import { useState, useCallback } from "react";
 import ActionButton from "../ActionButton";
-import EditOrderPopup from "../Popups/EditOrderPopup";
 import RemovePopup from "../Popups/RemovePopup";
 import { INVENTORY_REPORTS_ITEM_LIST_ATTRIBUTES, ListAttribute } from "../../constants/list-headers";
-import { Order } from "../../models/order";
-import { Action } from "../../models/action";
-import { calculateOrderItems } from "../../utils/orderUtils";
 import { formatDate } from "../../utils/dateUtils";
 import { InventoryReport } from "../../models/inventory_report";
 import InventoryReportContent from "./InventoryReportContent";
@@ -168,7 +164,7 @@ export function InventoryReportList({
 
       case "Opcje":
         return (
-          <div className="item-list-single-item-action-buttons flex ml-1">
+          <div className="item-list-single-item-action-buttons flex">
             {!inventoryReport.approved && (
               <>
                 <ActionButton

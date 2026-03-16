@@ -236,7 +236,7 @@ export function InventoryReportDashboard({
         </div>
       </section>
       <div className="flex-column width-max f-1 align-items-center min-height-0 mb-2">
-      <ListHeader attributes={INVENTORY_REPORTS_LIST_ATTRIBUTES} />
+      <ListHeader attributes={INVENTORY_REPORTS_LIST_ATTRIBUTES} customWidth="width-93"/>
       <InventoryReportList
         inventoryReports={inventoryReports}
         attributes={INVENTORY_REPORTS_LIST_ATTRIBUTES}

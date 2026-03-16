@@ -250,7 +250,7 @@ export function UsageRecordForm({
 
   return (
     <div className="form-container flex-column f-1 min-height-0 align-self-center width-90">
-      <div className="width-max flex space-between min-height-0">
+      <div className="width-max f-1 flex space-between min-height-0">
         <div className="flex-column width-60 align-items-center">
           <div className="flex space-between width-max align-items-center">
             <div className="popup-common-section-row flex align-items-center space-between g-10px name">
@@ -348,7 +348,7 @@ export function UsageRecordForm({
             ))}
           </div>
         </div>
-        <div className={`list-container width-30 flex-column min-height-0 report`}>
+        <div className={`list-container width-30 flex-column min-height-0 report `}>
           <div className="filters-container flex-column g-1 width-max align-items-center justify-center usage">
             <h2 className="list-container-header">Wybierz z listy:</h2>
             <SearchBar
@@ -370,7 +370,7 @@ export function UsageRecordForm({
             items={products}
             action={Action.DISPLAY}
             onClick={(prod) => handleSelectProducts(prod)}
-            className="products pricelist popup usage"
+            className="products pricelist popup usage align-self-center"
             onScroll={handleScroll}
             isLoading={loading}
             hasMore={hasMore}

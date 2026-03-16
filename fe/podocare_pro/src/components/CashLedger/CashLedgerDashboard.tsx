@@ -55,8 +55,17 @@ export function CashLedgerDashboard() {
     [todayCashVisits],
   );
   const calculatedClosingAmount = useMemo(
-    () => cashLedger.openingAmount + cashLedger.deposit + totalCashIncome - cashLedger.cashOutAmount,
-    [cashLedger.openingAmount, cashLedger.cashOutAmount, totalCashIncome, cashLedger.deposit],
+    () =>
+      cashLedger.openingAmount +
+      cashLedger.deposit +
+      totalCashIncome -
+      cashLedger.cashOutAmount,
+    [
+      cashLedger.openingAmount,
+      cashLedger.cashOutAmount,
+      totalCashIncome,
+      cashLedger.deposit,
+    ],
   );
   const closingDiscrepancy = useMemo(
     () =>
@@ -116,7 +125,8 @@ export function CashLedgerDashboard() {
           .reduce((sum, p) => sum + p.amount, 0);
         setCashLedger((prev) => ({
           ...prev,
-          closingAmount: prev.openingAmount + prev.deposit + income - prev.cashOutAmount,
+          closingAmount:
+            prev.openingAmount + prev.deposit + income - prev.cashOutAmount,
         }));
       })
       .catch((error) => {
@@ -186,7 +196,8 @@ export function CashLedgerDashboard() {
       setCashLedger((prev) => ({
         ...prev,
         cashOutAmount: value,
-        closingAmount: prev.openingAmount + prev.deposit + totalCashIncome - value,
+        closingAmount:
+          prev.openingAmount + prev.deposit + totalCashIncome - value,
       }));
     },
     [totalCashIncome],
@@ -254,8 +265,12 @@ export function CashLedgerDashboard() {
 
     if (!hasTodayLedger) {
       return (
-        <div className="flex-column width-90 align-items-center justify-center g-25 align-self-center mt-5">
-          <h2 className="cl-header">Brak otwartej kasetki na dzisiaj.</h2>
+        <div className="flex-column width-90 align-items-center justify-center g-25 align-self-center mt-3">
+          <h2 className="cl-header">
+            {isOpeningFormVisible
+              ? "Uzupełnij wartości początkowe."
+              : "Brak otwartej kasetki na dzisiaj."}
+          </h2>
           <ActionButton
             src={"src/assets/unlock.svg"}
             alt={"Otwórz Kasetkę"}
@@ -264,36 +279,27 @@ export function CashLedgerDashboard() {
             className={`cl ${isOpeningFormVisible ? "open" : ""}`}
           />
           {isOpeningFormVisible && (
-            <section className="width-90 flex-column g-25 mt-2">
-              <div className="flex g-4 align-items-center">
-                <h2 className="cl-header">Stan początkowy kasetki:</h2>
-                <div className="flex g-1 align-items-center">
-                  <h2 className="cl-header amt italic">
-                    {cashLedger.openingAmount.toFixed(2)} zł
-                  </h2>
-                  <ActionButton
-                    src={"src/assets/edit.svg"}
-                    alt={"Edytuj"}
-                    disableText={true}
-                    onClick={() => setShowCostInput((prev) => !prev)}
-                    className="clear"
-                  />
-                  {showCostInput && (
-                    <CostInput
-                      selectedCost={baseOpeningAmount}
-                      onChange={handleOpeningAmountChange}
-                      className="cl-opening-amt"
-                    />
-                  )}
+            <section className="cl-opening-form width-35 flex-column g-15">
+              <div className="flex align-items-center space-between">
+                <div className="flex-column width-max">
+                  <h2 className="cl-header of">Saldo na otwarcie:</h2>
                   {showFillInfo && (
                     <span className="qv-span amt-info italic">
                       Wartość pobrana z ostatniej zamkniętej Kasetki.
                     </span>
                   )}
                 </div>
+                <div className="flex g-1 align-items-center">
+                  <CostInput
+                    selectedCost={baseOpeningAmount}
+                    onChange={handleOpeningAmountChange}
+                    className="cl-opening-amt"
+                  />
+                  <span className="span-cl">zł</span>
+                </div>
               </div>
-              <div className="flex g-4 align-items-center">
-                <span className="span-cl">Depozyt:</span>
+              <div className="flex align-items-center space-between">
+                <span className="cl-header of">Depozyt:</span>
                 <div className="flex g-1 align-items-center">
                   <CostInput
                     selectedCost={cashLedger.deposit}
@@ -303,19 +309,15 @@ export function CashLedgerDashboard() {
                   <span className="span-cl">zł</span>
                 </div>
               </div>
-              {cashLedger.deposit != 0 && (
-                <div className="flex g-4 align-items-center">
-                  <span className="span-cl">Razem:</span>
-                  <div className="flex g-1 align-items-center">
-                    <h2 className="cl-header amt green italic">
-                      {(cashLedger.openingAmount + cashLedger.deposit).toFixed(
-                        2,
-                      )}{" "}
-                      zł
-                    </h2>
-                  </div>
+              <div className="flex align-items-center space-between">
+                <span className="cl-header of">Razem:</span>
+                <div className="flex g-1 align-items-center">
+                  <h2 className="cl-header amt">
+                    {(cashLedger.openingAmount + cashLedger.deposit).toFixed(2)}{" "}
+                    zł
+                  </h2>
                 </div>
-              )}
+              </div>
 
               <ActionButton
                 src={"src/assets/tick.svg"}
@@ -332,167 +334,170 @@ export function CashLedgerDashboard() {
 
     if (cashLedger.isClosed) {
       return (
-        <h2 className="cl-header mt-5 ">
+        <h2 className="cl-header mt-3 ">
           Kasetka z dzisiaj została zamknięta.
         </h2>
       );
     }
 
     return (
-      <section className="width-90 flex-column f-1">
-        <div className="flex g-4 align-items-center mt-2 mb-2">
-          <h2 className="cl-header">Stan początkowy kasetki:</h2>
-          <h2 className="cl-header amt italic">
-            {(cashLedger.openingAmount + cashLedger.deposit).toFixed(2)} zł
-          </h2>
-          {cashLedger.deposit > 0 && (
-            <div className="flex g-5px">
-              <span className="span-cl italic depo">w tym</span>
-              <span className="span-cl italic depo amt">
+      <section className="width-90 flex-column f-1 min-height-0">
+        <section className="company-scoreboard width-max flex justify-center g-1 default mb-05">
+          <div className="scoreboard-card cl open flex align-items-center">
+            <div className="scoreboard-main f-1 align-items-center flex-column">
+              <div className="scoreboard-header flex align-items-center g-5px mb-05 mr-025">
+                <img
+                  src="src/assets/unlock_white.svg"
+                  alt=""
+                  className="scoreboard-icon open"
+                />
+                <span className="scoreboard-label cl">Otwarcie:</span>
+              </div>
+              <span className={`scoreboard-value yellow`}>
+                {(cashLedger.openingAmount + cashLedger.deposit).toFixed(2)} zł
+              </span>
+            </div>
+          </div>
+
+          <div className="scoreboard-card cl income neutral flex align-items-center">
+            <div className="scoreboard-main f-1 align-items-center flex-column">
+              <div className="scoreboard-header flex align-items-center g-5px mb-05 mr-025">
+                <img
+                  src="src/assets/deposit.svg"
+                  alt=""
+                  className="scoreboard-icon open"
+                />
+                <span className="scoreboard-label cl">W tym depozyt:</span>
+              </div>
+              <span className={`scoreboard-value`}>
                 {cashLedger.deposit.toFixed(2)} zł
               </span>
-              <span className="span-cl italic depo">depozytu.</span>
             </div>
-          )}
-        </div>
-        <section className="cl-core-section min-height-0 f-1 flex width-max space-between align-items-center mb-2">
-          <div className="flex-column today-visits height-max width-45 justify-center">
+          </div>
+
+          <div className="scoreboard-card cl income flex align-items-center">
+            <div className="scoreboard-main f-1 align-items-center flex-column">
+              <div className="scoreboard-header flex align-items-center g-5px mb-05 mr-025">
+                <img
+                  src="src/assets/cash_income.svg"
+                  alt=""
+                  className="scoreboard-icon open"
+                />
+                <span className="scoreboard-label cl">Wizyty:</span>
+              </div>
+              <span className={`scoreboard-value green`}>
+                +{totalCashIncome.toFixed(2)} zł
+              </span>
+            </div>
+          </div>
+
+          <div className="scoreboard-card cl expenses flex align-items-center">
+            <div className="scoreboard-main f-1 align-items-center flex-column">
+              <div className="scoreboard-header flex align-items-center g-5px mb-05 mr-025">
+                <img
+                  src="src/assets/expenses.svg"
+                  alt=""
+                  className="scoreboard-icon"
+                />
+                <span className="scoreboard-label cl">Wypłata:</span>
+              </div>
+              <span className={`scoreboard-value red`}>
+                -{cashLedger.cashOutAmount.toFixed(2)} zł
+              </span>
+            </div>
+          </div>
+
+          <div className="scoreboard-card cl revenue flex align-items-center">
+            <div className="scoreboard-main f-1 align-items-center flex-column">
+              <div className="scoreboard-header flex align-items-center g-5px mb-05 mr-025">
+                <img
+                  src="src/assets/lock_white.svg"
+                  alt=""
+                  className="scoreboard-icon open"
+                />
+                <span className="scoreboard-label cl">Saldo końcowe:</span>
+              </div>
+              <span className={`scoreboard-value blue`}>
+                {(cashLedger.closingAmount ?? 0).toFixed(2)} zł
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <section className="cl-core-section min-height-0 f-1 g-2 flex width-max justify-center mb-1 mt-1">
+          <div className="flex-column today-visits justify-start min-height-0 width-42">
             <h2 className="v-header mt-1 align-self-center">
               {!isLedgerToday
                 ? `Płatności gotówką z dnia ${formatDate(cashLedger.date)}`
                 : "Dzisiejsze płatności gotówką:"}
             </h2>
-            <VisitList
-              attributes={CASH_VISITS_ATTRIBUTES}
-              visits={todayCashVisits}
-              className="products cash-pm"
-              disableExpand={true}
-            />
-            <div className="sb-month-summary mt-auto width-90 flex-column align-items-center align-self-center justify-center g-05">
-              <div className="width-max flex space-between mt-1">
-                <span className="qv-span visit-preview">Płatności razem:</span>
+            {todayCashVisits.length > 0 ? (
+              <div className="flex-column min-height-0 f-1 mt-05 mb-15 width-90 align-self-center">
+                <VisitList
+                  attributes={CASH_VISITS_ATTRIBUTES}
+                  visits={todayCashVisits}
+                  className="products cash-pm"
+                  disableExpand={true}
+                />
+              </div>
+            ) : (
+              <span className="span-cl nv italic text-align-center mt-15">
+                Brak wizyt opłaconych gotówką.
+              </span>
+            )}
+          </div>
 
-                <span className="qv-span visit-preview profit w">
-                  + {totalCashIncome.toFixed(2)} zł
-                </span>
+          <div className="flex-column min-height-0 today-visits justify-start min-height-0 width-30">
+
+            <div className="flex width-80 align-self-center space-between mt-2 align-items-center">
+              <span className="span-cl">Wypłata:</span>
+              <div className="flex g-10px align-items-center">
+                <CostInput
+                  selectedCost={cashLedger.cashOutAmount}
+                  onChange={handleCashOutAmountChange}
+                  className="cash-ledger"
+                />
+                <span className="span-cl">zł</span>
               </div>
             </div>
-          </div>
-          <div className="flex-column today-visits height-max width-45  align-items-center">
-            <div className="flex g-4 align-items-center mt-2 mb-2">
-              <h2 className="cl-header">Saldo:</h2>
-              <h2 className="cl-header amt italic">
-                {(cashLedger.openingAmount + cashLedger.deposit + totalCashIncome).toFixed(2)} zł
-              </h2>
-            </div>
-            <div
-              className={`flex width-fit-content align-self-start  ${showCashOut ? "g-2" : ""}`}
-            >
-              <ActionButton
-                disableImg={true}
-                text={"Wypłata"}
-                onClick={() => {
-                  setShowCashOut((prev) => !prev);
-                  handleCashOutAmountChange(0);
-                }}
-                className={`cashout ${showCashOut ? "selected" : ""}`}
-              />
-              {showCashOut && (
-                <div className="g-2 flex align-items-center">
-                  <div className="flex g-10px align-items-center">
-                    <CostInput
-                      selectedCost={cashLedger.cashOutAmount}
-                      onChange={handleCashOutAmountChange}
-                      className="cash-ledger"
-                    />
-                    <span className="span-cl status">zł</span>
-                  </div>
-                </div>
-              )}
-            </div>
-            <div className={`flex-column width-max align-self-start mt-2 f-1 min-height-0`}>
-              <ActionButton
-                src={"src/assets/addNew.svg"}
-                alt={"Dodaj notatkę"}
-                text={"Dodaj notatkę"}
-                onClick={() => {
-                  setShowNote((prev) => !prev);
+
+            <div className={`flex-column width-80 align-self-center mt-2 f-1 min-height-0`}>
+            <span className="span-cl">Notatka:</span>
+            <div className="flex width-max mt-2 f-1">
+              <TextInput
+                placeholder="Notatka stanu kasetki..."
+                multiline={true}
+                className="f-1"
+                onSelect={(value) =>
                   setCashLedger((prev) => ({
                     ...prev,
-                    note: null,
-                  }));
-                }}
-                className={`cl-note ${showNote ? "selected" : ""}`}
+                    note: value as string,
+                  }))
+                }
               />
-              {showNote && (
-                <div className="mt-2 width-max flex-column f-1 mb-1">
-                  <TextInput
-                    placeholder="Notatka stanu kasetki..."
-                    multiline={true}
-                    className="f-1"
-                    onSelect={(value) =>
-                      setCashLedger((prev) => ({
-                        ...prev,
-                        note: value as string,
-                      }))
-                    }
-                  />
-                </div>
-              )}
-            </div>
+              </div>
+          </div>
 
-            <div className="flex-column width-max align-items-center mt-auto">
-              <div className="flex width-max g-1 align-items-center mb-2">
-                <h2 className="cl-header">Saldo końcowe:</h2>
-                <h2 className="cl-header amt final italic">
-                  {(cashLedger.closingAmount ?? 0).toFixed(2)} zł
-                </h2>
-                <ActionButton
-                  src={"src/assets/edit.svg"}
-                  alt={"Edytuj"}
-                  disableText={true}
-                  onClick={() => {
-                    setShowClosingCostInput((prev) => {
-                      if (prev) {
-                        setCashLedger((c) => ({
-                          ...c,
-                          closingAmount: calculatedClosingAmount,
-                        }));
-                      }
-                      return !prev;
-                    });
-                  }}
-                  className="clear"
-                />
-                {showClosingCostInput && (
-                  <CostInput
-                    selectedCost={cashLedger.closingAmount ?? 0}
-                    onChange={handleClosingAmountChange}
-                  />
-                )}
-              </div>
-              <div className="flex width-max justify-end">
-                <ActionButton
-                  text={"Zatwierdź i zamknij"}
-                  src={"src/assets/lock.svg"}
-                  alt={"Zamknij Kasetkę"}
-                  onClick={() => {
-                    if (closingDiscrepancy !== 0 && !cashLedger.note) {
-                      showAlert(
-                        "Rozbieżność salda wymaga notatki.",
-                        AlertType.ERROR,
-                      );
-                      setShowNote(true);
-                      return;
-                    }
-                    setConfirmLockPopupOpen(true);
-                  }}
-                  className="lock"
-                />
-              </div>
-            </div>
+                <div className="flex mb-2 mt-2 align-items-center justify-center">
+          <ActionButton
+            text={"Zatwierdź i zamknij"}
+            src={"src/assets/lock.svg"}
+            alt={"Zamknij Kasetkę"}
+            onClick={() => {
+              if (closingDiscrepancy !== 0 && !cashLedger.note) {
+                showAlert("Rozbieżność salda wymaga notatki.", AlertType.ERROR);
+                setShowNote(true);
+                return;
+              }
+              setConfirmLockPopupOpen(true);
+            }}
+            className="lock"
+          />
+          </div>
+
           </div>
         </section>
+
         {confirmLockPopupOpen && (
           <CashLedgerPopup
             onClose={() => setConfirmLockPopupOpen(false)}

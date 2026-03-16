@@ -29,6 +29,7 @@ export function CashLedgerManage({
     useState<CashLedger | null>(null);
   const currentDate = new Date();
   const [filter, setFilter] = useState<CashLedgerFilterDTO>({
+    isClosed: true,
     year: currentDate.getFullYear(),
     month: currentDate.getMonth() + 1,
   });
@@ -123,6 +124,7 @@ export function CashLedgerManage({
         showAlert("Pomyślnie zaktualizowano Kasetkę!", AlertType.SUCCESS);
         setSelectedCashLedger(null);
         setFilter({
+          isClosed: true,
     year: currentDate.getFullYear(),
     month: currentDate.getMonth() + 1,
   })
@@ -212,7 +214,7 @@ export function CashLedgerManage({
           </section>
         </section>
         <div className="flex-column width-max f-1 align-items-center min-height-0 mb-1">
-        <ListHeader attributes={CASH_LEDGER_HISTORY_ATTRIBUTES} />
+        <ListHeader attributes={CASH_LEDGER_HISTORY_ATTRIBUTES} customWidth="width-93"/>
         <CashLedgersList
           items={cashLedgers}
           setSelectedCashLedger={setSelectedCashLedger}

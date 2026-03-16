@@ -19,6 +19,7 @@ export interface ItemListProps {
   onScroll?: (e: React.UIEvent<HTMLDivElement>) => void;
   isLoading?: boolean;
   hasMore?: boolean;
+  customWidth?:string;
 }
 
 export function ItemList ({
@@ -33,6 +34,7 @@ export function ItemList ({
   onScroll,
   isLoading = false,
   hasMore = true,
+  customWidth="",
 }: ItemListProps) {
   const [isSmall, setIsSmall] = useState(window.innerWidth < SM_BREAKPOINT);
 
@@ -94,23 +96,23 @@ export function ItemList ({
         ) : (<span className={`qv-span ${className}`}>{item.name}</span>);
       
       case "Marka":
-        return(<span className={`list-span ml-05 ${className}`}>{item.brand.name}</span>);
+        return(<span className={`list-span ml-1 ${className}`}>{item.brand.name}</span>);
 
       case "Stan Magazynowy":
-        return(<span className={`list-span ml-05 ${className}`}>{item.supply}</span>);
+        return(<span className={`list-span ml-1 ${className}`}>{item.supply}</span>);
 
       case "Cena":
         if (item.category.name != "Produkty" || !item.sellingPrice) {
           return "";
         }
-        return(<span className={`list-span ml-05 ${className}`}>{item.sellingPrice} zł</span>);
+        return(<span className={`list-span ml-1 ${className}`}>{item.sellingPrice} zł</span>);
 
       case "empty": 
         return "";
 
       case "Opcje":
         return (
-          <div className="item-list-single-item-action-buttons flex ml-05">
+          <div className="item-list-single-item-action-buttons flex ml-1">
             <ActionButton
               src="src/assets/edit.svg"
               alt="Edytuj Produkt"
@@ -138,7 +140,7 @@ export function ItemList ({
 
   return (
     <div 
-    className={`item-list width-max height-max flex-column p-0 ${items.length === 0 ? "border-none" : ""} ${className}`} 
+    className={`item-list ${customWidth.length > 0 ? customWidth : "width-93"} height-max flex-column p-0 ${items.length === 0 ? "border-none" : ""} ${className}`} 
     onScroll={onScroll}
     >
       {items.map((item, index) => (

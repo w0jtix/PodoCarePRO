@@ -193,6 +193,7 @@ public class CashLedgerServiceImpl implements CashLedgerService {
                 filter.getEmployeeId(),
                 dateFrom,
                 dateTo,
+                filter.getIsClosed(),
                 pageable);
 
         return ledgers.map(CashLedgerDTO::new);

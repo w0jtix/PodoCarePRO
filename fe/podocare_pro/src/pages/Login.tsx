@@ -72,8 +72,7 @@ const Login = () => {
           </div>
           <ActionButton
             text="Zaloguj"
-            src={"src/assets/tick.svg"}
-            alt={"Zaloguj"}
+            disableImg={true}
             onClick={handleLogin}
             className={"login-button"}
             />

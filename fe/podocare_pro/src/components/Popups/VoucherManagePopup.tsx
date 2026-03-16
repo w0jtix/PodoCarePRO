@@ -160,7 +160,7 @@ export function VoucherManagePopup({
           />
         </section>
         <div className="flex-column width-max f-1 align-items-center min-height-0 mb-1">
-        <ListHeader attributes={VOUCHERS_LIST_ATTRIBUTES} />
+        <ListHeader attributes={VOUCHERS_LIST_ATTRIBUTES} customWidth="width-93"/>
         <VouchersList
           attributes={VOUCHERS_LIST_ATTRIBUTES}
           items={vouchers}

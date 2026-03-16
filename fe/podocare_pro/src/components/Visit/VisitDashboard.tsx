@@ -475,7 +475,7 @@ export function VisitDashboard() {
           className={`${filter.hasSale ? "active-pink" : ""}`}
         />
       </section>
-      <div className="flex-column width-max f-1 align-items-center min-height-0 mb-2">
+      <div className="flex-column width-93 f-1 align-items-center min-height-0 mb-2">
       <ListHeader attributes={VISIT_LIST_ATTRIBUTES} />
       <VisitList
         attributes={VISIT_LIST_ATTRIBUTES}

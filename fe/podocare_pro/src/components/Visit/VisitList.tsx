@@ -174,7 +174,7 @@ export function VisitList({
 
       case "Wartość":
         return (
-          <span className="order-values-lower-font-size ml-1">
+          <span className="order-values-lower-font-size ml-05">
             {visit.totalValue}zł
           </span>
         );
@@ -182,7 +182,7 @@ export function VisitList({
       case "Status":
         return (
           <span
-            className={`order-values-lower-font-size ml-1 ${visit.paymentStatus.toLocaleLowerCase()}`}
+            className={`order-values-lower-font-size ${visit.paymentStatus.toLocaleLowerCase()} ml-05`}
           >
             {translatePaymentStatus(visit.paymentStatus)}
           </span>
@@ -191,7 +191,7 @@ export function VisitList({
       case "Opcje":
         return (
           
-            <div className="item-list-single-item-action-buttons flex ml-1">
+            <div className="item-list-single-item-action-buttons flex ml-05">
             <ActionButton
               src={"src/assets/preview.svg"}
               alt={"Podgląd Wizyty"}
@@ -230,7 +230,7 @@ export function VisitList({
 
         case "Wpływ":
         return (
-          <span className="order-values-lower-font-size ml-1 income">
+          <span className="order-values-lower-font-size income">
             + {visit.payments
               .filter((p) => p.method === "CASH")
               .reduce((sum, p) => sum + p.amount, 0)
@@ -245,7 +245,7 @@ export function VisitList({
 
   return (
     <div
-      className={`item-list flex-column order width-93 p-0 mt-05 ${
+      className={`item-list flex-column order width-max p-0 mt-05 ${
         visits.length === 0 ? "border-none" : ""
       } ${className}`}
       onScroll={onScroll}

@@ -161,7 +161,19 @@ const EmployeeBonusPage = () => {
   }, [filter]);
   return (
     <>
-      <section className="flex width-90 align-items-center g-4 mt-15 mb-15">
+      <section className="flex width-90 align-items-center g-2  mt-15 mb-1">
+         <div className="sb-user-selection flex width-fit-content align-items-center g-1 justify-start">
+          <div className="profile-avatar sb-rev flex align-items-center justify-center">
+            <img
+              src={`src/assets/avatars/${user?.avatar}`}
+              alt="Avatar"
+              className="user-pfp sb-rev"
+            ></img>
+          </div>
+          <span className="qv-span emp sb-rev">
+            {employees.find((e) => e.id === filter.employeeId)?.name}
+          </span>
+        </div>
         <div className="flex align-items-center g-10px">
           <a className="product-form-input-title">Pracownik:</a>
           <DropdownSelect<Employee>
@@ -196,6 +208,7 @@ const EmployeeBonusPage = () => {
           />
         </div>
         <div className="flex align-items-center g-10px">
+
           <a className="product-form-input-title">Miesiąc:</a>
           <DropdownSelect
             items={MONTHS}
@@ -213,7 +226,6 @@ const EmployeeBonusPage = () => {
             disabledItemIds={disabledMonthIds}
           />
         </div>
-
         <ActionButton
           src={"src/assets/reset.svg"}
           alt={"Reset"}
@@ -224,19 +236,7 @@ const EmployeeBonusPage = () => {
         />
       </section>
 
-      <section className="flex-column width-95 f-1 min-height-0 align-items-center mb-3">
-        <div className="flex width-max align-items-center g-1 justify-center mb-05">
-          <div className="profile-avatar sb-rev flex align-items-center justify-center">
-            <img
-              src={`src/assets/avatars/${user?.avatar}`}
-              alt="Avatar"
-              className="user-pfp sb-rev"
-            ></img>
-          </div>
-          <span className="qv-span emp sb-rev">
-            {employees.find((e) => e.id === filter.employeeId)?.name}
-          </span>
-        </div>
+      <section className="flex-column width-95 f-1 min-height-0 align-items-center mb-2">
         <section className="flex-column f-1 min-height-0 width-max">
           <div className="flex width-max f-1 min-height-0 space-between">
           <section className="services-bonus min-height-0 width-45 flex-column f-1">

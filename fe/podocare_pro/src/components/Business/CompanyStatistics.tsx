@@ -164,8 +164,8 @@ export function CompanyStatistics() {
     new Date(statRequest.year!, statRequest.month! - 1, 1);
 
   return (
-    <div className="company-statistics width-90 flex-column align-items-center mt-1">
-      <section className="company-scoreboard width-max flex justify-center g-1 default">
+    <div className="company-statistics width-90 flex-column min-height-0 align-items-center mt-1">
+      <section className="company-scoreboard width-max flex justify-center g-1 default mb-05">
         <div className="scoreboard-card revenue flex align-items-center">
           <div className="scoreboard-main f-1 align-items-center flex-column">
             <div className="scoreboard-header flex align-items-center g-5px mb-05 mr-025">
@@ -359,6 +359,8 @@ export function CompanyStatistics() {
         </div>
       </section>
 
+      <div className="cmp-charts-div flex-column f-1 min-height-0 width-max">
+                
       <section className="company-data-table width-max mt-05 flex-column">
         <div className="unit-toggle flex width-max align-items-center justify-end">
           <ToggleButton
@@ -773,12 +775,14 @@ export function CompanyStatistics() {
         )}
       </section>
 
-      <section className="company-chart width-max flex-column align-items-center mt-2">
+      <section className="company-chart width-max flex-column align-items-center mt-25">
         <CompanyRevenueChart
           statRequest={statRequest}
           setStatRequest={setStatRequest}
         />
       </section>
+
+      </div>
     </div>
   );
 }

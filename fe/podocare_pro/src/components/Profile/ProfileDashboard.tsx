@@ -155,7 +155,7 @@ export function ProfileDashboard() {
 
   return (
     <div className="dashboard-panel width-85 height-max flex-column align-items-center">
-      <div className={`user-container flex align-items-center space-between width-85 mt-1`}>
+      <div className={`user-container flex align-items-center space-between width-85 mt-1 mb-2`}>
         <div className={`user-basic-info relative flex-column`}>
           <div className="profile-container flex align-items-center space-between">
             <div className="width-max space-around flex align-items-center g-1">
@@ -208,7 +208,7 @@ export function ProfileDashboard() {
         <ChangePasswordForm />
       </div>
       {user?.roles.includes(RoleType.ROLE_ADMIN) && (
-      <div className="all-user-container mt-5 width-85 g-1 height-fit-content justify-center">
+      <div className="all-user-container width-85 g-1 flex-column f-1 min-height-0 justify-center mb-1">
         <div className="width-95 flex align-items-center justify-center">
           {user?.roles.includes(RoleType.ROLE_ADMIN) ? (
             <>
@@ -229,7 +229,7 @@ export function ProfileDashboard() {
           
         </div>
         
-        <div className="all-user-list width-max flex-column g-05 mb-1">
+        <div className="all-user-list width-max flex-column f-1 min-height-0 g-05 mb-1">
           {users.map((u) => (
             <div className="single-user-container flex width-90 align-self-center g-2" key={u.id}>
               <div className="single-user-avatar flex align-items-center ml-1">
@@ -270,7 +270,7 @@ export function ProfileDashboard() {
 
       </div>
       )}
-      <div className="quick-action-buttons flex width-85 mt-2 justify-end">
+      <div className="quick-action-buttons flex width-85 justify-end">
         <ActionButton
           src="src/assets/logout.svg"
           alt="Wyloguj"

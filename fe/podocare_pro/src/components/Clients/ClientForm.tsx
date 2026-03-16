@@ -228,7 +228,7 @@ export function ClientForm({
         <section className="flex-column width-max f-1 align-items-center min-height-0">
           
           {newClientNotesDTO.length > 0 && (
-            <div className="client-notes-list f-1 min-height-0 flex-column align-items-center width-max g-05 mt-05">
+            <div className="client-notes-list new min-height-0 flex-column align-items-center width-max g-05 mt-05">
               {newClientNotesDTO.map((note, index) => (
                 <div
                   key={index}

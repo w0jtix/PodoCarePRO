@@ -79,7 +79,7 @@ export function ChooseClientsPopup({
         </section>
         <SearchBar onKeywordChange={setKeyword} className="mb-1" />
         <div className="flex-column width-max f-1 align-items-center min-height-0">
-            <ListHeader attributes={CLIENTS_DISCOUNT_LIST_ATTRIBUTES} />
+            <ListHeader attributes={CLIENTS_DISCOUNT_LIST_ATTRIBUTES}  customWidth="width-93"/>
             <ClientsList
               attributes={CLIENTS_DISCOUNT_LIST_ATTRIBUTES}
               items={clients}

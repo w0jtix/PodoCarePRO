@@ -73,7 +73,7 @@ export function UsageRecordsList({
 
       case "Opcje":
         return (
-          <div className="item-list-single-item-action-buttons flex ml-1">
+          <div className="item-list-single-item-action-buttons flex">
             {(item.createdBy === user?.id || user?.roles.includes(RoleType.ROLE_ADMIN)) && (
             <ActionButton
               src="src/assets/cancel.svg"
@@ -98,7 +98,7 @@ export function UsageRecordsList({
       onScroll={onScroll}
     >
       {items.map((item, index) => (
-        <div key={item.id} className={`product-wrapper width-max ${className} `}>
+        <div key={item.id} className={`product-wrapper width-max ${className} min-height-req-25`}>
           <div className={`item flex ${className} `}>
             {attributes.map((attr) => (
               <div

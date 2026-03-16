@@ -175,7 +175,7 @@ export function ReviewManagePopup({
           />
         </section>
         <div className="flex-column width-max f-1 align-items-center min-height-0 mb-1">
-        <ListHeader attributes={REVIEWS_LIST_ATTRIBUTES} />
+        <ListHeader attributes={REVIEWS_LIST_ATTRIBUTES} customWidth="width-93"/>
         <ReviewsList
           attributes={REVIEWS_LIST_ATTRIBUTES}
           items={reviews}

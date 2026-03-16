@@ -41,7 +41,7 @@ export function NavbarMenu () {
   };
 
   return (
-    <nav ref={navRef} className="navbar-menu flex-column width-max space-evenly pl-1 align-items-start height-fit-content">
+    <nav ref={navRef} className="navbar-menu flex-column width-max pl-1 align-items-start f-1 min-height-0">
             {visibleMenuItems.map((item) => (
                 <MenuItem
                     key={item.name}

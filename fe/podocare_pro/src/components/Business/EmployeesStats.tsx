@@ -12,9 +12,6 @@ import { CARD_BACKGROUND_COLORS, CHART_COLORS } from "../../utils/statisticsUtil
 export function EmployeesStats() {
   const { showAlert } = useAlert();
   const [selectedEmployeeIds, setSelectedEmployeeIds] = useState<number[]>([]);
-  const [visibleView, setVisibleView] = useState<{ [key: number]: 'first' | 'second' }>({});
-  const scrollContainerRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
-  const scrollButtonRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
 
   const [statRequest, setStatRequest] = useState<EmployeeRevenueFilter>({
       mode: ChartMode.DAILY,

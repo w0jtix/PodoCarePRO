@@ -242,7 +242,7 @@ export function OrderHistory({
         />
       </section>
       <div className="min-height-0 width-max f-1 flex-column align-items-center align-self-center justify-center mb-2">
-      <ListHeader attributes={attributes} />
+      <ListHeader attributes={attributes} customWidth="width-93"/>
       {loading ? (
         <div className="list-loading-container relative flex align-items-center justify-center">
           <div className="loading-dot relative flex align-items-center height-max width-25"></div>

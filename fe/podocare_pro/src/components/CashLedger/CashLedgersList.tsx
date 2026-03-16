@@ -98,7 +98,7 @@ export function CashLedgersList({
 
         case "Notatka":
         return (
-          <span className={`order-values-lower-font-size ${item.note ? "note pointer" : "no-note"}`}
+          <span className={`order-values-lower-font-size ${item.note ? "note pointer" : "no-note"} ml-1`}
           title={item.note ? `${item.note}` : "Brak notatki"}>
             {item.note ? "TAK" : "NIE"}
           </span>
@@ -106,7 +106,7 @@ export function CashLedgersList({
 
       case "Opcje":
         return (
-<div className="item-list-single-item-action-buttons flex">
+<div className="item-list-single-item-action-buttons flex ml-15">
             <ActionButton
               src="src/assets/edit.svg"
               alt="Edytuj Kasetkę"

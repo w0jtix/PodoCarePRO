@@ -6,8 +6,8 @@ export enum ChartMode {
 }
 
 export const chartModeItems = [
-    { id: ChartMode.MONTHLY, name: "Miesięczny" },
-    { id: ChartMode.DAILY, name: "Dzienny" },
+    { id: ChartMode.MONTHLY, name: "Roczny" },
+    { id: ChartMode.DAILY, name: "Miesięczny" },
   ];
 
 export interface EmployeeRevenueFilter {

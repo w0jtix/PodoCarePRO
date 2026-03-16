@@ -9,4 +9,5 @@ public class CashLedgerFilterDTO {
     private Long employeeId;
     private Integer year;
     private Integer month;
+    private Boolean isClosed;
 }

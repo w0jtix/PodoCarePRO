@@ -105,6 +105,7 @@ export function EmployeeForm ({
               placeholder="Wymiar etatu"
               value={employmentTypeOptions.find((opt) => opt.id === employeeDTO.employmentType) || null}
               allowNew={false}
+              searchable={false}
               onChange={handleEmploymentTypeChange}
             />
           </li>

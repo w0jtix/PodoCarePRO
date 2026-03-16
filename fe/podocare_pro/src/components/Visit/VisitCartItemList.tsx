@@ -295,7 +295,7 @@ export function VisitCartItemList({
 
   return (
     <div
-      className={`item-list width-max grid p-0 ${
+      className={`item-list width-max flex-column p-0 ${
         items.length === 0 ? "border-none" : ""
       } ${className}`}
     >

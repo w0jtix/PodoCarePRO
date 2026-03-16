@@ -182,7 +182,7 @@ export function InventoryReportForm({
 
   return (
     <div className="form-container flex-column f-1 min-height-0 align-self-center width-90">
-      <div className="width-max flex space-between min-height-0">
+      <div className="width-max f-1 flex space-between min-height-0">
         <div className="flex-column width-60 align-items-center ">
           
           <div className="selected-usage-product-list report flex-column f-1 width-max align-items-center g-1">
@@ -274,7 +274,7 @@ export function InventoryReportForm({
             items={products}
             action={Action.DISPLAY}
             onClick={(prod) => handleSelectProducts(prod)}
-            className="products pricelist popup inv-report"
+            className="products pricelist popup inv-report align-self-center"
             onScroll={handleScroll}
             isLoading={loading}
             hasMore={hasMore}

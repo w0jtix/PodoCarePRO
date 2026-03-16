@@ -95,7 +95,7 @@ export function BusinessSettings() {
   }, []);
 
   return (
-    <div className="flex-column align-items-center">
+    <div className="flex-column align-items-center  min-height-0">
 
     <div className="flex width-90 mt-1 justify-end">
       <ActionButton
@@ -105,7 +105,7 @@ export function BusinessSettings() {
         onClick={() => setLogsPopupOpen(true)}
       />
       </div>
-     <div className="flex-column width-max f-1 align-items-center min-height-0 mb-2">
+     <div className="flex-column width-max f-1 align-items-center min-height-0 mb-1">
       <div className="settings-grid grid g-2 width-90 mt-1">
         
         <div className="setting-container flex width-max align-items-center justify-center">

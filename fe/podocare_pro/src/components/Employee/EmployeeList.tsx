@@ -63,7 +63,7 @@ export function EmployeeList({
 
       case "Opcje":
         return ( 
-<div className="item-list-single-item-action-buttons flex ml-1">
+<div className="item-list-single-item-action-buttons flex">
             <ActionButton
               src="src/assets/edit.svg"
               alt="Edytuj Rabat"
@@ -78,7 +78,7 @@ export function EmployeeList({
 };
   return (
     <div
-      className={`item-list width-93 flex-column p-0 mt-05 ${
+      className={`item-list width-93 flex-column p-0 mt-05 f-1 ${
         items.length === 0 ? "border-none" : ""
       } ${className} `}
       

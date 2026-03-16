@@ -44,9 +44,9 @@ export function ChangePasswordForm() {
   };
 
   return (
-    <div className="password-container flex-column g-2">
+    <div className="password-container flex-column ">
       <h2 className="pw-header text-align-center">Zmiana Hasła</h2>
-      <div className="pw-inputs-container flex-column g-1">
+      <div className="pw-inputs-container flex-column g-1 mt-025 mb-025">
       <div className="pw-input-group flex space-between align-items-center">
         <p className="pw-label">Stare Hasło:</p>
         <input

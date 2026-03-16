@@ -132,6 +132,10 @@ export function ClientsDashboard() {
     handleResetFiltersAndData();
   }, []);
 
+  const handleRefresh = useCallback(() => {
+    fetchClients();
+  }, [fetchClients]);
+
   useEffect(() => {
     fetchClients();
   }, [resetTriggered, filter]);
@@ -211,7 +215,7 @@ export function ClientsDashboard() {
         </div>
       </section>
       <div className="flex-column width-max f-1 align-items-center min-height-0 mb-2">
-      <ListHeader attributes={CLIENTS_LIST_ATTRIBUTES} />
+      <ListHeader attributes={CLIENTS_LIST_ATTRIBUTES} customWidth="width-93"/>
       <ClientsList
         attributes={CLIENTS_LIST_ATTRIBUTES}
         items={clients}
@@ -234,6 +238,7 @@ export function ClientsDashboard() {
         <ClientPopup
           onClose={() => setSelectedClientId(null)}
           onReset={handleReset}
+          onNotesSaved={handleRefresh}
           selectedClientId={selectedClientId}
           className={"client-popup"}
         />

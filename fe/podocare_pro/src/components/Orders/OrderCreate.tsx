@@ -17,7 +17,7 @@ export function OrderCreate () {
   },[]);
 
   return (
-    <div className="orders-container mt-4 width-max flex space-around relative mb-2">
+    <div className="orders-container mt-2 width-max flex space-around relative mb-1">
       <OrderCreator
         setSelectedSupplier={setSelectedSupplier}
         selectedOrderProduct={selectedOrderProduct}
