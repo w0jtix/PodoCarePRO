@@ -44,6 +44,11 @@ export const sendApiRequest = async <T>(
   } catch (error: any) {
     console.error("API error:", error);
 
+    if (error.response?.status === 401 && AuthService.getCurrentUser()) {
+      AuthService.logout();
+      return undefined as unknown as T;
+    }
+
     // If there's a backend response, preserve the original axios error
     if (error.response?.data) {
       throw error;

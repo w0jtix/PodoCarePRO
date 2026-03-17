@@ -1,10 +1,12 @@
 import { useLocation, Navigate, Outlet } from "react-router-dom";
 import AuthService from "../services/AuthService";
 import { FunctionComponent } from "react";
+import { useInactivityTimer } from "../hooks/useInactivityTimer";
 
 
 
 function RequireAuth({ children }: { children: JSX.Element }) {
+    useInactivityTimer();
     const location = useLocation();
     const user = AuthService.getCurrentUser();
     if(!user || !user.token) {

@@ -147,11 +147,11 @@ export function ClientsList({
         return <span className="qv-span clients">{item.firstName + " " + item.lastName}</span>;
 
       case "Wizyty":
-        return <span className="qv-span clients">{item.visitsCount}</span>;
+        return <span className="qv-span clients ml-1">{item.visitsCount}</span>;
 
       case "Opcje":
         return (
-          <div className="item-list-single-item-action-buttons flex">
+          <div className="item-list-single-item-action-buttons flex ml-1">
             <ActionButton
               src="src/assets/edit.svg"
               alt="Edytuj Klienta"

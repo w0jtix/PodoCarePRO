@@ -174,7 +174,7 @@ export function VisitList({
 
       case "Wartość":
         return (
-          <span className="order-values-lower-font-size ml-05">
+          <span className="order-values-lower-font-size ml-1">
             {visit.totalValue}zł
           </span>
         );
@@ -182,7 +182,7 @@ export function VisitList({
       case "Status":
         return (
           <span
-            className={`order-values-lower-font-size ${visit.paymentStatus.toLocaleLowerCase()} ml-05`}
+            className={`order-values-lower-font-size ${visit.paymentStatus.toLocaleLowerCase()} ml-1`}
           >
             {translatePaymentStatus(visit.paymentStatus)}
           </span>
@@ -191,7 +191,7 @@ export function VisitList({
       case "Opcje":
         return (
           
-            <div className="item-list-single-item-action-buttons flex ml-05">
+            <div className="item-list-single-item-action-buttons flex ml-1">
             <ActionButton
               src={"src/assets/preview.svg"}
               alt={"Podgląd Wizyty"}

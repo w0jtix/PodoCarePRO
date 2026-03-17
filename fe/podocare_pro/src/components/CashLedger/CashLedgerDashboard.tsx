@@ -39,12 +39,7 @@ export function CashLedgerDashboard() {
   const [hasTodayLedger, setHasTodayLedger] = useState<boolean | null>(null);
   const [isOpeningFormVisible, setIsOpeningFormVisible] =
     useState<boolean>(false);
-  const [showCostInput, setShowCostInput] = useState<boolean>(false);
-  const [showClosingCostInput, setShowClosingCostInput] =
-    useState<boolean>(false);
   const [showFillInfo, setShowFillInfo] = useState<boolean>(false);
-  const [showCashOut, setShowCashOut] = useState<boolean>(false);
-  const [showNote, setShowNote] = useState<boolean>(false);
   const [todayCashVisits, setTodayCashVisits] = useState<Visit[]>([]);
   const totalCashIncome = useMemo(
     () =>
@@ -486,7 +481,6 @@ export function CashLedgerDashboard() {
             onClick={() => {
               if (closingDiscrepancy !== 0 && !cashLedger.note) {
                 showAlert("Rozbieżność salda wymaga notatki.", AlertType.ERROR);
-                setShowNote(true);
                 return;
               }
               setConfirmLockPopupOpen(true);
