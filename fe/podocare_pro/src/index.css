@@ -4055,6 +4055,9 @@ background-color: rgba(0, 218, 0, 0.35);
 .scoreboard-value.no-data {
   color: rgba(255, 255, 255, 0.4);
 }
+.scoreboard-value.cl {
+  font-size: var(--font-size-26);
+}
 .gauge-value-text.no-data {
   fill: rgba(255, 255, 255, 0.4);
 }

@@ -353,7 +353,7 @@ export function CashLedgerDashboard() {
                 />
                 <span className="scoreboard-label cl">Otwarcie:</span>
               </div>
-              <span className={`scoreboard-value yellow`}>
+              <span className={`scoreboard-value cl yellow`}>
                 {(cashLedger.openingAmount + cashLedger.deposit).toFixed(2)} zł
               </span>
             </div>
@@ -369,7 +369,7 @@ export function CashLedgerDashboard() {
                 />
                 <span className="scoreboard-label cl">W tym depozyt:</span>
               </div>
-              <span className={`scoreboard-value`}>
+              <span className={`scoreboard-value cl`}>
                 {cashLedger.deposit.toFixed(2)} zł
               </span>
             </div>
@@ -385,7 +385,7 @@ export function CashLedgerDashboard() {
                 />
                 <span className="scoreboard-label cl">Wizyty:</span>
               </div>
-              <span className={`scoreboard-value green`}>
+              <span className={`scoreboard-value cl green`}>
                 +{totalCashIncome.toFixed(2)} zł
               </span>
             </div>
@@ -401,7 +401,7 @@ export function CashLedgerDashboard() {
                 />
                 <span className="scoreboard-label cl">Wypłata:</span>
               </div>
-              <span className={`scoreboard-value red`}>
+              <span className={`scoreboard-value cl red`}>
                 -{cashLedger.cashOutAmount.toFixed(2)} zł
               </span>
             </div>
@@ -417,8 +417,8 @@ export function CashLedgerDashboard() {
                 />
                 <span className="scoreboard-label cl">Saldo końcowe:</span>
               </div>
-              <span className={`scoreboard-value blue`}>
-                {(cashLedger.closingAmount ?? 0).toFixed(2)} zł
+              <span className={`scoreboard-value cl blue`}>
+                {(cashLedger.isClosed ? (cashLedger.closingAmount ?? 0) : calculatedClosingAmount).toFixed(2)} zł
               </span>
             </div>
           </div>
