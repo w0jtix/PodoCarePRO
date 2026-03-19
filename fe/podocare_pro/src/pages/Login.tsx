@@ -30,7 +30,7 @@ const Login = () => {
                 navigate("/");
             }
         })
-        .catch((error) => {
+        .catch(() => {
             showAlert("Wystąpił błąd podczas logowania", AlertType.ERROR);          
             setPassword("");
         })

@@ -1,4 +1,6 @@
-import React, { useEffect, useCallback } from "react";
+import { useEffect, useCallback } from "react";
+import closeIcon from "../../assets/close.svg";
+import warningIcon from "../../assets/warning.svg";
 import { useState } from "react";
 import ReactDOM from "react-dom";
 import OrderCreator from "../Orders/OrderCreator";
@@ -75,7 +77,7 @@ export function EditOrderPopup({
           <h2 className="popup-title">{`Edytuj Zamówienie #${fetchedOrder?.orderNumber}`}</h2>
           <button className="popup-close-button  transparent border-none flex align-items-center justify-center absolute pointer" onClick={onClose}>
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -92,7 +94,7 @@ export function EditOrderPopup({
         {conflictProducts.size > 0 && (
           <div className="popup-warning-explanation-display flex justify-center">
             <img
-              src="src/assets/warning.svg"
+              src={warningIcon}
               alt="Warning"
               className="order-item-warning-icon"
             />

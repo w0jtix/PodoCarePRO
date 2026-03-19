@@ -3,6 +3,7 @@ import { UsageRecordItem, UsageReason } from "../../models/usage-record";
 import { useCallback, useEffect, useState } from "react";
 import EmployeeService from "../../services/EmployeeService";
 import DropdownSelect from "../DropdownSelect";
+import cancelIcon from "../../assets/cancel.svg";
 import { Product } from "../../models/product";
 import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
@@ -36,7 +37,6 @@ export function UsageRecordForm({
   setUsageRecordItems,
   sharedFields,
   setSharedFields,
-  hasSupplyError,
   setHasSupplyError,
   className = "",
 }: UsageRecordFormProps) {
@@ -299,7 +299,7 @@ export function UsageRecordForm({
                   </span>
                   </div>
                   <ActionButton
-                    src="src/assets/cancel.svg"
+                    src={cancelIcon}
                     alt="Usuń Produkt"
                     iconTitle={"Usuń Produkt"}
                     text="Usuń"

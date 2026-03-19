@@ -1,4 +1,7 @@
 import React, { useCallback } from "react";
+import defaultArrowIcon from "../assets/arrow_down.svg";
+import defaultTickIcon from "../assets/tick.svg";
+import defaultAddNewIcon from "../assets/addNew.svg";
 import { useState, useRef, useEffect } from "react";
 
 /* single select -> item
@@ -8,12 +11,6 @@ export interface DropdownItem {
   name?: string;
   [key: string]: any;
 }
-
-/* interface NewItemComponentProps {
-  onClose: () => void;
-  onAdd?: (item: any) => void;
-  [key: string]: any;
-} */
 
 export interface DropdownSelectProps<T extends DropdownItem> {
   items: T[];
@@ -64,10 +61,9 @@ export function DropdownSelect<T extends DropdownItem>({
   className = "",
   searchPlaceholder = "Szukaj...",
   emptyMessage = "Nie znaleziono 🙄",
-  arrowIcon = "src/assets/arrow_down.svg",
-  tickIcon = "src/assets/tick.svg",
-  addNewIcon = "src/assets/addNew.svg",
-  maxHeight = 300,
+  arrowIcon = defaultArrowIcon,
+  tickIcon = defaultTickIcon,
+  addNewIcon = defaultAddNewIcon,
 }: DropdownSelectProps<T>) {
   const [searchValue, setSearchValue] = useState<string>("");
   const [isDropdownVisible, setIsDropdownVisible] = useState<boolean>(false);

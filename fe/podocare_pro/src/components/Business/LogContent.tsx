@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { AuditAction, AuditLog } from "../../models/audit_log";
 
 export interface LogContentProps {

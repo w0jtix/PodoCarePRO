@@ -4,6 +4,7 @@ import { ListAttribute} from "../../constants/list-headers";
 import { Discount } from "../../models/visit";
 import { CashLedger } from "../../models/cash_ledger";
 import { formatDate } from "../../utils/dateUtils";
+import editIcon from "../../assets/edit.svg";
 
 export interface CashLedgersListProps {
   attributes: ListAttribute[];
@@ -22,9 +23,7 @@ export function CashLedgersList({
   setSelectedCashLedger,
   onScroll,
   isLoading = false,
-  hasMore = true,
   className = "",
-  onClick,
 }: CashLedgersListProps) {
 
   const handleOnClickEdit = useCallback(
@@ -39,7 +38,6 @@ export function CashLedgersList({
   const renderAttributeContent = (
     attr: ListAttribute,
     item: CashLedger,
-    index: number,
   ): React.ReactNode => {
     switch (attr.name) {
 
@@ -108,7 +106,7 @@ export function CashLedgersList({
         return (
 <div className="item-list-single-item-action-buttons flex ml-15">
             <ActionButton
-              src="src/assets/edit.svg"
+              src={editIcon}
               alt="Edytuj Kasetkę"
               iconTitle={"Edytuj Kasetkę"}
               text="Edytuj"
@@ -126,7 +124,7 @@ export function CashLedgersList({
       } ${className} `}
       onScroll={onScroll}
     >
-      {items.map((item, index) => (
+      {items.map((item) => (
         <div key={item.id} className={`product-wrapper width-max ${className}`}>
           <div
             className={`item align-items-center flex ${className} `}
@@ -140,7 +138,7 @@ export function CashLedgersList({
                   justifyContent: attr.justify,
                 }}
               >
-                {renderAttributeContent(attr, item, index)}
+                {renderAttributeContent(attr, item)}
               </div>
             ))}
           </div>

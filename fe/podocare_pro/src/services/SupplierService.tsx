@@ -1,5 +1,3 @@
-import axios from "axios";
-import { AxiosResponse } from "axios";
 import { Supplier, NewSupplier } from "../models/supplier";
 import { sendApiRequest } from "../components/send-api-request/SendApiRequest";
 

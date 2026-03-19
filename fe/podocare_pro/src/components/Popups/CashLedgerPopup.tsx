@@ -3,6 +3,9 @@ import ActionButton from "../ActionButton";
 import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
 import { CashLedger } from "../../models/cash_ledger";
+import closeIcon from "../../assets/close.svg";
+import cancelIcon from "../../assets/cancel.svg";
+import tickIcon from "../../assets/tick.svg";
 import CashLedgerForm from "../CashLedger/CashLedgerForm";
 import { Action } from "../../models/action";
 
@@ -26,9 +29,6 @@ export function CashLedgerPopup ({
   action = Action.DISPLAY
 }: CashLedgerPopupProps) {
     const { showAlert } = useAlert();
-
-    
-
   
   const portalRoot = document.getElementById("portal-root");
   if (!portalRoot) {
@@ -47,7 +47,7 @@ export function CashLedgerPopup ({
           <h2 className="popup-title">{action === Action.EDIT ? "Edytuj Kasetkę" : "Sprawdź zgodność"}</h2>
           <button className="popup-close-button  transparent border-none flex align-items-center justify-center absolute pointer" onClick={onClose}>
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -68,7 +68,7 @@ export function CashLedgerPopup ({
             <section className="cl-f-btns footer-popup-action-buttons width-60 flex space-between mt-05 mb-05">
               <div className="footer-cancel-button">
                 <ActionButton
-                  src={"src/assets/cancel.svg"}
+                  src={cancelIcon}
                   alt={"Anuluj"}
                   text={"Anuluj"}
                   onClick={onClose}
@@ -76,7 +76,7 @@ export function CashLedgerPopup ({
               </div>
               <div className="footer-confirm-button">
                 <ActionButton
-                  src={"src/assets/tick.svg"}
+                  src={tickIcon}
                   alt={"Zatwierdź"}
                   text={"Zatwierdź"}
                   onClick={handleCloseCashLedger}

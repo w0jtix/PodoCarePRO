@@ -1,7 +1,7 @@
 
 import TextInput from "../TextInput";
-import React, { useState, useEffect, useCallback } from "react";
-import { Employee, EmploymentType, NewEmployee } from "../../models/employee";
+import React, { useCallback } from "react";
+import { EmploymentType, NewEmployee } from "../../models/employee";
 import { Action } from "../../models/action";
 import { Slider } from "../Slider";
 import DropdownSelect from "../DropdownSelect";
@@ -29,7 +29,6 @@ export function EmployeeForm ({
   employeeDTO,
   setEmployeeDTO,
   className="",
-  action,
  }: EmployeeFormProps) {
 
 

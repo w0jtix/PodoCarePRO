@@ -4,6 +4,8 @@ import { ListAttribute} from "../../constants/list-headers";
 import { Discount } from "../../models/visit";
 import { useUser } from "../User/UserProvider";
 import { RoleType } from "../../models/login";
+import editIcon from "../../assets/edit.svg";
+import cancelIcon from "../../assets/cancel.svg";
 
 export interface DiscountsListProps {
   attributes: ListAttribute[];
@@ -20,7 +22,6 @@ export function DiscountsList({
   setEditDiscountId,
   setRemoveDiscountId,
   className = "",
-  onClick,
 }: DiscountsListProps) {
   const { user } = useUser();
 
@@ -44,7 +45,6 @@ export function DiscountsList({
   const renderAttributeContent = (
     attr: ListAttribute,
     item: Discount,
-    index: number,
   ): React.ReactNode => {
     switch (attr.name) {
 
@@ -61,7 +61,7 @@ export function DiscountsList({
         return (
 <div className="item-list-single-item-action-buttons flex">
             <ActionButton
-              src="src/assets/edit.svg"
+              src={editIcon}
               alt="Edytuj Rabat"
               iconTitle={"Edytuj Rabat"}
               text="Edytuj"
@@ -70,7 +70,7 @@ export function DiscountsList({
             />
             {user?.roles.includes(RoleType.ROLE_ADMIN) && (
               <ActionButton
-              src="src/assets/cancel.svg"
+              src={cancelIcon}
               alt="Usuń Rabat"
               iconTitle={"Usuń Rabat"}
               text="Usuń"
@@ -89,7 +89,7 @@ export function DiscountsList({
       } ${className} `}
       
     >
-      {items.map((item, index) => (
+      {items.map((item) => (
         <div key={item.id} className={`product-wrapper width-max ${className}`}>
           <div
             className={`item align-items-center flex ${className} `}
@@ -103,7 +103,7 @@ export function DiscountsList({
                   justifyContent: attr.justify,
                 }}
               >
-                {renderAttributeContent(attr, item, index)}
+                {renderAttributeContent(attr, item)}
               </div>
             ))}
           </div>

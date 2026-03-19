@@ -1,6 +1,8 @@
 import ReactDOM from "react-dom";
 import ActionButton from "../ActionButton";
 import { useCallback, useState } from "react";
+import closeIcon from "../../assets/close.svg";
+import tickIcon from "../../assets/tick.svg";
 import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
 import { NewUsageRecord, UsageRecordItem } from "../../models/usage-record";
@@ -78,7 +80,7 @@ export function UsageRecordPopup({
             onClick={onClose}
           >
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -95,7 +97,7 @@ export function UsageRecordPopup({
           />
         </section>
         <ActionButton
-          src={"src/assets/tick.svg"}
+          src={tickIcon}
           alt={"Zapisz"}
           text={"Zapisz"}
           onClick={handleCreateUsageRecord}

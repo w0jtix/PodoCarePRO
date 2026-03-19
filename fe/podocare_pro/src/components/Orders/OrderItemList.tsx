@@ -14,6 +14,8 @@ import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
 import { NewOrderProduct } from "../../models/order-product";
 import { ORDER_ITEM_WITH_BRAND_LIST_ATTRIBUTES } from "../../constants/list-headers";
+import cancelIcon from "../../assets/cancel.svg";
+import warningIcon from "../../assets/warning.svg";
 
 export interface OrderItemListProps {
   attributes: ListAttribute[];
@@ -295,7 +297,7 @@ export function OrderItemList({
       case "":
         return (
           <ActionButton
-            src="src/assets/cancel.svg"
+            src={cancelIcon}
             alt="Usuń Produkt"
             iconTitle={"Usuń Produkt"}
             text="Usuń"
@@ -319,7 +321,7 @@ export function OrderItemList({
             />
             {item.product?.id && productWarnings.get(item.product.id) && (
               <img
-                src="src/assets/warning.svg"
+                src={warningIcon}
                 alt="Warning"
                 className="order-item-warning-icon"
               />

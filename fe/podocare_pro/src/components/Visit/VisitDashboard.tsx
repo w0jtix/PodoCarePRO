@@ -1,4 +1,13 @@
 import { useAlert } from "../Alert/AlertProvider";
+import addNewIcon from "../../assets/addNew.svg";
+import resetIcon from "../../assets/reset.svg";
+import filterIcon from "../../assets/filter_icon.svg";
+import absenceIcon from "../../assets/absence.svg";
+import timeIcon from "../../assets/time.svg";
+import boostIcon from "../../assets/boost.svg";
+import vipIcon from "../../assets/vip.svg";
+import clientDiscountIcon from "../../assets/client_discount.svg";
+import saleIcon from "../../assets/sale.svg";
 import { AlertType } from "../../models/alert";
 import ActionButton from "../ActionButton";
 import { useState, useEffect, useCallback, useMemo } from "react";
@@ -11,7 +20,6 @@ import ClientService from "../../services/ClientService";
 import { Client } from "../../models/client";
 import VisitList from "./VisitList";
 import DropdownSelect from "../DropdownSelect";
-import DateInput from "../DateInput";
 import { Employee } from "../../models/employee";
 import EmployeeService from "../../services/EmployeeService";
 import CostInput from "../CostInput";
@@ -78,7 +86,7 @@ export function VisitDashboard() {
         setHasMore(!data.last);
         setPage(pageNum);
       })
-      .catch((error) => {
+      .catch(() => {
         if (!append) setVisits([]);
         setHasMore(false);
       })
@@ -94,7 +102,7 @@ export function VisitDashboard() {
         );
         setClients(sortedClients);
       })
-      .catch((error) => {
+      .catch(() => {
         setClients([]);
       });
   };
@@ -284,7 +292,7 @@ export function VisitDashboard() {
         replaceSearchbar={true}
       >
         <ActionButton
-          src={"src/assets/addNew.svg"}
+          src={addNewIcon}
           alt={"Nowa Wizyta"}
           text={"Nowa Wizyta"}
           onClick={() => setIsAddNewVisitPopupOpen(true)}
@@ -368,7 +376,7 @@ export function VisitDashboard() {
           </div>
         </div>
         <ActionButton
-          src={"src/assets/reset.svg"}
+          src={resetIcon}
           alt={"Reset"}
           iconTitle={"Resetuj filtry"}
           text={"Reset"}
@@ -379,7 +387,7 @@ export function VisitDashboard() {
       </section>
       <section className="visit-filters width-90 flex space-between mb-1">
         <ActionButton
-          src={"src/assets/filter_icon.svg"}
+          src={filterIcon}
           alt={"Status"}
           text={`Status: ${
             filter.paymentStatus === null
@@ -403,7 +411,7 @@ export function VisitDashboard() {
         />
 
         <ActionButton
-          src={"src/assets/absence.svg"}
+          src={absenceIcon}
           alt={"Nieobecnosć"}
           text={"Nieobecnosć"}
           onClick={() =>
@@ -415,7 +423,7 @@ export function VisitDashboard() {
           className={`${filter.absence ? "active-r" : ""}`}
         />
         <ActionButton
-          src={"src/assets/time.svg"}
+          src={timeIcon}
           alt={"Spóźnienie"}
           text={"Spóźnienie"}
           onClick={() =>
@@ -427,7 +435,7 @@ export function VisitDashboard() {
           className={`${filter.delayed ? "active-y" : ""}`}
         />
         <ActionButton
-          src={"src/assets/boost.svg"}
+          src={boostIcon}
           alt={"Boost"}
           text={"Boost"}
           onClick={() =>
@@ -439,7 +447,7 @@ export function VisitDashboard() {
           className={`${filter.isBoost ? "active-p" : ""}`}
         />
         <ActionButton
-          src={"src/assets/vip.svg"}
+          src={vipIcon}
           alt={"Wizyta VIP"}
           text={"Wizyta VIP"}
           onClick={() =>
@@ -451,7 +459,7 @@ export function VisitDashboard() {
           className={`${filter.isVip ? "active-b" : ""}`}
         />
         <ActionButton
-          src={"src/assets/client_discount.svg"}
+          src={clientDiscountIcon}
           alt={"Ze Zniżką"}
           text={"Ze Zniżką"}
           onClick={() =>
@@ -463,7 +471,7 @@ export function VisitDashboard() {
           className={`${filter.hasDiscount ? "active-g" : ""}`}
         />
         <ActionButton
-          src={"src/assets/sale.svg"}
+          src={saleIcon}
           alt={"Sprzedaż Produktów"}
           text={"Sprzedaż Produktów"}
           onClick={() =>

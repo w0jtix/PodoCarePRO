@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import ActionButton from "../ActionButton";
 import { Client } from "../../models/client";
 import ChooseClientsPopup from "../Popups/ChooseClientsPopup";
+import klienciYellowIcon from "../../assets/klienci_yellow.svg";
+import manageIcon from "../../assets/manage.svg";
 
 export interface DisplayClientsListProps {
   className?: string;
@@ -36,12 +38,12 @@ export function DisplayClientsList({ className = "", clients, onClientsChange }:
     <div className="clients-container flex-column width-max mt-1">
       <div className="addons-list-header flex space-between g-2 align-items-center">
         <div className="addons-title-count flex align-items-center g-1">
-          <img src="src/assets/klienci_yellow.svg" alt="Klienci" className="klienci-icon"></img>
+          <img src={klienciYellowIcon} alt="Klienci" className="klienci-icon"></img>
           <span className="addons-title">Klienci:</span>
           <span className="addons-title">{clients.length}</span>
         </div>
         <ActionButton
-          src={"src/assets/manage.svg"}
+          src={manageIcon}
           alt={"Zarządzaj"}
           text={"Zarządzaj"}
           onClick={() => setIsManageClientsPopupOpen(true)}

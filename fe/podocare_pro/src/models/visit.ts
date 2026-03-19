@@ -1,10 +1,14 @@
 import { DebtRedemption, NewDebtRedemption } from "./debt";
-import { Client, NewClient } from "./client";
+import { Client } from "./client";
 import { Employee } from "./employee";
 import { Sale, NewSale } from "./sale";
 import { BaseService, ServiceVariant } from "./service";
 import { Payment, PaymentStatus, NewPayment } from "./payment";
 import { DiscountSettings } from "./app_settings";
+import clientDiscountIcon from "../assets/client_discount.svg";
+import booksyIcon from "../assets/booksy.png";
+import googleIcon from "../assets/google.png";
+import activeGoogleReviewIcon from "../assets/active_google_review.svg";
 
 export interface Discount {
     id: number;
@@ -47,16 +51,16 @@ export const discountLabelFor = (type: VisitDiscountType, visit: Visit | NewVisi
         return type;
     }
   };
-  export const discountSrcFor = (type: VisitDiscountType) => {
+  export const discountSrcFor = (type: VisitDiscountType): string => {
     switch (type) {
       case VisitDiscountType.CLIENT_DISCOUNT:
-        return "src/assets/client_discount.svg";
+        return clientDiscountIcon;
       case VisitDiscountType.HAPPY_HOURS:
-        return "src/assets/booksy.png";
+        return booksyIcon;
       case VisitDiscountType.GOOGLE_REVIEW:
-        return "src/assets/google.png";
+        return googleIcon;
       case VisitDiscountType.CUSTOM:
-        return "src/assets/active_google_review.svg";
+        return activeGoogleReviewIcon;
       default:
         return type;
     }

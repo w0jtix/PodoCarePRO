@@ -11,6 +11,8 @@ import { calculateNetPrice } from "../../utils/priceUtils";
 import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
 import { VatRate } from "../../models/vatrate";
+import warningIcon from "../../assets/warning.svg";
+import shippingIcon from "../../assets/shipping.svg";
 
 export interface HandyOrderProductListProps {
   attributes: ListAttribute[];
@@ -103,7 +105,6 @@ export function HandyOrderProductList({
   const renderAttributeContent = (
     attr: ListAttribute,
     orderProduct: OrderProduct,
-    index: number
   ): React.ReactNode => {
     const warning = hasWarning(orderProduct.id);
     const warningClass = warning ? "warning-visible" : "";
@@ -146,7 +147,7 @@ export function HandyOrderProductList({
             </span>
             {warning && (
               <img
-                src="src/assets/warning.svg"
+                src={warningIcon}
                 alt="Warning"
                 className="order-item-warning-icon"
               />
@@ -194,7 +195,7 @@ export function HandyOrderProductList({
       case "":
         return (
           <img
-            src="src/assets/shipping.svg"
+            src={shippingIcon}
             alt="Shipping"
             className="order-history-order-details-shipping-icon"
           />
@@ -243,7 +244,7 @@ export function HandyOrderProductList({
                   justifyContent: attr.justify,
                 }}
               >
-                {renderAttributeContent(attr, orderProduct, index)}
+                {renderAttributeContent(attr, orderProduct)}
               </div>
             ))}
           </div>

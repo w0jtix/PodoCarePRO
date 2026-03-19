@@ -1,6 +1,7 @@
 import ReactDOM from "react-dom";
 import { BaseService } from "../../models/service";
-import { useState, useCallback, useEffect } from "react";
+import closeIcon from "../../assets/close.svg";
+import { useState, useEffect } from "react";
 import VariantsList from "../Services/VariantsList";
 import { SERVICE_VARIANTS_ATTRIBUTES } from "../../constants/list-headers";
 import { ServiceVariant } from "../../models/service";
@@ -62,7 +63,7 @@ export function ServiceVariantsPopup({
             onClick={onClose}
           >
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />

@@ -5,6 +5,9 @@ import { Review, ReviewSource } from "../../models/review";
 import VisitPopup from "../Popups/VisitPopup";
 import { useUser } from "../User/UserProvider";
 import { RoleType } from "../../models/login";
+import removedIcon from "../../assets/removed.svg";
+import editIcon from "../../assets/edit.svg";
+import cancelIcon from "../../assets/cancel.svg";
 
 export interface ReviewsListProps {
   attributes: ListAttribute[];
@@ -21,7 +24,6 @@ export function ReviewsList({
   setEditReviewId,
   setRemoveReviewId,
   className = "",
-  onClick,
 }: ReviewsListProps) {
   const [selectedReviewIdForVisit, setSelectedReviewIdForVisit] = useState<string | number | null>(null);
   const { user } = useUser();
@@ -45,7 +47,6 @@ export function ReviewsList({
   const renderAttributeContent = (
     attr: ListAttribute,
     item: Review,
-    index: number
   ): React.ReactNode => {
     switch (attr.name) {
       case "Źródło":
@@ -80,7 +81,7 @@ export function ReviewsList({
           <div className={`flex g-5px ${item.client.isDeleted ? "pointer" : ""}`} title={`${item.client.isDeleted ? "Klient usunięty" : ""}`}>
             
           <span className={`text-align-center ${item.client.isDeleted ? "client-removed" : ""}`}>{item.client.firstName + " " + item.client.lastName}</span>
-          {item.client.isDeleted && <img src ="src/assets/removed.svg" alt="Client Removed" className="checkimg align-self-center"/>}
+          {item.client.isDeleted && <img src={removedIcon} alt="Client Removed" className="checkimg align-self-center"/>}
         </div>
       );
 
@@ -93,7 +94,7 @@ export function ReviewsList({
             {item.isUsed === false && (item.createdBy === user?.id || user?.roles.includes(RoleType.ROLE_ADMIN)) && (
               <>
             <ActionButton
-              src="src/assets/edit.svg"
+              src={editIcon}
               alt="Edytuj Opinię"
               iconTitle={"Edytuj Opinię"}
               text="Edytuj"
@@ -101,7 +102,7 @@ export function ReviewsList({
               disableText={true}
             />
               <ActionButton
-                src="src/assets/cancel.svg"
+                src={cancelIcon}
                 alt="Usuń Opinię"
                 iconTitle={"Usuń Opinię"}
                 text="Usuń"
@@ -121,7 +122,7 @@ export function ReviewsList({
           items.length === 0 ? "border-none" : ""
         } ${className} `}
       >
-        {items.map((item, index) => (
+        {items.map((item) => (
           <div key={item.id} className={`product-wrapper width-max ${className}`}>
             <div className={`item align-items-center flex ${className} `}>
               {attributes.map((attr) => (
@@ -133,7 +134,7 @@ export function ReviewsList({
                     justifyContent: attr.justify,
                   }}
                 >
-                  {renderAttributeContent(attr, item, index)}
+                  {renderAttributeContent(attr, item)}
                 </div>
               ))}
             </div>

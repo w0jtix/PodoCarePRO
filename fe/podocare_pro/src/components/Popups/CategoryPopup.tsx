@@ -2,6 +2,9 @@ import ReactDOM from "react-dom";
 import ActionButton from "../ActionButton";
 import { useState } from "react";
 import CategoryForm from "../CategoryForm";
+import closeIcon from "../../assets/close.svg";
+import cancelIcon from "../../assets/cancel.svg";
+import tickIcon from "../../assets/tick.svg";
 import { BaseServiceCategory, NewBaseServiceCategory, NewProductCategory, ProductCategory } from "../../models/categories";
 import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
@@ -47,7 +50,7 @@ export function CategoryPopup({
           </h2>
           <button className="popup-close-button  transparent border-none flex align-items-center justify-center absolute pointer" onClick={onClose}>
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -62,7 +65,7 @@ export function CategoryPopup({
         <section className="footer-popup-action-buttons width-60 flex space-between mb-05">
           <div className="footer-cancel-button">
             <ActionButton
-              src={"src/assets/cancel.svg"}
+              src={cancelIcon}
               alt={"Anuluj"}
               text={"Anuluj"}
               onClick={onClose}
@@ -70,7 +73,7 @@ export function CategoryPopup({
           </div>
           <div className="footer-confirm-button">
             <ActionButton
-              src={"src/assets/tick.svg"}
+              src={tickIcon}
               alt={"Zatwierdź"}
               text={"Zatwierdź"}
               onClick={() => categoryDTO && onConfirm(categoryDTO)}

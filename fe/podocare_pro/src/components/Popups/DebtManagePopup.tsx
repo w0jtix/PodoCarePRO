@@ -1,5 +1,8 @@
 import { useEffect, useState, useCallback } from "react";
 import { ClientDebt, DebtFilterDTO } from "../../models/debt";
+import closeIcon from "../../assets/close.svg";
+import filterIcon from "../../assets/filter_icon.svg";
+import addNewIcon from "../../assets/addNew.svg";
 import { useAlert } from "../Alert/AlertProvider";
 import ActionButton from "../ActionButton";
 import ReactDOM from "react-dom";
@@ -114,7 +117,7 @@ export function DebtManagePopup({
             onClick={onClose}
           >
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -122,7 +125,7 @@ export function DebtManagePopup({
         </section>
         <section className="flex width-90 space-between mb-1 g-2">
           <ActionButton
-            src={"src/assets/filter_icon.svg"}
+            src={filterIcon}
             alt={"Status"}
             text={`Status: ${filter.paymentStatus === null ? "wszystkie" : filter.paymentStatus === PaymentStatus.PAID ? "opłacone" : "nieopłacone"}`}
             onClick={toggleStatus}
@@ -132,7 +135,7 @@ export function DebtManagePopup({
                       onKeywordChange={handleKeywordChange}
                     /> 
           <ActionButton
-            src={"src/assets/addNew.svg"}
+            src={addNewIcon}
             alt={"Nowy Dług"}
             text={"Nowy Dług"}
             onClick={() => setIsAddNewDebtPopupOpen(true)}

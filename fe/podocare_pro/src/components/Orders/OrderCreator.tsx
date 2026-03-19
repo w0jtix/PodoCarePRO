@@ -1,19 +1,19 @@
 import React from "react";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import OrderProductList from "./OrderProductList";
 import DateInput from "../DateInput";
 import OrderNewProductsPopup from "../Popups/OrderNewProductsPopup";
 import ActionButton from "../ActionButton";
 import OrderService from "../../services/OrderService";
 import SupplierService from "../../services/SupplierService";
-import { Alert, AlertType } from "../../models/alert";
+import { AlertType } from "../../models/alert";
 import CostInput from "../CostInput";
 import DropdownSelect from "../DropdownSelect";
 import AddSupplierPopup from "../Popups/AddSupplierPopup";
 import { NewSupplier, Supplier } from "../../models/supplier";
 import { NewOrderProduct, OrderProduct } from "../../models/order-product";
 import { Order, NewOrder } from "../../models/order";
-import { VAT_NUMERIC_VALUES, VatRate } from "../../models/vatrate";
+import { VatRate } from "../../models/vatrate";
 import { Action } from "../../models/action";
 import {
   validateOrderForm,
@@ -21,6 +21,8 @@ import {
 } from "../../utils/validators";
 import { extractSupplierErrorMessage } from "../../utils/errorHandler";
 import { useAlert } from "../Alert/AlertProvider";
+import addNewIcon from "../../assets/addNew.svg";
+import tickIcon from "../../assets/tick.svg";
 
 export interface OrderCreatorProps {
   setSelectedSupplier?: (supplier: Supplier | null) => void;
@@ -312,7 +314,7 @@ export function OrderCreator({
           />
 
           <ActionButton
-            src={"src/assets/addNew.svg"}
+            src={addNewIcon}
             alt={"Dodaj Produkt"}
             text={"Dodaj produkt"}
             onClick={() => handleAddNewProduct(null)}
@@ -353,7 +355,7 @@ export function OrderCreator({
           className={`order-confirm-button flex align-self-center justify-self-end ${action.toString().toLowerCase()}`}
         >
           <ActionButton
-            src={"src/assets/tick.svg"}
+            src={tickIcon}
             alt={"Zapisz"}
             text={"Zapisz"}
             onClick={() => handleValidateOrder(orderDTO)}

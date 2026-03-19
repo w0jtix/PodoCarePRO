@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
+import closeIcon from "../../assets/close.svg";
 import { useAlert } from "../Alert/AlertProvider";
 import ReactDOM from "react-dom";
 import ListHeader from "../ListHeader";
@@ -120,7 +121,7 @@ export function CashLedgerManage({
           return null;
         }
     CashLedgerService.updateCashLedger(selectedCashLedger.id, selectedCashLedger)
-    .then((data) => {
+    .then(() => {
         showAlert("Pomyślnie zaktualizowano Kasetkę!", AlertType.SUCCESS);
         setSelectedCashLedger(null);
         setFilter({
@@ -171,7 +172,7 @@ export function CashLedgerManage({
             onClick={onClose}
           >
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />

@@ -11,9 +11,12 @@ import ActionButton from "../ActionButton";
 import { useUser } from "../User/UserProvider";
 import { formatDate } from "../../utils/dateUtils";
 import UserService from "../../services/UserService";
-import { useAlert } from "../Alert/AlertProvider";
-import { AlertType } from "../../models/alert";
 import { RoleType } from "../../models/login";
+import redflagIcon from "../../assets/redflag.svg";
+import boostIcon from "../../assets/boost.svg";
+import termsIcon from "../../assets/terms.svg";
+import addNewIcon from "../../assets/addNew.svg";
+import closeIcon from "../../assets/close.svg";
 
 export interface ClientFormProps {
   clientDTO: NewClient | Client;
@@ -39,7 +42,6 @@ export function ClientForm({
   setExistingClientNotesIdsToRemove
 }: ClientFormProps) {
   const { user } = useUser();
-  const { showAlert } = useAlert();
   const [employeeUsersMap, setEmployeeUsersMap] = useState<Map<number, any>>(
     new Map()
   );
@@ -148,7 +150,7 @@ export function ClientForm({
     >
       <section className={`form-row flex width-max align-items-center ${action === Action.CREATE ? "space-between" : "space-around"} mb-05`}>   
         <ActionButton
-            src={"src/assets/redflag.svg"}
+            src={redflagIcon}
             alt={"Red Flag"}
             text={`Red Flag`}
             iconTitle={"Klient kontrowersyjny"}
@@ -158,7 +160,7 @@ export function ClientForm({
         
       {action === Action.CREATE && (
           <ActionButton
-            src={"src/assets/boost.svg"}
+            src={boostIcon}
             alt={"Boost"}
             text={`Klient z Boosta`}
             iconTitle={"Klient pozyskany przez Boost"}
@@ -168,7 +170,7 @@ export function ClientForm({
       )}       
         
           <ActionButton
-            src={"src/assets/terms.svg"}
+            src={termsIcon}
             alt={"Regulamin"}
             text={`Regulamin ${clientDTO.signedRegulations ? " podpisany" : " niepodpisany"}`}
             iconTitle={"Klient podpisał regulamin"}
@@ -220,7 +222,7 @@ export function ClientForm({
       {action === Action.EDIT && (
         <div className="flex-column width-max min-height-0 f-1">
         <ActionButton
-            src={"src/assets/addNew.svg"}
+            src={addNewIcon}
             alt={"Dodaj notatkę"}
             text={"Dodaj notatkę"}
             onClick={addNote}
@@ -255,7 +257,7 @@ export function ClientForm({
                         prev.filter((_,i) => i !== index)
                         ))}>
                         <img
-                          src="src/assets/close.svg"
+                          src={closeIcon}
                           alt="close"
                           className="popup-close-icon note"
                         />
@@ -281,7 +283,7 @@ export function ClientForm({
           )}
           {existingClientNotes.length > 0 && (
             <div className="client-notes-list f-1 min-height-0 flex-column align-items-center width-max g-05 mt-05 mb-05">
-              {existingClientNotes.map((note, index) => {
+              {existingClientNotes.map((note) => {
                 const noteUser = employeeUsersMap.get(note.createdBy.id);
                 return (
                   <div
@@ -309,7 +311,7 @@ export function ClientForm({
                       onClick={handleExistingNotRemove(note.id)}
                       >
                         <img
-                          src="src/assets/close.svg"
+                          src={closeIcon}
                           alt="close"
                           className="popup-close-icon note"
                         />

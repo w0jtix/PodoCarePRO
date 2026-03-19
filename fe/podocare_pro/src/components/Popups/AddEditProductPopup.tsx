@@ -1,6 +1,8 @@
 import { useState, useCallback, useEffect } from "react";
 import ReactDOM from "react-dom";
 import ProductForm from "../Products/ProductForm";
+import closeIcon from "../../assets/close.svg";
+import tickIcon from "../../assets/tick.svg";
 import AllProductService from "../../services/AllProductService";
 import ActionButton from "../ActionButton";
 import BrandService from "../../services/BrandService";
@@ -135,7 +137,7 @@ export function AddEditProductPopup ({
           </h2>
           <button className="popup-close-button transparent border-none flex align-items-center justify-center absolute pointer" onClick={onClose}>
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -152,7 +154,7 @@ export function AddEditProductPopup ({
         </section>
         <div className="popup-footer-container flex-column justify-end"></div>
         <ActionButton
-          src={"src/assets/tick.svg"}
+          src={tickIcon}
           alt={"Zapisz"}
           text={"Zapisz"}
           onClick={handleProductAction}

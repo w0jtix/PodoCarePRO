@@ -1,4 +1,14 @@
-import React, { useEffect } from "react";
+import React from "react";
+import arrowDownIcon from "../../assets/arrow_down.svg";
+import boostIcon from "../../assets/boost.svg";
+import vipIcon from "../../assets/vip.svg";
+import timeIcon from "../../assets/time.svg";
+import absenceIcon from "../../assets/absence.svg";
+import debtRedemptionIcon from "../../assets/debt_redemption.svg";
+import clientDiscountIcon from "../../assets/client_discount.svg";
+import saleIcon from "../../assets/sale.svg";
+import previewIcon from "../../assets/preview.svg";
+import cancelIcon from "../../assets/cancel.svg";
 import { useState, useCallback } from "react";
 import ActionButton from "../ActionButton";
 import { ListAttribute } from "../../constants/list-headers";
@@ -28,15 +38,12 @@ export function VisitList({
   className = "",
   onScroll,
   isLoading = false,
-  hasMore = true,
   handleResetFiltersAndData,
   disableExpand = false,
 }: VisitListProps) {
   const [expandedVisitIds, setExpandedVisitIds] = useState<number[]>([]);
   const [previewVisitId, setPreviewVisitId] =
     useState<string | number | null>(null);
-  const [editVisitId, setEditVisitId] =
-    useState<number | string | null>(null);
   const [removeVisitId, setRemoveVisitId] =
     useState<number | string | null>(null);
   const { user } = useUser();
@@ -48,15 +55,6 @@ export function VisitList({
     },
     [setPreviewVisitId]
   );
-
-  /* const handleOnClickEdit = useCallback(
-    (e: React.MouseEvent, visit: Visit) => {
-      e.stopPropagation();
-      setEditVisitId(visit.id);
-    },
-    [setEditVisitId]
-  ); */
-
   const handleOnClickRemove = useCallback(
     (e: React.MouseEvent, visit: Visit) => {
       e.stopPropagation();
@@ -81,7 +79,7 @@ export function VisitList({
       case "":
         return (
           <img
-            src="src/assets/arrow_down.svg"
+            src={arrowDownIcon}
             alt="arrow down"
             className={`arrow-down ${
               expandedVisitIds.includes(visit.id) ? "rotated" : ""
@@ -115,7 +113,7 @@ export function VisitList({
           <div className="flex g-10px align-items-center">
             {visit.isBoost && (
               <img
-                src="src/assets/boost.svg"
+                src={boostIcon}
                 alt="Boost Visit"
                 title="Wizyta objęta Boost"
                 className="visit-form-icon"
@@ -123,7 +121,7 @@ export function VisitList({
             )}
             {visit.isVip && (
               <img
-                src="src/assets/vip.svg"
+                src={vipIcon}
                 alt="Vip Visit"
                 title="Wizyta VIP"
                 className="visit-form-icon"
@@ -131,7 +129,7 @@ export function VisitList({
             )}
             {visit.delayTime != null && (
               <img
-                src="src/assets/time.svg"
+                src={timeIcon}
                 alt="Delayed"
                 title="Klient spóźnił się na Wizytę"
                 className="visit-form-icon"
@@ -139,7 +137,7 @@ export function VisitList({
             )}
             {visit.absence && (
               <img
-                src="src/assets/absence.svg"
+                src={absenceIcon}
                 alt="Absence"
                 title="Nieobecność"
                 className="visit-form-icon"
@@ -147,7 +145,7 @@ export function VisitList({
             )}
             {visit.debtRedemptions.length > 0 && (
               <img
-                src="src/assets/debt_redemption.svg"
+                src={debtRedemptionIcon}
                 alt="Visit with Radeemed Debts"
                 title="Klient spłacił zadłużenie"
                 className="visit-form-icon"
@@ -155,7 +153,7 @@ export function VisitList({
             )}
             {visit.serviceDiscounts.length > 0 && (
               <img
-                src="src/assets/client_discount.svg"
+                src={clientDiscountIcon}
                 alt="Visit Discounted"
                 title="Wizyta objęta Rabatem"
                 className="visit-form-icon"
@@ -163,7 +161,7 @@ export function VisitList({
             )}
             {visit.sale != null && (
               <img
-                src="src/assets/sale.svg"
+                src={saleIcon}
                 alt="Visit with Sale"
                 title="Klient zakupił Produkty lub Voucher"
                 className="visit-form-icon"
@@ -193,7 +191,7 @@ export function VisitList({
           
             <div className="item-list-single-item-action-buttons flex ml-1">
             <ActionButton
-              src={"src/assets/preview.svg"}
+              src={previewIcon}
               alt={"Podgląd Wizyty"}
               iconTitle={"Podgląd Wizyty"}
               text={"Podgląd"}
@@ -202,7 +200,7 @@ export function VisitList({
             />
             {(visit.createdBy === user?.id || user?.roles.includes(RoleType.ROLE_ADMIN)) && (
             <ActionButton
-              src={"src/assets/cancel.svg"}
+              src={cancelIcon}
               alt={"Usuń Wizytę"}
               iconTitle={"Usuń Wizytę"}
               text={"Usuń"}
@@ -218,7 +216,7 @@ export function VisitList({
         return (
           <div className="item-list-single-item-action-buttons flex">
             <ActionButton
-              src={"src/assets/preview.svg"}
+              src={previewIcon}
               alt={"Podgląd Wizyty"}
               iconTitle={"Podgląd Wizyty"}
               text={"Podgląd"}

@@ -1,8 +1,10 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useAlert } from "../Alert/AlertProvider";
 import ReactDOM from "react-dom";
 import ListHeader from "../ListHeader";
 import { Client } from "../../models/client";
+import closeIcon from "../../assets/close.svg";
+import tickIcon from "../../assets/tick.svg";
 import { CLIENTS_DISCOUNT_LIST_ATTRIBUTES } from "../../constants/list-headers";
 import SearchBar from "../SearchBar";
 import ActionButton from "../ActionButton";
@@ -71,7 +73,7 @@ export function ChooseClientsPopup({
             onClick={onClose}
           >
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -91,7 +93,7 @@ export function ChooseClientsPopup({
             </div>
             <div className="flex width-max mt-1 align-items-center justify-center">
             <ActionButton
-                src={"src/assets/tick.svg"}
+                src={tickIcon}
                 alt={"Zapisz"}
                 text={"Zapisz"}
                 onClick={onSave}

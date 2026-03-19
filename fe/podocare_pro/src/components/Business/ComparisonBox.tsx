@@ -1,3 +1,6 @@
+import arrowDownRedIcon from "../../assets/arrow_down_red.svg";
+import arrowUpGreenIcon from "../../assets/arrow_up_green.svg";
+
 interface ComparisonBoxProps {
   label: string;
   percentage: number;
@@ -29,7 +32,7 @@ export function ComparisonBox({
         </span>
         {!isZero && (
           <img
-            src={`src/assets/arrow_${isNegative ? "down_red" : "up_green"}.svg`}
+            src={isNegative ? arrowDownRedIcon : arrowUpGreenIcon}
             alt=""
             className="comparison-icon"
           />

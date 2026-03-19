@@ -1,3 +1,4 @@
+
 import { useState, useCallback, useEffect, useMemo } from "react";
 import { useAlert } from "../Alert/AlertProvider";
 import {
@@ -28,6 +29,9 @@ import {
   YAxis,
   ReferenceLine,
 } from "recharts";
+import revenueIcon from "../../assets/revenue.svg";
+import expensesIcon from "../../assets/expenses.svg";
+import incomeIcon from "../../assets/income.svg";
 
 export function CompanyStatistics() {
   const { showAlert } = useAlert();
@@ -170,7 +174,7 @@ export function CompanyStatistics() {
           <div className="scoreboard-main f-1 align-items-center flex-column">
             <div className="scoreboard-header flex align-items-center g-5px mb-05 mr-025">
               <img
-                src="src/assets/revenue.svg"
+                src={revenueIcon}
                 alt=""
                 className="scoreboard-icon"
               />
@@ -203,7 +207,7 @@ export function CompanyStatistics() {
           <div className="scoreboard-main f-1 align-items-center flex-column">
             <div className="scoreboard-header flex align-items-center g-5px mb-05 mr-025">
               <img
-                src="src/assets/expenses.svg"
+                src={expensesIcon}
                 alt=""
                 className="scoreboard-icon"
               />
@@ -238,7 +242,7 @@ export function CompanyStatistics() {
           <div className="scoreboard-main f-1 align-items-center flex-column">
             <div className="scoreboard-header flex align-items-center g-5px mb-05 mr-025">
               <img
-                src="src/assets/income.svg"
+                src={incomeIcon}
                 alt=""
                 className="scoreboard-icon"
               />

@@ -1,6 +1,6 @@
 import { AlertType, Alert } from "../../models/alert";
 import CustomAlert from "./CustomAlert";
-import React, { createContext, useState, ReactNode, useContext } from "react";
+import React, { createContext, useState, useContext } from "react";
 
 interface AlertContextType {
     showAlert: (message: string, variant: AlertType) => void;

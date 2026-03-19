@@ -1,6 +1,5 @@
 import React, { useCallback } from "react";
 import TextInput from "./TextInput";
-import { useState, useEffect } from "react";
 import ColorPicker from "./ColorPicker";
 import CategoryButtons from "./CategoryButtons";
 import { NewProductCategory, ProductCategory, BaseServiceCategory, NewBaseServiceCategory } from "../models/categories";
@@ -13,7 +12,6 @@ export interface CategoryFormProps {
 }
 
 export function CategoryForm({
-  categoryId,
   categoryDTO,
   setCategoryDTO,
 }: CategoryFormProps) {

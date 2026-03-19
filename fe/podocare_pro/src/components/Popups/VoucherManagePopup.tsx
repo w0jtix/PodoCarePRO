@@ -3,11 +3,14 @@ import { useAlert } from "../Alert/AlertProvider";
 import ActionButton from "../ActionButton";
 import ReactDOM from "react-dom";
 import ListHeader from "../ListHeader";
+import closeIcon from "../../assets/close.svg";
+import filterIcon from "../../assets/filter_icon.svg";
+import addNewIcon from "../../assets/addNew.svg";
 import { Client } from "../../models/client";
 import RemovePopup from "./RemovePopup";
 import { AlertType } from "../../models/alert";
 import VoucherService from "../../services/VoucherService";
-import { Voucher, NewVoucher, VoucherStatus, VoucherFilterDTO } from "../../models/voucher";
+import { Voucher, VoucherStatus, VoucherFilterDTO } from "../../models/voucher";
 import { VOUCHERS_LIST_ATTRIBUTES } from "../../constants/list-headers";
 import VouchersList from "../Clients/VouchersList";
 import VoucherPopup from "./VoucherPopup";
@@ -24,7 +27,6 @@ export interface VoucherManagePopupProps {
 export function VoucherManagePopup({
   onClose,
   onReset,
-  clients,
   className = "",
 }: VoucherManagePopupProps) {
   const [isAddNewVoucherPopupOpen, setIsAddNewVoucherPopupOpen] =
@@ -119,7 +121,7 @@ export function VoucherManagePopup({
             onClick={onClose}
           >
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -127,7 +129,7 @@ export function VoucherManagePopup({
         </section>
         <section className="flex width-90 space-between mb-1 g-2">
           <ActionButton
-            src={"src/assets/filter_icon.svg"}
+            src={filterIcon}
             alt={"Status"}
             text={`Status: ${
               filter.status === null
@@ -153,7 +155,7 @@ export function VoucherManagePopup({
             onKeywordChange={handleKeywordChange}
           />  
           <ActionButton
-            src={"src/assets/addNew.svg"}
+            src={addNewIcon}
             alt={"Nowy Voucher"}
             text={"Nowy Voucher"}
             onClick={() => setIsAddNewVoucherPopupOpen(true)}

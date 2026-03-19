@@ -1,4 +1,8 @@
 import React from "react";
+import arrowDownIcon from "../../assets/arrow_down.svg";
+import tickIcon from "../../assets/tick.svg";
+import editIcon from "../../assets/edit.svg";
+import cancelIcon from "../../assets/cancel.svg";
 import { useState, useCallback } from "react";
 import ActionButton from "../ActionButton";
 import RemovePopup from "../Popups/RemovePopup";
@@ -30,7 +34,6 @@ export function InventoryReportList({
   onScroll,
   onSuccess,
   isLoading = false,
-  hasMore = true,
 }: InventoryReportListProps) {
   const { user } = useUser();
   const isAdmin = user?.roles.includes(RoleType.ROLE_ADMIN) ?? false;
@@ -68,7 +71,7 @@ export function InventoryReportList({
 
   const handleApproveReport = useCallback(async (id: number) => {
     InventoryReportService.approveReport(id)
-      .then((data) => {
+      .then(() => {
         showAlert("Pomyślnie zatweirdzono Raport!", AlertType.SUCCESS);
         setApproveReportId(null);
         onSuccess?.();
@@ -78,7 +81,7 @@ export function InventoryReportList({
         console.error("Error while approving Inventory Report: ", error);
       })
   }, [])
-  const deleteInventoryReport = useCallback(async(id: number) => {
+  const deleteInventoryReport = useCallback(async() => {
     if(!removeInventoryReportId) return;
 
     InventoryReportService.deleteInventoryReport(removeInventoryReportId)
@@ -104,7 +107,7 @@ export function InventoryReportList({
       case "":
         return (
           <img
-            src="src/assets/arrow_down.svg"
+            src={arrowDownIcon}
             alt="arrow down"
             className={`arrow-down ${
               expandedInventoryReportIds.includes(inventoryReport.id) ? "rotated" : ""
@@ -126,7 +129,7 @@ export function InventoryReportList({
             <span className="qv-span info">Sprawdź i zatwierdź Raport </span>
             <ActionButton
               text="Zatwierdź"
-              src={"src/assets/tick.svg"}
+              src={tickIcon}
               alt={"Zatwierdź"}
               onClick={(e) => {
                 e.stopPropagation();
@@ -168,7 +171,7 @@ export function InventoryReportList({
             {!inventoryReport.approved && (
               <>
                 <ActionButton
-                  src={"src/assets/edit.svg"}
+                  src={editIcon}
                   alt={"Edytuj Raport"}
                   iconTitle={"Edytuj Raport"}
                   text={"Edytuj"}
@@ -176,7 +179,7 @@ export function InventoryReportList({
                   disableText={true}
                 />
                 <ActionButton
-                  src={"src/assets/cancel.svg"}
+                  src={cancelIcon}
                   alt={"Usuń Raport"}
                   iconTitle={"Usuń Raport"}
                   text={"Usuń"}
@@ -254,7 +257,7 @@ export function InventoryReportList({
       {removeInventoryReportId != null && (
         <RemovePopup
           onClose={() => setRemoveInventoryReportId(null)}
-          handleRemove={() => deleteInventoryReport(removeInventoryReportId)}
+          handleRemove={() => deleteInventoryReport()}
           warningText={"Ilość Produktów zostanie przywrócona do stanu sprzed Raportu."}
         />
       )}

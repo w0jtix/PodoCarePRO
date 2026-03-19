@@ -1,4 +1,3 @@
-import React from "react";
 import HandyOrderProductList from "./HandyOrderProductList";
 import ListHeader, { ListModule } from "../ListHeader";
 import { Order } from "../../models/order";

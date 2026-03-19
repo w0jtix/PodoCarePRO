@@ -1,4 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
+import boostIcon from "../../assets/boost.svg";
+import boostOffIcon from "../../assets/boost_off.svg";
+import warningIcon from "../../assets/warning.svg";
+import cancelIcon from "../../assets/cancel.svg";
 import { ListAttribute } from "../../constants/list-headers";
 import ActionButton from "../ActionButton";
 import { NewVisitItem } from "../../models/visit";
@@ -8,10 +12,9 @@ import { Visit, VisitItem } from "../../models/visit";
 import {
   SERVICES_DISCOUNTED_VISIT_ATTRIBUTES,
   SERVICES_VISIT_ATTRIBUTES,
-  SERVICES_VISIT_CONTENT_ATTRIBUTES,
   SERVICES_BOOST_VISIT_CONTENT_ATTRIBUTES
 } from "../../constants/list-headers";
-import { Voucher, VoucherStatus } from "../../models/voucher";
+import { VoucherStatus } from "../../models/voucher";
 import VisitService from "../../services/VisitService";
 import { formatDate } from "../../utils/dateUtils";
 
@@ -147,7 +150,7 @@ export function VisitCartItemList({
           <div className="item-list-single-item-action-buttons flex">
             
               <ActionButton
-              src={`${visitItem && visitItem.boostItem ? "src/assets/boost.svg" :  "src/assets/boost_off.svg"}`}
+              src={visitItem && visitItem.boostItem ? boostIcon : boostOffIcon}
               alt="Usługa Boost"
               iconTitle={"Usługa Boost"}
               text="Usługa Boost"
@@ -190,7 +193,7 @@ export function VisitCartItemList({
                 voucherVisitMap[item.voucher.id] && (
                   <div className="flex g-5px align-items-center">
             <img
-              src={"src/assets/warning.svg"}
+              src={warningIcon}
               alt="Warning"
               className="voucher-warning-icon"
             />
@@ -272,7 +275,7 @@ export function VisitCartItemList({
         return (
           <div className="item-list-single-item-action-buttons flex">
             <ActionButton
-              src="src/assets/cancel.svg"
+              src={cancelIcon}
               alt="Usuń"
               iconTitle={"Usuń"}
               text="Usuń"

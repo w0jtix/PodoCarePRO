@@ -4,6 +4,7 @@ import { ListAttribute} from "../../constants/list-headers";
 import { Employee } from "../../models/employee";
 import { User } from "../../models/login";
 import { AVAILABLE_AVATARS } from "../../constants/avatars";
+import editIcon from "../../assets/edit.svg";
 
 export interface EmployeeListProps {
   attributes: ListAttribute[];
@@ -20,7 +21,6 @@ export function EmployeeList({
   users = [],
   setEditEmployeeId,
   className = "",
-  onClick,
 }: EmployeeListProps) {
 
   const findUserByEmployeeId = (employeeId: number): User | undefined => {
@@ -40,7 +40,6 @@ export function EmployeeList({
   const renderAttributeContent = (
     attr: ListAttribute,
     item: Employee,
-    index: number,
   ): React.ReactNode => {
     switch (attr.name) {
 
@@ -65,7 +64,7 @@ export function EmployeeList({
         return ( 
 <div className="item-list-single-item-action-buttons flex">
             <ActionButton
-              src="src/assets/edit.svg"
+              src={editIcon}
               alt="Edytuj Rabat"
               iconTitle={"Edytuj Rabat"}
               text="Edytuj"
@@ -83,7 +82,7 @@ export function EmployeeList({
       } ${className} `}
       
     >
-      {items.map((item, index) => (
+      {items.map((item) => (
         <div key={item.id} className={`product-wrapper width-max ${className}`}>
           <div
             className={`item align-items-center flex ${className} `}
@@ -97,7 +96,7 @@ export function EmployeeList({
                   justifyContent: attr.justify,
                 }}
               >
-                {renderAttributeContent(attr, item, index)}
+                {renderAttributeContent(attr, item)}
               </div>
             ))}
           </div>

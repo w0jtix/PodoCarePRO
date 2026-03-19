@@ -1,15 +1,15 @@
-import { Client } from "../../models/client";
 import { useState, useCallback, useEffect } from "react";
 import ReactDOM from "react-dom";
 import ActionButton from "../ActionButton";
 import { useAlert } from "../Alert/AlertProvider";
+import closeIcon from "../../assets/close.svg";
+import tickIcon from "../../assets/tick.svg";
 import { AlertType } from "../../models/alert";
 import { validateVoucherForm } from "../../utils/validators";
 import { NewVoucher, Voucher } from "../../models/voucher";
 import { Action } from "../../models/action";
 import VoucherService from "../../services/VoucherService";
 import VoucherForm from "../Clients/VoucherForm";
-import ClientService from "../../services/ClientService";
 
 export interface VoucherPopupProps {
   onClose: () => void;
@@ -117,7 +117,7 @@ export function VoucherPopup({
             onClick={onClose}
           >
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -134,7 +134,7 @@ export function VoucherPopup({
 
         {action != Action.DISPLAY && (
           <ActionButton
-          src={"src/assets/tick.svg"}
+          src={tickIcon}
           alt={"Zapisz"}
           text={"Zapisz"}
           onClick={handleVoucherAction}

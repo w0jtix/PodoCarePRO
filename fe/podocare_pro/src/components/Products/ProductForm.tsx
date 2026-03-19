@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 import CategoryButtons from "../CategoryButtons";
 import BrandService from "../../services/BrandService";
 import TextInput from "../TextInput";
-import { Product, NewProduct, Unit } from "../../models/product";
+import { NewProduct, Unit } from "../../models/product";
 import { Action } from "../../models/action";
 import { Brand, KeywordDTO, NewBrand } from "../../models/brand";
 import { CategoryButtonMode, ProductCategory } from "../../models/categories";
@@ -185,7 +185,7 @@ export function ProductForm({
         .toString()
         .toLowerCase()} ${className}`}
     >
-      <section className="product-form-categories flex align-items-center mb-3 g-4">
+      <section className="product-form-categories flex align-items-center mb-2 g-4">
         <a className="product-form-input-title">Kategoria:</a>
         <div className="product-form-category-buttons flex g-15px justify-center align-items-center">
           <CategoryButtons

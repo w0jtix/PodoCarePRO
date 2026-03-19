@@ -3,6 +3,8 @@ import { useState, useCallback, useEffect } from "react";
 import ReactDOM from "react-dom";
 import ActionButton from "../ActionButton";
 import { useAlert } from "../Alert/AlertProvider";
+import closeIcon from "../../assets/close.svg";
+import tickIcon from "../../assets/tick.svg";
 import { AlertType } from "../../models/alert";
 import DebtForm from "../Clients/DebtForm";
 import { DebtType, NewClientDebt } from "../../models/debt";
@@ -99,7 +101,7 @@ return ReactDOM.createPortal(
           </h2>
           <button className="popup-close-button transparent border-none flex align-items-center justify-center absolute pointer" onClick={onClose}>
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -115,7 +117,7 @@ return ReactDOM.createPortal(
           />
         </section>
         <ActionButton
-          src={"src/assets/tick.svg"}
+          src={tickIcon}
           alt={"Zapisz"}
           text={"Zapisz"}
           onClick={handleCreateDebt}

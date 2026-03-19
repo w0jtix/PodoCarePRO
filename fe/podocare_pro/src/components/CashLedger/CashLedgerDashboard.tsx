@@ -21,6 +21,16 @@ import {
 } from "../../utils/validators";
 import CashLedgerManage from "../Popups/CashLedgerManage";
 import { RoleType } from "../../models/login";
+import unlockIcon from "../../assets/unlock.svg";
+import unlockWhiteIcon from "../../assets/unlock_white.svg";
+import tickIcon from "../../assets/tick.svg";
+import depositIcon from "../../assets/deposit.svg";
+import cashIncomeIcon from "../../assets/cash_income.svg";
+import expensesIcon from "../../assets/expenses.svg";
+import lockWhiteIcon from "../../assets/lock_white.svg";
+import lockIcon from "../../assets/lock.svg";
+import warningIcon from "../../assets/warning.svg";
+import clHistoryIcon from "../../assets/cl_history.svg";
 
 export function CashLedgerDashboard() {
   const { showAlert } = useAlert();
@@ -197,9 +207,6 @@ export function CashLedgerDashboard() {
     },
     [totalCashIncome],
   );
-  const handleClosingAmountChange = useCallback((value: number) => {
-    setCashLedger((prev) => ({ ...prev, closingAmount: value }));
-  }, []);
 
   const handleCloseCashLedger = useCallback(async () => {
     if (cashLedger.id === null) return;
@@ -209,7 +216,7 @@ export function CashLedgerDashboard() {
       return null;
     }
     CashLedgerService.closeCashLedger(cashLedger.id, cashLedger)
-      .then((data) => {
+      .then(() => {
         showAlert("Zamknięto Kasetkę!", AlertType.SUCCESS);
         setCashLedger({
           id: null,
@@ -245,14 +252,14 @@ export function CashLedgerDashboard() {
         icon: null,
       };
     if (cashLedger.isClosed)
-      return { label: "ZAMKNIĘTA", className: "closed", icon: "lock" };
+      return { label: "ZAMKNIĘTA", className: "closed", icon: lockIcon };
     if (!isLedgerToday)
       return {
         label: "NIEZAMKNIĘTA KASETKA",
         className: "closed",
-        icon: "warning",
+        icon: warningIcon,
       };
-    return { label: "OTWARTA", className: "open", icon: "unlock" };
+    return { label: "OTWARTA", className: "open", icon: unlockIcon };
   };
 
   const renderContent = () => {
@@ -267,7 +274,7 @@ export function CashLedgerDashboard() {
               : "Brak otwartej kasetki na dzisiaj."}
           </h2>
           <ActionButton
-            src={"src/assets/unlock.svg"}
+            src={unlockIcon}
             alt={"Otwórz Kasetkę"}
             text={"Otwórz Kasetkę"}
             onClick={() => setIsOpeningFormVisible(true)}
@@ -315,7 +322,7 @@ export function CashLedgerDashboard() {
               </div>
 
               <ActionButton
-                src={"src/assets/tick.svg"}
+                src={tickIcon}
                 alt={"Potwierdź"}
                 text={"Potwierdź"}
                 onClick={handleOpenLedger}
@@ -342,7 +349,7 @@ export function CashLedgerDashboard() {
             <div className="scoreboard-main f-1 align-items-center flex-column">
               <div className="scoreboard-header flex align-items-center g-5px mb-05 mr-025">
                 <img
-                  src="src/assets/unlock_white.svg"
+                  src={unlockWhiteIcon}
                   alt=""
                   className="scoreboard-icon open"
                 />
@@ -358,7 +365,7 @@ export function CashLedgerDashboard() {
             <div className="scoreboard-main f-1 align-items-center flex-column">
               <div className="scoreboard-header flex align-items-center g-5px mb-05 mr-025">
                 <img
-                  src="src/assets/deposit.svg"
+                  src={depositIcon}
                   alt=""
                   className="scoreboard-icon open"
                 />
@@ -374,7 +381,7 @@ export function CashLedgerDashboard() {
             <div className="scoreboard-main f-1 align-items-center flex-column">
               <div className="scoreboard-header flex align-items-center g-5px mb-05 mr-025">
                 <img
-                  src="src/assets/cash_income.svg"
+                  src={cashIncomeIcon}
                   alt=""
                   className="scoreboard-icon open"
                 />
@@ -390,7 +397,7 @@ export function CashLedgerDashboard() {
             <div className="scoreboard-main f-1 align-items-center flex-column">
               <div className="scoreboard-header flex align-items-center g-5px mb-05 mr-025">
                 <img
-                  src="src/assets/expenses.svg"
+                  src={expensesIcon}
                   alt=""
                   className="scoreboard-icon"
                 />
@@ -406,7 +413,7 @@ export function CashLedgerDashboard() {
             <div className="scoreboard-main f-1 align-items-center flex-column">
               <div className="scoreboard-header flex align-items-center g-5px mb-05 mr-025">
                 <img
-                  src="src/assets/lock_white.svg"
+                  src={lockWhiteIcon}
                   alt=""
                   className="scoreboard-icon open"
                 />
@@ -476,7 +483,7 @@ export function CashLedgerDashboard() {
                 <div className="flex mb-2 mt-2 align-items-center justify-center">
           <ActionButton
             text={"Zatwierdź i zamknij"}
-            src={"src/assets/lock.svg"}
+            src={lockIcon}
             alt={"Zamknij Kasetkę"}
             onClick={() => {
               if (closingDiscrepancy !== 0 && !cashLedger.note) {
@@ -524,7 +531,7 @@ export function CashLedgerDashboard() {
             </span>
             {getLedgerStatus().icon && (
               <img
-                src={`src/assets/${getLedgerStatus().icon}.svg`}
+                src={getLedgerStatus().icon!}
                 alt={"Status"}
                 className="status-icon"
               />
@@ -534,7 +541,7 @@ export function CashLedgerDashboard() {
 
         {user?.roles.includes(RoleType.ROLE_ADMIN) && (
           <ActionButton
-            src={"src/assets/cl_history.svg"}
+            src={clHistoryIcon}
             alt={"Historia Kasetki"}
             text={"Historia Kasetki"}
             onClick={() => setIsCashLedgerHistoryPopupOpen(true)}

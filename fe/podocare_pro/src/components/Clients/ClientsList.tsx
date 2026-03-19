@@ -5,6 +5,15 @@ import { Client } from "../../models/client";
 import { Action } from "../../models/action";
 import { useUser } from "../User/UserProvider";
 import { RoleType } from "../../models/login";
+import redflagIcon from "../../assets/redflag.svg";
+import boostIcon from "../../assets/boost.svg";
+import warningIcon from "../../assets/warning.svg";
+import clientDiscountIcon from "../../assets/client_discount.svg";
+import debtIcon from "../../assets/debt.svg";
+import activeGoogleReviewIcon from "../../assets/active_google_review.svg";
+import voucherIcon from "../../assets/voucher.svg";
+import editIcon from "../../assets/edit.svg";
+import cancelIcon from "../../assets/cancel.svg";
 
 export interface ClientsListProps {
   attributes: ListAttribute[];
@@ -68,7 +77,7 @@ export function ClientsList({
           >
             {item.redFlag && (
             <img
-              src="src/assets/redflag.svg"
+              src={redflagIcon}
               alt="RedFlag"
               title="Klient RedFlag"
               className="client-form-icon"
@@ -76,7 +85,7 @@ export function ClientsList({
           )}
           {item.boostClient && (
             <img
-              src="src/assets/boost.svg"
+              src={boostIcon}
               alt="Boost"
               title="Klient z Boosta"
               className="client-form-icon"
@@ -84,7 +93,7 @@ export function ClientsList({
           )}
           {!item.signedRegulations && (
             <img
-              src="src/assets/warning.svg"
+              src={warningIcon}
               alt="Terms not Signed"
               title="Klient nie podpisał Regulaminu"
               className="client-form-icon"
@@ -92,7 +101,7 @@ export function ClientsList({
           )} 
           {item.discount && (
             <img
-              src="src/assets/client_discount.svg"
+              src={clientDiscountIcon}
               alt="ClientDiscount"
               title="Klient ma przypisaną stałą Zniżkę"
               className="client-form-icon"
@@ -100,7 +109,7 @@ export function ClientsList({
           )} 
           {item.hasDebts && (
             <img
-              src="src/assets/debt.svg"
+              src={debtIcon}
               alt="ClientDebt"
               title="Klient posiada Dług"
               className="client-form-icon"
@@ -117,7 +126,7 @@ export function ClientsList({
           )} 
           {item.hasActiveGoogleReview && (
             <img
-              src="src/assets/active_google_review.svg"
+              src={activeGoogleReviewIcon}
               alt="Active Google Review"
               title="Klientowi przysługuje rabat za opinię Google"
               className="client-form-icon"
@@ -133,7 +142,7 @@ export function ClientsList({
           )}
           {item.hasActiveVoucher && (
             <img
-              src="src/assets/voucher.svg"
+              src={voucherIcon}
               alt="Active Voucher"
               title="Klient posiada aktywny Voucher"
               className="client-form-icon"
@@ -153,7 +162,7 @@ export function ClientsList({
         return (
           <div className="item-list-single-item-action-buttons flex ml-1">
             <ActionButton
-              src="src/assets/edit.svg"
+              src={editIcon}
               alt="Edytuj Klienta"
               iconTitle={"Edytuj Klienta"}
               text="Edytuj"
@@ -162,7 +171,7 @@ export function ClientsList({
             />
             {(item.createdBy === user?.id || user?.roles.includes(RoleType.ROLE_ADMIN)) && (
               <ActionButton
-              src="src/assets/cancel.svg"
+              src={cancelIcon}
               alt="Usuń Klienta"
               iconTitle={"Usuń Klienta"}
               text="Usuń"

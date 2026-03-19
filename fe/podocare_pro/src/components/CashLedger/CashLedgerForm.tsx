@@ -6,6 +6,7 @@ import { Action } from '../../models/action';
 import ActionButton from '../ActionButton';
 import { useState } from 'react';
 import CostInput from '../CostInput';
+import editIcon from '../../assets/edit.svg';
 
 export interface CashLedgerFormProps {
     cashLedger: CashLedger;
@@ -39,7 +40,7 @@ const CashLedgerForm = ({ cashLedger, setCashLedger, action = Action.DISPLAY }: 
                     <span className="span-cl popup val">{(cashLedger.openingAmount + cashLedger.deposit).toFixed(2)} zł</span>
                     {action === Action.EDIT && (
                         <ActionButton
-                                      src="src/assets/edit.svg"
+                                      src={editIcon}
                                       alt="Edytuj St. Początkowy"
                                       iconTitle={"Edytuj St. Początkowy"}
                                       text="Edytuj"
@@ -70,7 +71,7 @@ const CashLedgerForm = ({ cashLedger, setCashLedger, action = Action.DISPLAY }: 
                     <span className={`span-cl popup ${cashLedger.deposit !=0 ? "val" : ""}`}>{cashLedger.deposit.toFixed(2)} zł</span>
                     {action === Action.EDIT && (
                         <ActionButton
-                                      src="src/assets/edit.svg"
+                                      src={editIcon}
                                       alt="Edytuj Depozyt"
                                       iconTitle={"Edytuj Depozyt"}
                                       text="Edytuj"
@@ -101,7 +102,7 @@ const CashLedgerForm = ({ cashLedger, setCashLedger, action = Action.DISPLAY }: 
                     <span className={`span-cl popup ${cashLedger.cashOutAmount !=0 ? "cashout-amt" : ""}`}>{cashLedger.cashOutAmount.toFixed(2)} zł</span>
                     {action === Action.EDIT && (
                         <ActionButton
-                                      src="src/assets/edit.svg"
+                                      src={editIcon}
                                       alt="Edytuj Wypłatę"
                                       iconTitle={"Edytuj Wypłatę"}
                                       text="Edytuj"
@@ -132,7 +133,7 @@ const CashLedgerForm = ({ cashLedger, setCashLedger, action = Action.DISPLAY }: 
                     <span className="span-cl popup closing-amt">{cashLedger.closingAmount!.toFixed(2)} zł</span>
                     {action === Action.EDIT && (
                         <ActionButton
-                                      src="src/assets/edit.svg"
+                                      src={editIcon}
                                       alt="Edytuj Saldo Końcowe"
                                       iconTitle={"Edytuj Saldo Końcowe"}
                                       text="Edytuj"
@@ -162,7 +163,7 @@ const CashLedgerForm = ({ cashLedger, setCashLedger, action = Action.DISPLAY }: 
                             <span className="span-cl popup">Notatka:</span>
                             {action === Action.EDIT && (
                                 <ActionButton
-                                    src="src/assets/edit.svg"
+                                    src={editIcon}
                                     alt="Edytuj Notatkę"
                                     iconTitle={"Edytuj Notatkę"}
                                     text="Edytuj"

@@ -1,8 +1,5 @@
-import axios from "axios";
 import { Brand, KeywordDTO, NewBrand } from "../models/brand";
 import { sendApiRequest } from "../components/send-api-request/SendApiRequest";
-import { AxiosResponse } from "axios";
-import { error } from "console";
 
 
 class BrandService {

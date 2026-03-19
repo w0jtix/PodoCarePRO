@@ -8,6 +8,13 @@ import VisitService from "../../services/VisitService";
 import { Visit } from "../../models/visit";
 import { formatDate } from "../../utils/dateUtils";
 import DigitInput from "../DigitInput";
+import closeIcon from "../../assets/close.svg";
+import removedIcon from "../../assets/removed.svg";
+import receiptIcon from "../../assets/receipt.svg";
+import absenceIcon from "../../assets/absence.svg";
+import timeIcon from "../../assets/time.svg";
+import boostIcon from "../../assets/boost.svg";
+import vipIcon from "../../assets/vip.svg";
 import VisitContent from "../Visit/VisitContent";
 import {
   VisitDiscountType,
@@ -372,7 +379,7 @@ export function VisitPopup({
                   </span>
                   {visit.client.isDeleted && (
                     <img
-                      src="src/assets/removed.svg"
+                      src={removedIcon}
                       alt="Client Removed"
                       className="checkimg align-self-center"
                     />
@@ -390,7 +397,7 @@ export function VisitPopup({
             onClick={onClose}
           >
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -410,7 +417,7 @@ export function VisitPopup({
                     <div className="flex space-evenly width-max align-items-end">
                       {visit.receipt == false && (
                         <ActionButton
-                          src={"src/assets/receipt.svg"}
+                          src={receiptIcon}
                           alt={"Nie wydano Paragonu"}
                           text={"Nie wydano Paragonu"}
                           iconTitle="Wizyta bez Paragonu"
@@ -424,7 +431,7 @@ export function VisitPopup({
                       )}
                       {visit.absence && (
                         <ActionButton
-                          src={"src/assets/absence.svg"}
+                          src={absenceIcon}
                           alt={"Nieobecność"}
                           text={"Nieobecność"}
                           default={true}
@@ -437,7 +444,7 @@ export function VisitPopup({
                       {visit.delayTime != null && (
                         <div className="flex g-05">
                           <ActionButton
-                            src={"src/assets/time.svg"}
+                            src={timeIcon}
                             alt={"Spóźnienie"}
                             text={"Spóźnienie"}
                             default={true}
@@ -465,7 +472,7 @@ export function VisitPopup({
                       )}
                       {visit.isBoost && (
                         <ActionButton
-                          src={"src/assets/boost.svg"}
+                          src={boostIcon}
                           alt={"Boost"}
                           text={"Boost"}
                           default={true}
@@ -477,7 +484,7 @@ export function VisitPopup({
                       )}
                       {visit.isVip && (
                         <ActionButton
-                          src={"src/assets/vip.svg"}
+                          src={vipIcon}
                           alt={"Wizyta VIP"}
                           text={"Wizyta VIP"}
                           default={true}

@@ -1,6 +1,4 @@
-import React, { useCallback, useEffect } from "react";
-import ActionButton from "../ActionButton";
-import { useState } from "react";
+import React from "react";
 import { ListAttribute} from "../../constants/list-headers";
 import { BaseService, ServiceVariant } from "../../models/service";
 
@@ -24,7 +22,6 @@ export function VariantsList({
   const renderAttributeContent = (
     attr: ListAttribute,
     item: ServiceVariant,
-    index?: number,
   ): React.ReactNode => {
     switch (attr.name) {
 
@@ -66,7 +63,7 @@ export function VariantsList({
                   justifyContent: attr.justify,
                 }}
               >
-                {renderAttributeContent(attr, item, index)}
+                {renderAttributeContent(attr, item)}
               </div>
             ))}
           </div>

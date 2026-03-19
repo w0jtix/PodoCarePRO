@@ -1,4 +1,6 @@
 import { useAlert } from "../Alert/AlertProvider";
+import resetIcon from "../../assets/reset.svg";
+import addNewIcon from "../../assets/addNew.svg";
 import { useState, useCallback, useEffect } from "react";
 import NavigationBar from "../NavigationBar";
 import ActionButton from "../ActionButton";
@@ -36,7 +38,7 @@ export function ServicesDashboard() {
     useState<boolean>(false);
   const [isCategoryPopupOpen, setIsCategoryPopupOpen] =
     useState<boolean>(false);
-  const { user, setUser, refreshUser } = useUser();
+  const { user } = useUser();
   const { showAlert } = useAlert();
 
   const fetchCategories = async (): Promise<void> => {
@@ -187,7 +189,7 @@ export function ServicesDashboard() {
                   multiple={true}
                 />
         <ActionButton
-          src={"src/assets/reset.svg"}
+          src={resetIcon}
           alt={"Reset filters"}
           iconTitle={"Resetuj filtry"}
           text={"Reset"}
@@ -200,13 +202,13 @@ export function ServicesDashboard() {
         {user?.roles.includes(RoleType.ROLE_ADMIN) && (  
           <>
           <ActionButton
-            src={"src/assets/addNew.svg"}
+            src={addNewIcon}
             alt={"Nowa Usługa"}
             text={"Nowa Usługa"}
             onClick={() => setIsAddNewServicePopupOpen(true)}
           />
           <ActionButton
-            src={"src/assets/addNew.svg"}
+            src={addNewIcon}
             alt={"Nowa Kategoria"}
             text={"Nowa Kategoria"}
             onClick={() => setIsCategoryPopupOpen(true)}
@@ -221,7 +223,7 @@ export function ServicesDashboard() {
           items={services}
           setRemoveServiceId={setRemoveServiceId}
           setEditServiceId={setEditServiceId}
-          className="services list min-height-req-28"
+          className="services list serv min-height-req-28"
         />
       </div>
       {isAddNewServicePopupOpen && (

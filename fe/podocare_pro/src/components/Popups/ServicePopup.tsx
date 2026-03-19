@@ -2,6 +2,8 @@ import {
   BaseService,
   NewBaseService,
 } from "../../models/service";
+import closeIcon from "../../assets/close.svg";
+import tickIcon from "../../assets/tick.svg";
 import { useCallback, useState, useEffect } from "react";
 import { useAlert } from "../Alert/AlertProvider";
 import { Action } from "../../models/action";
@@ -110,7 +112,7 @@ export function ServicePopup({
           </h2>
           <button className="popup-close-button transparent border-none flex align-items-center justify-center absolute pointer" onClick={onClose}>
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -126,7 +128,7 @@ export function ServicePopup({
         </section>
 
         <ActionButton
-          src={"src/assets/tick.svg"}
+          src={tickIcon}
           alt={"Zapisz"}
           text={"Zapisz"}
           onClick={handleServiceAction}

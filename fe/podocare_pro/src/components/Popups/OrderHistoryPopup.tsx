@@ -1,5 +1,6 @@
 import ReactDOM from "react-dom";
 import { useAlert } from "../Alert/AlertProvider";
+import closeIcon from "../../assets/close.svg";
 import { AlertType } from "../../models/alert";
 import { OrderHistory } from "../Orders/OrderHistory";
 import { ORDER_HISTORY_POPUP_ATTRIBUTES } from "../../constants/list-headers";
@@ -43,7 +44,7 @@ export function OrderHistoryPopup({
             onClick={onClose}
           >
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />

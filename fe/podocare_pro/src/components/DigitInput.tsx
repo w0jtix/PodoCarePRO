@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback, useEffect } from "react";
+import { ChangeEvent, useCallback, useEffect } from "react";
 import { useState } from "react";
 
 export interface DigitInputProps {

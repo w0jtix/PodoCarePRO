@@ -27,6 +27,10 @@ import StatisticsService from "../../services/StatisticsService";
 import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
 import EmployeeManagePopup from "../Popups/EmployeeManagePopup";
+import arrowDownIcon from "../../assets/arrow_down.svg";
+import manageIcon from "../../assets/manage.svg";
+import barChartIcon from "../../assets/bar_chart.svg";
+import chartIcon from "../../assets/chart.svg";
 
 export interface EmployeeRevenueChartProps {
   selectedEmployeeIds?: number[];
@@ -209,7 +213,7 @@ export function EmployeeRevenueChart({
       <div className={`flex width-max align-items-center mt-1 justify-start ${!isChartExpanded ? "mb-1" : ""}`}>
         <div className="flex justify-center align-items-center width-05">
           <img
-            src="src/assets/arrow_down.svg"
+            src={arrowDownIcon}
             alt={isChartExpanded ? "Zwiń" : "Rozwiń"}
             onClick={() => setIsChartExpanded((prev) => !prev)}
             className={`arrow-down ${isChartExpanded ? "rotated" : ""} chart pointer`}
@@ -272,7 +276,7 @@ export function EmployeeRevenueChart({
 
         <ActionButton
                       text={"Zarządzaj Pracownikami"}
-                      src={"src/assets/manage.svg"}
+                      src={manageIcon}
                       alt="Zarządzaj Pracownikami"
                       onClick={() => setIsManageEmployeesPopupOpen(true)}
                     />
@@ -291,7 +295,7 @@ export function EmployeeRevenueChart({
             />
           )}
           <ActionButton
-            src={chartType === "line" ? "src/assets/bar_chart.svg" : "src/assets/chart.svg"}
+            src={chartType === "line" ? barChartIcon : chartIcon}
             alt={chartType === "line" ? "Wykres Słupkowy" : "Wykres Liniowy"}
             iconTitle={chartType === "line" ? "Wykres Słupkowy" : "Wykres Liniowy"}
             text={chartType === "line" ? "Słupkowy" : "Liniowy"}

@@ -3,6 +3,8 @@ import { useState, useCallback, useEffect } from "react";
 import ReactDOM from "react-dom";
 import ActionButton from "../ActionButton";
 import { useAlert } from "../Alert/AlertProvider";
+import closeIcon from "../../assets/close.svg";
+import tickIcon from "../../assets/tick.svg";
 import { AlertType } from "../../models/alert";
 import { Action } from "../../models/action";
 import { Review, NewReview } from "../../models/review";
@@ -108,7 +110,7 @@ export function ReviewPopup({
             onClick={onClose}
           >
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -124,7 +126,7 @@ export function ReviewPopup({
         </section>
 
         <ActionButton
-          src={"src/assets/tick.svg"}
+          src={tickIcon}
           alt={"Zapisz"}
           text={"Zapisz"}
           onClick={handleReviewAction}

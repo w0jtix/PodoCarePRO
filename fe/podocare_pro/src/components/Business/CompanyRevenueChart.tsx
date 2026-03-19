@@ -27,6 +27,8 @@ import { SERIES_CONFIG } from "../../utils/statisticsUtils";
 import StatisticsService from "../../services/StatisticsService";
 import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
+import barChartIcon from "../../assets/bar_chart.svg";
+import chartIcon from "../../assets/chart.svg";
 
 export interface CompanyRevenueChartProps {
   statRequest: EmployeeRevenueFilter;
@@ -276,8 +278,8 @@ export function CompanyRevenueChart({
           <ActionButton
             src={
               chartType === "line"
-                ? "src/assets/bar_chart.svg"
-                : "src/assets/chart.svg"
+                ? barChartIcon
+                : chartIcon
             }
             alt={chartType === "line" ? "Wykres Słupkowy" : "Wykres Liniowy"}
             iconTitle={

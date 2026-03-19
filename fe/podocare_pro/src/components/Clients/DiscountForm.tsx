@@ -1,14 +1,7 @@
 import { Action } from "../../models/action";
-import { useState, useEffect, useCallback } from "react";
-import { NewClient, Client } from "../../models/client";
+import { useEffect, useCallback } from "react";
+import { Client } from "../../models/client";
 import TextInput from "../TextInput";
-import { DebtType, NewClientDebt } from "../../models/debt";
-import DropdownSelect from "../DropdownSelect";
-import CostInput from "../CostInput";
-import ActionButton from "../ActionButton";
-import { NewVoucher } from "../../models/voucher";
-import DateInput from "../DateInput";
-import VoucherService from "../../services/VoucherService";
 import { NewDiscount } from "../../models/visit";
 import DigitInput from "../DigitInput";
 import ClientService from "../../services/ClientService";
@@ -29,7 +22,6 @@ export function DiscountForm({
   discountDTO,
   setDiscountDTO,
   className = "",
-  action,
 }: DiscountFormProps) {
   const { showAlert } = useAlert();
 

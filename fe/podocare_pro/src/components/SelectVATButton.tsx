@@ -1,4 +1,5 @@
 import React from "react";
+import arrowDownIcon from "../assets/arrow_down.svg";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { VatRate, getVatRateDisplay } from "../models/vatrate";
 
@@ -74,7 +75,7 @@ export function SelectVATButton({
           {selectedItem ? getVatRateDisplay(selectedItem) : placeholder}
         </a>
         <img
-          src="src/assets/arrow_down.svg"
+          src={arrowDownIcon}
           alt="arrow down"
           className={`vat-select-arrow-icon ${isExpanded ? "rotated" : ""}`}
         />

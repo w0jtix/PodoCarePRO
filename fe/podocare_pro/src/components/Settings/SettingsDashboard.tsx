@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import tickIcon from "../../assets/tick.svg";
 import { useAlert } from "../Alert/AlertProvider";
 import AppSettingsService from "../../services/AppSettingsService";
 import { AppSettings, NewAppSettings } from "../../models/app_settings";
@@ -203,7 +204,7 @@ export function SettingsDashboard() {
       </div>
       <div className="flex width-90 justify-end mt-2">
         <ActionButton
-          src={"src/assets/tick.svg"}
+          src={tickIcon}
           alt={"Zapisz"}
           text={"Zapisz"}
           disableImg={true}

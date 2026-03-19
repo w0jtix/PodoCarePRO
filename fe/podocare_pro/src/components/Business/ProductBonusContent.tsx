@@ -2,6 +2,7 @@ import ListHeader, { ListModule } from "../ListHeader";
 import { ListAttribute } from "../../constants/list-headers";
 import { BonusProduct, BonusProductItem } from "../../models/employee";
 import { formatDate } from "../../utils/dateUtils";
+import alertIcon from "../../assets/alert.svg";
 
 export interface ProductBonusContentProps {
   product: BonusProduct;
@@ -20,7 +21,6 @@ export function ProductBonusContent ({
     product: BonusProductItem,
     noPurchaseHistory: boolean,
     fallbackPurchasePriceUsed: boolean,
-    index: number
   ): React.ReactNode => {
     switch (attr.name) {
 
@@ -39,7 +39,7 @@ export function ProductBonusContent ({
           return (
             <img
               title="Brak historii zakupów tego produktu. Brak możliwości naliczenia marży i premii."
-              src="src/assets/alert.svg"
+              src={alertIcon}
               alt="alert"
               className="sb-alert pointer"
             />
@@ -59,7 +59,7 @@ export function ProductBonusContent ({
           return (
             <img
               title="Brak historii zakupów tego produktu. Brak możliwości naliczenia marży i premii."
-              src="src/assets/alert.svg"
+              src={alertIcon}
               alt="alert"
               className="sb-alert pointer"
             />
@@ -133,7 +133,7 @@ export function ProductBonusContent ({
                   justifyContent: attr.justify,
                 }}
               >
-                {renderAttributeContent(attr, item, product.noPurchaseHistory, product.fallbackPurchasePriceUsed, index)}
+                {renderAttributeContent(attr, item, product.noPurchaseHistory, product.fallbackPurchasePriceUsed)}
               </div>
             ))}
           </div>

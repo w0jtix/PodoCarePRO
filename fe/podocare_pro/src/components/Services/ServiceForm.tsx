@@ -1,4 +1,7 @@
 import { Action } from "../../models/action";
+import cancelIcon from "../../assets/cancel.svg";
+import addNewIcon from "../../assets/addNew.svg";
+import arrowDownIcon from "../../assets/arrow_down.svg";
 import {
   BaseService,
   NewBaseService,
@@ -181,7 +184,7 @@ export function ServiceForm({
       </section>
       <section className="service-variants-container flex-column f-1 min-height-0">
         <ActionButton
-          src={"src/assets/addNew.svg"}
+          src={addNewIcon}
           alt={"Dodaj Wariant"}
           text={"Dodaj wariant usługi"}
           onClick={() => handleAddVariant()}
@@ -200,7 +203,7 @@ export function ServiceForm({
                 >
                   <div className="variant-name-div ml-05 g-1 flex align-items-center">
                     <img
-                      src={"src/assets/arrow_down.svg"}
+                      src={arrowDownIcon}
                       alt="Toggle dropdown"
                       className={`arrow-down ${
                         expandedVariantIndex === index ? "rotated" : ""
@@ -216,7 +219,7 @@ export function ServiceForm({
                     <span className="variant-value">{variant.duration}min</span>
                     <span className="variant-value">{variant.price}zł</span>
                     <ActionButton
-                      src="src/assets/cancel.svg"
+                      src={cancelIcon}
                       alt="Usuń Wariant"
                       iconTitle={"Usuń Wariant"}
                       text="Usuń"

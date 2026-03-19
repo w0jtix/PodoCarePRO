@@ -4,6 +4,7 @@ import { useAlert } from "../Alert/AlertProvider";
 import { validateChangePasswordForm } from "../../utils/validators";
 import ActionButton from "../ActionButton";
 import AuthService from "../../services/AuthService";
+import tickIcon from "../../assets/tick.svg";
 
 export function ChangePasswordForm() {
   const { showAlert } = useAlert();
@@ -88,7 +89,7 @@ export function ChangePasswordForm() {
 
         <ActionButton
                     text="Zmień Hasło"
-                    src={"src/assets/tick.svg"}
+                    src={tickIcon}
                     alt={"Zmień Hasło"}
                     onClick={handleSubmit}
                     className={"pw-change-button"}

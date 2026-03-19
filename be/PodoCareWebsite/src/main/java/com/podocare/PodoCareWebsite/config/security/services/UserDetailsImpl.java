@@ -40,7 +40,7 @@ public class UserDetailsImpl implements UserDetails {
                 user.getUsername(),
                 user.getPassword(),
                 user.getAvatar(),
-                new EmployeeSummaryDTO(user.getEmployee()),
+                user.getEmployee() != null ? new EmployeeSummaryDTO(user.getEmployee()) : null,
                 authorities);
     }
 

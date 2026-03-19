@@ -1,5 +1,4 @@
-import React from 'react'
-import { SOCIAL_ITEMS, getIconPath, getIconAlt } from '../constants/socials'
+import { SOCIAL_ITEMS } from '../constants/socials'
 
 export function Socials () {
 
@@ -14,8 +13,8 @@ export function Socials () {
         className="social-link"
         >
             <img 
-                src={getIconPath(site.icon)} 
-                alt={getIconAlt(site.icon)} 
+                src={site.icon}
+                alt={site.alt}
                 className="social-icon" 
             />
         </a>     

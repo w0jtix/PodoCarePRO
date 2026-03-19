@@ -18,6 +18,8 @@ import { User } from "../../models/login";
 import ProductBonusList from "./ProductBonusList";
 import StatSettingsService from "../../services/StatSettingsService";
 import { StatSettings } from "../../models/business_settings";
+import resetIcon from "../../assets/reset.svg";
+import boostIcon from "../../assets/boost.svg";
 
 const EmployeeBonusPage = () => {
   const [employeeBonus, setEmployeeBonus] = useState<EmployeeBonus | null>(
@@ -227,7 +229,7 @@ const EmployeeBonusPage = () => {
           />
         </div>
         <ActionButton
-          src={"src/assets/reset.svg"}
+          src={resetIcon}
           alt={"Reset"}
           iconTitle={"Resetuj filtry"}
           text={"Reset"}
@@ -260,7 +262,7 @@ const EmployeeBonusPage = () => {
                   <div className="width-max flex space-between">
                     <div className="flex g-5px align-items-center">
                       <img
-                        src="src/assets/boost.svg"
+                        src={boostIcon}
                         alt="Boost"
                         className="visit-form-icon"
                       ></img>
@@ -291,7 +293,7 @@ const EmployeeBonusPage = () => {
                 <div className="sb-title flex align-items-center g-1 align-self-center">
                   <h2 className="sb-header">Premia utarg:</h2>
                   <h2 className="sb-header bonus-value">
-                    {"+ " + employeeBonus?.bonusAmount.toFixed(2) + " zł"}
+                    {"+ " + (employeeBonus?.bonusAmount ?? 0).toFixed(2) + " zł"}
                   </h2>
                 </div>
               </div>

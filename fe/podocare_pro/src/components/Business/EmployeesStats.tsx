@@ -1,13 +1,17 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useAlert } from "../Alert/AlertProvider";
 import ProgressBar from "../ProgressBar";
 import {MONTHS} from "../../utils/dateUtils";
-import ActionButton from "../ActionButton";
 import EmployeeRevenueChart from "./EmployeeRevenueChart";
 import { EmployeeRevenueFilter, ChartMode, EmployeeStats } from "../../models/statistics";
 import StatisticsService from "../../services/StatisticsService";
 import { AlertType } from "../../models/alert";
 import { CARD_BACKGROUND_COLORS, CHART_COLORS } from "../../utils/statisticsUtils";
+import uslugiBlueIcon from "../../assets/uslugi_blue.svg";
+import productSoldIcon from "../../assets/product_sold.svg";
+import voucherIcon from "../../assets/voucher.svg";
+import crownIcon from "../../assets/crown.svg";
+import boostIcon from "../../assets/boost.svg";
 
 export function EmployeesStats() {
   const { showAlert } = useAlert();
@@ -62,7 +66,7 @@ export function EmployeesStats() {
           employeeStats.length == 1 ? "justify-center" : "space-around"
         } mt-1`}
       >
-        {employeeStats.map((employee, index) => {
+        {employeeStats.map((employee) => {
           const isSelected = selectedEmployeeIds.includes(employee.id);
           const chartColor = CHART_COLORS[(employee.id -1) % CHART_COLORS.length];
           const backgroundColor = CARD_BACKGROUND_COLORS[(employee.id -1) % CARD_BACKGROUND_COLORS.length];
@@ -173,7 +177,7 @@ export function EmployeesStats() {
                     <div className="flex width-max space-between">
                       
                       <div className="flex align-items-center g-5px">
-                      <img src="src/assets/uslugi_blue.svg" alt="Services Sold" className="visit-form-icon"></img>
+                      <img src={uslugiBlueIcon} alt="Services Sold" className="visit-form-icon"></img>
                       <span className="stat-span">Zrealizowane usługi:</span>
                       </div>
                       <span className="stat-span white">
@@ -186,7 +190,7 @@ export function EmployeesStats() {
                     <div className="flex width-max space-between">
                       
                       <div className="flex align-items-center g-5px">
-                      <img src="src/assets/product_sold.svg" alt="Products Sold" className="visit-form-icon"></img>
+                      <img src={productSoldIcon} alt="Products Sold" className="visit-form-icon"></img>
                       <span className="stat-span">Sprzedane produkty:</span>
                       </div>
                       <span className="stat-span white">
@@ -198,7 +202,7 @@ export function EmployeesStats() {
                   <div className=" width-90 flex">
                     <div className="flex width-max space-between">
                       <div className="flex align-items-center g-5px">
-                      <img src="src/assets/voucher.svg" alt="Vouchers Sold" className="visit-form-icon"></img>
+                      <img src={voucherIcon} alt="Vouchers Sold" className="visit-form-icon"></img>
                       <span className="stat-span">Sprzedane vouchery:</span>
                       </div>
                       <span className="stat-span white">
@@ -210,7 +214,7 @@ export function EmployeesStats() {
                   <div className=" width-90 flex">
                     <div className="flex width-max space-between">
                       <div className="flex align-items-center g-5px">
-                      <img src="src/assets/crown.svg" alt="Best Selling Service" className="visit-form-icon"></img>
+                      <img src={crownIcon} alt="Best Selling Service" className="visit-form-icon"></img>
                       <span className="stat-span">Usługa:</span>
                       </div>
                       <span className="stat-span white text-ellipsis" title={employee.topSellingServiceName}>{employee.topSellingServiceName}</span>
@@ -220,7 +224,7 @@ export function EmployeesStats() {
                   <div className=" width-90 flex">
                     <div className="flex width-max space-between">
                       <div className="flex align-items-center g-5px">
-                      <img src="src/assets/crown.svg" alt="Best Selling Product" className="visit-form-icon"></img>
+                      <img src={crownIcon} alt="Best Selling Product" className="visit-form-icon"></img>
                       
                       <span className="stat-span">Produkt:</span>
                       </div>
@@ -231,7 +235,7 @@ export function EmployeesStats() {
                   <div className=" width-90 flex">
                     <div className="flex width-max space-between">
                       <div className="flex align-items-center g-5px">
-                      <img src="src/assets/boost.svg" alt="Boost" className="visit-form-icon"></img>
+                      <img src={boostIcon} alt="Boost" className="visit-form-icon"></img>
                       <span className="stat-span">Nowi klienci Boost:</span>
                       </div>
                       <span className="stat-span white">
@@ -244,7 +248,7 @@ export function EmployeesStats() {
                     <div className="flex width-max space-between">
                       
                       <div className="flex align-items-center g-5px">
-                      <img src="src/assets/boost.svg" alt="Boost" className="visit-form-icon"></img>
+                      <img src={boostIcon} alt="Boost" className="visit-form-icon"></img>
                       <span className="stat-span">Konwersja klienta Boost:</span>
                       </div>
                       <span className="stat-span white">

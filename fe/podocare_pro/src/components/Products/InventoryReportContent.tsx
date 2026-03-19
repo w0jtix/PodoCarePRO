@@ -1,5 +1,6 @@
 
 import { InventoryReport, InventoryReportItem } from "../../models/inventory_report";
+import transitionIcon from "../../assets/transition.svg";
 import { ListAttribute } from "../../constants/list-headers";
 import { getSupplyChange } from "../../utils/inventoryReportUtils";
 import ListHeader from "../ListHeader";
@@ -20,7 +21,6 @@ export function InventoryReportContent ({
     const renderAttributeContent = (
         attr: ListAttribute,
         item: InventoryReportItem,
-        index: number
       ): React.ReactNode => {
         switch (attr.name) {
 
@@ -53,7 +53,7 @@ export function InventoryReportContent ({
                 {item.supplyBefore}
               </span>
               <img 
-              src="src/assets/transition.svg"
+              src={transitionIcon}
               alt="Change"
               className="ir-change-icon"
               />
@@ -103,7 +103,7 @@ export function InventoryReportContent ({
                           justifyContent: attr.justify,
                         }}
                       >
-                        {renderAttributeContent(attr, item, index)}
+                        {renderAttributeContent(attr, item)}
                       </div>
                     ))}
                   </div>

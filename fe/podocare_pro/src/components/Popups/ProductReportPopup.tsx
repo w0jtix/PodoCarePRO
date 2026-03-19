@@ -1,4 +1,7 @@
 import CategoryButtons from "../CategoryButtons";
+import closeIcon from "../../assets/close.svg";
+import resetIcon from "../../assets/reset.svg";
+import pdfIcon from "../../assets/pdf.svg";
 import { useState, useCallback, useEffect } from "react";
 import ReactDOM from "react-dom";
 import ActionButton from "../ActionButton";
@@ -86,7 +89,7 @@ export function ProductReportPopup({
         const sortedBrands = data.sort((a, b) => a.name.localeCompare(b.name));
         setBrands(sortedBrands);
       })
-      .catch((error) => {
+      .catch(() => {
         setBrands([]);
       });
   };
@@ -221,7 +224,7 @@ export function ProductReportPopup({
             onClick={onClose}
           >
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -260,7 +263,7 @@ export function ProductReportPopup({
             />
             
             <ActionButton
-                    src={"src/assets/reset.svg"}
+                    src={resetIcon}
                     alt={"Reset filters"}
                     iconTitle={"Resetuj filtry"}
                     text={"Reset"}
@@ -281,7 +284,7 @@ export function ProductReportPopup({
         </div>
             
         <ActionButton
-          src={"src/assets/pdf.svg"}
+          src={pdfIcon}
           alt={"Utwórz PDF"}
           text={"Utwórz PDF"}
           onClick={handlePreviewPDF}

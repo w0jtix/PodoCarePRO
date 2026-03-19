@@ -1,4 +1,6 @@
 import { useNavigate } from 'react-router-dom'
+import arrowDownIcon from "../assets/arrow_down.svg";
+import pointerIcon from "../assets/pointer.svg";
 
 export interface SubItem {
   name: string;
@@ -43,7 +45,7 @@ export function MenuItem ({ name, href, src, alt, subItems, isOpen = false, onTo
         <img className="menuItem-icon" src={src} alt={alt}/>
         <span className="menu-a">{name}</span>
         <img
-          src="src/assets/arrow_down.svg"
+          src={arrowDownIcon}
           alt="Toggle submenu"
           className={`menu-sub-arrow ${isOpen ? "rotated" : ""}`}
         />
@@ -52,7 +54,7 @@ export function MenuItem ({ name, href, src, alt, subItems, isOpen = false, onTo
         <div className="menu-sub-dropdown flex-column">
           {subItems.map((sub) => (
             <div key={sub.module} className='menu-sub-div flex g-5px align-items-center pointer' onClick={() => handleSubItemClick(sub)}>
-              <img className="menu-subitem-icon" src={"/src/assets/pointer.svg"} alt={"Pointer"}/>
+              <img className="menu-subitem-icon" src={pointerIcon} alt={"Pointer"}/>
               <span className="menu-sub-item flex align-items-center">
                 {sub.name}
               </span>

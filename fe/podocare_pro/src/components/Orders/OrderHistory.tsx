@@ -5,14 +5,14 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import OrderService from "../../services/OrderService.jsx";
 import ActionButton from "../ActionButton.jsx";
 import DropdownSelect from "../DropdownSelect.js";
-import DateInput from "../DateInput.js";
 import SupplierService from "../../services/SupplierService.jsx";
 import { Order, OrderFilterDTO } from "../../models/order.js";
 import { Supplier } from "../../models/supplier.js";
-import { Alert, AlertType } from "../../models/alert.js";
+import { AlertType } from "../../models/alert.js";
 import { ListAttribute, ORDER_HISTORY_ATTRIBUTES } from "../../constants/list-headers.js";
 import { useAlert } from "../Alert/AlertProvider.js";
 import { getYears, MONTHS } from "../../utils/dateUtils.js";
+import resetIcon from "../../assets/reset.svg";
 
 export interface OrderHistoryProps {
   attributes?: ListAttribute[];
@@ -233,7 +233,7 @@ export function OrderHistory({
                     />
         </section>
         <ActionButton
-          src={"src/assets/reset.svg"}
+          src={resetIcon}
           alt={"Reset"}
           iconTitle={"Resetuj filtry"}
           text={"Reset"}

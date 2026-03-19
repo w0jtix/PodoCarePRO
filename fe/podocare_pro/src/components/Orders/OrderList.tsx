@@ -9,6 +9,9 @@ import { Order } from "../../models/order";
 import { Action } from "../../models/action";
 import { calculateOrderItems } from "../../utils/orderUtils";
 import { formatDate } from "../../utils/dateUtils";
+import arrowDownIcon from "../../assets/arrow_down.svg";
+import editIcon from "../../assets/edit.svg";
+import cancelIcon from "../../assets/cancel.svg";
 
 export interface OrderListProps {
   attributes: ListAttribute[];
@@ -29,7 +32,6 @@ export function OrderList({
   className = "",
   onScroll,
   isLoading = false,
-  hasMore = true,
   onSelect,
   selectedOrderId,
 }: OrderListProps) {
@@ -74,7 +76,7 @@ export function OrderList({
       case "":
         return (
           <img
-            src="src/assets/arrow_down.svg"
+            src={arrowDownIcon}
             alt="arrow down"
             className={`arrow-down ${
               expandedOrderIds.includes(order.id) ? "rotated" : ""
@@ -119,7 +121,7 @@ export function OrderList({
         return (
           <div className="item-list-single-item-action-buttons flex  ml-1">
             <ActionButton
-              src={"src/assets/edit.svg"}
+              src={editIcon}
               alt={"Edytuj Zamówienie"}
               iconTitle={"Edytuj Zamówienie"}
               text={"Edytuj"}
@@ -127,7 +129,7 @@ export function OrderList({
               disableText={true}
             />
             <ActionButton
-              src={"src/assets/cancel.svg"}
+              src={cancelIcon}
               alt={"Usuń Zamówienie"}
               iconTitle={"Usuń Zamówienie"}
               text={"Usuń"}

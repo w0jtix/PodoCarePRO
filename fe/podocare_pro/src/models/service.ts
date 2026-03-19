@@ -1,4 +1,4 @@
-import { BaseServiceCategory, NewBaseServiceCategory } from "./categories";
+import { BaseServiceCategory } from "./categories";
 
 export interface ServiceFilterDTO {
     keyword?: string;

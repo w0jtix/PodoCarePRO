@@ -1,6 +1,5 @@
-import React from "react";
 import { useCallback } from "react";
-import { ORDER_SUBMENU_ITEMS, getIconPath, getIconAlt, SubModuleType, SubMenuItem } from "../constants/modules";
+import { SubModuleType, SubMenuItem } from "../constants/modules";
 
 export interface SubMenuNavbarProps {
   setModuleVisible: (module: SubModuleType) => void;
@@ -37,8 +36,8 @@ export function SubMenuNavbar ( {
             <div className="submenu-navbar-menuItem-button-interior flex align-items-center justify-center pr-15px">
               <img
                 className="submenu-order-icon align-self-center justify-self-center mr-5px"
-                src={getIconPath(menuItem.icon)}
-                alt={menuItem.alt || getIconAlt(menuItem.icon)}
+                src={menuItem.icon}
+                alt={menuItem.alt || menuItem.name}
               ></img>
               <a className="submenu-navbar-menuItem-button-a align-self-center">
                 {menuItem.name}

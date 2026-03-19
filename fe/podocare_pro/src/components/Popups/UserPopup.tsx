@@ -1,6 +1,8 @@
 import ReactDOM from "react-dom";
 import { useState, useCallback } from "react";
 import ActionButton from "../ActionButton";
+import closeIcon from "../../assets/close.svg";
+import tickIcon from "../../assets/tick.svg";
 import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
 import SignupForm from "../User/SignupForm";
@@ -32,7 +34,7 @@ export function UserPopup ({
       return;
     }
     AuthService.register(signupRequest.username, signupRequest.password, signupRequest.role)
-    .then((data) => {
+    .then(() => {
         showAlert("Użytkownik utworzony!", AlertType.SUCCESS);
         onClose();
     })
@@ -59,7 +61,7 @@ export function UserPopup ({
           <h2 className="popup-title">Nowy Użytkownik</h2>
           <button className="popup-close-button  transparent border-none flex align-items-center justify-center absolute pointer" onClick={onClose}>
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -72,7 +74,7 @@ export function UserPopup ({
         />
         <div className="popup-footer-container flex-column justify-end">
         <ActionButton
-          src={"src/assets/tick.svg"}
+          src={tickIcon}
           alt={"Zapisz"}
           text={"Zapisz"}
           onClick={handleCreateUser}

@@ -3,6 +3,9 @@ import { useAlert } from "../Alert/AlertProvider";
 import ActionButton from "../ActionButton";
 import ReactDOM from "react-dom";
 import ListHeader from "../ListHeader";
+import closeIcon from "../../assets/close.svg";
+import filterIcon from "../../assets/filter_icon.svg";
+import resetIcon from "../../assets/reset.svg";
 import { AUDIT_LOG_LIST_ATTRIBUTES } from "../../constants/list-headers";
 import { AlertType } from "../../models/alert";
 import SearchBar from "../SearchBar";
@@ -178,7 +181,7 @@ export function LogsPopup({
             onClick={onClose}
           >
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -186,7 +189,7 @@ export function LogsPopup({
         </section>
         <section className="flex width-95 space-between mb-1 g-2">
           <ActionButton
-            src={"src/assets/filter_icon.svg"}
+            src={filterIcon}
             alt={"Akcja"}
             text={`Akcja: ${filter.action ?? "WSZYSTKIE"}`}
             onClick={toggleAction}
@@ -230,7 +233,7 @@ export function LogsPopup({
           </div>
           
           <ActionButton
-            src={"src/assets/reset.svg"}
+            src={resetIcon}
             alt={"Reset"}
             iconTitle={"Resetuj filtry"}
             text={"Reset"}

@@ -7,6 +7,7 @@ import { Action } from "../../models/action";
 import { formatDate } from "../../utils/dateUtils";
 import { formatPrice } from "../../utils/priceUtils";
 import { calculateOrderItems } from "../../utils/orderUtils";
+import arrowDownIcon from "../../assets/arrow_down.svg";
 
 export interface HandyOrderListProps {
   attributes: ListAttribute[];
@@ -41,7 +42,7 @@ export function HandyOrderList({
       return (
         <button className="order-product-move-button border-none pointer transparent p-0">
           <img
-            src="src/assets/arrow_down.svg"
+            src={arrowDownIcon}
             alt="Expand order"
             className={`expand-order-icon grid pointer ${
               expandedOrderIds.includes(order.id) ? "rotated" : ""

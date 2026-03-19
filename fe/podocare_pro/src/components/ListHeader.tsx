@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ListAttribute, SM_BREAKPOINT } from "../constants/list-headers";
 
 export enum ListModule {

@@ -1,4 +1,4 @@
-import React from "react";
+import resetIcon from "../assets/reset.svg";
 import CategoryButtons from "./CategoryButtons";
 import ActionButton from "./ActionButton";
 import DropdownSelect, { DropdownItem } from "./DropdownSelect";
@@ -7,8 +7,6 @@ import CategoryService from "../services/CategoryService";
 import { useState, useEffect, useCallback } from "react";
 import { ProductFilterDTO } from "../models/product";
 import { ProductCategory, CategoryButtonMode, NewProductCategory } from "../models/categories";
-import { useAlert } from "./Alert/AlertProvider";
-import { AlertType } from "../models/alert";
 
 export interface Brand extends DropdownItem {
   id: number;
@@ -38,7 +36,6 @@ export function ListActionSection({
   const [selectedCategories, setSelectedCategories] = useState<
     ProductCategory[]
   >([]);
-  const { showAlert } = useAlert();
   
 
   const fetchBrands = async (): Promise<void> => {
@@ -47,7 +44,7 @@ export function ListActionSection({
         const sortedBrands = data.sort((a, b) => a.name.localeCompare(b.name));
         setBrands(sortedBrands);
       })
-      .catch((error) => {
+      .catch(() => {
         setBrands([]);
       });
   };
@@ -57,7 +54,7 @@ export function ListActionSection({
         .then((data) => {
           setCategories(data);
         })
-        .catch((error) => {
+        .catch(() => {
           setCategories([]);
         });
     };
@@ -139,7 +136,7 @@ export function ListActionSection({
         className="brand-dropdown"
       />
       <ActionButton
-        src={"src/assets/reset.svg"}
+        src={resetIcon}
         alt={"Reset filters"}
         iconTitle={"Resetuj filtry"}
         text={"Reset"}

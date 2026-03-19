@@ -3,6 +3,8 @@ import ReactDOM from "react-dom";
 import ActionButton from "../ActionButton";
 import { Action } from "../../models/action";
 import { AlertType } from "../../models/alert";
+import closeIcon from "../../assets/close.svg";
+import tickIcon from "../../assets/tick.svg";
 import { validateExpenseForm } from "../../utils/validators";
 import { useAlert } from "../Alert/AlertProvider";
 import { CompanyExpense, NewCompanyExpense } from "../../models/expense";
@@ -115,7 +117,7 @@ export function ExpensePopup({
             onClick={onClose}
           >
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -129,7 +131,7 @@ export function ExpensePopup({
           />
         </section>
         <ActionButton
-          src={"src/assets/tick.svg"}
+          src={tickIcon}
           alt={"Zapisz"}
           text={"Zapisz"}
           onClick={handleExpenseAction}

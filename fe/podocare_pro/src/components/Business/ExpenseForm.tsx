@@ -21,6 +21,8 @@ import ExpenseService from "../../services/ExpenseService";
 import { AlertType } from "../../models/alert";
 import OrderHistoryPopup from "../Popups/OrderHistoryPopup";
 import { Order } from "../../models/order";
+import zamowieniaIcon from "../../assets/zamówienia.svg";
+import addNewIcon from "../../assets/addNew.svg";
 
 export interface ExpenseFormProps {
   action: Action;
@@ -208,7 +210,7 @@ export function ExpenseForm({
         <section className="flex width-max space-between align-items-center mb-1">
         <a className="product-form-input-title">Zamówienie:</a>
         <ActionButton
-          src={"src/assets/zamówienia.svg"}
+          src={zamowieniaIcon}
           alt={"Wbierz zamówienie"}
           text={selectedOrderNumber ? `Zamówienie #${selectedOrderNumber}` : "Wybierz zamówienie"}
           onClick={() => setIsOrderHistoryPopupOpen(true)}
@@ -253,7 +255,7 @@ export function ExpenseForm({
       </section>
       <div className="addons-list-header invoice flex justify-end align-items-center">
         <ActionButton
-          src={"src/assets/addNew.svg"}
+          src={addNewIcon}
           alt={"Nowa pozycja"}
           text={"Nowa pozycja"}
           onClick={handleAddNewExpenseItem}

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import searchbarIcon from "../assets/searchbar_icon.svg";
 import { useState, useCallback } from 'react'
 
 export interface SearchBarProps {
@@ -13,7 +14,7 @@ export interface SearchBarProps {
 export function SearchBar ({ 
   onKeywordChange, 
   resetTriggered,
-  iconSrc = "src/assets/searchbar_icon.svg",
+  iconSrc = searchbarIcon,
   iconAlt = "Searchbar icon",
   placeholder = "Szukaj...",
   className="",

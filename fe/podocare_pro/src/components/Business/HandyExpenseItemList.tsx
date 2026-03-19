@@ -16,7 +16,6 @@ export interface HandyExpenseItemListProps {
 export function HandyExpenseItemList({
   attributes,
   expense,
-  action,
   mode = Mode.NORMAL,
   className = "",
 }: HandyExpenseItemListProps) {
@@ -24,7 +23,6 @@ export function HandyExpenseItemList({
   const renderAttributeContent = (
     attr: ListAttribute,
     expenseItem: CompanyExpenseItem,
-    index: number
   ): React.ReactNode => {
     switch (attr.name) {
 
@@ -102,7 +100,7 @@ export function HandyExpenseItemList({
                   justifyContent: attr.justify,
                 }}
               >
-                {renderAttributeContent(attr, expenseItem, index)}
+                {renderAttributeContent(attr, expenseItem)}
               </div>
             ))}
           </div>

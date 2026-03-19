@@ -3,15 +3,11 @@ import { useAlert } from "../Alert/AlertProvider";
 import ActionButton from "../ActionButton";
 import ReactDOM from "react-dom";
 import ListHeader from "../ListHeader";
-import { Client } from "../../models/client";
+import closeIcon from "../../assets/close.svg";
+import addNewIcon from "../../assets/addNew.svg";
 import RemovePopup from "./RemovePopup";
 import { AlertType } from "../../models/alert";
-import VoucherService from "../../services/VoucherService";
-import { Voucher, NewVoucher, VoucherStatus, VoucherFilterDTO } from "../../models/voucher";
-import { DISCOUNTS_LIST_ATTRIBUTES, VOUCHERS_LIST_ATTRIBUTES } from "../../constants/list-headers";
-import VouchersList from "../Clients/VouchersList";
-import VoucherPopup from "./VoucherPopup";
-import SearchBar from "../SearchBar";
+import { DISCOUNTS_LIST_ATTRIBUTES } from "../../constants/list-headers";
 import DiscountsList from "../Clients/DiscountsList";
 import { Discount } from "../../models/visit";
 import DiscountService from "../../services/DiscountService";
@@ -91,7 +87,7 @@ export function DiscountManagePopup({
             onClick={onClose}
           >
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -99,7 +95,7 @@ export function DiscountManagePopup({
         </section>
         <section className="flex width-90 space-between mb-1 g-2">
           <ActionButton
-            src={"src/assets/addNew.svg"}
+            src={addNewIcon}
             alt={"Nowy Rabat"}
             text={"Nowy Rabat"}
             onClick={() => setIsAddNewDiscountPopupOpen(true)}

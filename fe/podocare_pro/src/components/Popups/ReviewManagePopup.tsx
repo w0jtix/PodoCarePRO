@@ -3,6 +3,9 @@ import { useAlert } from "../Alert/AlertProvider";
 import ActionButton from "../ActionButton";
 import ReactDOM from "react-dom";
 import ListHeader from "../ListHeader";
+import closeIcon from "../../assets/close.svg";
+import filterIcon from "../../assets/filter_icon.svg";
+import addNewIcon from "../../assets/addNew.svg";
 import { Client } from "../../models/client";
 import RemovePopup from "./RemovePopup";
 import { AlertType } from "../../models/alert";
@@ -126,7 +129,7 @@ export function ReviewManagePopup({
             onClick={onClose}
           >
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -135,7 +138,7 @@ export function ReviewManagePopup({
         <section className="flex width-90 space-between mb-1 g-2">
           <div className="flex g-2"> 
           <ActionButton
-            src={"src/assets/filter_icon.svg"}
+            src={filterIcon}
             alt={"Status"}
             text={`Status: ${
               filter.isUsed === null
@@ -168,7 +171,7 @@ export function ReviewManagePopup({
           />  
           </div>
           <ActionButton
-            src={"src/assets/addNew.svg"}
+            src={addNewIcon}
             alt={"Nowa Opinia"}
             text={"Nowa Opinia"}
             onClick={() => setIsAddNewReviewPopupOpen(true)}

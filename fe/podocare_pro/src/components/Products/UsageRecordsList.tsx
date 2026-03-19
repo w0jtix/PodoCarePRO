@@ -1,4 +1,5 @@
 import { UsageReason, UsageRecord, getUsageReasonDisplay } from "../../models/usage-record";
+import cancelIcon from "../../assets/cancel.svg";
 import { ListAttribute } from "../../constants/list-headers";
 import ActionButton from "../ActionButton";
 import { useCallback } from "react";
@@ -23,7 +24,6 @@ export function UsageRecordsList({
   setRemoveUsageRecordId,
   onScroll,
   isLoading = false,
-  hasMore = true,
   className = "",
 }: UsageRecordsListProps) {
   const { user } = useUser();
@@ -38,7 +38,6 @@ export function UsageRecordsList({
   const renderAttributeContent = (
     attr: ListAttribute,
     item: UsageRecord,
-    index: number
   ): React.ReactNode => {
     switch (attr.name) {
       case "":
@@ -76,7 +75,7 @@ export function UsageRecordsList({
           <div className="item-list-single-item-action-buttons flex">
             {(item.createdBy === user?.id || user?.roles.includes(RoleType.ROLE_ADMIN)) && (
             <ActionButton
-              src="src/assets/cancel.svg"
+              src={cancelIcon}
               alt="Usuń Zużycie Produktut"
               iconTitle={"Usuń Zużycie Produktu"}
               text="Usuń"
@@ -97,7 +96,7 @@ export function UsageRecordsList({
       } ${className}`}
       onScroll={onScroll}
     >
-      {items.map((item, index) => (
+      {items.map((item) => (
         <div key={item.id} className={`product-wrapper width-max ${className} min-height-req-25`}>
           <div className={`item flex ${className} `}>
             {attributes.map((attr) => (
@@ -111,7 +110,7 @@ export function UsageRecordsList({
                   justifyContent: attr.justify,
                 }}
               >
-                {renderAttributeContent(attr, item, index)}
+                {renderAttributeContent(attr, item)}
               </div>
             ))}
           </div>

@@ -8,6 +8,8 @@ import { NewStatSettings, StatSettings } from "../../models/business_settings";
 import StatSettingsService from "../../services/StatSettingsService";
 import { MONTHS } from "../../utils/dateUtils";
 import LogsPopup from "../Popups/LogsPopup";
+import logsIcon from "../../assets/logs.svg";
+import tickIcon from "../../assets/tick.svg";
 
 export function BusinessSettings() {
   const [initialSettings, setIninitalSettings] = useState<StatSettings>({
@@ -99,7 +101,7 @@ export function BusinessSettings() {
 
     <div className="flex width-90 mt-1 justify-end">
       <ActionButton
-        src={"/src/assets/logs.svg"}
+        src={logsIcon}
         alt={"Logs"}
         text={"Wyświetl logi"}
         onClick={() => setLogsPopupOpen(true)}
@@ -177,7 +179,7 @@ export function BusinessSettings() {
       </div>
       <div className="flex width-90 justify-end mt-2">
         <ActionButton
-          src={"src/assets/tick.svg"}
+          src={tickIcon}
           alt={"Zapisz"}
           text={"Zapisz"}
           disableImg={true}

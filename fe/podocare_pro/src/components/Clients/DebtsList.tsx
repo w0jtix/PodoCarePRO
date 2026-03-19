@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState } from "react";
 import ActionButton from "../ActionButton";
 import { ListAttribute } from "../../constants/list-headers";
 import { ClientDebt, DebtType } from "../../models/debt";
@@ -7,6 +7,9 @@ import VisitPopup from "../Popups/VisitPopup";
 import { DEBTS_BY_VISIT_LIST_ATTRIBUTES } from "../../constants/list-headers";
 import { useUser } from "../User/UserProvider";
 import { RoleType } from "../../models/login";
+import removedIcon from "../../assets/removed.svg";
+import editIcon from "../../assets/edit.svg";
+import cancelIcon from "../../assets/cancel.svg";
 
 export interface DebtsListProps {
   attributes: ListAttribute[];
@@ -51,7 +54,6 @@ export function DebtsList({
   const renderAttributeContent = (
     attr: ListAttribute,
     item: ClientDebt,
-    index: number
   ): React.ReactNode => {
     switch (attr.name) {
       case "":
@@ -80,7 +82,7 @@ export function DebtsList({
           <div className={`flex g-5px ${item.client.isDeleted ? "pointer" : ""}`} title={`${item.client.isDeleted ? "Klient usunięty" : ""}`}>
             
           <span className={`text-align-center ${item.client.isDeleted ? "client-removed" : ""}`}>{item.client.firstName + " " + item.client.lastName}</span>
-          {item.client.isDeleted && <img src ="src/assets/removed.svg" alt="Client Removed" className="checkimg align-self-center"/>}
+          {item.client.isDeleted && <img src={removedIcon} alt="Client Removed" className="checkimg align-self-center"/>}
         </div>
       );
 
@@ -115,7 +117,7 @@ export function DebtsList({
             {item.sourceVisit === null && (item.createdBy === user?.id || user?.roles.includes(RoleType.ROLE_ADMIN)) && (
               <>
                 <ActionButton
-                  src="src/assets/edit.svg"
+                  src={editIcon}
                   alt="Edytuj Dług"
                   iconTitle={"Edytuj Dług"}
                   text="Edytuj"
@@ -123,7 +125,7 @@ export function DebtsList({
                   disableText={true}
                 />
                 <ActionButton
-                  src="src/assets/cancel.svg"
+                  src={cancelIcon}
                   alt="Usuń Dług"
                   iconTitle={"Usuń Dług"}
                   text="Usuń"
@@ -145,7 +147,7 @@ export function DebtsList({
         items.length === 0 ? "border-none" : ""
       } ${className}`}
     >
-      {items.map((item, index) => (
+      {items.map((item) => (
         <div
           key={item.id}
           className={`product-wrapper width-max ${className} ${
@@ -167,7 +169,7 @@ export function DebtsList({
                   justifyContent: attr.justify,
                 }}
               >
-                {renderAttributeContent(attr, item, index)}
+                {renderAttributeContent(attr, item)}
               </div>
             ))}
           </div>

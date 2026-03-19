@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { AVAILABLE_AVATARS } from "../../constants/avatars";
 
 interface AvatarPickerProps {

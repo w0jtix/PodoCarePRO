@@ -1,4 +1,7 @@
 import { useState, useEffect } from "react";
+import closeIcon from "../../assets/close.svg";
+import resetIcon from "../../assets/reset.svg";
+import tickIcon from "../../assets/tick.svg";
 import ReactDOM from "react-dom";
 import AllProductService from "../../services/AllProductService";
 import ActionButton from "../ActionButton";
@@ -333,7 +336,7 @@ export function OrderNewProductsPopup({
           </div>
           <button className="popup-close-button  transparent border-none flex align-items-center justify-center absolute pointer" onClick={onClose}>
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -350,7 +353,7 @@ export function OrderNewProductsPopup({
               resetTriggered={resetTriggered}
             />
             <ActionButton
-              src={"src/assets/reset.svg"}
+              src={resetIcon}
               alt={"Reset"}
               iconTitle={"Resetuj"}
               text={"Reset"}
@@ -433,7 +436,7 @@ export function OrderNewProductsPopup({
         </div>
         <div className="popup-footer-container flex-column justify-end">
           <ActionButton
-            src={"src/assets/tick.svg"}
+            src={tickIcon}
             alt={"Zapisz"}
             text={"Zapisz"}
             onClick={createNewProducts}

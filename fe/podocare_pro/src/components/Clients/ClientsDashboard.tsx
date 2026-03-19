@@ -14,6 +14,14 @@ import DebtManagePopup from "../Popups/DebtManagePopup";
 import VoucherManagePopup from "../Popups/VoucherManagePopup";
 import ReviewManagePopup from "../Popups/ReviewManagePopup";
 import DiscountManagePopup from "../Popups/DiscountManagePopup";
+import boostIcon from "../../assets/boost.svg";
+import warningIcon from "../../assets/warning.svg";
+import debtIcon from "../../assets/debt.svg";
+import resetIcon from "../../assets/reset.svg";
+import addNewIcon from "../../assets/addNew.svg";
+import starIcon from "../../assets/star.svg";
+import voucherIcon from "../../assets/voucher.svg";
+import clientDiscountIcon from "../../assets/client_discount.svg";
 
 export function ClientsDashboard() {
   const [resetTriggered, setResetTriggered] = useState<boolean>(false);
@@ -147,14 +155,14 @@ export function ClientsDashboard() {
       >
         <div className="flex g-4 width-fit-content">
           <ActionButton
-            src={"src/assets/boost.svg"}
+            src={boostIcon}
             alt={"Boost"}
             text={"Boost"}
             onClick={handleBoost}
             className={`${filter.boostClient ? "cb-selected" : ""}`}
           />
           <ActionButton
-            src={"src/assets/warning.svg"}
+            src={warningIcon}
             alt={"Brak Regulaminu"}
             text={"Brak Regulaminu"}
             onClick={handleTerms}
@@ -163,7 +171,7 @@ export function ClientsDashboard() {
             }`}
           />
           <ActionButton
-            src={"src/assets/debt.svg"}
+            src={debtIcon}
             alt={"Klienci Zadłużeni"}
             text={"Posiadający Dług"}
             onClick={handleDebt}
@@ -171,7 +179,7 @@ export function ClientsDashboard() {
           />
         </div>
         <ActionButton
-          src={"src/assets/reset.svg"}
+          src={resetIcon}
           alt={"Reset filters"}
           iconTitle={"Resetuj filtry"}
           text={"Reset"}
@@ -181,33 +189,33 @@ export function ClientsDashboard() {
       </NavigationBar>
       <section className="products-action-buttons width-80 flex align-self-center space-between mt-1 mb-1">
         <ActionButton
-          src={"src/assets/addNew.svg"}
+          src={addNewIcon}
           alt={"Nowy Klient"}
           text={"Nowy Klient"}
           onClick={() => setIsAddNewClientPopupOpen(true)}
         />
         <div className="flex g-25">
           <ActionButton
-            src={"src/assets/star.svg"}
+            src={starIcon}
             alt={"Opinie"}
             text={"Opinie"}
             onClick={() => setIsManageReviewsPopupOpen(true)}
           />
           <ActionButton
-            src={"src/assets/voucher.svg"}
+            src={voucherIcon}
             alt={"Vouchery"}
             text={"Vouchery"}
             onClick={() => setIsManageVouchersPopupOpen(true)}
           />
           <ActionButton
-            src={"src/assets/debt.svg"}
+            src={debtIcon}
             alt={"Zadłużenia"}
             text={"Zadłużenia"}
             onClick={() => setIsManageDebtsPopupOpen(true)}
           />
 
           <ActionButton
-            src={"src/assets/client_discount.svg"}
+            src={clientDiscountIcon}
             alt={"Rabaty Klientów"}
             text={"Rabaty Klientów"}
             onClick={() => setIsManageDiscountsPopupOpen(true)}

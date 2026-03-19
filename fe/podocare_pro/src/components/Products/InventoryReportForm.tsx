@@ -1,12 +1,8 @@
-import { Employee } from "../../models/employee";
-import { UsageRecordItem, UsageReason } from "../../models/usage-record";
 import { useCallback, useEffect, useState } from "react";
-import EmployeeService from "../../services/EmployeeService";
-import DropdownSelect from "../DropdownSelect";
+import cancelIcon from "../../assets/cancel.svg";
 import { Product } from "../../models/product";
 import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
-import DateInput from "../DateInput";
 import SearchBar from "../SearchBar";
 import ItemList from "./ItemList";
 import { ProductFilterDTO } from "../../models/product";
@@ -18,8 +14,7 @@ import CategoryService from "../../services/CategoryService";
 import CategoryButtons from "../CategoryButtons";
 import ActionButton from "../ActionButton";
 import DigitInput from "../DigitInput";
-import { InventoryReport, NewInventoryReportItem, InventoryReportItem } from "../../models/inventory_report";
-import CostInput from "../CostInput";
+import { NewInventoryReportItem, InventoryReportItem } from "../../models/inventory_report";
 import { getSupplyChange } from "../../utils/inventoryReportUtils";
 
 export interface InventoryReportFormProps {
@@ -210,7 +205,7 @@ export function InventoryReportForm({
                   </span>
                   </div>
                   <ActionButton
-                    src="src/assets/cancel.svg"
+                    src={cancelIcon}
                     alt="Usuń Produkt"
                     iconTitle={"Usuń Produkt"}
                     text="Usuń"

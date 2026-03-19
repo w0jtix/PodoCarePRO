@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
+import editIcon from "../../assets/edit.svg";
+import cancelIcon from "../../assets/cancel.svg";
 import ActionButton from "../ActionButton";
 import { ListAttribute, SM_BREAKPOINT } from "../../constants/list-headers";
 import { Product, Unit } from "../../models/product";
 import { Action } from "../../models/action";
-import CostInput from "../CostInput";
 
 export interface ItemListProps {
   attributes: ListAttribute[];
@@ -29,11 +30,9 @@ export function ItemList ({
   setRemoveProductId,
   className = "",
   onClick,
-  onRemoveByIndex,
   productInfo = false,
   onScroll,
   isLoading = false,
-  hasMore = true,
   customWidth="",
 }: ItemListProps) {
   const [isSmall, setIsSmall] = useState(window.innerWidth < SM_BREAKPOINT);
@@ -114,7 +113,7 @@ export function ItemList ({
         return (
           <div className="item-list-single-item-action-buttons flex ml-1">
             <ActionButton
-              src="src/assets/edit.svg"
+              src={editIcon}
               alt="Edytuj Produkt"
               iconTitle={"Edytuj Produkt"}
               text="Edytuj"
@@ -123,7 +122,7 @@ export function ItemList ({
               disabled={item.isDeleted}
               />
               <ActionButton
-              src="src/assets/cancel.svg"
+              src={cancelIcon}
               alt="Usuń Produkt"
               iconTitle={"Usuń Produkt"}
               text="Usuń"

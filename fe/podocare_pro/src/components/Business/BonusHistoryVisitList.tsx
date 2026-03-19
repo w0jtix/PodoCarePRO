@@ -5,6 +5,8 @@ import { ListAttribute } from "../../constants/list-headers";
 import { formatDate, getWeekday, getWeeksOfMonth, WeekRange } from "../../utils/dateUtils";
 import VisitPopup from "../Popups/VisitPopup";
 import { BonusVisit } from "../../models/employee";
+import previewIcon from "../../assets/preview.svg";
+import arrowDownIcon from "../../assets/arrow_down.svg";
 
 export interface BonusHistoryVisitListProps {
   attributes: ListAttribute[];
@@ -116,7 +118,7 @@ export function BonusHistoryVisitList({
         return (
           <div className="item-list-single-item-action-buttons flex">
             <ActionButton
-              src={"src/assets/preview.svg"}
+              src={previewIcon}
               alt={"Podgląd Wizyty"}
               iconTitle={"Podgląd Wizyty"}
               text={"Podgląd"}
@@ -152,7 +154,7 @@ export function BonusHistoryVisitList({
             >
                 <div className="flex g-10px align-items-center" style={{ flex: 1 }}>
                 <img
-            src="src/assets/arrow_down.svg"
+            src={arrowDownIcon}
             alt="arrow down"
             className={`arrow-down ${
               expandedWeeks.includes(week.weekNumber) ? "rotated" : ""

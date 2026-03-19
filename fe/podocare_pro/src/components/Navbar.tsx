@@ -1,4 +1,3 @@
-import React from 'react'
 import NavbarLogoContainer from './NavbarLogoContainer'
 import NavbarMenu from './NavbarMenu'
 import Socials from './Socials'

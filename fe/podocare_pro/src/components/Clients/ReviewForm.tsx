@@ -1,11 +1,9 @@
 import { Action } from "../../models/action";
-import { useState, useEffect, useCallback } from "react";
-import { NewClient, Client } from "../../models/client";
-import TextInput from "../TextInput";
+import { useEffect, useCallback } from "react";
+import { Client } from "../../models/client";
 import DropdownSelect from "../DropdownSelect";
-import CostInput from "../CostInput";
 import ActionButton from "../ActionButton";
-import { Review, NewReview, ReviewSource } from "../../models/review";
+import { NewReview, ReviewSource } from "../../models/review";
 import DateInput from "../DateInput";
 
 export interface ReviewFormProps {
@@ -23,10 +21,6 @@ export function ReviewForm({
   className = "",
   action,
 }: ReviewFormProps) {
-  const clientItems = clients.map((client) => ({
-    name: `${client.firstName} ${client.lastName}`,
-    ...client,
-  }));
   const handleClientChange = useCallback((client: Client | Client[] | null) => {
     const selectedClient = Array.isArray(client) ? client[0] : client;
 

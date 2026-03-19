@@ -1,6 +1,8 @@
 import React, { useCallback } from "react";
 import { useState, useRef, useEffect } from "react";
 import ActionButton from "./ActionButton";
+import hideIcon from "../assets/hide.svg";
+import previewIcon from "../assets/preview.svg";
 
 interface SuggestionItem {
   id: string | number;
@@ -217,7 +219,7 @@ export function TextInput<T extends SuggestionItem = SuggestionItem> ({
           />
           {password && (
             <ActionButton
-              src={showPassword ? "src/assets/hide.svg" : "src/assets/preview.svg"}
+              src={showPassword ? hideIcon : previewIcon}
               disableText={true}
               onClick={() => setShowPassword(!showPassword)}
               className="password-toggle-btn"

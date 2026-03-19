@@ -1,8 +1,10 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useAlert } from "../Alert/AlertProvider";
 import ActionButton from "../ActionButton";
 import ReactDOM from "react-dom";
 import { AlertType } from "../../models/alert";
+import closeIcon from "../../assets/close.svg";
+import addNewIcon from "../../assets/addNew.svg";
 import { EMPLOYEES_LIST_ATTRIBUTES } from "../../constants/list-headers";
 import { Employee } from "../../models/employee";
 import { User } from "../../models/login";
@@ -84,7 +86,7 @@ export function EmployeeManagePopup({
             onClick={onClose}
           >
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -92,7 +94,7 @@ export function EmployeeManagePopup({
         </section>
         <section className="flex width-90 justify-end mb-1 g-2">
           <ActionButton
-            src={"src/assets/addNew.svg"}
+            src={addNewIcon}
             alt={"Nowy Pracownik"}
             text={"Nowy Pracownik"}
             onClick={() => setIsAddNewEmployeePopupOpen(true)}

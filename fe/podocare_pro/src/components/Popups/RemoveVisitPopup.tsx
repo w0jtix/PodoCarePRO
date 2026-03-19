@@ -1,6 +1,10 @@
 import ReactDOM from "react-dom";
 import ActionButton from "../ActionButton";
 import { Visit } from "../../models/visit";
+import closeIcon from "../../assets/close.svg";
+import warningIcon from "../../assets/warning.svg";
+import cancelIcon from "../../assets/cancel.svg";
+import tickIcon from "../../assets/tick.svg";
 import { SaleItem } from "../../models/sale";
 import { useCallback, useState, useEffect } from "react";
 import VisitService from "../../services/VisitService";
@@ -64,7 +68,7 @@ export function RemoveVisitPopup({
 
   const handleRemove = useCallback(async () => {
     VisitService.deleteVisit(visitId)
-      .then((status) => {
+      .then(() => {
         showAlert("Wizyta usunięta!", AlertType.SUCCESS);
         handleResetFiltersAndData();
         setTimeout(() => {
@@ -157,7 +161,7 @@ export function RemoveVisitPopup({
             onClick={onClose}
           >
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -171,7 +175,7 @@ export function RemoveVisitPopup({
           {visitWithDebtRedempted && (
             <div className="flex width-fit-content g-5px mb-2">
               <img
-                    src={"src/assets/warning.svg"}
+                    src={warningIcon}
                     alt="Warning"
                     className="visit-remove-warning-icon"
                   />
@@ -211,7 +215,7 @@ export function RemoveVisitPopup({
               {voucherConflict && (
                 <div className="width-90 flex g-05 mt-05 mb-05 justify-center align-items-center align-self-center">
                   <img
-                    src={"src/assets/warning.svg"}
+                    src={warningIcon}
                     alt="Warning"
                     className="voucher-warning-icon"
                   />
@@ -252,7 +256,7 @@ export function RemoveVisitPopup({
         <section className="footer-popup-action-buttons width-60 flex space-between mt-05 mb-05">
           <div className="footer-cancel-button">
             <ActionButton
-              src={"src/assets/cancel.svg"}
+              src={cancelIcon}
               alt={"Anuluj"}
               text={"Anuluj"}
               onClick={onClose}
@@ -260,7 +264,7 @@ export function RemoveVisitPopup({
           </div>
           <div className="footer-confirm-button">
             <ActionButton
-              src={"src/assets/tick.svg"}
+              src={tickIcon}
               alt={"Zatwierdź"}
               text={"Zatwierdź"}
               disabled={(voucherConflict || visitWithDebtRedempted !== null) ? true : false}

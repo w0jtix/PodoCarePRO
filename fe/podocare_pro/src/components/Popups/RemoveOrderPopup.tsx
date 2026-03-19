@@ -1,11 +1,15 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import ReactDOM from "react-dom";
 import OrderContent from "../Orders/OrderContent";
+import closeIcon from "../../assets/close.svg";
+import warningIcon from "../../assets/warning.svg";
+import cancelIcon from "../../assets/cancel.svg";
+import tickIcon from "../../assets/tick.svg";
 import ActionButton from "../ActionButton";
 import { useState, useCallback } from "react";
 import OrderService from "../../services/OrderService";
 import { Order } from "../../models/order";
-import { Alert, AlertType } from "../../models/alert";
+import { AlertType } from "../../models/alert";
 import { Action, Mode } from "../../models/action";
 import { useAlert } from "../Alert/AlertProvider";
 
@@ -44,7 +48,7 @@ export function RemoveOrderPopup({
   const handleOrderRemove = useCallback(async () => {
     if(fetchedOrder)
       OrderService.deleteOrder(fetchedOrder.id)
-        .then((status) => {
+        .then(() => {
           showAlert(`Zamówienie #${fetchedOrder.orderNumber} usunięte pomyślnie`
           , AlertType.SUCCESS);
           onSuccess();
@@ -90,7 +94,7 @@ export function RemoveOrderPopup({
           <h2 className="popup-title">Na pewno? ⚠️</h2>
           <button className="popup-close-button  transparent border-none flex align-items-center justify-center absolute pointer" onClick={onClose}>
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -122,7 +126,7 @@ export function RemoveOrderPopup({
               {hasWarning && (
                 <div className="popup-warning-explanation-display flex justify-center">
                   <img
-                    src="src/assets/warning.svg"
+                    src={warningIcon}
                     alt="Warning"
                     className="order-item-warning-icon"
                   />
@@ -140,7 +144,7 @@ export function RemoveOrderPopup({
         <section className="footer-popup-action-buttons  width-60 flex space-between mb-05">
           <div className="footer-cancel-button">
             <ActionButton
-              src={"src/assets/cancel.svg"}
+              src={cancelIcon}
               alt={"Anuluj"}
               text={"Anuluj"}
               onClick={onClose}
@@ -148,7 +152,7 @@ export function RemoveOrderPopup({
           </div>
           <div className="footer-confirm-button">
             <ActionButton
-              src={"src/assets/tick.svg"}
+              src={tickIcon}
               alt={"Zatwierdź"}
               text={"Zatwierdź"}
               onClick={handleOrderRemove}

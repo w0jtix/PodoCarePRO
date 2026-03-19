@@ -1,4 +1,6 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
+import editIcon from "../../assets/edit.svg";
+import cancelIcon from "../../assets/cancel.svg";
 import ActionButton from "../ActionButton";
 import { useState } from "react";
 import { ListAttribute} from "../../constants/list-headers";
@@ -52,7 +54,6 @@ export function ServiceList({
   const renderAttributeContent = (
     attr: ListAttribute,
     item: BaseService,
-    index?: number,
   ): React.ReactNode => {
     switch (attr.name) {
 
@@ -87,7 +88,7 @@ export function ServiceList({
         return (
           <div className="item-list-single-item-action-buttons flex">
             <ActionButton
-              src="src/assets/edit.svg"
+              src={editIcon}
               alt="Edytuj Usługę"
               iconTitle={"Edytuj Usługę"}
               text="Edytuj"
@@ -95,7 +96,7 @@ export function ServiceList({
               disableText={true}
             />
             <ActionButton
-              src="src/assets/cancel.svg"
+              src={cancelIcon}
               alt="Usuń Usługę"
               iconTitle={"Usuń Usługę"}
               text="Usuń"
@@ -136,7 +137,7 @@ export function ServiceList({
                   justifyContent: attr.justify,
                 }}
               >
-                {renderAttributeContent(attr, item, index)}
+                {renderAttributeContent(attr, item)}
               </div>
             ))}
           </div>

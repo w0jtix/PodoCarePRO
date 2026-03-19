@@ -1,4 +1,10 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
+import toggleSelectedIcon from "../../assets/toggleSelected.svg";
+import toggleIcon from "../../assets/toggle.svg";
+import pricetagSelectedIcon from "../../assets/pricetagSelected.svg";
+import pricetagIcon from "../../assets/pricetag.svg";
+import usageIcon from "../../assets/usage.svg";
+import addNewIcon from "../../assets/addNew.svg";
 import NavigationBar from "../NavigationBar";
 import SupplyList from "./SupplyList";
 import { useState, useCallback } from "react";
@@ -40,7 +46,7 @@ export function Dashboard() {
   const [productInfo, setProductInfo] = useState<boolean>(false);
   const [resetTriggered, setResetTriggered] = useState<boolean>(false);
   const [categories, setCategories] = useState<ProductCategory[]>([]);
-  const { user, setUser, refreshUser } = useUser();
+  const { user } = useUser();
   const { showAlert } = useAlert();
 
   const fetchCategories = useCallback(async () => {
@@ -168,8 +174,8 @@ export function Dashboard() {
           <ActionButton
             src={
               filter.includeZero
-                ? "src/assets/toggleSelected.svg"
-                : "src/assets/toggle.svg"
+                ? toggleSelectedIcon
+                : toggleIcon
             }
             alt={"Include Zero"}
             iconTitle={"Pokaż produkty o stanie magazynowym = 0"}
@@ -180,8 +186,8 @@ export function Dashboard() {
           <ActionButton
             src={
               productInfo
-                ? "src/assets/pricetagSelected.svg"
-                : "src/assets/pricetag.svg"
+                ? pricetagSelectedIcon
+                : pricetagIcon
             }
             alt={"Szczegółowe Dane"}
             iconTitle={"Szczegółowe Dane Produktu"}
@@ -192,20 +198,20 @@ export function Dashboard() {
         </div>
         <section className="products-action-buttons width-80 flex align-self-center justify-end g-25 mt-1 mb-1">
           <ActionButton
-            src={"src/assets/usage.svg"}
+            src={usageIcon}
             alt={"Zużycie Produktów"}
             text={"Zużycie Produktów"}
             onClick={() => setIsUsageRecordsPopupOpen(true)}
           />
           <ActionButton
-            src={"src/assets/addNew.svg"}
+            src={addNewIcon}
             alt={"Nowy Produkt"}
             text={"Nowy Produkt"}
             onClick={() => setIsAddNewProductsPopupOpen(true)}
           />
           {user?.roles.includes(RoleType.ROLE_ADMIN) && ( 
             <ActionButton
-            src={"src/assets/addNew.svg"}
+            src={addNewIcon}
             alt={"Nowa Kategoria"}
             text={"Nowa Kategoria"}
             onClick={() => setIsCategoryPopupOpen(true)}

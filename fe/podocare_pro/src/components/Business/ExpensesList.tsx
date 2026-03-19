@@ -1,15 +1,15 @@
 import React from "react";
 import { useState, useCallback } from "react";
 import ActionButton from "../ActionButton";
-import EditOrderPopup from "../Popups/EditOrderPopup";
-import RemoveOrderPopup from "../Popups/RemoveOrderPopup";
 import { ListAttribute } from "../../constants/list-headers";
-import RemovePopup from "../../components/Popups/RemovePopup";
 import { Action } from "../../models/action";
 import { calculateExpenseItems } from "../../utils/expenseUtils";
 import { formatDate } from "../../utils/dateUtils";
 import { CompanyExpense, expenseCategoryItems } from "../../models/expense";
 import ExpenseContent from "./ExpenseContent";
+import arrowDownIcon from "../../assets/arrow_down.svg";
+import editIcon from "../../assets/edit.svg";
+import cancelIcon from "../../assets/cancel.svg";
 
 export interface ExpensesListProps {
   attributes: ListAttribute[];
@@ -28,14 +28,10 @@ export function ExpensesList({
   className = "",
   onScroll,
   isLoading = false,
-  hasMore = true,
   setEditExpenseId,
   setRemoveExpenseId,
 }: ExpensesListProps) {
   const [expandedExpenseIds, setExpandedExpenseIds] = useState<number[]>([]);
-  const [selectedExpense, setSelectedExpense] = useState<CompanyExpense | null>(
-    null
-  );
 
   const handleOnClickEdit = useCallback(
     (e: React.MouseEvent, expense: CompanyExpense) => {
@@ -69,7 +65,7 @@ export function ExpensesList({
       case "":
         return (
           <img
-            src="src/assets/arrow_down.svg"
+            src={arrowDownIcon}
             alt="arrow down"
             className={`arrow-down ${
               expandedExpenseIds.includes(expense.id) ? "rotated" : ""
@@ -137,7 +133,7 @@ export function ExpensesList({
         return (
           <div className="item-list-single-item-action-buttons flex">
             <ActionButton
-              src={"src/assets/edit.svg"}
+              src={editIcon}
               alt={"Edytuj Produkt"}
               iconTitle={"Edytuj Produkt"}
               text={"Edytuj"}
@@ -145,7 +141,7 @@ export function ExpensesList({
               disableText={true}
             />
             <ActionButton
-              src={"src/assets/cancel.svg"}
+              src={cancelIcon}
               alt={"Usuń Produkt"}
               iconTitle={"Usuń Produkt"}
               text={"Usuń"}

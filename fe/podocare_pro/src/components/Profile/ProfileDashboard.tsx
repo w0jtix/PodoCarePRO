@@ -2,7 +2,7 @@ import { AvatarPicker } from "./AvatarPicker";
 import AuthService from "../../services/AuthService";
 import { AVAILABLE_AVATARS } from "../../constants/avatars";
 import ActionButton from "../ActionButton";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { ChangePasswordForm } from "./ChangePasswordForm";
 import { User, Role, JwtUser, RoleType } from "../../models/login";
 import UserService from "../../services/UserService";
@@ -16,9 +16,13 @@ import DropdownSelect from "../DropdownSelect";
 import EmployeeService from "../../services/EmployeeService";
 import { Employee } from "../../models/employee";
 import UserPopup from "../Popups/UserPopup";
+import tickIcon from "../../assets/tick.svg";
+import addNewIcon from "../../assets/addNew.svg";
+import editIcon from "../../assets/edit.svg";
+import logoutIcon from "../../assets/logout.svg";
 
 export function ProfileDashboard() {
-  const { user, setUser, refreshUser } = useUser();
+  const { user, refreshUser } = useUser();
   const { showAlert } = useAlert();
 
   const [isAvatarPickerOpen, setIsAvatarPickerOpen] = useState<boolean>(false);
@@ -198,7 +202,7 @@ export function ProfileDashboard() {
               />
               <ActionButton
                 text={"Zapisz Zmiany"}
-                src={"src/assets/tick.svg"}
+                src={tickIcon}
                 onClick={handleValidateUpdatedUser}
                 className="user-update-button"
               />
@@ -217,7 +221,7 @@ export function ProfileDashboard() {
           <div className="f-1 flex justify-end">
             <ActionButton
               text={"Nowy Użytkownik"}
-              src={"src/assets/addNew.svg"}
+              src={addNewIcon}
               alt="Nowy Użytkownik"
               onClick={() => setIsCreateUserPopupOpen(true)}
             />
@@ -250,7 +254,7 @@ export function ProfileDashboard() {
               {u.id != user?.id &&
                 user?.roles.includes(RoleType.ROLE_ADMIN) && (
                   <ActionButton
-                    src="src/assets/edit.svg"
+                    src={editIcon}
                     alt="Edytuj Użytkownika"
                     iconTitle={"Edytuj Użytkownika"}
                     text="Edytuj"
@@ -272,7 +276,7 @@ export function ProfileDashboard() {
       )}
       <div className="quick-action-buttons flex width-85 justify-end">
         <ActionButton
-          src="src/assets/logout.svg"
+          src={logoutIcon}
           alt="Wyloguj"
           text="Wyloguj"
           onClick={handleLogout}

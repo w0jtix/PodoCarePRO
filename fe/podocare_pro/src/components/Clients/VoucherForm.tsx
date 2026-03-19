@@ -1,11 +1,8 @@
 import { Action } from "../../models/action";
 import { useState, useEffect, useCallback } from "react";
-import { NewClient, Client } from "../../models/client";
-import TextInput from "../TextInput";
-import { DebtType, NewClientDebt } from "../../models/debt";
+import { Client } from "../../models/client";
 import DropdownSelect from "../DropdownSelect";
 import CostInput from "../CostInput";
-import ActionButton from "../ActionButton";
 import { NewVoucher, Voucher } from "../../models/voucher";
 import DateInput from "../DateInput";
 import VoucherService from "../../services/VoucherService";

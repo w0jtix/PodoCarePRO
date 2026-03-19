@@ -3,12 +3,13 @@ import ReactDOM from "react-dom";
 import ActionButton from "../ActionButton";
 import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
+import closeIcon from "../../assets/close.svg";
+import tickIcon from "../../assets/tick.svg";
 import { Action } from "../../models/action";
 import { NewDiscount, Discount } from "../../models/visit";
 import { validateDiscountForm } from "../../utils/validators";
 import DiscountService from "../../services/DiscountService";
 import DiscountForm from "../Clients/DiscountForm";
-import { Alert } from "react-bootstrap";
 
 export interface DiscountPopupProps {
   onClose: () => void;
@@ -109,7 +110,7 @@ export function DiscountPopup({
             onClick={onClose}
           >
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -126,7 +127,7 @@ export function DiscountPopup({
         </section>
 
         <ActionButton
-          src={"src/assets/tick.svg"}
+          src={tickIcon}
           alt={"Zapisz"}
           text={"Zapisz"}
           onClick={handleDiscountAction}

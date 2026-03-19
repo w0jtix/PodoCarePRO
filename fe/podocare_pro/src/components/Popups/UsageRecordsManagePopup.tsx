@@ -3,8 +3,11 @@ import { useAlert } from "../Alert/AlertProvider";
 import ActionButton from "../ActionButton";
 import ReactDOM from "react-dom";
 import RemovePopup from "./RemovePopup";
+import closeIcon from "../../assets/close.svg";
+import addNewIcon from "../../assets/addNew.svg";
+import filterIcon from "../../assets/filter_icon.svg";
+import resetIcon from "../../assets/reset.svg";
 import { AlertType } from "../../models/alert";
-import ReviewService from "../../services/ReviewService";
 import { USAGE_RECORDS_LIST_ATTRIBUTES } from "../../constants/list-headers";
 import { getUsageReasonDisplay, UsageRecord, UsageRecordFilterDTO } from "../../models/usage-record";
 import UsageRecordService from "../../services/UsageRecordService";
@@ -237,7 +240,7 @@ export function UsageRecordsManagePopup({
             onClick={onClose}
           >
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -245,7 +248,7 @@ export function UsageRecordsManagePopup({
         </section>
         <section className="flex width-90 justify-end mb-1 g-2">
           <ActionButton
-            src={"src/assets/addNew.svg"}
+            src={addNewIcon}
             alt={"Nowe Zużycie Produktu"}
             text={"Nowe Zużycie Produktu"}
             onClick={() => setIsAddNewUsageRecordPopupOpen(true)}
@@ -254,7 +257,7 @@ export function UsageRecordsManagePopup({
         <section className="flex-column width-90 space-between mb-1 g-2">
           <div className="flex width-max align-items-center space-between">
             <ActionButton
-                        src={"src/assets/filter_icon.svg"}
+                        src={filterIcon}
                         alt={"Powód"}
                         text={`Powód: ${filter.usageReason === null ? "wszystkie" : filter.usageReason && getUsageReasonDisplay(filter.usageReason).toLowerCase()}`}
                         onClick={toggleStatus}
@@ -262,7 +265,7 @@ export function UsageRecordsManagePopup({
                       />
             <SearchBar onKeywordChange={handleKeywordChange} resetTriggered={resetTriggered}/>
             <ActionButton
-                      src={"src/assets/reset.svg"}
+                      src={resetIcon}
                       alt={"Reset"}
                       iconTitle={"Resetuj filtry"}
                       text={"Reset"}

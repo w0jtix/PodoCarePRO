@@ -1,9 +1,8 @@
 import avatar5 from "../assets/avatars/avatar5.png";
+import arrowDownIcon from "../assets/arrow_down.svg";
 import { useState, useEffect, useRef, useCallback } from "react";
 import {
   USER_MENU_ITEMS,
-  getIconPath,
-  getIconAlt,
 } from "../constants/modules";
 import AuthService from "../services/AuthService";
 import { useNavigate } from "react-router-dom";
@@ -97,7 +96,7 @@ export function UserMenu({
         />
         <h2 className="username">{displayUsername}</h2>
         <img
-          src="src/assets/arrow_down.svg"
+          src={arrowDownIcon}
           alt="arrow down"
           className={`arrow-down ${isMenuVisible ? "rotated" : ""}`}
         />
@@ -112,8 +111,8 @@ export function UserMenu({
                 onClick={() => handleAction(item.label)}
               >
                 <img
-                  src={getIconPath(item.icon)}
-                  alt={getIconAlt(item.icon)}
+                  src={item.icon}
+                  alt={item.label}
                   className={item.className}
                 />
                 {item.label}

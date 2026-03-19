@@ -11,6 +11,8 @@ import { MONTHS, getYears } from "../../utils/dateUtils";
 import RemovePopup from "../Popups/RemovePopup";
 import ExpensePopup from "../Popups/ExpensePopup";
 import ExpensesList from "./ExpensesList";
+import addNewIcon from "../../assets/addNew.svg";
+import resetIcon from "../../assets/reset.svg";
 
 
 export function ExpenseHistory() {
@@ -154,7 +156,7 @@ export function ExpenseHistory() {
   <>
   <section className="width-90 flex align-self-center mt-1 mb-1 space-between">
     <ActionButton
-                src={"src/assets/addNew.svg"}
+                src={addNewIcon}
                 alt={"Nowa Faktura Kosztowa"}
                 text={"Nowa Faktura Kosztowa"}
                 onClick={() => setIsAddNewExpensePopupOpen(true)}
@@ -205,7 +207,7 @@ export function ExpenseHistory() {
       />
     </section>
     <ActionButton
-      src={"src/assets/reset.svg"}
+      src={resetIcon}
       alt={"Reset"}
       iconTitle={"Resetuj filtry"}
       text={"Reset"}

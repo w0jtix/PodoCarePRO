@@ -1,7 +1,6 @@
 import { Action } from "../../models/action";
-import { useState, useEffect, useCallback } from "react";
-import { NewClient, Client } from "../../models/client";
-import TextInput from "../TextInput";
+import { useEffect, useCallback } from "react";
+import { Client } from "../../models/client";
 import { DebtType, NewClientDebt } from "../../models/debt";
 import DropdownSelect from "../DropdownSelect";
 import CostInput from "../CostInput";
@@ -22,10 +21,6 @@ export function DebtForm({
   className = "",
   action
 }: DebtFormProps) {
-  const clientItems = clients.map((client) => ({
-    name: `${client.firstName} ${client.lastName}`,
-    ...client,
-  }));
   const handleClientChange = useCallback((client: Client | Client[] | null) => {
     const selectedClient = Array.isArray(client) ? client[0] : client;
 

@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import MenuItem from './MenuItem'
-import { MENU_ITEMS, getIconPath, getIconAlt } from '../constants/modules';
+import { MENU_ITEMS } from '../constants/modules';
 import { useUser } from './User/UserProvider';
 import { RoleType } from '../models/login';
 
@@ -47,8 +47,8 @@ export function NavbarMenu () {
                     key={item.name}
                     name={item.name}
                     href={item.href}
-                    src={getIconPath(item.icon)}
-                    alt={getIconAlt(item.icon)}
+                    src={item.icon}
+                    alt={item.name}
                     subItems={item.subItems}
                     isOpen={openMenu === item.name}
                     onToggle={() => handleToggle(item.name)}

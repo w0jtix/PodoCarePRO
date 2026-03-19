@@ -5,6 +5,11 @@ import { Voucher, VoucherStatus } from "../../models/voucher";
 import VisitPopup from "../Popups/VisitPopup";
 import { useUser } from "../User/UserProvider";
 import { RoleType } from "../../models/login";
+import voucherIcon from "../../assets/voucher.svg";
+import removedIcon from "../../assets/removed.svg";
+import editIcon from "../../assets/edit.svg";
+import cancelIcon from "../../assets/cancel.svg";
+import previewIcon from "../../assets/preview.svg";
 
 export interface VouchersListProps {
   attributes: ListAttribute[];
@@ -27,7 +32,6 @@ export function VouchersList({
   setSelectedVoucher,
   selectedVoucher,
   className = "",
-  onClick,
 }: VouchersListProps) {
   const { user } = useUser();
   const [selectedVoucherIdForVisit,setSelectedVoucherIdForVisit] = useState<string | number| null>(null);
@@ -52,7 +56,6 @@ export function VouchersList({
   const renderAttributeContent = (
     attr: ListAttribute,
     item: Voucher,
-    index: number
   ): React.ReactNode => {
     switch (attr.name) {
       case "Status":
@@ -82,7 +85,7 @@ export function VouchersList({
 
       case " ":
         return (
-          <img src={"src/assets/voucher.svg"} alt={"Voucher"} className="rv-voucher-icon"></img>
+          <img src={voucherIcon} alt={"Voucher"} className="rv-voucher-icon"></img>
         )
 
       case "Klient":
@@ -90,7 +93,7 @@ export function VouchersList({
           <div className={`flex g-5px ${item.client.isDeleted ? "pointer" : ""}`} title={`${item.client.isDeleted ? "Klient usunięty" : ""}`}>
             
           <span className={`text-align-center ${item.client.isDeleted ? "client-removed" : ""}`}>{item.client.firstName + " " + item.client.lastName}</span>
-          {item.client.isDeleted && <img src ="src/assets/removed.svg" alt="Client Removed" className="checkimg align-self-center"/>}
+          {item.client.isDeleted && <img src={removedIcon} alt="Client Removed" className="checkimg align-self-center"/>}
         </div>
       );
 
@@ -109,7 +112,7 @@ export function VouchersList({
             {!item.purchaseVisitId && item.status !== VoucherStatus.USED && (item.createdBy === user?.id || user?.roles.includes(RoleType.ROLE_ADMIN)) && (
               <>
               <ActionButton
-              src="src/assets/edit.svg"
+              src={editIcon}
               alt="Edytuj Voucher"
               iconTitle={"Edytuj Voucher"}
               text="Edytuj"
@@ -117,7 +120,7 @@ export function VouchersList({
               disableText={true}
             />
             <ActionButton
-              src="src/assets/cancel.svg"
+              src={cancelIcon}
               alt="Usuń Voucher"
               iconTitle={"Usuń Voucher"}
               text="Usuń"
@@ -128,7 +131,7 @@ export function VouchersList({
             )}
             {item.purchaseVisitId && (
               <ActionButton
-                src="src/assets/preview.svg"
+                src={previewIcon}
                 alt="Podgląd wizyty zakupu"
                 iconTitle={"Podgląd Wizyty zakupu Vouchera"}
                 onClick={(e) => {
@@ -148,7 +151,7 @@ export function VouchersList({
         items.length === 0 ? "border-none" : ""
       } ${className} `}
     >
-      {items.map((item, index) => (
+      {items.map((item) => (
         <div
           key={item.id}
           className={`product-wrapper width-max ${className} ${
@@ -170,13 +173,13 @@ export function VouchersList({
                   justifyContent: attr.justify,
                 }}
               >
-                {renderAttributeContent(attr, item, index)}
+                {renderAttributeContent(attr, item)}
               </div>
             ))}
           </div>
         </div>
       ))}
-      {expiredVouchers && expiredVouchers.map((item, index) => (
+      {expiredVouchers && expiredVouchers.map((item) => (
         <div
           key={item.id}
           className={`product-wrapper width-max ${className} disabled expired-voucher`}          
@@ -193,7 +196,7 @@ export function VouchersList({
                   justifyContent: attr.justify,
                 }}
               >
-                {renderAttributeContent(attr, item, index)}
+                {renderAttributeContent(attr, item)}
               </div>
             ))}
           </div>

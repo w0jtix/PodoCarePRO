@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
+import closeIcon from "../../assets/close.svg";
+import tickIcon from "../../assets/tick.svg";
 import { Voucher, VoucherStatus } from "../../models/voucher";
 import VoucherService from "../../services/VoucherService";
 import ReactDOM from "react-dom";
@@ -101,7 +103,7 @@ export function AvailableVouchersPopup({
             onClick={onClose}
           >
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -120,7 +122,7 @@ export function AvailableVouchersPopup({
 </div>
         <div className="mt-1 flex width-max align-items-end justify-center f-1 ">
           <ActionButton
-            src={"src/assets/tick.svg"}
+            src={tickIcon}
             alt={"Zapisz"}
             text={"Zapisz"}
             onClick={() => onSave(selectedVoucher)}

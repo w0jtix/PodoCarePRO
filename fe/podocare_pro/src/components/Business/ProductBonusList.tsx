@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { ListAttribute, BONUS_PRODUCT_CONTENT_LIST_ATTRIBUTES } from "../../constants/list-headers";
 import { BonusProduct } from "../../models/employee";
 import ProductBonusContent from "./ProductBonusContent";
+import arrowDownIcon from "../../assets/arrow_down.svg";
+import alertIcon from "../../assets/alert.svg";
 
 export interface ProductBonusListProps {
   attributes: ListAttribute[];
@@ -35,14 +37,13 @@ export function ProductBonusList ({
   const renderAttributeContent = (
     attr: ListAttribute,
     item: BonusProduct,
-    index: number,
   ): React.ReactNode => {
     switch (attr.name) {
 
       case "":
         return (
           <img
-            src="src/assets/arrow_down.svg"
+            src={arrowDownIcon}
             alt="arrow down"
             className={`arrow-down ${expandedIds.has(item.productId) ? "rotated" : ""}`}
           />
@@ -57,7 +58,7 @@ export function ProductBonusList ({
               
                 <img
                   title="Brak historii zakupów — użyto awaryjnej ceny zakupu Netto przypisanej do produktu. Marża i premia mogą być niedokładne."
-                  src="src/assets/alert.svg"
+                  src={alertIcon}
                   alt="alert"
                   className="sb-alert"
                 />
@@ -66,13 +67,13 @@ export function ProductBonusList ({
               <>
                 <img
                   title="Brak historii zakupów tego produktu. Brak możliwości naliczenia marży i premii."
-                  src="src/assets/alert.svg"
+                  src={alertIcon}
                   alt="alert"
                   className="sb-alert"
                 />
               <img
                 title="Brak historii zakupów tego produktu. Brak możliwości naliczenia marży i premii."
-                src="src/assets/alert.svg"
+                src={alertIcon}
                 alt="alert"
                 className="sb-alert"
               />
@@ -125,7 +126,7 @@ export function ProductBonusList ({
                   justifyContent: attr.justify,
                 }}
               >
-                {renderAttributeContent(attr, item, index)}
+                {renderAttributeContent(attr, item)}
                 </div>
             ))}
           </div>

@@ -4,16 +4,21 @@ import { ListAttribute } from "../../constants/list-headers";
 import { formatTimestamp } from "../../utils/dateUtils";
 import { AuditAction, AuditLog } from "../../models/audit_log";
 import LogContent from "./LogContent";
+import arrowDownIcon from "../../assets/arrow_down.svg";
+import addNewIcon from "../../assets/addNew.svg";
+import editIcon from "../../assets/edit.svg";
+import cancelIcon from "../../assets/cancel.svg";
+import loginIcon from "../../assets/login.svg";
 
 const actionIconMap: Record<AuditAction, string> = {
-  [AuditAction.CREATE]: "addNew",
-  [AuditAction.UPDATE]: "edit",
-  [AuditAction.DELETE]: "cancel",
+  [AuditAction.CREATE]: addNewIcon,
+  [AuditAction.UPDATE]: editIcon,
+  [AuditAction.DELETE]: cancelIcon,
 };
 
 const getActionIcon = (log: AuditLog): string => {
   if (log.action === AuditAction.CREATE && log.entityType === "User-Login") {
-    return "login";
+    return loginIcon;
   }
   return actionIconMap[log.action];
 };
@@ -34,8 +39,6 @@ export function LogsList({
   className = "",
   onScroll,
   isLoading = false,
-  hasMore = true,
-  handleResetFiltersAndData,
 }: LogsListProps) {
   const [expandedLogsIds, setExpandedLogsIds] = useState<number[]>([]);
   
@@ -56,7 +59,7 @@ export function LogsList({
       case "":
         return (
           <img
-            src="src/assets/arrow_down.svg"
+            src={arrowDownIcon}
             alt="arrow down"
             className={`arrow-down ${
               expandedLogsIds.includes(log.id) ? "rotated" : ""
@@ -67,7 +70,7 @@ export function LogsList({
         case " ":
         return (
           <img
-            src={`src/assets/${getActionIcon(log)}.svg`}
+            src={getActionIcon(log)}
             alt="action icon"
             className={`visit-form-icon ${getActionIcon(log)} ml-05`}
           />
@@ -138,7 +141,7 @@ export function LogsList({
       } ${className}`}
       onScroll={onScroll}
     >
-      {logs.map((log, index) => {
+      {logs.map((log) => {
         return (
           <div className="flex-column width-max align-items-center" key={log.id}>
             <div

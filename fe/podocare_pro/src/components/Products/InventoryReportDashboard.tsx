@@ -1,4 +1,6 @@
 import React from "react";
+import pdfIcon from "../../assets/pdf.svg";
+import reportIcon from "../../assets/report.svg";
 import { useState, useCallback, useEffect, useMemo } from "react";
 import ActionButton from "../ActionButton";
 import { useAlert } from "../Alert/AlertProvider";
@@ -222,13 +224,13 @@ export function InventoryReportDashboard({
         </div>
         <div className="pab-right flex g-25 justify-end">
           <ActionButton
-            src={"src/assets/pdf.svg"}
+            src={pdfIcon}
             alt={"Wygeneruj PDF"}
             text={"Wygeneruj PDF Stanu Magazynowego"}
             onClick={() => setIsCurrentInventoryPopupOpen(true)}
           />
           <ActionButton
-            src={"src/assets/report.svg"}
+            src={reportIcon}
             alt={"Raport Stanu Mag."}
             text={"Utwórz Raport"}
             onClick={() => setIsProductReportPopupOpen(true)}

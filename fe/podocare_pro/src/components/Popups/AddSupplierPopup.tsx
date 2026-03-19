@@ -1,4 +1,5 @@
-import React from "react";
+import closeIcon from "../../assets/close.svg";
+import tickIcon from "../../assets/tick.svg";
 import ReactDOM from "react-dom";
 import { useState, useCallback } from "react";
 import ActionButton from "../ActionButton";
@@ -45,7 +46,7 @@ export function AddSupplierPopup ({
           <h2 className="popup-title">Dodaj nowy sklep</h2>
           <button className="popup-close-button  transparent border-none flex align-items-center justify-center absolute pointer" onClick={onClose}>
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -56,7 +57,7 @@ export function AddSupplierPopup ({
         />
         <div className="popup-footer-container flex-column justify-end">
         <ActionButton
-          src={"src/assets/tick.svg"}
+          src={tickIcon}
           alt={"Zapisz"}
           text={"Zapisz"}
           onClick={handleCreateSupplier}

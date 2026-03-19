@@ -1,6 +1,9 @@
 import ReactDOM from "react-dom";
 import { User } from "../../models/login";
 import { AVAILABLE_AVATARS } from "../../constants/avatars";
+import closeIcon from "../../assets/close.svg";
+import tickIcon from "../../assets/tick.svg";
+import arrowDownIcon from "../../assets/arrow_down.svg";
 import { useEffect, useState } from "react";
 import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
@@ -180,7 +183,7 @@ export function EditUserPopup({
           <h2 className="h2-username text-align-center">{fetchedUser.username}</h2>
           <button className="popup-close-button  transparent border-none flex align-items-center justify-center absolute pointer" onClick={onClose}>
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -220,13 +223,13 @@ export function EditUserPopup({
         </div>
         <ActionButton
           text={"Zapisz Zmiany"}
-          src={"src/assets/tick.svg"}
+          src={tickIcon}
           onClick={handleValidateUpdatedUser}
           className="user-update-button popup"
         />
         <ActionButton
           text="Dodatkowe Opcje"
-          src={"src/assets/arrow_down.svg"}
+          src={arrowDownIcon}
           alt={"Wymuś zmianę hasła"}
           onClick={handleShowForceChangePw}
           className={`pw-change-button fc-pw ${
@@ -265,7 +268,7 @@ export function EditUserPopup({
             </div>
             <ActionButton
               text="Zmień Hasło"
-              src={"src/assets/tick.svg"}
+              src={tickIcon}
               alt={"Zmień Hasło"}
               onClick={handleForceChangePassword}
               className={"pw-change-button"}

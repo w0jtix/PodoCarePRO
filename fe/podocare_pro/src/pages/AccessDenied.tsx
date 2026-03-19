@@ -1,6 +1,7 @@
 import Navbar from "../components/Navbar";
 import ActionButton from "../components/ActionButton";
 import { useNavigate } from "react-router-dom";
+import homepageIcon from "../assets/homepage.svg";
 
 const AccessDenied = () => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ const AccessDenied = () => {
           <div className="flex-column align-items-center g-1">
             <h1 className="access-denied-title">Strona nie istnieje</h1>
             <ActionButton
-              src="src/assets/homepage.svg"
+              src={homepageIcon}
               alt="Strona główna"
               text="Strona główna"
               onClick={() => navigate("/")}

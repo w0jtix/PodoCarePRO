@@ -1,4 +1,15 @@
 import DropdownSelect from "../DropdownSelect";
+import warningIcon from "../../assets/warning.svg";
+import receiptIcon from "../../assets/receipt.svg";
+import absenceIcon from "../../assets/absence.svg";
+import timeIcon from "../../assets/time.svg";
+import boostIcon from "../../assets/boost.svg";
+import vipIcon from "../../assets/vip.svg";
+import arrowDownIcon from "../../assets/arrow_down.svg";
+import addNewIcon from "../../assets/addNew.svg";
+import voucherIcon from "../../assets/voucher.svg";
+import cancelIcon from "../../assets/cancel.svg";
+import tickIcon from "../../assets/tick.svg";
 import { Employee } from "../../models/employee";
 import { Client } from "../../models/client";
 import { useEffect, useState, useCallback } from "react";
@@ -842,7 +853,7 @@ export function VisitForm({
             {clientWithDebt && (
               <div className="popup-warning-explanation-display flex justify-center align-items-center">
                 <img
-                  src="src/assets/warning.svg"
+                  src={warningIcon}
                   alt="Warning"
                   className="order-item-warning-icon"
                 />
@@ -872,7 +883,7 @@ export function VisitForm({
           <div className="qv-dropdown-with-label width-95 justify-self-center flex space-between align-items-top">
             <div className="flex space-between width-max align-items-end">
               <ActionButton
-                src={"src/assets/receipt.svg"}
+                src={receiptIcon}
                 alt={"Wydano Paragon"}
                 text={"Wydano Paragon"}
                 iconTitle="Klient otrzymał Paragon"
@@ -883,7 +894,7 @@ export function VisitForm({
                 }`}
               />
               <ActionButton
-                src={"src/assets/absence.svg"}
+                src={absenceIcon}
                 alt={"Nieobecność"}
                 text={"Nieobecność"}
                 iconTitle={"Nieobecność"}
@@ -893,7 +904,7 @@ export function VisitForm({
                 }`}
               />
               <ActionButton
-                src={"src/assets/time.svg"}
+                src={timeIcon}
                 alt={"Spóźnienie"}
                 text={"Spóźnienie"}
                 iconTitle={"Spóźnienie"}
@@ -914,7 +925,7 @@ export function VisitForm({
               )}
 
               <ActionButton
-                src={"src/assets/boost.svg"}
+                src={boostIcon}
                 alt={"Boost"}
                 text={"Boost"}
                 iconTitle={"Wizyta Boost"}
@@ -924,7 +935,7 @@ export function VisitForm({
                 }`}
               />
               <ActionButton
-                src={"src/assets/vip.svg"}
+                src={vipIcon}
                 alt={"Wizyta VIP"}
                 text={"Wizyta VIP"}
                 iconTitle={"Wizyta VIP"}
@@ -950,7 +961,7 @@ export function VisitForm({
                   </div>
                   <div className="flex g-1">
                     <ActionButton
-                      src={"src/assets/arrow_down.svg"}
+                      src={arrowDownIcon}
                       alt={"Toggle"}
                       disableText={true}
                       onClick={() =>
@@ -1002,7 +1013,7 @@ export function VisitForm({
                   </div>
                 </div>
                 <ActionButton
-                  src={"src/assets/arrow_down.svg"}
+                  src={arrowDownIcon}
                   alt={"Toggle"}
                   disableText={true}
                   onClick={() =>
@@ -1068,7 +1079,7 @@ export function VisitForm({
                   <div className="flex g-1">
                     {sectionVisible.products && (
                       <ActionButton
-                        src={"src/assets/addNew.svg"}
+                        src={addNewIcon}
                         alt={"Voucher"}
                         text={"Voucher"}
                         onClick={addVoucherToSaleItems}
@@ -1077,7 +1088,7 @@ export function VisitForm({
                       />
                     )}
                     <ActionButton
-                      src={"src/assets/arrow_down.svg"}
+                      src={arrowDownIcon}
                       alt={"Toggle"}
                       disableText={true}
                       onClick={() =>
@@ -1125,7 +1136,7 @@ export function VisitForm({
                     </div>
                     <div className="flex g-1">
                       <ActionButton
-                        src={"src/assets/arrow_down.svg"}
+                        src={arrowDownIcon}
                         alt={"Toggle"}
                         disableText={true}
                         onClick={() =>
@@ -1173,7 +1184,7 @@ export function VisitForm({
                   </div>
                   <div className="flex g-1">
                     <ActionButton
-                      src={"src/assets/arrow_down.svg"}
+                      src={arrowDownIcon}
                       alt={"Toggle"}
                       disableText={true}
                       onClick={() =>
@@ -1266,7 +1277,7 @@ export function VisitForm({
                   <div className="flex g-1">
                     {sectionVisible.payment && (
                       <ActionButton
-                        src={"src/assets/addNew.svg"}
+                        src={addNewIcon}
                         alt={"Płatność"}
                         text={"Płatność"}
                         onClick={addPayment}
@@ -1277,7 +1288,7 @@ export function VisitForm({
                       />
                     )}
                     <ActionButton
-                      src={"src/assets/arrow_down.svg"}
+                      src={arrowDownIcon}
                       alt={"Toggle"}
                       disableText={true}
                       onClick={() =>
@@ -1347,7 +1358,7 @@ export function VisitForm({
                     {visitDTO.payments[index].method ===
                       PaymentMethod.VOUCHER && (
                       <ActionButton
-                        src={"src/assets/voucher.svg"}
+                        src={voucherIcon}
                         alt={"Voucher"}
                         text={`${
                           visitDTO.payments[index].voucher != null
@@ -1384,7 +1395,7 @@ export function VisitForm({
                       />
                       <span className="qv-span f10">zł</span>
                       <ActionButton
-                        src="src/assets/cancel.svg"
+                        src={cancelIcon}
                         alt="Usuń Płatność"
                         iconTitle={"Usuń Płatność"}
                         text="Usuń"
@@ -1410,7 +1421,7 @@ export function VisitForm({
             >{`${visitPreview?.totalValue}zł`}</span>
           </div>
           <ActionButton
-            src={"src/assets/tick.svg"}
+            src={tickIcon}
             alt={"Zapisz"}
             text={"Zapisz"}
             onClick={handleVisitAction}

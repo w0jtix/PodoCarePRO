@@ -1,4 +1,5 @@
-import React, { useCallback } from "react";
+import  { useCallback } from "react";
+import calendarIcon from "../assets/calendar.svg";
 import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -58,7 +59,7 @@ const DateInput = ({
             className={`custom-calendar-button flex pointer transparent border-none align-items-center ${orderDate ? "selected" : ""}`}
           >
             <img
-              src="src/assets/calendar.svg"
+              src={calendarIcon}
               alt="Calendar"
               className={`calendar-icon pointer ${orderDate ? "selected" : ""}`}
             />

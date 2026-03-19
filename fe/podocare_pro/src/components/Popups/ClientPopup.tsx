@@ -1,4 +1,6 @@
 import { Action } from "../../models/action";
+import closeIcon from "../../assets/close.svg";
+import tickIcon from "../../assets/tick.svg";
 import {
   Client,
   ClientNote,
@@ -18,7 +20,6 @@ import {
 import { extractClientErrorMessage } from "../../utils/errorHandler";
 import ClientService from "../../services/ClientService";
 import ClientNoteService from "../../services/ClientNoteService";
-import { Alert } from "react-bootstrap";
 
 export interface ClientPopupProps {
   onClose: () => void;
@@ -209,7 +210,7 @@ export function ClientPopup({
             onClick={onClose}
           >
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -230,7 +231,7 @@ export function ClientPopup({
         </section>
 
         <ActionButton
-          src={"src/assets/tick.svg"}
+          src={tickIcon}
           alt={"Zapisz"}
           text={"Zapisz"}
           onClick={handleClientAction}

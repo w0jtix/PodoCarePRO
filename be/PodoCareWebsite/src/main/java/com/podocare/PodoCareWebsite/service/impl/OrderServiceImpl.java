@@ -240,6 +240,14 @@ public class OrderServiceImpl implements OrderService {
         Product product = getOrRestoreProduct(orderProductDTO.getProduct().getId());
 
         product.setSupply(product.getSupply() + orderProductDTO.getQuantity());
+
+        if ("Produkty".equals(product.getCategory().getName())) {
+            double vatMultiplier = 1 + orderProductDTO.getVatRate().getRate() / 100.0;
+            double netPrice = orderProductDTO.getPrice() / vatMultiplier;
+            product.setFallbackNetPurchasePrice(netPrice);
+            product.setFallbackVatRate(orderProductDTO.getVatRate());
+        }
+
         productRepo.save(product);
 
         return OrderProduct.builder()

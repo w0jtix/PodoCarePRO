@@ -1,4 +1,4 @@
-import React from 'react'
+import stopyIcon from "../assets/stopy.svg";
 
 export interface NavbarLogoContainerProps {
   logoSrc?: string;
@@ -9,7 +9,7 @@ export interface NavbarLogoContainerProps {
 }
 
 export function NavbarLogoContainer ({  
-  logoSrc = "src/assets/stopy.svg",
+  logoSrc = stopyIcon,
   logoAlt = "podocare-stopy-logo",
   title = "PodoCare",
   subtitle = "PRO",

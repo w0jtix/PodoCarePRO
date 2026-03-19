@@ -1,8 +1,10 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import ReactDOM from "react-dom";
 import { useState, useCallback } from "react";
 import ActionButton from "../ActionButton";
 import EmployeeForm from "../Employee/EmployeeForm";
+import closeIcon from "../../assets/close.svg";
+import tickIcon from "../../assets/tick.svg";
 import { NewEmployee, Employee, EmploymentType } from "../../models/employee";
 import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
@@ -102,7 +104,7 @@ export function EmployeePopup ({
           <h2 className="popup-title">{action === Action.CREATE ? "Nowy Pracownik 👩‍⚕️" : "Edytuj Pracownika"}</h2>
           <button className="popup-close-button  transparent border-none flex align-items-center justify-center absolute pointer" onClick={onClose}>
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -116,7 +118,7 @@ export function EmployeePopup ({
         />
         <div className="popup-footer-container flex-column justify-end mt-25">
         <ActionButton
-          src={"src/assets/tick.svg"}
+          src={tickIcon}
           alt={"Zapisz"}
           text={"Zapisz"}
           onClick={handleEmployeeAction}

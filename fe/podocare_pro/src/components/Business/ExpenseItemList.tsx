@@ -9,6 +9,7 @@ import { VatRate } from "../../models/vatrate";
 import CostInput from "../CostInput";
 import DigitInput from "../DigitInput";
 import SelectVATButton from "../SelectVATButton";
+import cancelIcon from "../../assets/cancel.svg";
 
 export interface ExpenseItemListProps {
   className?: string;
@@ -61,7 +62,7 @@ export function ExpenseItemList({
       case "":
         return (
           <ActionButton
-            src="src/assets/cancel.svg"
+            src={cancelIcon}
             alt="Usuń Produkt"
             iconTitle={"Usuń Produkt"}
             text="Usuń"

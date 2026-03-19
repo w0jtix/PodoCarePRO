@@ -1,6 +1,8 @@
 import ReactDOM from "react-dom";
 import ActionButton from "../ActionButton";
 import { useCallback, useState, useEffect } from "react";
+import closeIcon from "../../assets/close.svg";
+import tickIcon from "../../assets/tick.svg";
 import { useAlert } from "../Alert/AlertProvider";
 import { AlertType } from "../../models/alert";
 import { validateInventoryReportForm } from "../../utils/validators";
@@ -130,7 +132,7 @@ export function StockAdjustmentReportPopup({
             onClick={onClose}
           >
             <img
-              src="src/assets/close.svg"
+              src={closeIcon}
               alt="close"
               className="popup-close-icon"
             />
@@ -155,7 +157,7 @@ export function StockAdjustmentReportPopup({
               />
             </section>
             <ActionButton
-              src={"src/assets/tick.svg"}
+              src={tickIcon}
               alt={"Zapisz"}
               text={"Zapisz"}
               onClick={handleInventoryReportAction}
