@@ -24,6 +24,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/podocare
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: Admin123
+      SPRING_REDIS_HOST: redis
     depends_on:
       - postgres
       - redis

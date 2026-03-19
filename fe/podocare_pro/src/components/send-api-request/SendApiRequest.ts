@@ -50,7 +50,7 @@ export const sendApiRequest = async <T>(
     }
 
     // If there's a backend response, preserve the original axios error
-    if (error.response?.data) {
+    if (error.response) {
       throw error;
     }
 

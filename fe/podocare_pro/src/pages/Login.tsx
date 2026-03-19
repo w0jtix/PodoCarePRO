@@ -30,8 +30,12 @@ const Login = () => {
                 navigate("/");
             }
         })
-        .catch(() => {
-            showAlert("Wystąpił błąd podczas logowania", AlertType.ERROR);          
+        .catch((error) => {
+            if (error?.response?.status === 429) {
+                showAlert("Zbyt wiele nieudanych prób logowania. Spróbuj ponownie za chwilę.", AlertType.ERROR);
+            } else {
+                showAlert("Wystąpił błąd podczas logowania", AlertType.ERROR);
+            }
             setPassword("");
         })
     }

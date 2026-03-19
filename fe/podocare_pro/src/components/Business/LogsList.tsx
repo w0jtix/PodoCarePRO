@@ -9,6 +9,8 @@ import addNewIcon from "../../assets/addNew.svg";
 import editIcon from "../../assets/edit.svg";
 import cancelIcon from "../../assets/cancel.svg";
 import loginIcon from "../../assets/login.svg";
+import securityBlock from "../../assets/security_block.svg";
+import securityBan from "../../assets/security_ban.svg";
 
 const actionIconMap: Record<AuditAction, string> = {
   [AuditAction.CREATE]: addNewIcon,
@@ -19,6 +21,12 @@ const actionIconMap: Record<AuditAction, string> = {
 const getActionIcon = (log: AuditLog): string => {
   if (log.action === AuditAction.CREATE && log.entityType === "User-Login") {
     return loginIcon;
+  }
+  if (log.action === AuditAction.CREATE && log.entityType === "Security-Block") {
+    return securityBlock;
+  }
+  if (log.action === AuditAction.CREATE && log.entityType === "Security-ShadowBan") {
+    return securityBan;
   }
   return actionIconMap[log.action];
 };
@@ -149,7 +157,7 @@ export function LogsList({
               className={`product-wrapper width-max order ${className} `}
             >
               <div
-                className={`item order align-items-center flex-column pointer ${className} ${(log.action === AuditAction.CREATE && log.entityType === "User-Login") ? "info" : log.action === AuditAction.CREATE ? "create" :  log.action === AuditAction.UPDATE ? "edit" : "delete"}`}
+                className={`item order align-items-center flex-column pointer ${className} ${(log.action === AuditAction.CREATE && log.entityType === "User-Login") ? "info" : (log.action === AuditAction.CREATE && (log.entityType === "Security-Block" || log.entityType === "Security-ShadowBan")) ? "alert" : log.action === AuditAction.CREATE ? "create" :  log.action === AuditAction.UPDATE ? "edit" : "delete"}`}
                 onClick={() => toggleLogs(log.id)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {

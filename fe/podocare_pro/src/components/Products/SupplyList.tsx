@@ -98,29 +98,20 @@ export function SupplyList ({
   return (
     <div className="min-height-0 width-93 f-1 flex-column align-items-center align-self-center justify-center mb-2">
       <ListHeader attributes={productInfo ? PRODUCT_VOLUME_LIST_ATTRIBUTES : PRODUCT_LIST_ATTRIBUTES} />
-      {loading ? (
-        <div className="list-loading-container relative flex align-items-center justify-center">
-          <div className="loading-dot relative flex align-items-center height-max width-25"></div>
-          <div className="loading-dot relative flex align-items-center height-max width-25"></div>
-          <div className="loading-dot relative flex align-items-center height-max width-25"></div>
-          <div className="loading-dot relative flex align-items-center height-max width-25"></div>
-        </div>
-      ) : (
-        <section className="products-list-section f-1 min-height-0 width-max flex align-items-center justify-center mt-05">
-          <ItemList
-            attributes={productInfo ? PRODUCT_VOLUME_LIST_ATTRIBUTES : PRODUCT_LIST_ATTRIBUTES}
-            items={items}
-            setIsAddNewProductsPopupOpen={setIsAddNewProductsPopupOpen}
-            setEditProductId={setEditProductId}
-            setRemoveProductId={setRemoveProductId}
-            className="products"
-            productInfo={productInfo}
-            onScroll={handleScroll}
-            isLoading={loading}
-            hasMore={hasMore}
-          />
-        </section>
-      )}
+      <section className="products-list-section f-1 min-height-0 width-max flex align-items-center justify-center mt-05">
+        <ItemList
+          attributes={productInfo ? PRODUCT_VOLUME_LIST_ATTRIBUTES : PRODUCT_LIST_ATTRIBUTES}
+          items={items}
+          setIsAddNewProductsPopupOpen={setIsAddNewProductsPopupOpen}
+          setEditProductId={setEditProductId}
+          setRemoveProductId={setRemoveProductId}
+          className="products"
+          productInfo={productInfo}
+          onScroll={handleScroll}
+          isLoading={loading}
+          hasMore={hasMore}
+        />
+      </section>
     </div>
   );
 };

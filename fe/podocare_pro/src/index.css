@@ -876,75 +876,6 @@ button.menu-button:hover a.menu-a {
   height:1.0625rem;
 }
 /* SUPPLY LIST */
-.list-error {
-  color:white;
-  top: 50%;
-  left: 50%;
-}
-.list-error > h2 {
-  font-family: var(--font-h2-outfit);
-  font-size: var(--font-size-h1);
-}
-
-.list-loading-container {
-  --uib-size: 4.875rem;
-  --uib-color: rgba(255, 255, 255, 0.767);
-  --uib-speed: 1.1s;
-  top: 28%;
-  width: calc(var(--uib-size) * 0.51);
-  height: calc(var(--uib-size) * 0.51);
-}
-.loading-dot {
-  flex-shrink: 0;
-  transform-origin: center top;
-}
-.loading-dot::after {
-  content: '';
-  display: block;
-  width: 100%;
-  height: 25%;
-  border-radius: 50%;
-  background-color: var(--uib-color);
-  transition: background-color 0.3s ease;
-}
-.loading-dot:first-child {
-  animation: swing var(--uib-speed) linear infinite;
-}
-.loading-dot:last-child {
-  animation: swing2 var(--uib-speed) linear infinite;
-}
-@keyframes swing {
-  0% {
-    transform: rotate(0deg);
-    animation-timing-function: ease-out;
-  }
-
-  25% {
-    transform: rotate(70deg);
-    animation-timing-function: ease-in;
-  }
-
-  50% {
-    transform: rotate(0deg);
-    animation-timing-function: linear;
-  }
-}
-@keyframes swing2 {
-  0% {
-    transform: rotate(0deg);
-    animation-timing-function: linear;
-  }
-
-  50% {
-    transform: rotate(0deg);
-    animation-timing-function: ease-out;
-  }
-
-  75% {
-    transform: rotate(-70deg);
-    animation-timing-function: ease-in;
-  }
-}
 .list-header,
 .list-header.order
 .list-header.popup,
@@ -4224,6 +4155,11 @@ background-color: rgba(0, 218, 0, 0.35);
 .item.order.products.logs.info {
   background-color: rgba(229, 192, 30, 0.6);
   border: 1px solid #dca3279e;
+}
+.item.order.logs.alert,
+.item.order.products.logs.alert {
+  background-color: rgb(246, 62, 0.6);
+  border: 1px solid #fa4300;
 }
 .log-content-diff {
   padding: 0.625rem;

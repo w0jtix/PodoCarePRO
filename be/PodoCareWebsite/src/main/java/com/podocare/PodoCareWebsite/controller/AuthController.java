@@ -17,7 +17,10 @@ import com.podocare.PodoCareWebsite.repo.RoleRepo;
 import com.podocare.PodoCareWebsite.repo.UserRepo;
 import com.podocare.PodoCareWebsite.service.AuditLogService;
 import com.podocare.PodoCareWebsite.service.EmployeeService;
+import com.podocare.PodoCareWebsite.service.LoginAttemptService;
+import com.podocare.PodoCareWebsite.service.TokenBlacklistService;
 import com.podocare.PodoCareWebsite.utils.SessionUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,6 +31,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,12 +56,25 @@ public class AuthController {
     private final JwtUtils jwtUtils;
     private final EmployeeService employeeService;
     private final AuditLogService auditLogService;
+    private final TokenBlacklistService tokenBlacklistService;
+    private final LoginAttemptService loginAttemptService;
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        try{
+    public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, HttpServletRequest request) {
+        String ip = getClientIp(request);
+        String username = loginRequest.getUsername();
+
+        if (loginAttemptService.isShadowBanned(ip, username)) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        if (loginAttemptService.isBlocked(ip, username)) {
+            return new ResponseEntity<>(HttpStatus.TOO_MANY_REQUESTS);
+        }
+
+        try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+                    new UsernamePasswordAuthenticationToken(username, loginRequest.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtUtils.generateJwtToken(authentication);
 
@@ -66,6 +83,7 @@ public class AuthController {
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList());
 
+            loginAttemptService.recordSuccess(ip, username);
             auditLogService.logCreate("User-Login", userDetails.getId(), userDetails.getUsername(), Map.of("username", userDetails.getUsername()));
 
             return new ResponseEntity<>(JwtResponse.builder()
@@ -78,8 +96,17 @@ public class AuthController {
                     .employee(userDetails.getEmployee())
                     .build(), HttpStatus.OK);
         } catch (Exception e) {
+            loginAttemptService.recordFailure(ip, username);
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    private String getClientIp(HttpServletRequest request) {
+        String realIp = request.getHeader("X-Real-IP");
+        if (StringUtils.hasText(realIp)) {
+            return realIp;
+        }
+        return request.getRemoteAddr();
     }
 
     @PostMapping("/createUser")
@@ -128,6 +155,20 @@ public class AuthController {
         } else {
             return new ResponseEntity<>(new MessageResponse("Old password doesn't match"),HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PostMapping("/logout")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<MessageResponse> logout(HttpServletRequest request) {
+        String headerAuth = request.getHeader("Authorization");
+        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
+            String token = headerAuth.substring(7);
+            long remainingMs = jwtUtils.getRemainingExpirationMs(token);
+            if (remainingMs > 0) {
+                tokenBlacklistService.blacklist(token, remainingMs);
+            }
+        }
+        return new ResponseEntity<>(new MessageResponse("Logged out successfully"), HttpStatus.OK);
     }
 
     @PostMapping("/forceChangePassword")

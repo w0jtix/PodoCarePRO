@@ -32,9 +32,14 @@ class AuthService {
         return jwtUser;
     }
 
-    logout(): void {
-        localStorage.removeItem("user");
-        window.location.replace("/login");
+    async logout(): Promise<void> {
+        try {
+            await sendApiRequest('auth/logout', { method: "post" });
+        } catch (_) {
+        } finally {
+            localStorage.removeItem("user");
+            window.location.replace("/login");
+        }
     }
 
     async register(
