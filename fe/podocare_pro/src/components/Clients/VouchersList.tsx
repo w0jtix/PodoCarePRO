@@ -1,0 +1,220 @@
+import React, { useCallback, useState } from "react";
+import ActionButton from "../ActionButton";
+import { ListAttribute } from "../../constants/list-headers";
+import { Voucher, VoucherStatus } from "../../models/voucher";
+import VisitPopup from "../Popups/VisitPopup";
+import { useUser } from "../User/UserProvider";
+import { RoleType } from "../../models/login";
+import voucherIcon from "../../assets/voucher.svg";
+import removedIcon from "../../assets/removed.svg";
+import editIcon from "../../assets/edit.svg";
+import cancelIcon from "../../assets/cancel.svg";
+import previewIcon from "../../assets/preview.svg";
+
+export interface VouchersListProps {
+  attributes: ListAttribute[];
+  items: Voucher[];
+  expiredVouchers?: Voucher[];
+  setEditVoucherId?: (voucherId: string | number | null) => void;
+  setRemoveVoucherId?: (voucherId: string | number | null) => void;
+  setSelectedVoucher?: (voucher: Voucher | null) => void;
+  selectedVoucher?: Voucher | null;
+  className?: string;
+  onClick?: (voucher: Voucher) => void;
+}
+
+export function VouchersList({
+  attributes,
+  items,
+  expiredVouchers,
+  setEditVoucherId,
+  setRemoveVoucherId,
+  setSelectedVoucher,
+  selectedVoucher,
+  className = "",
+}: VouchersListProps) {
+  const { user } = useUser();
+  const [selectedVoucherIdForVisit,setSelectedVoucherIdForVisit] = useState<string | number| null>(null);
+  const [previewVisitId, setPreviewVisitId] = useState<string | number | null>(null);
+
+  const handleOnClickEdit = useCallback(
+    (e: React.MouseEvent, item: Voucher) => {
+      e.stopPropagation();
+      setEditVoucherId?.(item.id);
+    },
+    [setEditVoucherId]
+  );
+
+  const handleOnClickRemove = useCallback(
+    (e: React.MouseEvent, item: Voucher) => {
+      e.stopPropagation();
+      setRemoveVoucherId?.(item.id);
+    },
+    [setRemoveVoucherId]
+  );
+
+  const renderAttributeContent = (
+    attr: ListAttribute,
+    item: Voucher,
+  ): React.ReactNode => {
+    switch (attr.name) {
+      case "Status":
+        return (
+          <div
+            onClick={item.status === VoucherStatus.USED ? () => setSelectedVoucherIdForVisit(item.id) : undefined}
+            className={item.status === VoucherStatus.USED ? 'pointer' : 'default'}
+          >
+          
+          <span
+            className={`debt-list-span ${
+              item.status === VoucherStatus.ACTIVE
+                ? "active"
+                : item.status === VoucherStatus.EXPIRED
+                ? "expired"
+                : "used"
+            }`}
+          >
+            {item.status === VoucherStatus.ACTIVE
+              ? "AKTYWNY"
+              : item.status === VoucherStatus.EXPIRED
+              ? "NIEAKTYWNY"
+              : "ZREALIZOWANY"}
+          </span>
+          </div>
+        );
+
+      case " ":
+        return (
+          <img src={voucherIcon} alt={"Voucher"} className="rv-voucher-icon"></img>
+        )
+
+      case "Klient":
+        return(
+          <div className={`flex g-5px ${item.client.isDeleted ? "pointer" : ""}`} title={`${item.client.isDeleted ? "Klient usunięty" : ""}`}>
+            
+          <span className={`text-align-center ${item.client.isDeleted ? "client-removed" : ""}`}>{item.client.firstName + " " + item.client.lastName}</span>
+          {item.client.isDeleted && <img src={removedIcon} alt="Client Removed" className="checkimg align-self-center"/>}
+        </div>
+      );
+
+      case "Ważny od":
+        return new Date(item.issueDate).toLocaleDateString("pl-PL");
+
+      case "Ważny do":
+        return new Date(item.expiryDate).toLocaleDateString("pl-PL");
+
+      case "Wartość":
+        return `${item.value} zł`;
+
+      case "Opcje":
+        return (
+          <div className="item-list-single-item-action-buttons flex">
+            {!item.purchaseVisitId && item.status !== VoucherStatus.USED && (item.createdBy === user?.id || user?.roles.includes(RoleType.ROLE_ADMIN)) && (
+              <>
+              <ActionButton
+              src={editIcon}
+              alt="Edytuj Voucher"
+              iconTitle={"Edytuj Voucher"}
+              text="Edytuj"
+              onClick={(e) => handleOnClickEdit(e, item)}
+              disableText={true}
+            />
+            <ActionButton
+              src={cancelIcon}
+              alt="Usuń Voucher"
+              iconTitle={"Usuń Voucher"}
+              text="Usuń"
+              onClick={(e) => handleOnClickRemove(e, item)}
+              disableText={true}
+            />
+            </>
+            )}
+            {item.purchaseVisitId && (
+              <ActionButton
+                src={previewIcon}
+                alt="Podgląd wizyty zakupu"
+                iconTitle={"Podgląd Wizyty zakupu Vouchera"}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setPreviewVisitId(item.purchaseVisitId!);
+                }}
+                disableText={true}
+              />
+            )}
+          </div>
+        );
+    }
+  };
+  return (
+    <div
+      className={`item-list width-93 flex-column p-0 mt-05 ${
+        items.length === 0 ? "border-none" : ""
+      } ${className} `}
+    >
+      {items.map((item) => (
+        <div
+          key={item.id}
+          className={`product-wrapper width-max ${className} ${
+            selectedVoucher?.id === item.id ? "selected" : ""
+          }`}
+          onClick={() => setSelectedVoucher?.(item)}
+        >
+          <div
+            className={`item align-items-center flex ${className} ${
+              selectedVoucher?.id === item.id ? "selected" : ""
+            }`}
+          >
+            {attributes.map((attr) => (
+              <div
+                key={`${item.id}-${attr.name}`}
+                className={`attribute-item flex  ${className}`}
+                style={{
+                  width: attr.width,
+                  justifyContent: attr.justify,
+                }}
+              >
+                {renderAttributeContent(attr, item)}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+      {expiredVouchers && expiredVouchers.map((item) => (
+        <div
+          key={item.id}
+          className={`product-wrapper width-max ${className} disabled expired-voucher`}          
+        >
+          <div
+            className={`item align-items-center flex ${className} disabled expired-voucher`}
+          >
+            {attributes.map((attr) => (
+              <div
+                key={`${item.id}-${attr.name}`}
+                className={`attribute-item flex  ${className}`}
+                style={{
+                  width: attr.width,
+                  justifyContent: attr.justify,
+                }}
+              >
+                {renderAttributeContent(attr, item)}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+      {selectedVoucherIdForVisit !== null && (
+              <VisitPopup
+                onClose={() => setSelectedVoucherIdForVisit(null)}
+                voucherId={selectedVoucherIdForVisit}
+              />
+            )}
+      {previewVisitId && (
+        <VisitPopup
+          onClose={() => setPreviewVisitId(null)}
+          visitId={previewVisitId}
+        />
+      )}
+    </div>
+  );
+}
+export default VouchersList;
