@@ -7,7 +7,7 @@ read -p "Enter your email for Let's Encrypt notifications: " EMAIL
 
 echo "=== Generating SSL certificate (standalone) ==="
 docker run --rm -p 80:80 \
-  -v letsencrypt:/etc/letsencrypt \
+  -v podocarepro_letsencrypt:/etc/letsencrypt \
   certbot/certbot certonly --standalone \
   --email $EMAIL \
   --agree-tos \
