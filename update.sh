@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-if [ ! -f ./nginx/dhparam.pem ] || [ ! -d /etc/letsencrypt/live/pro.podocare.com.pl ]; then
+if [ ! -f ./nginx/dhparam.pem ]; then
   echo "SSL not initialized. Run ./init-ssl.sh first."
   exit 1
 fi
