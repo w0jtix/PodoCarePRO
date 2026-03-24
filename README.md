@@ -2,27 +2,32 @@
 
 Podiatry clinic management system — Spring Boot backend + React frontend.
 
-## Deployment and first run
+## First-time deployment
 
 1. Install Docker.
 2. Clone the repository.
-3. Create a `.env` file in the project root with the following content:
+3. Create a `.env` file in the project root:
    ```env
-   POSTGRES_PASSWORD=
+   POSTGRES_PASSWORD=your_strong_password
    JWT_SECRET=        # generate with: openssl rand -base64 64
-   CORS_ALLOWED_ORIGINS=http://localhost:5173
+   CORS_ALLOWED_ORIGINS=https://pro.podocare.com.pl
    ```
-4. Run the app:
-   ```bash
-   ./update.sh
-   ```
-5. Open `http://localhost` in your browser.
-6. Log in with default credentials: `admin` / `Admin123` and change the password.
+4. Run the SSL initialization init-ssl.sh script (only once).
 
-**APP is working!**
+   This will:
+   - Generate a Let's Encrypt SSL certificate via Certbot (webroot method)
+   - Generate dhparam for stronger HTTPS encryption
+   - Start all containers
+
+5. Open `https://pro.podocare.com.pl` in your browser and log in with default credentials: `admin` / `Admin123`. Change the password immediately.
+
+## Updating the app
+
+After pushing new code to the repository, run update.sh script.
 
 ## Notes
 
+- SSL certificates are renewed automatically by the Certbot container (checked every 12h).
 - PostgreSQL is available on host port `5433` for database management tools (DBeaver, pgAdmin).
-- Access is intended via **Tailscale VPN** — install Tailscale on the server and all client devices, enable MagicDNS for a friendly hostname (e.g. `http://podocare`).
 - CORS allowed origins are configured via `CORS_ALLOWED_ORIGINS` in `.env`.
+- `init-ssl.sh` must be run before `update.sh` on a fresh server.
