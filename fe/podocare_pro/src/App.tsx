@@ -1,23 +1,22 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { lazy, Suspense, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import Warehouse from "./pages/Warehouse";
+import Orders from "./pages/Orders";
 import Login from "./pages/Login";
 import { AlertProvider } from "./components/Alert/AlertProvider";
 import { Main } from "./layouts/Main";
+import Profile from "./pages/Profile";
 import { UserProvider } from "./components/User/UserProvider";
+import Services from "./pages/Services";
+import PriceList from "./pages/PriceList";
+import Clients from "./pages/Clients";
+import Settings from "./pages/Settings";
+import Visits from "./pages/Visits";
+import Business from "./pages/Business";
+import AccessDenied from "./pages/AccessDenied";
 import { ProtectedRoute } from "./components/ProtectedRoute";
-
-const Warehouse = lazy(() => import("./pages/Warehouse"));
-const Orders = lazy(() => import("./pages/Orders"));
-const Profile = lazy(() => import("./pages/Profile"));
-const Services = lazy(() => import("./pages/Services"));
-const PriceList = lazy(() => import("./pages/PriceList"));
-const Clients = lazy(() => import("./pages/Clients"));
-const Settings = lazy(() => import("./pages/Settings"));
-const Visits = lazy(() => import("./pages/Visits"));
-const Business = lazy(() => import("./pages/Business"));
-const AccessDenied = lazy(() => import("./pages/AccessDenied"));
-const CashRegistry = lazy(() => import("./pages/CashRegistry"));
+import CashRegistry from "./pages/CashRegistry";
 
 function App() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1280);
@@ -43,8 +42,7 @@ function App() {
     <AlertProvider>
       <UserProvider>
       <Router>
-        <Suspense fallback={null}>
-          <Routes>
+        <Routes>
             <Route element={<Main />}>
               <Route path="/" element={<Warehouse />} />
               <Route path="/orders" element={<Orders />} />
@@ -61,7 +59,6 @@ function App() {
             </Route>
             <Route path="/login" element={<Login />} />
           </Routes>
-        </Suspense>
       </Router>
       </UserProvider>
     </AlertProvider>
