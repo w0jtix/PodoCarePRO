@@ -1,22 +1,23 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Warehouse from "./pages/Warehouse";
-import Orders from "./pages/Orders";
+import { lazy, Suspense, useState, useEffect } from "react";
 import Login from "./pages/Login";
 import { AlertProvider } from "./components/Alert/AlertProvider";
 import { Main } from "./layouts/Main";
-import Profile from "./pages/Profile";
 import { UserProvider } from "./components/User/UserProvider";
-import Services from "./pages/Services";
-import PriceList from "./pages/PriceList";
-import Clients from "./pages/Clients";
-import Settings from "./pages/Settings";
-import Visits from "./pages/Visits";
-import Business from "./pages/Business";
-import AccessDenied from "./pages/AccessDenied";
 import { ProtectedRoute } from "./components/ProtectedRoute";
-import CashRegistry from "./pages/CashRegistry";
-import { useState, useEffect } from "react";
+
+const Warehouse = lazy(() => import("./pages/Warehouse"));
+const Orders = lazy(() => import("./pages/Orders"));
+const Profile = lazy(() => import("./pages/Profile"));
+const Services = lazy(() => import("./pages/Services"));
+const PriceList = lazy(() => import("./pages/PriceList"));
+const Clients = lazy(() => import("./pages/Clients"));
+const Settings = lazy(() => import("./pages/Settings"));
+const Visits = lazy(() => import("./pages/Visits"));
+const Business = lazy(() => import("./pages/Business"));
+const AccessDenied = lazy(() => import("./pages/AccessDenied"));
+const CashRegistry = lazy(() => import("./pages/CashRegistry"));
 
 function App() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1280);
@@ -42,23 +43,25 @@ function App() {
     <AlertProvider>
       <UserProvider>
       <Router>
-        <Routes>
-          <Route element={<Main />}>
-            <Route path="/" element={<Warehouse />} />
-            <Route path="/orders" element={<Orders />} />
-            <Route path="/profile" element={<Profile />}/>
-            <Route path="/pricelist" element={<PriceList />}/>
-            <Route path="/visits" element={<Visits />}/>
-            <Route path="/services" element={<Services />}/>
-            <Route path="/clients" element={<Clients />}/>
-            <Route path="/cash-ledger" element={<CashRegistry />} />
-            <Route path="/my-company" element={<ProtectedRoute permissions={['ROLE_ADMIN']}><Business /></ProtectedRoute>}/>
-            <Route path="/settings" element={<ProtectedRoute permissions={['ROLE_ADMIN']}><Settings /></ProtectedRoute>}/>
-            <Route path="/no-access" element={<AccessDenied />}/>
-            <Route path="*" element={<AccessDenied />}/>
-          </Route>
-          <Route path="/login" element={<Login />} />
-        </Routes>
+        <Suspense fallback={null}>
+          <Routes>
+            <Route element={<Main />}>
+              <Route path="/" element={<Warehouse />} />
+              <Route path="/orders" element={<Orders />} />
+              <Route path="/profile" element={<Profile />}/>
+              <Route path="/pricelist" element={<PriceList />}/>
+              <Route path="/visits" element={<Visits />}/>
+              <Route path="/services" element={<Services />}/>
+              <Route path="/clients" element={<Clients />}/>
+              <Route path="/cash-ledger" element={<CashRegistry />} />
+              <Route path="/my-company" element={<ProtectedRoute permissions={['ROLE_ADMIN']}><Business /></ProtectedRoute>}/>
+              <Route path="/settings" element={<ProtectedRoute permissions={['ROLE_ADMIN']}><Settings /></ProtectedRoute>}/>
+              <Route path="/no-access" element={<AccessDenied />}/>
+              <Route path="*" element={<AccessDenied />}/>
+            </Route>
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </Suspense>
       </Router>
       </UserProvider>
     </AlertProvider>
