@@ -1,0 +1,116 @@
+import React, { useCallback } from "react";
+import ActionButton from "../ActionButton";
+import { ListAttribute} from "../../constants/list-headers";
+import { Discount } from "../../models/visit";
+import { useUser } from "../User/UserProvider";
+import { RoleType } from "../../models/login";
+import editIcon from "../../assets/edit.svg";
+import cancelIcon from "../../assets/cancel.svg";
+
+export interface DiscountsListProps {
+  attributes: ListAttribute[];
+  items: Discount[];
+  setEditDiscountId?: (discountId: number | string | null) => void;
+  setRemoveDiscountId?: (discountId: number | string | null) => void;
+  className?: string;
+  onClick?: (discount: Discount) => void;
+}
+
+export function DiscountsList({
+  attributes,
+  items,
+  setEditDiscountId,
+  setRemoveDiscountId,
+  className = "",
+}: DiscountsListProps) {
+  const { user } = useUser();
+
+  const handleOnClickEdit = useCallback(
+    (e: React.MouseEvent, item: Discount) => {
+      e.stopPropagation();
+      setEditDiscountId?.(item.id);
+    },
+    [setEditDiscountId]
+  );
+
+  const handleOnClickRemove = useCallback(
+    (e: React.MouseEvent, item: Discount) => {
+      e.stopPropagation();
+      setRemoveDiscountId?.(item.id);
+    },
+    [setRemoveDiscountId]
+  );
+
+
+  const renderAttributeContent = (
+    attr: ListAttribute,
+    item: Discount,
+  ): React.ReactNode => {
+    switch (attr.name) {
+
+        case "%":
+        return `${item.percentageValue}%`
+
+      case "Klienci":
+        return `${item.clientCount}`;
+
+        case "Nazwa":
+        return `${item.name}`;
+
+      case "Opcje":
+        return (
+<div className="item-list-single-item-action-buttons flex">
+            <ActionButton
+              src={editIcon}
+              alt="Edytuj Rabat"
+              iconTitle={"Edytuj Rabat"}
+              text="Edytuj"
+              onClick={(e) => handleOnClickEdit(e, item)}
+              disableText={true}
+            />
+            {user?.roles.includes(RoleType.ROLE_ADMIN) && (
+              <ActionButton
+              src={cancelIcon}
+              alt="Usuń Rabat"
+              iconTitle={"Usuń Rabat"}
+              text="Usuń"
+              onClick={(e) => handleOnClickRemove(e, item)}
+              disableText={true}
+            />
+            )}
+          </div>   
+        );
+    }
+};
+  return (
+    <div
+      className={`item-list width-93 flex-column p-0 mt-05 ${
+        items.length === 0 ? "border-none" : ""
+      } ${className} `}
+      
+    >
+      {items.map((item) => (
+        <div key={item.id} className={`product-wrapper width-max ${className}`}>
+          <div
+            className={`item align-items-center flex ${className} `}
+          >
+            {attributes.map((attr) => (
+              <div
+                key={`${item.id}-${attr.name}`}
+                className={`attribute-item flex  ${className}`}
+                style={{
+                  width: attr.width,
+                  justifyContent: attr.justify,
+                }}
+              >
+                {renderAttributeContent(attr, item)}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+}
+export default DiscountsList;

@@ -1,0 +1,18 @@
+# Node.js / React
+/fe/node_modules/
+/fe/.env
+
+# Secrets
+.env
+
+# IntelliJ IDEA
+.idea/
+
+# Java
+/be/PodoCareWebsite/target/
+/be/.idea/
+/be/logs/
+/be/PodoCareWebsite/logs/*.log
+
+# Claude Code
+CLAUDE.md
