@@ -5,6 +5,7 @@ import com.podocare.PodoCareWebsite.config.security.jwt.AuthTokenFilter;
 import com.podocare.PodoCareWebsite.config.security.services.UserDetailsImpl;
 import com.podocare.PodoCareWebsite.config.security.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,6 +29,9 @@ import java.util.List;
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
+    @Value("${app.corsAllowedOrigins:http://localhost:5173}")
+    private String corsAllowedOrigins;
+
     @Autowired
     UserDetailsServiceImpl userDetailsService;
 
@@ -77,7 +81,7 @@ public class WebSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuration.setAllowedOrigins(List.of(corsAllowedOrigins.split(",")));
         configuration.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

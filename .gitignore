@@ -2,6 +2,9 @@
 /fe/node_modules/
 /fe/.env
 
+# Secrets
+.env
+
 # IntelliJ IDEA
 .idea/
 

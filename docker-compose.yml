@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_DB: podocare
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Admin123
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5433:5432"
     volumes:
@@ -23,11 +23,19 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/podocare
       SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: Admin123
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_REDIS_HOST: redis
+      JWT_SECRET: ${JWT_SECRET}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS}
     depends_on:
       - postgres
       - redis
+
+  frontend:
+    build:
+      context: ./fe/podocare_pro
+      dockerfile: Dockerfile
+    restart: always
 
   nginx:
     image: nginx:alpine
@@ -38,6 +46,7 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - spring-boot
+      - frontend
 
 volumes:
   postgres_data:
